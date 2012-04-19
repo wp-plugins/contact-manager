@@ -25,11 +25,11 @@ wp_mail($list, $subject, $body, 'From: '.$sender); }
 
 function subscribe_to_cybermailing($list, $contact) {
 wp_remote_get('http://www.cybermailing.com/mailing/subscribe.php?'.
-'Liste='.$list.'&amp;'.
-'ListName='.$list.'&amp;'.
-'Identifiant='.$contact['login'].'&amp;'.
-'Name='.$contact['first_name'].'&amp;'.
-'Email='.$contact['email_address'].'&amp;'.
+'Liste='.$list.'&'.
+'ListName='.$list.'&'.
+'Identifiant='.$contact['login'].'&'.
+'Name='.$contact['first_name'].'&'.
+'Email='.$contact['email_address'].'&'.
 'WebSite='.$contact['website_url']); }
 
 
