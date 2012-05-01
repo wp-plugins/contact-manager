@@ -19,7 +19,8 @@ $body =
 "\nReferrer: ".$contact['referrer'];
 $domain = $_SERVER['SERVER_NAME'];
 if (substr($domain, 0, 4) == 'www.') { $domain = substr($domain, 4); }
-$sender = 'wordpress@'.$domain;
+if (strlen($domain) < 36) { $sender = 'wordpress@'.$domain; }
+else { $sender = 'w@'.$domain; }
 wp_mail($list, $subject, $body, 'From: '.$sender); }
 
 

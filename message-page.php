@@ -429,7 +429,7 @@ if ($categories) { ?>
 <td><select name="sender_affiliate_category_id" id="sender_affiliate_category_id">
 <option value="0"<?php if ($_POST['sender_affiliate_category_id'] == 0) { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
-echo '<option value="'.$category->id.'"'.($_POST['sender_affiliate_category_id'] == $category->id ? ' selected="selected"' : '').'>'.$category->name.'</option>'."\n"; } ?>
+echo '<option value="'.$category->id.'"'.($_POST['sender_affiliate_category_id'] == $category->id ? ' selected="selected"' : '').'>'.do_shortcode($category->name).'</option>'."\n"; } ?>
 </select>
 <?php if ((function_exists('affiliation_manager_admin_menu')) && ($_POST['sender_affiliate_category_id'] > 0)) { echo '<br />
 <a style="text-decoration: none;" href="admin.php?page=affiliation-manager-affiliate-category&amp;id='.$_POST['sender_affiliate_category_id'].'">'.__('Edit').'</a> | 
@@ -473,7 +473,7 @@ if ($categories) { ?>
 <td><select name="sender_member_category_id" id="sender_member_category_id">
 <option value="0"<?php if ($_POST['sender_member_category_id'] == 0) { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
-echo '<option value="'.$category->id.'"'.($_POST['sender_member_category_id'] == $category->id ? ' selected="selected"' : '').'>'.$category->name.'</option>'."\n"; } ?>
+echo '<option value="'.$category->id.'"'.($_POST['sender_member_category_id'] == $category->id ? ' selected="selected"' : '').'>'.do_shortcode($category->name).'</option>'."\n"; } ?>
 </select>
 <?php if ((function_exists('membership_manager_admin_menu')) && ($_POST['sender_member_category_id'] > 0)) { echo '<br />
 <a style="text-decoration: none;" href="admin.php?page=membership-manager-member-category&amp;id='.$_POST['sender_member_category_id'].'">'.__('Edit').'</a> | 

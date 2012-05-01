@@ -167,7 +167,7 @@ if ($categories) { ?>
 <option value="0"<?php if ($_POST['category_id'] == 0) { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
 if ((!$is_category) || (!in_array($_GET['id'], contact_forms_categories_list($category->id)))) {
-echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id ? ' selected="selected"' : '').'>'.$category->name.'</option>'."\n"; } } ?>
+echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id ? ' selected="selected"' : '').'>'.do_shortcode($category->name).'</option>'."\n"; } } ?>
 </select>
 <span class="description"><?php ($is_category ? _e('The options of this category will apply by default to the category.', 'contact-manager') : _e('The options of this category will apply by default to the form.', 'contact-manager')); ?></span>
 <?php if ($_POST['category_id'] > 0) { echo '<br />
@@ -402,7 +402,7 @@ if ($categories) { ?>
 <option value=""<?php if ($_POST['sender_affiliate_category_id'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($_POST['sender_affiliate_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
-echo '<option value="'.$category->id.'"'.($_POST['sender_affiliate_category_id'] == $category->id ? ' selected="selected"' : '').'>'.$category->name.'</option>'."\n"; } ?>
+echo '<option value="'.$category->id.'"'.($_POST['sender_affiliate_category_id'] == $category->id ? ' selected="selected"' : '').'>'.do_shortcode($category->name).'</option>'."\n"; } ?>
 </select>
 <?php if ((function_exists('affiliation_manager_admin_menu')) && ($_POST['sender_affiliate_category_id'] > 0)) { echo '<br />
 <a style="text-decoration: none;" href="admin.php?page=affiliation-manager-affiliate-category&amp;id='.$_POST['sender_affiliate_category_id'].'">'.__('Edit').'</a> | 
@@ -461,7 +461,7 @@ if ($categories) { ?>
 <option value=""<?php if ($_POST['sender_member_category_id'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($_POST['sender_member_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
-echo '<option value="'.$category->id.'"'.($_POST['sender_member_category_id'] == $category->id ? ' selected="selected"' : '').'>'.$category->name.'</option>'."\n"; } ?>
+echo '<option value="'.$category->id.'"'.($_POST['sender_member_category_id'] == $category->id ? ' selected="selected"' : '').'>'.do_shortcode($category->name).'</option>'."\n"; } ?>
 </select>
 <?php if ((function_exists('membership_manager_admin_menu')) && ($_POST['sender_member_category_id'] > 0)) { echo '<br />
 <a style="text-decoration: none;" href="admin.php?page=membership-manager-member-category&amp;id='.$_POST['sender_member_category_id'].'">'.__('Edit').'</a> | 
