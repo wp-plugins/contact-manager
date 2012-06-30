@@ -88,7 +88,7 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
 <td><label><input type="checkbox" name="custom_icon_used" id="custom_icon_used" value="yes"<?php if ($options['custom_icon_used'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Use a custom icon', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="custom_icon_url"><?php _e('Icon URL', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_icon_url" id="custom_icon_url" rows="1" cols="75"><?php echo $options['custom_icon_url']; ?></textarea> 
-<a style="vertical-align: 25%;" href="<?php echo htmlspecialchars(format_url($options['custom_icon_url'])); ?>"><?php _e('Link', 'contact-manager'); ?></a></td></tr>
+<a style="vertical-align: 25%;" href="<?php echo htmlspecialchars(format_url(do_shortcode($options['custom_icon_url']))); ?>"><?php _e('Link', 'contact-manager'); ?></a></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>

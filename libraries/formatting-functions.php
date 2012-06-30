@@ -1,7 +1,6 @@
 <?php function fix_url() {
 $url = $_SERVER['REQUEST_URI'];
 if (strstr($url, '&amp;')) { $url = str_replace('&amp;', '&', $url); $error = true; }
-if ((strstr($url, '?')) && (!strstr($url, '/?')) && (!strstr($url, '.php?'))) { $url = str_replace('?', '/?', $url); $error = true; }
 if (($error) && (!headers_sent())) { header('Location: '.$url); exit; } }
 
 

@@ -6,22 +6,25 @@ switch ($autoresponder) {
 case 'AWeber': subscribe_to_aweber($list, $contact); break;
 case 'CyberMailing': subscribe_to_cybermailing($list, $contact); break;
 case 'GetResponse': subscribe_to_getresponse($list, $contact); break;
+case 'MailChimp': subscribe_to_mailchimp($list, $contact); break;
 case 'SG Autorépondeur': subscribe_to_sg_autorepondeur($list, $contact); break; } } }
 
 
 function subscribe_to_aweber($list, $contact) {
 $list = str_replace('à', '@', $list);
 if (!strstr($list, '@')) { $list = $list.'@aweber.com'; }
+$contact['first_name'] = strip_accents($contact['first_name']);
 $subject = 'AWeber Subscription';
 $body =
 "\nEmail: ".$contact['email_address'].
-"\nName: ".strip_accents($contact['first_name']).
+"\nName: ".$contact['first_name'].
 "\nReferrer: ".$contact['referrer'];
 $domain = $_SERVER['SERVER_NAME'];
 if (substr($domain, 0, 4) == 'www.') { $domain = substr($domain, 4); }
 if (strlen($domain) < 36) { $sender = 'wordpress@'.$domain; }
 else { $sender = 'w@'.$domain; }
-wp_mail($list, $subject, $body, 'From: '.$sender); }
+foreach (array($sender, $contact['first_name'].' <'.$contact['email_address'].'>') as $string) {
+mail($list, $subject, $body, 'From: '.$string); } }
 
 
 function subscribe_to_cybermailing($list, $contact) {
@@ -51,6 +54,15 @@ $data = array(
 if ($contact['referrer'] != '') { $data['customs'] = array(array('name' => 'referrer', 'content' => $contact['referrer'])); }
 try { $result = $client->add_contact($api_key, $data); }
 catch (Exception $e) { die($e->getMessage()); } }
+
+
+function subscribe_to_mailchimp($list, $contact) {
+include_once dirname(__FILE__).'/MCAPI.class.php';
+$apiUrl = 'http://api.mailchimp.com/1.3/';
+$api_key = contact_data('mailchimp_api_key');
+$api = new MCAPI($api_key);
+$data = array('FNAME' => $contact['first_name'], 'LNAME' => $contact['last_name']);
+$result = $api->listSubscribe($list, $contact['email_address'], $data); }
 
 
 function subscribe_to_sg_autorepondeur($list, $contact) {

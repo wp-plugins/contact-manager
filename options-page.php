@@ -267,6 +267,14 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#getresponse"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 </tbody></table>
 </div>
+<div id="mailchimp-module"<?php if (in_array('mailchimp', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h4 id="mailchimp"><strong><?php echo $modules['options']['autoresponders-integration']['modules']['mailchimp']['name']; ?></strong></h4>
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="mailchimp_api_key"><?php _e('API key', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="mailchimp_api_key" id="mailchimp_api_key" rows="1" cols="50"><?php echo $options['mailchimp_api_key']; ?></textarea> 
+<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/documentation/#mailchimp"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+</tbody></table>
+</div>
 <div id="sg-autorepondeur-module"<?php if (in_array('sg-autorepondeur', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="sg-autorepondeur"><strong><?php echo $modules['options']['autoresponders-integration']['modules']['sg-autorepondeur']['name']; ?></strong></h4>
 <table class="form-table"><tbody>

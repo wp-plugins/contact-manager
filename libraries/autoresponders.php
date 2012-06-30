@@ -2,4 +2,5 @@
 'AWeber',
 'CyberMailing',
 'GetResponse',
+'MailChimp',
 'SG Autorépondeur');

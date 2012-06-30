@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 1.0.2
+Version: 1.0.3
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -199,9 +199,10 @@ function message_data($atts) {
 return contact_item_data('message', $atts); }
 
 
-function contact_jquery_js() { ?>
+function contact_jquery_js() {
+if (!defined('KLEOR_JQUERY_LOADED')) { define('KLEOR_JQUERY_LOADED', true); ?>
 <script type="text/javascript" src="<?php echo CONTACT_MANAGER_URL; ?>libraries/jquery.js"></script>
-<?php }
+<?php } }
 
 
 function contact_string_map($function, $string) {

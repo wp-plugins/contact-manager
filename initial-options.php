@@ -16,6 +16,7 @@ $initial_options[''] = array(
 'encrypted_urls_validity_duration' => 48,
 'getresponse_api_key' => '',
 'invalid_email_address_message' => __('This email address appears to be invalid.', 'contact-manager'),
+'mailchimp_api_key' => '',
 'maximum_messages_quantity' => 'unlimited',
 'membership_registration_confirmation_email_sent' => '',
 'membership_registration_notification_email_sent' => '',
@@ -188,10 +189,7 @@ $menu_displayed_items = array();
 foreach ($menu_items as $key => $value) {
 if (!in_array($value, array(
 'form_category',
-'forms_categories',
-'message',
-'messages',
-'statistics'))) {
+'forms_categories'))) {
 $menu_displayed_items[] = $key; } }
 
 $initial_options['back_office'] = array(

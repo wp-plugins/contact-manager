@@ -119,6 +119,7 @@ $modules['options'] = array(
 	'aweber' => array('name' => 'AWeber'),
 	'cybermailing' => array('name' => 'CyberMailing'),
 	'getresponse' => array('name' => 'GetResponse'),
+	'mailchimp' => array('name' => 'MailChimp'),
 	'sg-autorepondeur' => array('name' => 'SG Autorépondeur'))),
 'registration-to-affiliate-program' => array('name' => __('Registration to affiliate program', 'contact-manager')),
 'membership' => array('name' => __('Membership', 'contact-manager')),
