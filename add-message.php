@@ -18,7 +18,7 @@ $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."membership_manager_memb
 if ($result) { $_GET['member_data'] = (array) $result; $_GET['member_id'] = $result->id; } } }
 $_GET['user_id'] = (int) $_GET['user_id'];
 if ($_GET['user_id'] == 0) {
-$result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."users WHERE user_email = '".$message['email_address']."'", OBJECT);
+$result = $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE user_email = '".$message['email_address']."'", OBJECT);
 if ($result) { $_GET['user_data'] = (array) $result; $_GET['user_id'] = $result->ID; } }
 if ((is_admin()) || (contact_form_data('messages_registration_enabled') == 'yes')) {
 foreach ($tables['messages'] as $key => $value) { $keys_list .= $key.","; $values_list .= "'".$message[$key]."',"; }
@@ -90,7 +90,7 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET 
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $member = $affiliate; }
 else { $member = $message; }
-$member['members_areas'] = $member['message_members_areas'];
+$member['members_areas'] = $member['sender_members_areas'];
 $members_areas = array_unique(preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 if (count($members_areas) == 1) { $_GET['member_area_id'] = (int) $members_areas[0]; } else { unset($_GET['member_area_id']); }
 if (!isset($member['login'])) { $member['login'] = $member['email_address']; }
@@ -116,7 +116,7 @@ else { $user = $message; }
 $user['role'] = $message['sender_user_role'];
 if (!isset($user['login'])) { $user['login'] = $user['email_address']; }
 $login = $user['login']; $result = true; $i = 1; while ($result) {
-$result = $wpdb->get_results("SELECT user_login FROM ".$wpdb->prefix."users WHERE user_login = '".$user['login']."'", OBJECT);
+$result = $wpdb->get_results("SELECT user_login FROM ".$wpdb->base_prefix."users WHERE user_login = '".$user['login']."'", OBJECT);
 if ($result) { $user['login'] = $login.$i; $i = $i + 1; } }
 if (!isset($user['password'])) { $user['password'] = substr(md5(mt_rand()), 0, 8); }
 unset($user['ID']);

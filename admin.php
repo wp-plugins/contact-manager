@@ -5,6 +5,7 @@ if (strstr($_GET['page'], 'contact-manager')) { include 'admin-pages-functions.p
 function contact_manager_admin_menu() {
 include 'admin-pages.php';
 $options = get_option('contact_manager_back_office');
+if ($options['menu_title'] == '') { $options['menu_title'] = __('Contact', 'contact-manager'); }
 $menu_items = (array) $options['menu_items'];
 $numbers = (array) $options['menu_displayed_items'];
 $menu_displayed_items = array();
@@ -24,8 +25,10 @@ add_action('admin_menu', 'contact_manager_admin_menu');
 
 function contact_manager_action_links($links, $file) {
 if ($file == 'contact-manager/contact-manager.php') {
-return array_merge($links, array(
-'<a href="admin.php?page=contact-manager&amp;action=uninstall">'.__('Uninstall', 'contact-manager').'</a>',
+if (!is_multisite()) {
+$links = array_merge($links, array(
+'<a href="admin.php?page=contact-manager&amp;action=uninstall">'.__('Uninstall', 'contact-manager').'</a>')); }
+$links = array_merge($links, array(
 '<a href="admin.php?page=contact-manager&amp;action=reset">'.__('Reset', 'contact-manager').'</a>',
 '<a href="admin.php?page=contact-manager">'.__('Options', 'contact-manager').'</a>')); }
 return $links; }
@@ -35,7 +38,7 @@ add_filter('plugin_action_links', 'contact_manager_action_links', 10, 2);
 
 function contact_manager_row_meta($links, $file) {
 if ($file == 'contact-manager/contact-manager.php') {
-return array_merge($links, array(
+$links = array_merge($links, array(
 '<a href="http://www.kleor-editions.com/contact-manager">'.__('Documentation', 'contact-manager').'</a>')); }
 return $links; }
 

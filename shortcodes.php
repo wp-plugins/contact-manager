@@ -171,7 +171,7 @@ global $user_ID, $wpdb;
 $_GET['user_data'] = (array) $_GET['user_data'];
 if ((!isset($_GET['user_id'])) && (function_exists('is_user_logged_in'))) { if (is_user_logged_in()) { $_GET['user_id'] = $user_ID; } }
 if ((isset($_GET['user_id'])) && ($_GET['user_data']['ID'] != $_GET['user_id'])) {
-$_GET['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."users WHERE ID = '".$_GET['user_id']."'", OBJECT); }
+$_GET['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = '".$_GET['user_id']."'", OBJECT); }
 $user_data = $_GET['user_data'];
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; }
 else {
@@ -191,7 +191,7 @@ if (($id == 0) || ($id == $user_data['ID'])) { $data = $user_data[$field]; }
 else {
 foreach (array('user_id', 'user_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
-if ($_GET['user'.$id.'_data']['ID'] != $id) { $_GET['user'.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."users WHERE ID = '".$id."'", OBJECT); }
+if ($_GET['user'.$id.'_data']['ID'] != $id) { $_GET['user'.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = '".$id."'", OBJECT); }
 $user_data = $_GET['user'.$id.'_data'];
 $_GET['user_id'] = $id; $_GET['user_data'] = $user_data;
 $data = $user_data[$field]; }
