@@ -44,6 +44,7 @@ foreach (array(
 'message_confirmation_email_sent',
 'message_custom_instructions_executed',
 'message_notification_email_sent',
+'message_removal_custom_instructions_executed',
 'messages_registration_enabled',
 'sender_subscribed_as_a_user',
 'sender_subscribed_to_affiliate_program',
@@ -73,7 +74,8 @@ foreach (array(
 'code',
 'message_confirmation_email_body',
 'message_custom_instructions',
-'message_notification_email_body') as $field) {
+'message_notification_email_body',
+'message_removal_custom_instructions') as $field) {
 if ($_POST[$field] == '') { $_POST[$field] = $initial_options[$field]; }
 update_option('contact_manager_'.$field, $_POST[$field]); } } }
 if (!isset($options)) { $options = (array) get_option('contact_manager'); }
@@ -410,13 +412,27 @@ echo '<option value="'.$role.'"'.($options['sender_user_role'] == $role ? ' sele
 <div class="postbox" id="custom-instructions-module"<?php if (in_array('custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h3 id="custom-instructions"><strong><?php echo $modules['options']['custom-instructions']['name']; ?></strong></h3>
 <div class="inside">
+<div id="message-custom-instructions-module"<?php if (in_array('message-custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h4 id="message-custom-instructions"><strong><?php echo $modules['options']['custom-instructions']['modules']['message-custom-instructions']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="message_custom_instructions_executed" id="message_custom_instructions_executed" value="yes"<?php if ($options['message_custom_instructions_executed'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Execute custom instructions', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="message_custom_instructions"><?php _e('PHP code', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="float: left; margin-right: 1em; width: 75%;" name="message_custom_instructions" id="message_custom_instructions" rows="10" cols="75"><?php echo htmlspecialchars(get_option('contact_manager_message_custom_instructions')); ?></textarea>
-<span class="description"><?php _e('You can add custom instructions that will be executed just after the sending of the message.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<span class="description"><?php _e('You can add custom instructions that will be executed just after the sending of a message.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+</tbody></table>
+</div>
+<div id="message-removal-custom-instructions-module"<?php if (in_array('message-removal-custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h4 id="message-removal-custom-instructions"><strong><?php echo $modules['options']['custom-instructions']['modules']['message-removal-custom-instructions']['name']; ?></strong></h4>
+<table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><label><input type="checkbox" name="message_removal_custom_instructions_executed" id="message_removal_custom_instructions_executed" value="yes"<?php if ($options['message_removal_custom_instructions_executed'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Execute custom instructions', 'contact-manager'); ?></label></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="message_removal_custom_instructions"><?php _e('PHP code', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="float: left; margin-right: 1em; width: 75%;" name="message_removal_custom_instructions" id="message_removal_custom_instructions" rows="10" cols="75"><?php echo htmlspecialchars(get_option('contact_manager_message_removal_custom_instructions')); ?></textarea>
+<span class="description"><?php _e('You can add custom instructions that will be executed just after the removal of a message.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+</tbody></table>
+</div>
+<table class="form-table"><tbody><tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
 </div></div>

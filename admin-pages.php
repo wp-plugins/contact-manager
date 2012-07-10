@@ -124,7 +124,9 @@ $modules['options'] = array(
 'registration-to-affiliate-program' => array('name' => __('Registration to affiliate program', 'contact-manager')),
 'membership' => array('name' => __('Membership', 'contact-manager')),
 'wordpress' => array('name' => __('WordPress', 'contact-manager')),
-'custom-instructions' => array('name' => __('Custom instructions', 'contact-manager')),
+'custom-instructions' => array('name' => __('Custom instructions', 'contact-manager'), 'modules' => array(
+	'message-custom-instructions' => array('name' => __('New message', 'contact-manager')),
+	'message-removal-custom-instructions' => array('name' => __('Message removal', 'contact-manager')))),
 'affiliation' => array('name' => __('Affiliation', 'contact-manager'), 'modules' => array(
 	'level-1-commission' => array('name' => __('Level 1 commission', 'contact-manager')),
 	'level-2-commission' => array('name' => __('Level 2 commission', 'contact-manager')))),

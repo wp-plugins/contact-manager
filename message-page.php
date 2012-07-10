@@ -11,7 +11,9 @@ if ($message_data->form_id > 0) {
 $contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = '".$message_data->form_id."'", OBJECT);
 $messages_count = $contact_form_data->messages_count - 1;
 if ($messages_count < 0) { $messages_count = 0; }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = '".$messages_count."' WHERE id = '".$contact_form_data->id."'"); } } } ?>
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = '".$messages_count."' WHERE id = '".$contact_form_data->id."'"); }
+if (contact_data('message_removal_custom_instructions_executed') == 'yes') {
+eval(format_instructions(contact_data('message_removal_custom_instructions'))); } } } ?>
 <div class="wrap">
 <div id="poststuff">
 <?php contact_manager_pages_top($back_office_options); ?>

@@ -43,7 +43,7 @@
 'sender_subscribed_as_a_user' => array('type' => 'text', 'name' => __('Senders subscribed as users', 'contact-manager'), 'width' => 18),
 'sender_user_role' => array('type' => 'text', 'name' => __('Senders user role', 'contact-manager'), 'width' => 15),
 'message_custom_instructions_executed' => array('type' => 'text', 'name' => __('Custom instructions executed', 'contact-manager'), 'width' => 15),
-'message_custom_instructions' => array('type' => 'text', 'name' => __('PHP code of the custom instructions', 'contact-manager'), 'width' => 18, 'searchby' => __('the PHP code of the custom instructions', 'contact-manager')),
+'message_custom_instructions' => array('type' => 'text', 'name' => __('PHP code of the custom instructions', 'contact-manager'), 'width' => 18),
 'affiliation_enabled' => array('type' => 'text', 'name' => __('Affiliation enabled', 'contact-manager'), 'width' => 12),
 'commission_amount' => array('type' => 'text', 'name' => __('Commission amount', 'contact-manager'), 'width' => 12, 'searchby' => __('the commission amount', 'contact-manager')),
 'commission2_enabled' => array('type' => 'text', 'name' => __('Commission enabled', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 12),

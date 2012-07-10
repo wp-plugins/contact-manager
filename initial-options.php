@@ -29,6 +29,7 @@ $initial_options[''] = array(
 'message_notification_email_sender' => '[sender first-name] [sender last-name] <[sender email-address]>',
 'message_notification_email_sent' => 'yes',
 'message_notification_email_subject' => '[message subject]',
+'message_removal_custom_instructions_executed' => 'no',
 'messages_registration_enabled' => 'no',
 'sender_affiliate_category_id' => '',
 'sender_affiliate_status' => '',
@@ -107,6 +108,9 @@ $initial_options['message_notification_email_body'] =
 
 --
 '.__('Sent through this form:', 'contact-manager').' [contact-form name]';
+
+
+$initial_options['message_removal_custom_instructions'] = '';
 
 
 $variables = array(
