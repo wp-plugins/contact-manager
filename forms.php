@@ -40,6 +40,7 @@ foreach ($_GET[$prefix.'required_fields'] as $field) {
 if ($_POST[$prefix.$field] == '') { $_GET[$prefix.'unfilled_fields_error'] = contact_form_data('unfilled_fields_message'); $_GET['form_error'] = 'yes'; } }
 if ($_GET['form_error'] == '') {
 foreach ($_POST as $key => $value) { $_POST[str_replace($prefix, '', $key)] = $value; }
+$_POST['receiver'] = contact_form_data('message_notification_email_receiver');
 $_POST['ip_address'] = $_SERVER['REMOTE_ADDR'];
 $_POST['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 $_POST['form_id'] = $id;
@@ -168,6 +169,7 @@ $name = str_replace('-', '_', format_nice_name($atts[0]));
 $_GET[$prefix.'fields'][] = $name;
 if (in_array($name, $_GET[$prefix.'required_fields'])) { $atts['required'] = 'yes'; }
 switch ($name) {
+case 'message_confirmation_email_sent': if ($atts['type'] == '') { $atts['type'] = 'checkbox'; } break;
 case 'submit': if ($atts['type'] == '') { $atts['type'] = 'submit'; } break;
 default: if ($atts['type'] == '') { $atts['type'] = 'text'; } }
 switch ($atts['type']) {

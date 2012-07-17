@@ -55,6 +55,7 @@ foreach (array('displays_count', 'messages_count') as $field) { unset($tables['f
 $tables['messages'] = array(
 'id' => array('type' => 'int', 'name' => __('ID', 'contact-manager'), 'width' => 5),
 'form_id' => array('type' => 'int', 'name' => __('Form ID', 'contact-manager'), 'width' => 9),
+'receiver' => array('type' => 'text', 'name' => __('Receiver', 'contact-manager'), 'width' => 15, 'searchby' => __('the receiver', 'contact-manager')),
 'subject' => array('type' => 'text', 'name' => __('Subject', 'contact-manager'), 'width' => 15, 'searchby' => __('the subject', 'contact-manager')),
 'content' => array('type' => 'text', 'name' => __('Content', 'contact-manager'), 'width' => 18, 'searchby' => __('the content', 'contact-manager')),
 'date' => array('type' => 'datetime', 'name' => __('Date', 'contact-manager'), 'width' => 18, 'searchby' => __('the date', 'contact-manager')),

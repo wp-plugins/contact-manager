@@ -45,6 +45,7 @@ $_POST = array_map('html_entity_decode', $_POST);
 $back_office_options = update_contact_manager_back_office($back_office_options, 'message');
 
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+if ($_POST['receiver'] == '') { $_POST['receiver'] = contact_form_data('message_notification_email_receiver'); }
 $_POST['email_address'] = format_email_address($_POST['email_address']);
 $_POST['form_id'] = (int) $_POST['form_id'];
 $_GET['contact_form_id'] = $_POST['form_id'];
@@ -139,7 +140,8 @@ if (isset($_POST['update_fields'])) {
 foreach ($_POST as $key => $value) { $_GET['message_data'][$key] = $value; }
 $_GET['message_data']['id'] = '{message id}';
 if ($_POST['referrer'] != '') { $_GET['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT); }
-foreach ($add_message_fields as $field) { $_POST[$field] = str_replace('{message id}', '[message id]', contact_form_data($field)); } }
+foreach ($add_message_fields as $field) { $_POST[$field] = str_replace('{message id}', '[message id]', contact_form_data($field)); }
+$_POST['message_notification_email_receiver'] = $_POST['receiver']; }
 else {
 $members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 sort($members_areas, SORT_NUMERIC);
@@ -216,6 +218,8 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? __('Message update
 <a style="text-decoration: none;" href="admin.php?page=contact-manager-form&amp;id='.$_POST['form_id'].'">'.__('Edit').'</a> | 
 <a style="text-decoration: none;" href="admin.php?page=contact-manager-form&amp;id='.$_POST['form_id'].'&amp;action=delete">'.__('Delete').'</a> | 
 <a style="text-decoration: none;" href="admin.php?page=contact-manager-statistics&amp;form_id='.$_POST['form_id'].'">'.__('Statistics', 'contact-manager').'</a>'; } ?></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="receiver"><?php _e('Receiver', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="receiver" id="receiver" rows="1" cols="75"><?php echo $_POST['receiver']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="subject"><?php _e('Subject', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="subject" id="subject" rows="1" cols="75"><?php echo $_POST['subject']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="content"><?php _e('Content', 'contact-manager'); ?></label></strong></th>
