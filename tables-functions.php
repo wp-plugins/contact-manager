@@ -51,13 +51,17 @@ global $wpdb;
 return $wpdb->prefix.'contact_manager_'.$table; }
 
 
-function table_td($table, $column, $item) {
+function table_data($table, $column, $item) {
 switch ($table) {
 case 'forms': $_GET['contact_form_id'] = $item->id; $_GET['contact_form_data'] = $item; $data = contact_form_data($column); break;
 case 'forms_categories': $_GET['contact_form_category_id'] = $item->id; $_GET['contact_form_category_data'] = $item; $data = contact_form_category_data($column); break;
 case 'messages': $_GET['message_data'] = $item; $data = message_data($column); break;
 default: $data = contact_format_data($column, $item->$column); }
-$data = htmlspecialchars($data);
+return $data; }
+
+
+function table_td($table, $column, $item) {
+$data = htmlspecialchars(table_data($table, $column, $item));
 switch ($column) {
 case 'affiliation_enabled': case 'affiliation_registration_confirmation_email_sent': case 'affiliation_registration_notification_email_sent': case 'commission2_enabled':
 case 'membership_registration_confirmation_email_sent': case 'membership_registration_notification_email_sent':

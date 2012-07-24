@@ -136,7 +136,7 @@ else { $message[$field] = contact_form_data($field); } }
 
 $form_id = $message['form_id'];
 if (in_array('message_confirmation_email_sent', $_GET['contact_form'.$form_id.'_fields'])) {
-$message['message_confirmation_email_sent'] = $_POST['message_confirmation_email_sent']; }
+$message['message_confirmation_email_sent'] = (isset($_POST['message_confirmation_email_sent']) ? 'yes' : 'no'); }
 
 foreach (array('confirmation', 'notification') as $action) {
 foreach (array('sent', 'sender', 'receiver', 'subject', 'body') as $field) {

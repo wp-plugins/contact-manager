@@ -79,7 +79,18 @@ $max_paged = ceil($n/$limit);
 if ($max_paged < 1) { $max_paged = 1; }
 if ($_GET['paged'] > $max_paged) { $_GET['paged'] = $max_paged; }
 $start = ($_GET['paged'] - 1)*$limit;
-$items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria ORDER BY ".$_GET['orderby']." ".strtoupper($_GET['order'])." LIMIT $start, $limit", OBJECT); ?>
+
+if ($n > 0) {
+if ($table_slug == 'messages') { $items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria ORDER BY ".$_GET['orderby']." ".strtoupper($_GET['order'])." LIMIT $start, $limit", OBJECT); }
+else {
+$items = $wpdb->get_results("SELECT id, category_id, ".$_GET['orderby']." FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria ORDER BY ".$_GET['orderby']." ".strtoupper($_GET['order']), OBJECT);
+foreach ($items as $item) { $datas[$item->id] = table_data($table_slug, $_GET['orderby'], $item); }
+if ($_GET['order'] == 'asc') { asort($datas); } else { arsort($datas); }
+foreach ($datas as $key => $value) { $array[] = array('id' => $key, 'data' => $value); }
+for ($i = $start; $i < $start + $limit; $i++) { if (isset($array[$i])) { $ids[] = $array[$i]['id']; } }
+$items = array();
+foreach ($ids as $id) { $items[] = $wpdb->get_row("SELECT * FROM $table_name WHERE id = '".$id."'", OBJECT); }
+foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?>
 
 <div class="wrap">
 <div id="poststuff">

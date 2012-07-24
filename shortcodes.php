@@ -16,7 +16,7 @@ return $content[$n]; }
 function contact_counter($atts, $content) {
 global $wpdb;
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
-extract(shortcode_atts(array('data' => '', 'limit' => '', 'range' => ''), $atts));
+extract(shortcode_atts(array('data' => '', 'limit' => '', 'range' => '', 'status' => ''), $atts));
 
 $data = str_replace('_', '-', format_nice_name($data));
 switch ($data) {
@@ -49,17 +49,20 @@ $end_date = $y.'-12-31 23:59:59';
 $date_criteria = "AND (date BETWEEN '".$start_date."' AND '".$end_date."')"; break;
 default: $date_criteria = ''; } }
 
+$status = str_replace('-', '_', format_nice_name($status));
+if ($status != '') { $status_criteria = "AND status = '".$status."'"; }
+
 if (is_string($table)) {
 if ($field == '') {
-$row = $wpdb->get_row("SELECT count(*) as total FROM $table WHERE id > 0 $date_criteria", OBJECT);
+$row = $wpdb->get_row("SELECT count(*) as total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
 $data = (int) $row->total; }
 else {
-$row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table WHERE id > 0 $date_criteria", OBJECT);
+$row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
 $data = round(100*$row->total)/100; } }
 
 else {
 $data = 0; foreach ($table as $table_name) {
-$row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table_name WHERE id > 0 $date_criteria", OBJECT);
+$row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table_name WHERE id > 0 $date_criteria $status_criteria", OBJECT);
 $data = $data + round(100*$row->total)/100; } }
 
 if ($limit == '') { $limit = '0'; }

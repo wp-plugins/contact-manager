@@ -78,6 +78,8 @@ $initial_options['code'] =
 [textarea content cols=60 rows=10 required=yes][/textarea]<br />
 [error style="color: red;" content]</label></p>
 
+<p><label>[input message-confirmation-email-sent value=yes] '.__('Receive a copy of this message', 'contact-manager').'</label></p>
+
 <div>[input submit value="'.__('Send', 'contact-manager').'"]</div>';
 
 
