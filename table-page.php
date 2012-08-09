@@ -89,7 +89,7 @@ if ($_GET['order'] == 'asc') { asort($datas); } else { arsort($datas); }
 foreach ($datas as $key => $value) { $array[] = array('id' => $key, 'data' => $value); }
 for ($i = $start; $i < $start + $limit; $i++) { if (isset($array[$i])) { $ids[] = $array[$i]['id']; } }
 $items = array();
-foreach ($ids as $id) { $items[] = $wpdb->get_row("SELECT * FROM $table_name WHERE id = '".$id."'", OBJECT); }
+foreach ($ids as $id) { $items[] = $wpdb->get_row("SELECT * FROM $table_name WHERE id = ".$id, OBJECT); }
 foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?>
 
 <div class="wrap">

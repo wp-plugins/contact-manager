@@ -28,6 +28,7 @@ $_POST[$prefix.'website_url'] = format_url($_POST[$prefix.'website_url']);
 $_POST['referring_url'] = html_entity_decode($_POST['referring_url']); }
 $_GET[$prefix.'required_fields'] = array();
 $_GET[$prefix.'fields'] = $_GET[$prefix.'required_fields'];
+$_GET[$prefix.'checkbox_fields'] = array();
 foreach (array('invalid_email_address_message', 'unfilled_field_message') as $key) { $_GET[$prefix.$key] = contact_form_data($key); }
 $code = contact_form_data('code');
 foreach (array('fields', 'required_fields') as $array) { $_GET[$prefix.$array] = array_unique($_GET[$prefix.$array]); }
@@ -60,11 +61,11 @@ else { $content .= '<script type="text/javascript">window.location = \''.htmlspe
 
 else {
 $displays_count = contact_form_data('displays_count') + 1;
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displays_count = '".$displays_count."' WHERE id = '".$id."'"); }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displays_count = ".$displays_count." WHERE id = ".$id); }
 
 foreach ($_GET[$prefix.'required_fields'] as $field) {
 $required_fields_js .= '
-if (form.'.$prefix.$field.'.value == "") {
+if '.(in_array($field, $_GET[$prefix.'checkbox_fields']) ? '(form.'.$prefix.$field.'.checked == false)' : '(form.'.$prefix.$field.'.value == "")').' {
 if (document.getElementById("'.$prefix.$field.'_error")) { document.getElementById("'.$prefix.$field.'_error").innerHTML = "'.$_GET[$prefix.'unfilled_field_message'].'"; }
 if (!error) { form.'.$prefix.$field.'.focus(); } error = true; }
 else if (document.getElementById("'.$prefix.$field.'_error")) { document.getElementById("'.$prefix.$field.'_error").innerHTML = ""; }'; }
@@ -173,6 +174,7 @@ case 'message_confirmation_email_sent': if ($atts['type'] == '') { $atts['type']
 case 'submit': if ($atts['type'] == '') { $atts['type'] = 'submit'; } break;
 default: if ($atts['type'] == '') { $atts['type'] = 'text'; } }
 switch ($atts['type']) {
+case 'checkbox': $_GET[$prefix.'checkbox_fields'][] = $name; break;
 case 'password': case 'text':
 if ($atts['size'] == '') { $atts['size'] = '30'; }
 $id_markup = ' id="'.$prefix.$name.'"'; break; }

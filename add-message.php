@@ -1,6 +1,5 @@
 <?php if (isset($message)) {
 global $wpdb;
-$message['id'] = '';
 foreach (array('admin-pages.php', 'tables.php') as $file) { include dirname(__FILE__).'/'.$file; }
 $_GET['contact_form_id'] = $message['form_id'];
 if (function_exists('add_affiliate')) {
@@ -21,7 +20,8 @@ if ($_GET['user_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE user_email = '".$message['email_address']."'", OBJECT);
 if ($result) { $_GET['user_data'] = (array) $result; $_GET['user_id'] = $result->ID; } }
 if ((is_admin()) || (contact_form_data('messages_registration_enabled') == 'yes')) {
-foreach ($tables['messages'] as $key => $value) { $keys_list .= $key.","; $values_list .= "'".$message[$key]."',"; }
+$sql = contact_sql_array($tables['messages'], $message);
+foreach ($tables['messages'] as $key => $value) { if ($key != 'id') { $keys_list .= $key.","; $values_list .= $sql[$key].","; } }
 $result = $wpdb->query("INSERT INTO ".$wpdb->prefix."contact_manager_messages (".substr($keys_list, 0, -1).") VALUES(".substr($values_list, 0, -1).")");
 $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages ORDER BY id DESC LIMIT 1", OBJECT);
 $message['id'] = $result->id;
@@ -34,10 +34,10 @@ $n = $messages_quantity - $maximum_messages_quantity;
 if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n"); } }
 $maximum_messages_quantity = contact_form_data('maximum_messages_quantity');
 if (is_numeric($maximum_messages_quantity)) {
-$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = '".$message['form_id']."'", OBJECT);
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id'], OBJECT);
 $messages_quantity = (int) $row->total;
 $n = $messages_quantity - $maximum_messages_quantity;
-if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = '".$message['form_id']."' ORDER BY date ASC LIMIT $n"); } } } }
+if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id']." ORDER BY date ASC LIMIT $n"); } } } }
 $_GET['message_data'] = $message;
 $original_message = $message;
 if ($message['referrer'] != '') {
@@ -52,13 +52,13 @@ $displays_count = contact_form_data('displays_count');
 $messages_count = contact_form_data('messages_count') + 1;
 if ($displays_count < $messages_count) { $displays_count = $messages_count; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
-	displays_count = '".$displays_count."',
-	messages_count = '".$messages_count."' WHERE id = '".$message['form_id']."'"); }
+	displays_count = ".$displays_count.",
+	messages_count = ".$messages_count." WHERE id = ".$message['form_id']); }
 
 if ((function_exists('add_affiliate')) && ($message['sender_subscribed_to_affiliate_program'] == 'yes')) {
 if ($_GET['affiliate_id'] > 0) {
 if ($message['sender_affiliate_category_id'] > 0) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET category_id = '".$message['sender_affiliate_category_id']."' WHERE id = '".$_GET['affiliate_id']."'"); } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET category_id = ".$message['sender_affiliate_category_id']." WHERE id = ".$_GET['affiliate_id']); } }
 elseif ($message['email_address'] != '') {
 $affiliate = $message;
 if (!isset($affiliate['login'])) { $affiliate['login'] = $affiliate['email_address']; }
@@ -86,7 +86,7 @@ if ((function_exists('add_member')) && ($message['sender_subscribed_to_members_a
 if ($_GET['member_id'] > 0) {
 update_member_members_areas($_GET['member_id'], $message['sender_members_areas'], 'add');
 if ($message['sender_member_category_id'] > 0) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET category_id = '".$message['sender_member_category_id']."' WHERE id = '".$_GET['member_id']."'"); } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET category_id = ".$message['sender_member_category_id']." WHERE id = ".$_GET['member_id']); } }
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $member = $affiliate; }
 else { $member = $message; }
@@ -143,6 +143,15 @@ foreach (array('sent', 'sender', 'receiver', 'subject', 'body') as $field) {
 $$field = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', $message['message_'.$action.'_email_'.$field])); }
 if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender); } }
+
+if ((function_exists('referrer_data')) && ($message['referrer'] != '') && (!strstr($message['referrer'], '@'))) {
+$_GET['referrer'] = $message['referrer'];
+if (referrer_data('status') == 'active') {
+$sent = referrer_data('message_notification_email_sent');
+if (($sent == 'yes') || (($sent == 'if commission') && ($message['commission_amount'] > 0))) {
+foreach (array('sender', 'receiver', 'subject', 'body') as $field) {
+$$field = affiliation_data('message_notification_email_'.$field); }
+wp_mail($receiver, $subject, $body, 'From: '.$sender); } } }
 
 if (($message['sender_subscribed_to_autoresponder'] == 'yes') && ($message['email_address'] != '')) {
 if (!function_exists('subscribe_to_autoresponder')) { include_once dirname(__FILE__).'/libraries/autoresponders-functions.php'; }

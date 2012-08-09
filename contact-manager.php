@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 3.3
+Version: 3.5
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -11,7 +11,7 @@ License: GPL2
 */
 
 /* 
-Copyright 2010 Kleor Editions (http://www.kleor-editions.com)
+Copyright 2012 Kleor Editions (http://www.kleor-editions.com)
 
 This program is a free software. You can redistribute it and/or 
 modify it under the terms of the GNU General Public License as 
@@ -120,7 +120,7 @@ global $wpdb;
 $id = (int) $id;
 $list = array($id);
 while ($id > 0) {
-$category = $wpdb->get_row("SELECT category_id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE id = '$id'", OBJECT);
+$category = $wpdb->get_row("SELECT category_id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE id = $id", OBJECT);
 if ($category) { $id = $category->category_id; }
 if ((!$category) || (in_array($id, $list))) { $id = 0; }
 $list[] = $id; }
@@ -141,7 +141,7 @@ case 'contact_form_category': $table = 'forms_categories'; $default_field = 'nam
 case 'message': $table = 'messages'; $default_field = 'subject'; break; }
 $_GET[$type.'_data'] = (array) $_GET[$type.'_data'];
 if ((isset($_GET[$type.'_id'])) && ($_GET[$type.'_data']['id'] != $_GET[$type.'_id'])) {
-$_GET[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = '".$_GET[$type.'_id']."'", OBJECT); }
+$_GET[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = ".$_GET[$type.'_id'], OBJECT); }
 $item_data = $_GET[$type.'_data'];
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; $part = 0; }
 else {
@@ -159,7 +159,7 @@ elseif ($id > 0) {
 foreach (array($type.'_id', $type.'_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
 if ($_GET[$type.$id.'_data']['id'] != $id) {
-$_GET[$type.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = '$id'", OBJECT); }
+$_GET[$type.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = $id", OBJECT); }
 $item_data = $_GET[$type.$id.'_data'];
 if ($attribute == 'id') { $_GET[$type.'_id'] = $id; $_GET[$type.'_data'] = $item_data; }
 $data = $item_data[$field]; }
@@ -203,6 +203,15 @@ function contact_jquery_js() {
 if (!defined('KLEOR_JQUERY_LOADED')) { define('KLEOR_JQUERY_LOADED', true); ?>
 <script type="text/javascript" src="<?php echo CONTACT_MANAGER_URL; ?>libraries/jquery.js"></script>
 <?php } }
+
+
+function contact_sql_array($table, $array) {
+foreach ($table as $key => $value) {
+$sql[$key] = $array[$key];
+if ($value['type'] == 'int') { $sql[$key] = (int) $sql[$key]; }
+elseif ((strstr($value['type'], 'dec')) && (!is_numeric($sql[$key]))) { $sql[$key] = round(100*$sql[$key])/100; }
+elseif (($value['type'] == 'text') || ($value['type'] == 'datetime')) { $sql[$key] = "'".$sql[$key]."'"; } }
+return $sql; }
 
 
 function contact_string_map($function, $string) {

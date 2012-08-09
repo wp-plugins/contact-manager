@@ -9,10 +9,10 @@ if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 if ($is_category) {
-$category = $wpdb->get_row("SELECT category_id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE id = '".$_GET['id']."'", OBJECT);
+$category = $wpdb->get_row("SELECT category_id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE id = ".$_GET['id'], OBJECT);
 foreach (array('forms', 'forms_categories') as $table) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table." SET category_id = ".$category->category_id." WHERE category_id = '".$_GET['id']."'"); } }
-$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = '".$_GET['id']."'"); } } ?>
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table." SET category_id = ".$category->category_id." WHERE category_id = ".$_GET['id']); } }
+$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = ".$_GET['id']); } } ?>
 <div class="wrap">
 <div id="poststuff">
 <?php contact_manager_pages_top($back_office_options); ?>
@@ -84,42 +84,44 @@ else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager
 if (!$result) {
 $updated = true;
 include 'tables.php';
-foreach ($tables[$table_slug] as $key => $value) { $keys_list .= $key.","; $values_list .= "'".$_POST[$key]."',"; }
+$sql = contact_sql_array($tables[$table_slug], $_POST);
+foreach ($tables[$table_slug] as $key => $value) { if ($key != 'id') { $keys_list .= $key.","; $values_list .= $sql[$key].","; } }
 $results = $wpdb->query("INSERT INTO ".$wpdb->prefix."contact_manager_".$table_slug." (".substr($keys_list, 0, -1).") VALUES(".substr($values_list, 0, -1).")"); } } }
 
 if (isset($_GET['id'])) {
 $updated = true;
 if ((isset($_POST['count_messages'])) || (isset($_POST['count_messages_of_all_forms']))) {
-$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = '".$_GET['id']."'", OBJECT);
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$_GET['id'], OBJECT);
 $_POST['messages_count'] = (int) $row->total;
 if ($_POST['displays_count'] < $_POST['messages_count']) { $_POST['displays_count'] = $_POST['messages_count']; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
-	displays_count = '".$_POST['displays_count']."',
-	messages_count = '".$_POST['messages_count']."' WHERE id = '".$_GET['id']."'"); }
+	displays_count = ".$_POST['displays_count'].",
+	messages_count = ".$_POST['messages_count']." WHERE id = ".$_GET['id']); }
 if (isset($_POST['count_messages_of_all_forms'])) {
-$forms = $wpdb->get_results("SELECT id, displays_count FROM ".$wpdb->prefix."contact_manager_forms WHERE id != '".$_GET['id']."'", OBJECT);
+$forms = $wpdb->get_results("SELECT id, displays_count FROM ".$wpdb->prefix."contact_manager_forms WHERE id != ".$_GET['id'], OBJECT);
 if ($forms) { foreach ($forms as $form) {
 $displays_count = $form->displays_count;
-$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = '".$form->id."'", OBJECT);
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$form->id, OBJECT);
 $messages_count = (int) $row->total;
 if ($displays_count < $messages_count) { $displays_count = $messages_count; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
-	displays_count = '".$displays_count."',
-	messages_count = '".$messages_count."' WHERE id = '".$form->id."'"); } } }
+	displays_count = ".$displays_count.",
+	messages_count = ".$messages_count." WHERE id = ".$form->id); } } }
 if ($_POST['name'] != '') {
-if (!$is_category) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".$_POST['name']."' WHERE id = '".$_GET['id']."'"); }
+if (!$is_category) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".$_POST['name']."' WHERE id = ".$_GET['id']); }
 else {
-$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".$_POST['name']."' AND id != '".$_GET['id']."'", OBJECT);
+$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".$_POST['name']."' AND id != ".$_GET['id'], OBJECT);
 if ($result) { $error .= ' '.__('This name is not available.', 'contact-manager'); }
-else { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".$_POST['name']."' WHERE id = '".$_GET['id']."'"); } } }
+else { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".$_POST['name']."' WHERE id = ".$_GET['id']); } } }
 include 'tables.php';
+$sql = contact_sql_array($tables[$table_slug], $_POST);
 foreach ($tables[$table_slug] as $key => $value) { switch ($key) {
 case 'id': case 'name': break;
-default: $list .= $key." = '".$_POST[$key]."',"; } }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET ".substr($list, 0, -1)." WHERE id = '".$_GET['id']."'"); } } }
+default: $list .= $key." = ".$sql[$key].","; } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET ".substr($list, 0, -1)." WHERE id = ".$_GET['id']); } } }
 
 if (isset($_GET['id'])) {
-$item_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = '".$_GET['id']."'", OBJECT);
+$item_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = ".$_GET['id'], OBJECT);
 if ($item_data) { foreach ($item_data as $key => $value) { $_POST[$key] = $value; } }
 elseif (!headers_sent()) { header('Location: admin.php?page=contact-manager-forms'.($is_category ? '-categories' : '')); exit(); }
 else { echo '<script type="text/javascript">window.location = "admin.php?page=contact-manager-forms'.($is_category ? '-categories' : '').'";</script>'; } }

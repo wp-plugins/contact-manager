@@ -5,13 +5,13 @@ if ((isset($_GET['id'])) && ($_GET['action'] == 'delete')) {
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
-$message_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = '".$_GET['id']."'", OBJECT);
-$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE id = '".$_GET['id']."'");
+$message_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id'], OBJECT);
+$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id']);
 if ($message_data->form_id > 0) {
-$contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = '".$message_data->form_id."'", OBJECT);
+$contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$message_data->form_id, OBJECT);
 $messages_count = $contact_form_data->messages_count - 1;
 if ($messages_count < 0) { $messages_count = 0; }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = '".$messages_count."' WHERE id = '".$contact_form_data->id."'"); }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = ".$messages_count." WHERE id = ".$contact_form_data->id); }
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 if (contact_data('message_removal_custom_instructions_executed') == 'yes') {
 eval(format_instructions(contact_data('message_removal_custom_instructions'))); } } } } ?>
@@ -50,11 +50,11 @@ if ($_POST['receiver'] == '') { $_POST['receiver'] = contact_form_data('message_
 $_POST['email_address'] = format_email_address($_POST['email_address']);
 $_POST['form_id'] = (int) $_POST['form_id'];
 $_GET['contact_form_id'] = $_POST['form_id'];
-if ($_POST['form_id'] > 0) { $_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = '".$_POST['form_id']."'", OBJECT); }
+if ($_POST['form_id'] > 0) { $_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_POST['form_id'], OBJECT); }
 if (isset($_POST['referrer'])) {
 if (is_numeric($_POST['referrer'])) {
 $_POST['referrer'] = preg_replace('/[^0-9]/', '', $_POST['referrer']);
-$result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE id = '".$_POST['referrer']."'", OBJECT);
+$result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE id = ".$_POST['referrer'], OBJECT);
 if ($result) { $_POST['referrer'] = $result->login; } }
 elseif (strstr($_POST['referrer'], '@')) {
 $_POST['referrer'] = format_email_address($_POST['referrer']);
@@ -93,7 +93,7 @@ if ($result) { $_POST['referrer2'] = $result->referrer; } }
 else {
 if (is_numeric($_POST['referrer2'])) {
 $_POST['referrer2'] = preg_replace('/[^0-9]/', '', $_POST['referrer2']);
-$result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE id = '".$_POST['referrer2']."'", OBJECT);
+$result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE id = ".$_POST['referrer2'], OBJECT);
 if ($result) { $_POST['referrer2'] = $result->login; } }
 elseif (strstr($_POST['referrer2'], '@')) {
 $_POST['referrer2'] = format_email_address($_POST['referrer2']);
@@ -155,29 +155,30 @@ if (!$result) { $updated = true; add_message($_POST); } } } }
 if (isset($_GET['id'])) {
 $updated = true;
 include 'tables.php';
-$message_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = '".$_GET['id']."'", OBJECT);
+$message_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id'], OBJECT);
+$sql = contact_sql_array($tables['messages'], $_POST);
 foreach ($tables['messages'] as $key => $value) { switch ($key) {
 case 'id': break;
-default: $list .= $key." = '".$_POST[$key]."',"; } }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET ".substr($list, 0, -1)." WHERE id = '".$_GET['id']."'");
+default: $list .= $key." = ".$sql[$key].","; } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET ".substr($list, 0, -1)." WHERE id = ".$_GET['id']);
 
 if ($_POST['form_id'] != $message_data->form_id) {
 if ($message_data->form_id > 0) {
-$contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = '".$message_data->form_id."'", OBJECT);
+$contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$message_data->form_id, OBJECT);
 $messages_count = $contact_form_data->messages_count - 1;
 if ($messages_count < 0) { $messages_count = 0; }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = '".$messages_count."' WHERE id = '".$message_data->form_id."'"); }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = ".$messages_count." WHERE id = ".$message_data->form_id); }
 
 if ($_POST['form_id'] > 0) {
 $displays_count = $_GET['contact_form_data']['displays_count'];
 $messages_count = $_GET['contact_form_data']['messages_count'] + 1;
 if ($displays_count < $messages_count) { $displays_count = $messages_count; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
-	displays_count = '".$displays_count."',
-	messages_count = '".$messages_count."' WHERE id = '".$_POST['form_id']."'"); } } } } }
+	displays_count = ".$displays_count.",
+	messages_count = ".$messages_count." WHERE id = ".$_POST['form_id']); } } } } }
 
 if (isset($_GET['id'])) {
-$message_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = '".$_GET['id']."'", OBJECT);
+$message_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id'], OBJECT);
 if ($message_data) {
 $_GET['message_data'] = (array) $message_data;
 foreach ($message_data as $key => $value) { $_POST[$key] = $value; } }

@@ -57,7 +57,7 @@ update_option('contact_manager_statistics', $options); }
 
 if ($_GET['s'] != '') {
 $_GET['filter_criteria'] = str_replace(' ', '%20', '&amp;'.$filterby.'='.$_GET['s']);
-$filter_criteria = "AND (".$filterby." = '".$_GET['s']."')"; }
+$filter_criteria = (is_numeric($_GET['s']) ? "AND (".$filterby." = ".$_GET['s'].")" : "AND (".$filterby." = '".$_GET['s']."')"); }
 
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE $date_criteria $selection_criteria $filter_criteria", OBJECT);
 $messages_number = (int) $row->total;

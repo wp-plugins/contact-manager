@@ -13,7 +13,7 @@ foreach (array(
 'referrer2') as $field) {
 if (isset($_GET[$field])) {
 $_GET['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
-$selection_criteria .= " AND ".$field." = '".$_GET[$field]."'"; } }
+$selection_criteria .= (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')"); } }
 
 
 function no_items($table) {
@@ -103,9 +103,9 @@ function table_th($table, $column) {
 include 'tables.php';
 if (strstr($_GET['page'], 'statistics')) { $table_th = '<th scope="col" class="manage-column" style="width: '.$tables[$table][$column]['width'].'%;">'.$tables[$table][$column]['name'].'</th>'; }
 else {
-$table_th = '<th scope="col" class="manage-column '.($_GET['orderby'] == $column ? 'sorted '.$_GET['order'] : 'sortable desc').'" style="width: '.$tables[$table][$column]['width'].'%;">
-<a href="admin.php?page='.$_GET['page'].'&amp;orderby='.$column.'&amp;order='.((($_GET['orderby'] == $column) && ($_GET['order'] == 'asc')) ? 'desc' : 'asc').
-$_GET['selection_criteria'].($_GET['s'] == '' ? '' : '&amp;s='.str_replace(' ', '%20', $_GET['s'])).'">
+$reverse_order = ($_GET['order'] == 'asc' ? 'desc' : 'asc');
+$table_th = '<th scope="col" class="manage-column '.($_GET['orderby'] == $column ? 'sorted '.$_GET['order'] : 'sortable '.$reverse_order).'" style="width: '.$tables[$table][$column]['width'].'%;">
+<a href="admin.php?page='.$_GET['page'].'&amp;orderby='.$column.'&amp;order='.($_GET['orderby'] == $column ? $reverse_order : $_GET['order']).$_GET['selection_criteria'].($_GET['s'] == '' ? '' : '&amp;s='.str_replace(' ', '%20', $_GET['s'])).'">
 <span>'.$tables[$table][$column]['name'].'</span><span class="sorting-indicator"></span></a></th>'; }
 return $table_th; }
 

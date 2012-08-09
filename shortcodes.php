@@ -6,7 +6,7 @@ $forms = array_unique(preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY));
 if (is_admin()) { if (in_array($_GET['contact_form_id'], $forms)) { $n = 0; } else { $n = 1; } }
 else {
 if (count($forms) > 0) {
-foreach ($forms as $form) { $search_criteria .= " OR form_id = '".$form."'"; }
+foreach ($forms as $form) { $search_criteria .= " OR form_id = ".$form; }
 $search_criteria = 'AND ('.substr($search_criteria, 4).')'; }
 $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE (ip_address = '".$_SERVER['REMOTE_ADDR']."' OR ip_address = '".message_data('ip_address')."') $search_criteria", OBJECT);
 if ($result) { $n = 0; } else { $n = 1; } }
@@ -109,7 +109,7 @@ function contact_form_counter($atts, $content) {
 global $wpdb;
 $_GET['contact_form_data'] = (array) $_GET['contact_form_data'];
 if ((isset($_GET['contact_form_id'])) && ($_GET['contact_form_data']['id'] != $_GET['contact_form_id'])) {
-$_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = '".$_GET['contact_form_id']."'", OBJECT); }
+$_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_GET['contact_form_id'], OBJECT); }
 $contact_form_data = $_GET['contact_form_data'];
 extract(shortcode_atts(array('data' => '', 'id' => '', 'limit' => ''), $atts));
 $field = str_replace('-', '_', format_nice_name($data));
@@ -128,14 +128,14 @@ if (($id == 0) || ($id == $contact_form_data['id'])) { $data = $contact_form_dat
 else {
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
-$contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = '$id'", OBJECT);
+$contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = $id", OBJECT);
 $_GET['contact_form_id'] = $id; $_GET['contact_form_data'] = $contact_form_data;
 $data = $contact_form_data[$field]; } }
 
 else {
 $data = 0; for ($i = 0; $i < $m; $i++) {
 $id[$i] = (int) $id[$i];
-$contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = '".$id[$i]."'", OBJECT);
+$contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$id[$i], OBJECT);
 $data = $data + $contact_form_data[$field]; } }
 
 $i = 0; while (($i < $n) && ($limit[$i] <= $data)) { $k = $i; $i = $i + 1; }
@@ -174,7 +174,7 @@ global $user_ID, $wpdb;
 $_GET['user_data'] = (array) $_GET['user_data'];
 if ((!isset($_GET['user_id'])) && (function_exists('is_user_logged_in'))) { if (is_user_logged_in()) { $_GET['user_id'] = $user_ID; } }
 if ((isset($_GET['user_id'])) && ($_GET['user_data']['ID'] != $_GET['user_id'])) {
-$_GET['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = '".$_GET['user_id']."'", OBJECT); }
+$_GET['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$_GET['user_id'], OBJECT); }
 $user_data = $_GET['user_data'];
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; }
 else {
@@ -194,7 +194,7 @@ if (($id == 0) || ($id == $user_data['ID'])) { $data = $user_data[$field]; }
 else {
 foreach (array('user_id', 'user_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
-if ($_GET['user'.$id.'_data']['ID'] != $id) { $_GET['user'.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = '".$id."'", OBJECT); }
+if ($_GET['user'.$id.'_data']['ID'] != $id) { $_GET['user'.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$id, OBJECT); }
 $user_data = $_GET['user'.$id.'_data'];
 $_GET['user_id'] = $id; $_GET['user_data'] = $user_data;
 $data = $user_data[$field]; }
