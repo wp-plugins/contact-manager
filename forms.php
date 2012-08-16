@@ -259,7 +259,7 @@ foreach ($attributes as $key => $value) { if ($atts[$key] == '') { $atts[$key] =
 $content = do_shortcode($content);
 $name = $_GET['contact_field_name'];
 if ($atts['value'] == '') { $atts['value'] = $content; }
-if (isset($_POST[$prefix.'submit'])) { $atts['selected'] = ($_POST[$prefix.$name] == $atts['value'] ? 'selected' : ''); }
+if ((isset($_POST[$prefix.'submit'])) || ($atts['selected'] == '')) { $atts['selected'] = ($_POST[$prefix.$name] == $atts['value'] ? 'selected' : ''); }
 $atts['value'] = quotes_entities($atts['value']);
 foreach ($attributes as $key => $value) { if ((is_string($key)) && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } }
 

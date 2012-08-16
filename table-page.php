@@ -4,9 +4,10 @@ include 'tables.php';
 include_once 'tables-functions.php';
 $options = get_option(str_replace('-', '_', $_GET['page']));
 $table_name = table_name($table_slug);
+$undisplayed_keys = table_undisplayed_keys($table_slug, $back_office_options);
 foreach ($tables[$table_slug] as $key => $value) {
 if ($value['name'] == '') { unset($tables[$table_slug][$key]); }
-if ($value['searchby'] != '') { $searchby_options[$key] = $value['searchby']; } }
+if (($value['searchby'] != '') && (!in_array($key, $undisplayed_keys))) { $searchby_options[$key] = $value['searchby']; } }
 $max_columns = count($tables[$table_slug]);
 if ($tables[$table_slug][$_GET['orderby']] == '') { $_GET['orderby'] = $options['orderby']; }
 switch ($_GET['order']) { case 'asc': case 'desc': break; default: $_GET['order'] = $options['order']; }
@@ -63,7 +64,7 @@ update_option('contact_manager_'.$table_slug, $options); }
 
 if ($_GET['s'] != '') {
 if ($searchby == '') {
-foreach ($searchby_options as $key => $value) { $search_criteria .= " OR ".$key." LIKE '%".$_GET['s']."%'"; }
+foreach ($tables[$table_slug] as $key => $value) { $search_criteria .= " OR ".$key." LIKE '%".$_GET['s']."%'"; }
 $search_criteria = substr($search_criteria, 4); }
 else {
 $search_column = true; for ($i = 0; $i < $max_columns; $i++) {
@@ -141,13 +142,17 @@ echo $columns_inputs.' <label><input type="checkbox" name="columns_list_displaye
 onclick="if (this.checked == true) { document.getElementById(\'columns-list\').style.display = \'block\'; } else { document.getElementById(\'columns-list\').style.display = \'none\'; }"
 '.($columns_list_displayed == 'yes' ? ' checked="checked"' : '').' /> '.__('Display the columns list', 'contact-manager').'</label>'; ?><br />
 <span id="columns-list"<?php if ($columns_list_displayed == 'no') { echo ' style="display: none;"'; } ?>>
-<?php for ($i = 0; $i < $max_columns; $i++) {
-if ($i < 9) { $space = '&nbsp;&nbsp;&nbsp;&nbsp;'; } elseif ($i < 99) { $space = '&nbsp;&nbsp;'; } else { $space = ''; }
-echo '<label>'.__('Column', 'contact-manager').' '.($i + 1).$space.' <select name="column'.$i.'" id="column'.$i.'">';
+<?php $j = 0; for ($i = 0; $i < $max_columns; $i++) {
+if ((in_array($columns[$i], $undisplayed_keys)) && (!in_array($i, $displayed_columns))) {
+echo '<input type="hidden" name="column'.$i.'" id="column'.$i.'" value="'.$columns[$i].'" />
+<input type="hidden" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="no" />'; }
+else {
+$j = $j + 1; if ($j < 10) { $space = '&nbsp;&nbsp;&nbsp;&nbsp;'; } elseif ($j < 100) { $space = '&nbsp;&nbsp;'; } else { $space = ''; }
+echo '<label>'.__('Column', 'contact-manager').' '.$j.$space.' <select name="column'.$i.'" id="column'.$i.'">';
 foreach ($tables[$table_slug] as $key => $value) {
-if ($value['name'] != '') { echo '<option value="'.$key.'"'.($columns[$i] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } }
+if ((!in_array($key, $undisplayed_keys)) || ($columns[$i] == $key)) { echo '<option value="'.$key.'"'.($columns[$i] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } }
 echo '</select></label>
-<label><input type="checkbox" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="yes"'.(!in_array($i, $displayed_columns) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } ?>
+<label><input type="checkbox" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="yes"'.(!in_array($i, $displayed_columns) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } } ?>
 <?php echo str_replace('check_all_columns1', 'check_all_columns2', $columns_inputs); ?></span>
 </div></div>
 </form>

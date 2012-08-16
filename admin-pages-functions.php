@@ -1,15 +1,6 @@
 <?php load_plugin_textdomain('contact-manager', false, 'contact-manager/languages'); wp_enqueue_script('dashboard');
 
 
-function contact_manager_pages_date_picker($start_date, $end_date) {
-echo '<p style="margin: 0 0 1em 0; float: left;"><label><strong>'.__('Start', 'contact-manager').'</strong>
-<input class="date-pick" style="margin: 0.5em;" type="text" name="start_date" id="start_date" size="20" value="'.$start_date.'" /></label>
-<label style="margin-left: 3em;"><strong>'.__('End', 'contact-manager').'</strong>
-<input class="date-pick" style="margin: 0.5em;" type="text" name="end_date" id="end_date" size="20" value="'.$end_date.'" /></label>
-<input style="margin-left: 3em;" type="submit" class="button-secondary" name="submit" value="'.__('Display', 'contact-manager').'" /></p>
-<div class="clear"></div>'; }
-
-
 function contact_manager_pages_links($back_office_options) {
 $links = (array) $back_office_options['links'];
 $displayed_links = (array) $back_office_options['displayed_links'];
@@ -27,6 +18,10 @@ $links_markup = array(
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Commerce Manager']['name'].'</a>' : '<a href="http://www.kleor-editions.com/commerce-manager">'.$admin_links['Commerce Manager']['name'].'</a>'),
 'Affiliation Manager' => (function_exists('affiliation_manager_admin_menu') ? '<a href="admin.php?page=affiliation-manager'.
+($_GET['page'] == 'contact-manager-form' ? '-affiliate' : '').
+($_GET['page'] == 'contact-manager-form-category' ? '-affiliate-category' : '').
+($_GET['page'] == 'contact-manager-forms' ? '-affiliates' : '').
+($_GET['page'] == 'contact-manager-forms-categories' ? '-affiliates-categories' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'messages') ? '-messages-commissions' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Affiliation Manager']['name'].'</a>' : '<a href="http://www.kleor-editions.com/affiliation-manager">'.$admin_links['Affiliation Manager']['name'].'</a>'),
@@ -89,7 +84,7 @@ else {
 if ((($page_slug == 'back_office') || (!strstr($_GET['page'], 'back-office'))) && ($key != $module)) {
 $onclick = " onclick=\"if (this.checked == true) { document.getElementById('".$key."-module').style.display = 'block'; } else { document.getElementById('".$key."-module').style.display = 'none'; } window.location = '#".$module."-module';\""; }
 else { $onclick = ""; }
-echo '<label'.$onmouseover.((($page_slug != 'message') || (!isset($_GET['id'])) || (!in_array($key, $add_message_modules))) ? '' : ' style="display: none;"').'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $page_undisplayed_modules) ? '' : ' checked="checked"').$onclick.' /> '.$value['name'].'<br /></label>'; }
+echo '<label'.$onmouseover.(((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) ? '' : ' style="display: none;"').'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $page_undisplayed_modules) ? '' : ' checked="checked"').$onclick.' /> '.$value['name'].'<br /></label>'; }
 if (!strstr($_GET['page'], 'back-office')) { echo '<div style="display: none;" id="'.$key.'-submodules">'; }
 if (is_array($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
 $module_name = $page_slug.'_page_'.str_replace('-', '_', $module_key).'_module_displayed';
@@ -126,7 +121,7 @@ include 'admin-pages.php';
 $modules = $modules[$page_slug];
 $undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules'];
 foreach ($modules as $key => $value) {
-if (($page_slug != 'message') || (!isset($_GET['id'])) || (!in_array($key, $add_message_modules))) {
+if ((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) {
 if (!in_array($key, $undisplayed_modules)) { $list .= '<li> | <a href="#'.$key.'">'.$value['name'].'</a></li>'; } } }
 if (strlen($list) > 7) { echo '<ul class="subsubsub" style="float: none; white-space: normal;"><li>'.substr($list, 7).'</ul>'; } } }
 
@@ -170,6 +165,15 @@ update_option('contact_manager_back_office', $back_office_options);
 return $back_office_options; } }
 
 
+function contact_manager_pages_date_picker($start_date, $end_date) {
+echo '<p style="margin: 0 0 1em 0; float: left;"><label><strong>'.__('Start', 'contact-manager').'</strong>
+<input class="date-pick" style="margin: 0.5em;" type="text" name="start_date" id="start_date" size="20" value="'.$start_date.'" /></label>
+<label style="margin-left: 3em;"><strong>'.__('End', 'contact-manager').'</strong>
+<input class="date-pick" style="margin: 0.5em;" type="text" name="end_date" id="end_date" size="20" value="'.$end_date.'" /></label>
+<input style="margin-left: 3em;" type="submit" class="button-secondary" name="submit" value="'.__('Display', 'contact-manager').'" /></p>
+<div class="clear"></div>'; }
+
+
 function contact_manager_date_picker_css() { ?>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo CONTACT_MANAGER_URL; ?>libraries/date-picker.css" />
 <?php }
@@ -197,14 +201,9 @@ HEADER_FORMAT : 'mmmm yyyy'
 <?php }
 
 
-if (($_GET['action'] != 'delete') && (
-($_GET['page'] == 'contact-manager-form')
- || ($_GET['page'] == 'contact-manager-form-category')
- || ($_GET['page'] == 'contact-manager-forms')
- || ($_GET['page'] == 'contact-manager-forms-categories')
- || ($_GET['page'] == 'contact-manager-message')
- || ($_GET['page'] == 'contact-manager-messages')
- || ($_GET['page'] == 'contact-manager-statistics'))) {
+if (($_GET['action'] != 'delete')
+ && ($_GET['page'] != 'contact-manager')
+ && ($_GET['page'] != 'contact-manager-back-office')) {
 add_action('admin_head', 'contact_manager_date_picker_css');
 add_action('admin_footer', 'contact_jquery_js');
 add_action('admin_footer', 'contact_manager_date_picker_js'); }

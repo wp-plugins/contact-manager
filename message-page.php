@@ -419,6 +419,32 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 </div></div>
 <?php } ?>
 
+<?php if (!in_array('registration-as-a-client', $undisplayed_modules)) { ?>
+<div class="postbox" id="registration-as-a-client-module">
+<h3 id="registration-as-a-client"><strong><?php echo $modules['message']['registration-as-a-client']['name']; ?></strong></h3>
+<div class="inside">
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><span class="description"><?php if (function_exists('commerce_manager_admin_menu')) { ?>
+<a href="admin.php?page=contact-manager#registration-as-a-client"><?php _e('Click here to configure the default options.', 'contact-manager'); ?></a>
+<?php } else { _e('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor-editions.com/commerce-manager">Commerce Manager</a>.', 'contact-manager'); } ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><label><input type="checkbox" name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client" value="yes"<?php if ($_POST['sender_subscribed_as_a_client'] == 'yes') { echo ' checked="checked"'; } ?> /> 
+<?php _e('Subscribe the sender as a client', 'contact-manager'); ?></label> <span class="description"><a href="http://www.kleor-editions.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
+<td><select name="sender_client_status" id="sender_client_status">
+<option value="active"<?php if ($_POST['sender_client_status'] == 'active') { echo ' selected="selected"'; } ?>><?php _e('Active', 'contact-manager'); ?></option>
+<option value="inactive"<?php if ($_POST['sender_client_status'] == 'inactive') { echo ' selected="selected"'; } ?>><?php _e('Inactive', 'contact-manager'); ?></option>
+</select>
+<span class="description"><a href="http://www.kleor-editions.com/commerce-manager/documentation/#client-status"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><label><input type="checkbox" name="commerce_registration_confirmation_email_sent" id="commerce_registration_confirmation_email_sent" value="yes"<?php if ((isset($_POST['update_fields'])) && ($_POST['commerce_registration_confirmation_email_sent'] == 'yes')) { echo ' checked="checked"'; } ?> /> <?php _e('Send a registration confirmation email', 'contact-manager'); ?></label></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><label><input type="checkbox" name="commerce_registration_notification_email_sent" id="commerce_registration_notification_email_sent" value="yes"<?php if ((isset($_POST['update_fields'])) && ($_POST['commerce_registration_notification_email_sent'] == 'yes')) { echo ' checked="checked"'; } ?> /> <?php _e('Send a registration notification email', 'contact-manager'); ?></label></td></tr>
+</tbody></table>
+</div></div>
+<?php } ?>
+
 <?php if (!in_array('registration-to-affiliate-program', $undisplayed_modules)) { ?>
 <div class="postbox" id="registration-to-affiliate-program-module">
 <h3 id="registration-to-affiliate-program"><strong><?php echo $modules['message']['registration-to-affiliate-program']['name']; ?></strong></h3>

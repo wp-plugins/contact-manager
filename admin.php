@@ -1,5 +1,5 @@
 <?php if (strstr($_SERVER['REQUEST_URI'], '/plugins.php')) { load_plugin_textdomain('contact-manager', false, 'contact-manager/languages'); }
-if (strstr($_GET['page'], 'contact-manager')) { include 'admin-pages-functions.php'; }
+if (strstr($_GET['page'], 'contact-manager')) { include_once 'admin-pages-functions.php'; }
 
 
 function contact_manager_admin_menu() {

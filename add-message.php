@@ -9,6 +9,13 @@ if ($_GET['affiliate_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE email_address = '".$message['email_address']."'", OBJECT);
 if (!$result) { $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE paypal_email_address = '".$message['email_address']."'", OBJECT); }
 if ($result) { $_GET['affiliate_data'] = (array) $result; $_GET['affiliate_id'] = $result->id; } } }
+if (function_exists('add_client')) {
+if ((!is_admin()) && (commerce_session())) { $_GET['client_id'] = (int) client_data('id'); }
+$_GET['client_id'] = (int) $_GET['client_id'];
+if ($_GET['client_id'] == 0) {
+$result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."commerce_manager_clients WHERE email_address = '".$message['email_address']."'", OBJECT);
+if (!$result) { $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."commerce_manager_clients WHERE paypal_email_address = '".$message['email_address']."'", OBJECT); }
+if ($result) { $_GET['client_data'] = (array) $result; $_GET['client_id'] = $result->id; } } }
 if (function_exists('add_member')) {
 if ((!is_admin()) && (membership_session(''))) { $_GET['member_id'] = (int) member_data('id'); }
 $_GET['member_id'] = (int) $_GET['member_id'];
@@ -69,7 +76,7 @@ $login = $affiliate['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['login']."'", OBJECT);
 if ($result) { $affiliate['login'] = $login.$i; $i = $i + 1; } }
 if (!isset($affiliate['password'])) { $affiliate['password'] = substr(md5(mt_rand()), 0, 8); }
-$affiliate['paypal_email_address'] = $affiliate['email_address'];
+if (!isset($affiliate['paypal_email_address'])) { $affiliate['paypal_email_address'] = $affiliate['email_address']; }
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['referrer']."' AND status = 'active'", OBJECT);
 if (!$result) { $affiliate['referrer'] = ''; }
 foreach (array('category_id', 'status') as $field) {
@@ -82,6 +89,28 @@ $affiliate['registration_'.$action.'_email_sent'] = affiliation_data('registrati
 $affiliate['registration_without_form'] = 'yes';
 add_affiliate($affiliate); } }
 
+if ((function_exists('add_client')) && ($message['sender_subscribed_as_a_client'] == 'yes')) {
+if (($_GET['client_id'] == 0) && ($message['email_address'] != '')) {
+if (isset($affiliate)) { $client = $affiliate; }
+else { $client = $message; }
+if (!isset($client['login'])) { $client['login'] = $client['email_address']; }
+$login = $client['login']; $result = true; $i = 1; while ($result) {
+$result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."commerce_manager_clients WHERE login = '".$client['login']."'", OBJECT);
+if ($result) { $client['login'] = $login.$i; $i = $i + 1; } }
+if (!isset($client['password'])) { $client['password'] = substr(md5(mt_rand()), 0, 8); }
+if (function_exists('add_affiliate')) {
+$result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$client['referrer']."' AND status = 'active'", OBJECT);
+if (!$result) { $client['referrer'] = ''; } }
+else { $client['referrer'] = ''; }
+$client['status'] = $message['sender_client_status'];
+if ($client['status'] == '') { $client['status'] = commerce_data('clients_initial_status'); }
+foreach (array('confirmation', 'notification') as $action) {
+$client['registration_'.$action.'_email_sent'] = $message['commerce_registration_'.$action.'_email_sent'];
+if ((!is_admin()) && ($client['registration_'.$action.'_email_sent'] == '')) {
+$client['registration_'.$action.'_email_sent'] = commerce_data('registration_'.$action.'_email_sent'); } }
+$client['registration_without_form'] = 'yes';
+add_client($client); } }
+
 if ((function_exists('add_member')) && ($message['sender_subscribed_to_members_areas'] == 'yes')) {
 if ($_GET['member_id'] > 0) {
 update_member_members_areas($_GET['member_id'], $message['sender_members_areas'], 'add');
@@ -89,8 +118,9 @@ if ($message['sender_member_category_id'] > 0) {
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET category_id = ".$message['sender_member_category_id']." WHERE id = ".$_GET['member_id']); } }
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $member = $affiliate; }
+elseif (isset($client)) { $member = $client; }
 else { $member = $message; }
-$member['members_areas'] = $member['sender_members_areas'];
+$member['members_areas'] = $message['sender_members_areas'];
 $members_areas = array_unique(preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 if (count($members_areas) == 1) { $_GET['member_area_id'] = (int) $members_areas[0]; } else { unset($_GET['member_area_id']); }
 if (!isset($member['login'])) { $member['login'] = $member['email_address']; }
@@ -111,6 +141,7 @@ add_member($member); } }
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 if (($_GET['user_id'] == 0) && ($message['sender_subscribed_as_a_user'] == 'yes') && ($message['email_address'] != '')) {
 if (isset($affiliate)) { $user = $affiliate; }
+elseif (isset($client)) { $user = $client; }
 elseif (isset($member)) { $user = $member; }
 else { $user = $message; }
 $user['role'] = $message['sender_user_role'];

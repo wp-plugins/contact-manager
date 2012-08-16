@@ -1,5 +1,4 @@
-<?php include 'tables.php';
-foreach (array('admin_email', 'blogname', 'siteurl') as $key) { $$key = get_option($key); }
+<?php foreach (array('admin_email', 'blogname', 'siteurl') as $key) { $$key = get_option($key); }
 
 
 $initial_options[''] = array(
@@ -9,6 +8,8 @@ $initial_options[''] = array(
 'automatic_display_enabled' => 'no',
 'automatic_display_form_id' => 1,
 'automatic_display_location' => 'top',
+'commerce_registration_confirmation_email_sent' => '',
+'commerce_registration_notification_email_sent' => '',
 'commission_amount' => 1,
 'commission2_amount' => 0.1,
 'commission2_enabled' => 'no',
@@ -35,9 +36,11 @@ $initial_options[''] = array(
 'sender_affiliate_status' => '',
 'sender_autoresponder' => 'AWeber',
 'sender_autoresponder_list' => '',
+'sender_client_status' => '',
 'sender_member_category_id' => '',
 'sender_member_status' => '',
 'sender_members_areas' => '',
+'sender_subscribed_as_a_client' => 'no',
 'sender_subscribed_as_a_user' => 'no',
 'sender_subscribed_to_affiliate_program' => 'no',
 'sender_subscribed_to_autoresponder' => 'no',
@@ -129,6 +132,7 @@ $variables = array(
 foreach ($variables as $variable) { if (isset($$variable)) { $original[$variable] = $$variable; unset($$variable); } }
 
 
+include 'tables.php';
 foreach ($tables as $table_slug => $table) {
 switch ($table_slug) {
 case 'forms': $first_columns = array(
@@ -215,6 +219,7 @@ $initial_options['back_office'] = array(
 	'membership',
 	'message-confirmation-email',
 	'messages-registration',
+	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
 'form_page_summary_displayed' => 'yes',
@@ -227,6 +232,7 @@ $initial_options['back_office'] = array(
 	'membership',
 	'message-confirmation-email',
 	'messages-registration',
+	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
 'menu_displayed' => 'yes',
@@ -240,6 +246,7 @@ $initial_options['back_office'] = array(
 	'custom-instructions',
 	'membership',
 	'message-confirmation-email',
+	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
 'minimum_roles' => array(
@@ -255,6 +262,7 @@ $initial_options['back_office'] = array(
 	'membership',
 	'message-confirmation-email',
 	'messages-registration',
+	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'urls-encryption',
 	'wordpress'),

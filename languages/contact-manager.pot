@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 3.5\n"
+"Project-Id-Version: Contact Manager 4.0\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2011-11-01 17:45+0000\n"
 "PO-Revision-Date: 2011-11-01 17:45+0000\n"
@@ -1822,4 +1822,33 @@ msgid "the receiver"
 msgstr ""
 
 msgid "Receive a copy of this message"
+msgstr ""
+
+msgid "(Commerce)"
+msgstr ""
+
+msgid "Senders subscribed as clients"
+msgstr ""
+
+msgid "Senders client status"
+msgstr ""
+
+msgid "Registration as a client"
+msgstr ""
+
+msgid "Click here to configure the options of Commerce Manager."
+msgstr ""
+
+msgid ""
+"To subscribe the senders as clients, you must have installed and activated <a href=\"http://"
+"www.kleor-editions.com/commerce-manager\">Commerce Manager</a>."
+msgstr ""
+
+msgid "Subscribe the sender as a client"
+msgstr ""
+
+msgid "Commerce Manager's option"
+msgstr ""
+
+msgid "Leave this field blank to apply the Commerce Manager's option."
 msgstr ""

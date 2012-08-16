@@ -41,6 +41,7 @@ function subscribe_to_getresponse($list, $contact) {
 ini_set('display_errors', 0);
 include_once dirname(__FILE__).'/jsonRPCClient.php';
 $api_key = contact_data('getresponse_api_key');
+if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('getresponse_api_key'); }
 $client = new jsonRPCClient('http://api2.getresponse.com');
 $result = NULL;
 try { $result = $client->get_campaigns($api_key, array('name' => array('EQUALS' => $list))); }
@@ -60,15 +61,19 @@ function subscribe_to_mailchimp($list, $contact) {
 include_once dirname(__FILE__).'/MCAPI.class.php';
 $apiUrl = 'http://api.mailchimp.com/1.3/';
 $api_key = contact_data('mailchimp_api_key');
+if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('mailchimp_api_key'); }
 $api = new MCAPI($api_key);
 $data = array('FNAME' => $contact['first_name'], 'LNAME' => $contact['last_name']);
 $result = $api->listSubscribe($list, $contact['email_address'], $data); }
 
 
 function subscribe_to_sg_autorepondeur($list, $contact) {
+foreach (array('id', 'code') as $key) {
+$$key = contact_data('sg_autorepondeur_account_'.$key);
+if (($$key == '') && (function_exists('commerce_data'))) { $$key = commerce_data('sg_autorepondeur_account_'.$key); } }
 $data = http_build_query(array(
-'membreid' => contact_data('sg_autorepondeur_account_id'),
-'codeactivationclient' => contact_data('sg_autorepondeur_activation_code'),
+'membreid' => $id,
+'codeactivationclient' => $code,
 'inscription_normale' => 'non',
 'listeid' => $list,
 'email' => $contact['email_address'],

@@ -51,6 +51,25 @@ global $wpdb;
 return $wpdb->prefix.'contact_manager_'.$table; }
 
 
+function table_undisplayed_keys($table, $back_office_options) {
+global $wpdb;
+include 'tables.php';
+$undisplayed_modules = array();
+switch ($table) {
+case 'forms': $undisplayed_modules = (array) $back_office_options['form_page_undisplayed_modules']; break;
+case 'forms_categories': $undisplayed_modules = (array) $back_office_options['form_category_page_undisplayed_modules']; break;
+case 'messages': $undisplayed_modules = (array) $back_office_options['message_page_undisplayed_modules']; break; }
+$undisplayed_keys = array();
+switch ($table) {
+case 'forms': case 'forms_categories':
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms_categories", OBJECT);
+$n = (int) $row->total; if ($n == 0) { $undisplayed_keys[] = 'category_id'; } break; }
+foreach ($tables[$table] as $key => $value) {
+foreach ((array) $value['modules'] as $module) {
+if (in_array($module, $undisplayed_modules)) { $undisplayed_keys[] = $key; } } }
+return $undisplayed_keys; }
+
+
 function table_data($table, $column, $item) {
 switch ($table) {
 case 'forms': $_GET['contact_form_id'] = $item->id; $_GET['contact_form_data'] = $item; $data = contact_form_data($column); break;
@@ -63,10 +82,11 @@ return $data; }
 function table_td($table, $column, $item) {
 $data = htmlspecialchars(table_data($table, $column, $item));
 switch ($column) {
-case 'affiliation_enabled': case 'affiliation_registration_confirmation_email_sent': case 'affiliation_registration_notification_email_sent': case 'commission2_enabled':
+case 'affiliation_enabled': case 'affiliation_registration_confirmation_email_sent': case 'affiliation_registration_notification_email_sent':
+case 'commerce_registration_confirmation_email_sent': case 'commerce_registration_notification_email_sent': case 'commission2_enabled':
 case 'membership_registration_confirmation_email_sent': case 'membership_registration_notification_email_sent':
 case 'message_confirmation_email_sent': case 'message_custom_instructions_executed': case 'message_notification_email_sent': case 'messages_registration_enabled':
-case 'sender_subscribed_as_a_user': case 'sender_subscribed_to_affiliate_program': case 'sender_subscribed_to_autoresponder': case 'sender_subscribed_to_members_areas': 
+case 'sender_subscribed_as_a_client': case 'sender_subscribed_as_a_user': case 'sender_subscribed_to_affiliate_program': case 'sender_subscribed_to_autoresponder': case 'sender_subscribed_to_members_areas': 
 if ($data == 'yes') { $table_td = '<span style="color: #008000;">'.__('Yes', 'contact-manager').'</span>'; }
 elseif ($data == 'no')  { $table_td = '<span style="color: #c00000;">'.__('No', 'contact-manager').'</span>'; }
 else { $table_td = $data; } break;
@@ -83,7 +103,7 @@ case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.$data.'</a>'; br
 case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == 'http://'.$_SERVER['SERVER_NAME'] ? '/' : str_replace('http://'.$_SERVER['SERVER_NAME'], '', $data)).'</a>'); break;
 case 'maximum_messages_quantity': if ($data == 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
 case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.$data.'</a>'); break;
-case 'sender_affiliate_status': case 'sender_member_status':
+case 'sender_affiliate_status': case 'sender_client_status': case 'sender_member_status':
 if ($data == 'active') { $table_td = '<span style="color: #008000;">'.__('Active', 'contact-manager').'</span>'; }
 elseif ($data == 'inactive') { $table_td = '<span style="color: #e08000;">'.__('Inactive', 'contact-manager').'</span>'; }
 else { $table_td = $data; } break;

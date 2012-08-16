@@ -349,7 +349,6 @@ echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id
 </tbody></table>
 </div></div>
 
-<?php if (isset($modules[$admin_page]['autoresponders'])) { ?>
 <div class="postbox" id="autoresponders-module"<?php if (in_array('autoresponders', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h3 id="autoresponders"><strong><?php echo $modules[$admin_page]['autoresponders']['name']; ?></strong></h3>
 <div class="inside">
@@ -379,7 +378,46 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <td><input type="submit" class="button-secondary" name="submit" value="'.__('Update').'" /></td></tr>'; } ?>
 </tbody></table>
 </div></div>
-<?php } ?>
+
+<div class="postbox" id="registration-as-a-client-module"<?php if (in_array('registration-as-a-client', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h3 id="registration-as-a-client"><strong><?php echo $modules[$admin_page]['registration-as-a-client']['name']; ?></strong></h3>
+<div class="inside">
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><span class="description"><?php if (function_exists('commerce_manager_admin_menu')) { ?>
+<a href="admin.php?page=<?php echo ($_POST['category_id'] == 0 ? 'contact-manager#registration-as-a-client' : 'contact-manager-form-category&amp;id='.$_POST['category_id'].'#registration-as-a-client'); ?>">
+<?php ($_POST['category_id'] == 0 ? _e('Click here to configure the default options.', 'contact-manager') : ($is_category ? _e('Click here to configure the default options of the parent category.', 'contact-manager') : _e('Click here to configure the default options of the category.', 'contact-manager'))); ?></a>
+<?php } else { _e('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor-editions.com/commerce-manager">Commerce Manager</a>.', 'contact-manager'); } ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_subscribed_as_a_client"><?php _e('Subscribe the sender as a client', 'contact-manager'); ?></label></strong></th>
+<td><select name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client">
+<option value=""<?php if ($_POST['sender_subscribed_as_a_client'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>
+<option value="yes"<?php if ($_POST['sender_subscribed_as_a_client'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
+<option value="no"<?php if ($_POST['sender_subscribed_as_a_client'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
+</select>
+<span class="description"><a href="http://www.kleor-editions.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
+<td><select name="sender_client_status" id="sender_client_status">
+<option value=""<?php if ($_POST['sender_client_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>
+<option value="active"<?php if ($_POST['sender_client_status'] == 'active') { echo ' selected="selected"'; } ?>><?php _e('Active', 'contact-manager'); ?></option>
+<option value="inactive"<?php if ($_POST['sender_client_status'] == 'inactive') { echo ' selected="selected"'; } ?>><?php _e('Inactive', 'contact-manager'); ?></option>
+</select>
+<span class="description"><a href="http://www.kleor-editions.com/commerce-manager/documentation/#client-status"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commerce_registration_confirmation_email_sent"><?php _e('Send a registration confirmation email', 'contact-manager'); ?></label></strong></th>
+<td><select name="commerce_registration_confirmation_email_sent" id="commerce_registration_confirmation_email_sent">
+<option value=""<?php if ($_POST['commerce_registration_confirmation_email_sent'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>
+<option value="yes"<?php if ($_POST['commerce_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
+<option value="no"<?php if ($_POST['commerce_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
+</select></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commerce_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
+<td><select name="commerce_registration_notification_email_sent" id="commerce_registration_notification_email_sent">
+<option value=""<?php if ($_POST['commerce_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>
+<option value="yes"<?php if ($_POST['commerce_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
+<option value="no"<?php if ($_POST['commerce_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
+</select></td></tr>
+<?php if (isset($_GET['id'])) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="'.__('Update').'" /></td></tr>'; } ?>
+</tbody></table>
+</div></div>
 
 <div class="postbox" id="registration-to-affiliate-program-module"<?php if (in_array('registration-to-affiliate-program', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h3 id="registration-to-affiliate-program"><strong><?php echo $modules[$admin_page]['registration-to-affiliate-program']['name']; ?></strong></h3>

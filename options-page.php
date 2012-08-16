@@ -46,6 +46,7 @@ foreach (array(
 'message_notification_email_sent',
 'message_removal_custom_instructions_executed',
 'messages_registration_enabled',
+'sender_subscribed_as_a_client',
 'sender_subscribed_as_a_user',
 'sender_subscribed_to_affiliate_program',
 'sender_subscribed_to_autoresponder',
@@ -214,7 +215,6 @@ $currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
 </tbody></table>
 </div></div>
 
-<?php if (isset($modules['options']['autoresponders'])) { ?>
 <div class="postbox" id="autoresponders-module"<?php if (in_array('autoresponders', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h3 id="autoresponders"><strong><?php echo $modules['options']['autoresponders']['name']; ?></strong></h3>
 <div class="inside">
@@ -237,13 +237,15 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
 </div></div>
-<?php } ?>
 
-<?php if (isset($modules['options']['autoresponders-integration'])) { ?>
 <div class="postbox" id="autoresponders-integration-module"<?php if (in_array('autoresponders-integration', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h3 id="autoresponders-integration"><strong><?php echo $modules['options']['autoresponders-integration']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
+<?php if (function_exists('commerce_manager_admin_menu')) { ?>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><span class="description"><a href="admin.php?page=commerce-manager#autoresponders-integration"><?php _e('Click here to configure the options of Commerce Manager.', 'contact-manager'); ?></a></span></td></tr>
+<?php } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php _e('You must make some adjustments so that the subscription works with some autoresponders.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#autoresponders"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 </tbody></table>
@@ -266,7 +268,8 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="getresponse_api_key"><?php _e('API key', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="getresponse_api_key" id="getresponse_api_key" rows="1" cols="50"><?php echo $options['getresponse_api_key']; ?></textarea> 
-<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#getresponse"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#getresponse"><?php _e('More informations', 'contact-manager'); ?></a>
+<?php if (function_exists('commerce_manager_admin_menu')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
 </tbody></table>
 </div>
 <div id="mailchimp-module"<?php if (in_array('mailchimp', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -274,7 +277,8 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="mailchimp_api_key"><?php _e('API key', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="mailchimp_api_key" id="mailchimp_api_key" rows="1" cols="50"><?php echo $options['mailchimp_api_key']; ?></textarea> 
-<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/documentation/#mailchimp"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/documentation/#mailchimp"><?php _e('More informations', 'contact-manager'); ?></a>
+<?php if (function_exists('commerce_manager_admin_menu')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
 </tbody></table>
 </div>
 <div id="sg-autorepondeur-module"<?php if (in_array('sg-autorepondeur', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -282,17 +286,51 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sg_autorepondeur_account_id"><?php _e('Account ID', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="sg_autorepondeur_account_id" id="sg_autorepondeur_account_id" rows="1" cols="25"><?php echo $options['sg_autorepondeur_account_id']; ?></textarea> 
-<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#sg-autorepondeur"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#sg-autorepondeur"><?php _e('More informations', 'contact-manager'); ?></a>
+<?php if (function_exists('commerce_manager_admin_menu')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sg_autorepondeur_activation_code"><?php _e('Activation code', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="sg_autorepondeur_activation_code" id="sg_autorepondeur_activation_code" rows="1" cols="50"><?php echo $options['sg_autorepondeur_activation_code']; ?></textarea> 
-<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#sg-autorepondeur"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#sg-autorepondeur"><?php _e('More informations', 'contact-manager'); ?></a>
+<?php if (function_exists('commerce_manager_admin_menu')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
 </tbody></table>
 </div>
 <table class="form-table"><tbody><tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
 </div></div>
-<?php } ?>
+
+<div class="postbox" id="registration-as-a-client-module"<?php if (in_array('registration-as-a-client', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h3 id="registration-as-a-client"><strong><?php echo $modules['options']['registration-as-a-client']['name']; ?></strong></h3>
+<div class="inside">
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><span class="description"><?php echo (function_exists('commerce_manager_admin_menu') ? '<a href="admin.php?page=commerce-manager-clients-accounts">'.__('Click here to configure the options of Commerce Manager.', 'contact-manager').'</a>' : __('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor-editions.com/commerce-manager">Commerce Manager</a>.', 'contact-manager')); ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><label><input type="checkbox" name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client" value="yes"<?php if ($options['sender_subscribed_as_a_client'] == 'yes') { echo ' checked="checked"'; } ?> /> 
+<?php _e('Subscribe the sender as a client', 'contact-manager'); ?></label> <span class="description"><a href="http://www.kleor-editions.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
+<td><select name="sender_client_status" id="sender_client_status">
+<option value=""<?php if ($options['sender_client_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('Commerce Manager\'s option', 'contact-manager'); ?></option>
+<option value="active"<?php if ($options['sender_client_status'] == 'active') { echo ' selected="selected"'; } ?>><?php _e('Active', 'contact-manager'); ?></option>
+<option value="inactive"<?php if ($options['sender_client_status'] == 'inactive') { echo ' selected="selected"'; } ?>><?php _e('Inactive', 'contact-manager'); ?></option>
+</select>
+<span class="description"><a href="http://www.kleor-editions.com/commerce-manager/documentation/#client-status"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commerce_registration_confirmation_email_sent"><?php _e('Send a registration confirmation email', 'contact-manager'); ?></label></strong></th>
+<td><select name="commerce_registration_confirmation_email_sent" id="commerce_registration_confirmation_email_sent">
+<option value=""<?php if ($options['commerce_registration_confirmation_email_sent'] == '') { echo ' selected="selected"'; } ?>><?php _e('Commerce Manager\'s option', 'contact-manager'); ?></option>
+<option value="yes"<?php if ($options['commerce_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
+<option value="no"<?php if ($options['commerce_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
+</select></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commerce_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
+<td><select name="commerce_registration_notification_email_sent" id="commerce_registration_notification_email_sent">
+<option value=""<?php if ($options['commerce_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?>><?php _e('Commerce Manager\'s option', 'contact-manager'); ?></option>
+<option value="yes"<?php if ($options['commerce_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
+<option value="no"<?php if ($options['commerce_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
+</select></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
+</tbody></table>
+</div></div>
 
 <div class="postbox" id="registration-to-affiliate-program-module"<?php if (in_array('registration-to-affiliate-program', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h3 id="registration-to-affiliate-program"><strong><?php echo $modules['options']['registration-to-affiliate-program']['name']; ?></strong></h3>
