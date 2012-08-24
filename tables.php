@@ -30,6 +30,7 @@
 'sender_autoresponder' => array('type' => 'text', 'modules' => array('autoresponders'), 'name' => __('Senders autoresponder', 'contact-manager'), 'width' => 12, 'searchby' => __('the senders autoresponder', 'contact-manager')),
 'sender_autoresponder_list' => array('type' => 'text', 'modules' => array('autoresponders'), 'name' => __('Senders autoresponder list', 'contact-manager'), 'width' => 15, 'searchby' => __('the senders autoresponder list', 'contact-manager')),
 'sender_subscribed_as_a_client' => array('type' => 'text', 'modules' => array('registration-as-a-client'), 'name' => __('Senders subscribed as clients', 'contact-manager'), 'width' => 18),
+'sender_client_category_id' => array('type' => 'text', 'modules' => array('registration-as-a-client'), 'name' => __('Senders client category ID', 'contact-manager'), 'width' => 15),
 'sender_client_status' => array('type' => 'text', 'modules' => array('registration-as-a-client'), 'name' => __('Senders client status', 'contact-manager'), 'width' => 15),
 'commerce_registration_confirmation_email_sent' => array('type' => 'text', 'modules' => array('registration-as-a-client'), 'name' => __('Registration confirmation email sent', 'contact-manager').' '.__('(Commerce)', 'contact-manager'), 'width' => 15),
 'commerce_registration_notification_email_sent' => array('type' => 'text', 'modules' => array('registration-as-a-client'), 'name' => __('Registration notification email sent', 'contact-manager').' '.__('(Commerce)', 'contact-manager'), 'width' => 15),

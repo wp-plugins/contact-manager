@@ -136,7 +136,11 @@ echo '</select></label>
 </tbody></table>
 </div></div>
 
-<?php foreach (array('options-page', 'form-page', 'form-category-page', 'message-page') as $module) { contact_manager_pages_module($options, $module, $undisplayed_modules); } ?>
+<?php foreach (array(
+'options-page',
+'form-page',
+'form-category-page',
+'message-page') as $module) { contact_manager_pages_module($options, $module, $undisplayed_modules); } ?>
 
 <div class="postbox" id="statistics-page-module"<?php if (in_array('statistics-page', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h3 id="statistics-page"><strong><?php echo $modules['back_office']['statistics-page']['name']; ?></strong></h3>

@@ -90,7 +90,10 @@ $affiliate['registration_without_form'] = 'yes';
 add_affiliate($affiliate); } }
 
 if ((function_exists('add_client')) && ($message['sender_subscribed_as_a_client'] == 'yes')) {
-if (($_GET['client_id'] == 0) && ($message['email_address'] != '')) {
+if ($_GET['client_id'] > 0) {
+if ($message['sender_client_category_id'] > 0) {
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."commerce_manager_clients SET category_id = ".$message['sender_client_category_id']." WHERE id = ".$_GET['client_id']); } }
+elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $client = $affiliate; }
 else { $client = $message; }
 if (!isset($client['login'])) { $client['login'] = $client['email_address']; }
@@ -102,8 +105,9 @@ if (function_exists('add_affiliate')) {
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$client['referrer']."' AND status = 'active'", OBJECT);
 if (!$result) { $client['referrer'] = ''; } }
 else { $client['referrer'] = ''; }
-$client['status'] = $message['sender_client_status'];
-if ($client['status'] == '') { $client['status'] = commerce_data('clients_initial_status'); }
+foreach (array('category_id', 'status') as $field) {
+$client[$field] = $message['sender_client_'.$field];
+if ($client[$field] == '') { $client[$field] = commerce_data('clients_initial_'.$field); } }
 foreach (array('confirmation', 'notification') as $action) {
 $client['registration_'.$action.'_email_sent'] = $message['commerce_registration_'.$action.'_email_sent'];
 if ((!is_admin()) && ($client['registration_'.$action.'_email_sent'] == '')) {

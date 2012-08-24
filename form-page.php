@@ -395,6 +395,19 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <option value="no"<?php if ($_POST['sender_subscribed_as_a_client'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
 <span class="description"><a href="http://www.kleor-editions.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."commerce_manager_clients_categories ORDER BY name ASC", OBJECT);
+if ($categories) { ?>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
+<td><select name="sender_client_category_id" id="sender_client_category_id">
+<option value=""<?php if ($_POST['sender_client_category_id'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>
+<option value="0"<?php if ($_POST['sender_client_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
+<?php foreach ($categories as $category) {
+echo '<option value="'.$category->id.'"'.($_POST['sender_client_category_id'] == $category->id ? ' selected="selected"' : '').'>'.do_shortcode($category->name).'</option>'."\n"; } ?>
+</select>
+<?php if ((function_exists('commerce_manager_admin_menu')) && ($_POST['sender_client_category_id'] > 0)) { echo '<br />
+<a style="text-decoration: none;" href="admin.php?page=commerce-manager-client-category&amp;id='.$_POST['sender_client_category_id'].'">'.__('Edit').'</a> | 
+<a style="text-decoration: none;" href="admin.php?page=commerce-manager-client-category&amp;id='.$_POST['sender_client_category_id'].'&amp;action=delete">'.__('Delete').'</a>'; } ?></td></tr>
+<?php } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_client_status" id="sender_client_status">
 <option value=""<?php if ($_POST['sender_client_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('Default option', 'contact-manager'); ?></option>

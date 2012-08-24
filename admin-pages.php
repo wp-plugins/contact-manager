@@ -94,6 +94,7 @@ $add_message_fields = array(
 'sender_autoresponder',
 'sender_autoresponder_list',
 'sender_subscribed_as_a_client',
+'sender_client_category_id',
 'sender_client_status',
 'commerce_registration_confirmation_email_sent',
 'commerce_registration_notification_email_sent',

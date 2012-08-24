@@ -27,9 +27,13 @@ return $no_items; }
 function row_actions($table, $item) {
 global $wpdb;
 switch ($table) {
-case 'forms': $row_actions = 
+case 'forms':
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$item->id, OBJECT);
+$messages_number = (int) $row->total;
+$row_actions =
 '<span class="edit"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'">'.__('Edit').'</a></span>
- | <span class="delete"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'&amp;action=delete">'.__('Delete').'</a></span>'; break;
+ | <span class="delete"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'&amp;action=delete">'.__('Delete').'</a></span>'
+.($messages_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.__('Messages', 'contact-manager').'</a></span>'); break;
 case 'forms_categories':
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms WHERE category_id = ".$item->id, OBJECT);
 $forms_number = (int) $row->total;

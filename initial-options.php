@@ -36,6 +36,7 @@ $initial_options[''] = array(
 'sender_affiliate_status' => '',
 'sender_autoresponder' => 'AWeber',
 'sender_autoresponder_list' => '',
+'sender_client_category_id' => '',
 'sender_client_status' => '',
 'sender_member_category_id' => '',
 'sender_member_status' => '',
