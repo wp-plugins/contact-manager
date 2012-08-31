@@ -1,5 +1,6 @@
 <?php global $wpdb;
 $back_office_options = get_option('contact_manager_back_office');
+if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 
 if ((isset($_GET['id'])) && ($_GET['action'] == 'delete')) {
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
@@ -41,12 +42,17 @@ include 'admin-pages.php';
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
-foreach ($_POST as $key => $value) { $_POST[$key] = str_replace('&nbsp;', ' ', $value); }
-$_POST = array_map('html_entity_decode', $_POST);
+foreach ($_POST as $key => $value) {
+if (is_string($value)) { $_POST[$key] = html_entity_decode(str_replace('&nbsp;', ' ', $value)); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, 'message');
 
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 if ($_POST['receiver'] == '') { $_POST['receiver'] = contact_form_data('message_notification_email_receiver'); }
+$keywords = explode(',', $_POST['keywords']);
+for ($i = 0; $i < count($keywords); $i++) { $keywords[$i] = strtolower(trim($keywords[$i])); }
+sort($keywords);
+foreach ($keywords as $keyword) { $keywords_list .= $keyword.', '; }
+$_POST['keywords'] = substr($keywords_list, 0, -2);
 $_POST['email_address'] = format_email_address($_POST['email_address']);
 $_POST['form_id'] = (int) $_POST['form_id'];
 $_GET['contact_form_id'] = $_POST['form_id'];
@@ -142,7 +148,7 @@ foreach ($_POST as $key => $value) { $_GET['message_data'][$key] = $value; }
 $_GET['message_data']['id'] = '{message id}';
 if ($_POST['referrer'] != '') { $_GET['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT); }
 foreach ($add_message_fields as $field) { $_POST[$field] = str_replace('{message id}', '[message id]', contact_form_data($field)); }
-$_POST['message_notification_email_receiver'] = $_POST['receiver']; }
+foreach (array('receiver', 'subject') as $field) { if ($_POST[$field] != '') { $_POST['message_notification_email_'.$field] = $_POST[$field]; } } }
 else {
 $members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 sort($members_areas, SORT_NUMERIC);
@@ -185,11 +191,10 @@ foreach ($message_data as $key => $value) { $_POST[$key] = $value; } }
 elseif (!headers_sent()) { header('Location: admin.php?page=contact-manager-messages'); exit(); }
 else { echo '<script type="text/javascript">window.location = "admin.php?page=contact-manager-messages";</script>'; } }
 
-$_POST = array_map('stripslashes', $_POST);
-$_POST = array_map('htmlspecialchars', $_POST);
 foreach ($_POST as $key => $value) {
-$_POST[$key] = str_replace(array('&amp;amp;', '&amp;apos;', '&amp;quot;'), array('&amp;', '&apos;', '&quot;'), $value);
-if ($value == '0000-00-00 00:00:00') { $_POST[$key] = ''; } }
+if (is_string($value)) {
+$_POST[$key] = str_replace(array('&amp;amp;', '&amp;apos;', '&amp;quot;'), array('&amp;', '&apos;', '&quot;'), htmlspecialchars(stripslashes($value)));
+if ($value == '0000-00-00 00:00:00') { $_POST[$key] = ''; } } }
 $undisplayed_modules = (array) $back_office_options['message_page_undisplayed_modules'];
 if (function_exists('commerce_data')) { $currency_code = commerce_data('currency_code'); }
 else { $commerce_manager_options = (array) get_option('commerce_manager');
@@ -226,6 +231,9 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? __('Message update
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="subject" id="subject" rows="1" cols="75"><?php echo $_POST['subject']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="content"><?php _e('Content', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="float: left; margin-right: 1em; width: 75%;" name="content" id="content" rows="10" cols="75"><?php echo $_POST['content']; ?></textarea></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="keywords"><?php _e('Keywords', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="keywords" id="keywords" rows="1" cols="75"><?php echo $_POST['keywords']; ?></textarea><br />
+<span class="description"><?php _e('Separate the keywords with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="date"><?php _e('Date', 'contact-manager'); ?></label></strong></th>
 <td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="date" id="date" size="20" value="<?php echo (isset($_POST['date']) ? $_POST['date'] : date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET)); ?>" /></td></tr>
 <?php if (isset($_GET['id'])) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -298,12 +306,12 @@ if ($result) { echo '<br />
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission_amount" id="commission_amount" rows="1" cols="25"><?php echo $_POST['commission_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span> 
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for 0.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
-<td><select name="commission_status" id="commission_status">
+<td><select name="commission_status" id="commission_status" onchange="if (this.value == 'paid') { document.getElementById('commission-payment-date').style.display = ''; } else { document.getElementById('commission-payment-date').style.display = 'none'; }">
 <option value=""<?php if ($_POST['commission_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('None', 'contact-manager'); ?></option>
 <option value="unpaid"<?php if ($_POST['commission_status'] == 'unpaid') { echo ' selected="selected"'; } ?>><?php _e('Unpaid', 'contact-manager'); ?></option>
 <option value="paid"<?php if ($_POST['commission_status'] == 'paid') { echo ' selected="selected"'; } ?>><?php _e('Paid', 'contact-manager'); ?></option>
 </select><?php if (isset($_GET['id'])) { echo '<input type="hidden" name="old_commission_status" value="'.$_POST['commission_status'].'" />'; } ?></td></tr>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
+<tr id="commission-payment-date" style="<?php if ($_POST['commission_status'] != 'paid') { echo 'display: none; '; } ?>vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
 <td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission_payment_date" id="commission_payment_date" size="20" value="<?php echo $_POST['commission_payment_date']; ?>" /><br />
 <span class="description"><?php _e('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager'); ?></span></td></tr>
 </tbody></table>
@@ -326,12 +334,12 @@ if ($result) { echo '<br />
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission2_amount" id="commission2_amount" rows="1" cols="25"><?php echo $_POST['commission2_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span> 
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for 0.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
-<td><select name="commission2_status" id="commission2_status">
+<td><select name="commission2_status" id="commission2_status" onchange="if (this.value == 'paid') { document.getElementById('commission2-payment-date').style.display = ''; } else { document.getElementById('commission2-payment-date').style.display = 'none'; }">
 <option value=""<?php if ($_POST['commission2_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('None', 'contact-manager'); ?></option>
 <option value="unpaid"<?php if ($_POST['commission2_status'] == 'unpaid') { echo ' selected="selected"'; } ?>><?php _e('Unpaid', 'contact-manager'); ?></option>
 <option value="paid"<?php if ($_POST['commission2_status'] == 'paid') { echo ' selected="selected"'; } ?>><?php _e('Paid', 'contact-manager'); ?></option>
 </select><?php if (isset($_GET['id'])) { echo '<input type="hidden" name="old_commission2_status" value="'.$_POST['commission2_status'].'" />'; } ?></td></tr>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
+<tr id="commission2-payment-date" style="<?php if ($_POST['commission2_status'] != 'paid') { echo 'display: none; '; } ?>vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
 <td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission2_payment_date" id="commission2_payment_date" size="20" value="<?php echo $_POST['commission2_payment_date']; ?>" /><br />
 <span class="description"><?php _e('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager'); ?></span></td></tr>
 </tbody></table>
@@ -343,8 +351,10 @@ if ($result) { echo '<br />
 <?php if (!isset($_GET['id'])) {
 if (!isset($_POST['submit'])) {
 $contact_manager_options = (array) get_option('contact_manager');
-$contact_manager_options = array_map('htmlspecialchars', $contact_manager_options);
-foreach ($add_message_fields as $field) { $_POST[$field] = $contact_manager_options[$field]; } }
+foreach ($contact_manager_options as $key => $value) {
+if (is_string($value)) { $contact_manager_options[$key] = htmlspecialchars($value); } }
+foreach ($add_message_fields as $field) { $_POST[$field] = $contact_manager_options[$field]; }
+$_POST['message_notification_email_subject'] = '[message subject]'; }
 $value = false; foreach ($add_message_modules as $module) { if (!$value) { $value = (!in_array($module, $undisplayed_modules)); } }
 if ($value) { ?><p class="submit" style="margin: 0 20%;"><input type="hidden" name="submit" value="true" />
 <input type="submit" class="button-secondary" name="update_fields" value="<?php _e('Complete the fields below with the informations about the sender, the message and the form', 'contact-manager'); ?>" /></p><?php } ?>

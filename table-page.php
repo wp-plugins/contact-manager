@@ -13,7 +13,8 @@ if ($tables[$table_slug][$_GET['orderby']] == '') { $_GET['orderby'] = $options[
 switch ($_GET['order']) { case 'asc': case 'desc': break; default: $_GET['order'] = $options['order']; }
 
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
-$_POST = array_map('stripslashes', $_POST);
+foreach ($_POST as $key => $value) {
+if (is_string($value)) { $_POST[$key] = stripslashes($value); } }
 $_GET['s'] = $_POST['s'];
 if (isset($_POST['reset_columns'])) {
 include 'initial-options.php';

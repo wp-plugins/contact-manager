@@ -32,9 +32,8 @@ if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 include 'initial-options.php';
-foreach ($_POST as $key => $value) { $_POST[$key] = str_replace('&nbsp;', ' ', $value); }
-$_POST = array_map('html_entity_decode', $_POST);
-$_POST = array_map('stripslashes', $_POST);
+foreach ($_POST as $key => $value) {
+if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, 'options');
 
 foreach (array(
@@ -81,7 +80,8 @@ if ($_POST[$field] == '') { $_POST[$field] = $initial_options[$field]; }
 update_option('contact_manager_'.$field, $_POST[$field]); } } }
 if (!isset($options)) { $options = (array) get_option('contact_manager'); }
 
-$options = array_map('htmlspecialchars', $options);
+foreach ($options as $key => $value) {
+if (is_string($value)) { $options[$key] = htmlspecialchars($value); } }
 $undisplayed_modules = (array) $back_office_options['options_page_undisplayed_modules'];
 if (function_exists('commerce_data')) { $currency_code = commerce_data('currency_code'); }
 else { $commerce_manager_options = (array) get_option('commerce_manager');
@@ -138,6 +138,8 @@ $currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="unfilled_field_message" id="unfilled_field_message" rows="1" cols="75"><?php echo $options['unfilled_field_message']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="invalid_email_address_message"><?php _e('Invalid email address', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="invalid_email_address_message" id="invalid_email_address_message" rows="1" cols="75"><?php echo $options['invalid_email_address_message']; ?></textarea></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_reached_message"><?php _e('Message of maximum messages quantity reached', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="maximum_messages_quantity_reached_message" id="maximum_messages_quantity_reached_message" rows="1" cols="75"><?php echo $options['maximum_messages_quantity_reached_message']; ?></textarea></td></tr>
 </tbody></table>
 </div>
 <table class="form-table"><tbody><tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>

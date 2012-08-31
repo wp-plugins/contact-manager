@@ -7,9 +7,8 @@ if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 include 'initial-options.php';
-foreach ($_POST as $key => $value) { $_POST[$key] = str_replace('&nbsp;', ' ', $value); }
-$_POST = array_map('html_entity_decode', $_POST);
-$_POST = array_map('stripslashes', $_POST);
+foreach ($_POST as $key => $value) {
+if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
 foreach (array(
 'custom_icon_used',
 'links_displayed',

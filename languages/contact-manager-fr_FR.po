@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 4.5\n"
+"Project-Id-Version: Contact Manager 4.6\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2011-11-01 17:45+0000\n"
-"PO-Revision-Date: 2012-08-22 22:43+0100\n"
+"PO-Revision-Date: 2012-08-31 06:56+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor\n"
 "MIME-Version: 1.0\n"
@@ -2222,4 +2222,19 @@ msgstr "Laissez ce champ vide pour appliquer l'option de Commerce Manager."
 
 msgid "Senders client category ID"
 msgstr "ID de la catégorie de client des expéditeurs"
+
+msgid "Message of maximum messages quantity reached"
+msgstr "Message de quantité maximale de messages atteinte"
+
+msgid "Maximum messages quantity per sender"
+msgstr "Quantité maximale de messages par expéditeur"
+
+msgid "the maximum messages quantity per sender"
+msgstr "la quantité maximale de messages par expéditeur"
+
+msgid "You have already sent [contact-form maximum-messages-quantity-per-sender] messages through this form."
+msgstr "Vous avez déjà envoyé [contact-form maximum-messages-quantity-per-sender] messages via ce formulaire."
+
+msgid "Maximum messages quantity reached"
+msgstr "Quantité maximale de messages atteinte"
 

@@ -23,7 +23,8 @@ $filterby_options = array(
 'referrer' => __('referrer', 'contact-manager'));
 
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
-$_POST = array_map('stripslashes', $_POST);
+foreach ($_POST as $key => $value) {
+if (is_string($value)) { $_POST[$key] = stripslashes($value); } }
 $_GET['s'] = $_POST['s'];
 $filterby = $_POST['filterby'];
 $start_date = $_POST['start_date'];

@@ -180,13 +180,14 @@ $$field = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r
 if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender); } }
 
 if ((function_exists('referrer_data')) && ($message['referrer'] != '') && (!strstr($message['referrer'], '@'))) {
+if (affiliation_data('message_notification_email_deactivated') != 'yes') {
 $_GET['referrer'] = $message['referrer'];
 if (referrer_data('status') == 'active') {
 $sent = referrer_data('message_notification_email_sent');
 if (($sent == 'yes') || (($sent == 'if commission') && ($message['commission_amount'] > 0))) {
 foreach (array('sender', 'receiver', 'subject', 'body') as $field) {
 $$field = affiliation_data('message_notification_email_'.$field); }
-wp_mail($receiver, $subject, $body, 'From: '.$sender); } } }
+wp_mail($receiver, $subject, $body, 'From: '.$sender); } } } }
 
 if (($message['sender_subscribed_to_autoresponder'] == 'yes') && ($message['email_address'] != '')) {
 if (!function_exists('subscribe_to_autoresponder')) { include_once dirname(__FILE__).'/libraries/autoresponders-functions.php'; }

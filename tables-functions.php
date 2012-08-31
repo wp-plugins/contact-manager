@@ -8,12 +8,15 @@ foreach (array(
 'commission2_status',
 'form_id',
 'ip_address',
+'keywords',
 'maximum_messages_quantity',
+'maximum_messages_quantity_per_sender',
 'referrer',
 'referrer2') as $field) {
 if (isset($_GET[$field])) {
 $_GET['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
-$selection_criteria .= (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')"); } }
+$selection_criteria .= ($field == "keywords" ? " AND (".$field." LIKE '%".$_GET[$field]."%')" :
+ (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')")); } }
 
 
 function no_items($table) {
@@ -105,7 +108,14 @@ elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin
 else { $table_td = $data; } break;
 case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.$data.'</a>'; break;
 case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == 'http://'.$_SERVER['SERVER_NAME'] ? '/' : str_replace('http://'.$_SERVER['SERVER_NAME'], '', $data)).'</a>'); break;
-case 'maximum_messages_quantity': if ($data == 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
+case 'keywords':
+$keywords = explode(',', $data);
+foreach ($keywords as $keyword) {
+$keyword = strtolower(trim($keyword));
+$keyword = '<a href="admin.php?page='.$_GET['page'].'&amp;keywords='.$keyword.'">'.$keyword.'</a>';
+$keywords_list .= $keyword.', '; }
+$table_td = substr($keywords_list, 0, -2); break;
+case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data == 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
 case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.$data.'</a>'); break;
 case 'sender_affiliate_status': case 'sender_client_status': case 'sender_member_status':
 if ($data == 'active') { $table_td = '<span style="color: #008000;">'.__('Active', 'contact-manager').'</span>'; }

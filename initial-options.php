@@ -19,6 +19,7 @@ $initial_options[''] = array(
 'invalid_email_address_message' => __('This email address appears to be invalid.', 'contact-manager'),
 'mailchimp_api_key' => '',
 'maximum_messages_quantity' => 'unlimited',
+'maximum_messages_quantity_reached_message' => __('You have already sent [contact-form maximum-messages-quantity-per-sender] messages through this form.', 'contact-manager'),
 'membership_registration_confirmation_email_sent' => '',
 'membership_registration_notification_email_sent' => '',
 'message_confirmation_email_receiver' => '[sender email-address]',
@@ -56,7 +57,7 @@ $initial_options[''] = array(
 
 $initial_options['code'] =
 '[validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
-[other]<p style="color: red;">[error unfilled-fields]</p>[/validation-content]
+[other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields]</p>[/validation-content]
 
 <p><label><strong>'.__('Your first name:', 'contact-manager').'</strong>*<br />
 [input first-name size=30 required=yes]<br />
@@ -218,7 +219,6 @@ $initial_options['back_office'] = array(
 	'custom-instructions',
 	'gift',
 	'membership',
-	'message-confirmation-email',
 	'messages-registration',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
@@ -231,7 +231,6 @@ $initial_options['back_office'] = array(
 	'custom-instructions',
 	'gift',
 	'membership',
-	'message-confirmation-email',
 	'messages-registration',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
@@ -246,7 +245,6 @@ $initial_options['back_office'] = array(
 	'autoresponders',
 	'custom-instructions',
 	'membership',
-	'message-confirmation-email',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
@@ -261,7 +259,6 @@ $initial_options['back_office'] = array(
 	'autoresponders-integration',
 	'custom-instructions',
 	'membership',
-	'message-confirmation-email',
 	'messages-registration',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',

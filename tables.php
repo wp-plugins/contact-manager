@@ -8,12 +8,14 @@
 'date_utc' => array('type' => 'datetime', 'modules' => array('general-informations'), 'name' => __('Creation date (UTC)', 'contact-manager'), 'width' => 18, 'searchby' => __('the creation date (UTC)', 'contact-manager')),
 'gift_download_url' => array('type' => 'text', 'modules' => array('gift'), 'name' => __('Gift download URL', 'contact-manager'), 'width' => 18, 'searchby' => __('the gift download URL', 'contact-manager')),
 'gift_instructions' => array('type' => 'text', 'modules' => array('gift'), 'name' => __('Instructions to the sender', 'contact-manager'), 'width' => 18, 'searchby' => __('the instructions to the sender', 'contact-manager')),
+'maximum_messages_quantity_per_sender' => array('type' => 'text', 'default' => 'unlimited', 'modules' => array('general-informations'), 'name' => __('Maximum messages quantity per sender', 'contact-manager'), 'width' => 12, 'searchby' => __('the maximum messages quantity per sender', 'contact-manager')),
 'displays_count' => array('type' => 'int', 'modules' => array('counters'), 'name' => __('Displays count', 'contact-manager'), 'width' => 12, 'searchby' => __('the displays count', 'contact-manager')),
 'messages_count' => array('type' => 'int', 'modules' => array('counters'), 'name' => __('Messages count', 'contact-manager'), 'width' => 12, 'searchby' => __('the messages count', 'contact-manager')),
 'code' => array('type' => 'text', 'modules' => array('form'), 'name' => __('Code', 'contact-manager'), 'width' => 18, 'searchby' => __('the code', 'contact-manager')),
 'unfilled_fields_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Unfilled fields message', 'contact-manager'), 'width' => 18),
 'unfilled_field_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Unfilled field\'s message', 'contact-manager'), 'width' => 18),
 'invalid_email_address_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Invalid email address message', 'contact-manager'), 'width' => 18),
+'maximum_messages_quantity_reached_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Message of maximum messages quantity reached', 'contact-manager'), 'width' => 18),
 'messages_registration_enabled' => array('type' => 'text', 'modules' => array('messages-registration'), 'name' => __('Messages registration enabled', 'contact-manager'), 'width' => 15),
 'maximum_messages_quantity' => array('type' => 'text', 'modules' => array('messages-registration'), 'name' => __('Maximum messages quantity', 'contact-manager'), 'width' => 12, 'searchby' => __('the maximum messages quantity', 'contact-manager')),
 'message_confirmation_email_sent' => array('type' => 'text', 'modules' => array('message-confirmation-email'), 'name' => __('Message confirmation email sent', 'contact-manager'), 'width' => 15),
@@ -55,7 +57,7 @@
 'commission2_amount' => array('type' => 'text', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Commission amount', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 15, 'searchby' => __('the commission amount', 'contact-manager').' '.__('(level 2)', 'contact-manager')));
 
 $tables['forms_categories'] = $tables['forms'];
-foreach (array('displays_count', 'messages_count') as $field) { unset($tables['forms_categories'][$field]); }
+foreach (array('maximum_messages_quantity_per_sender', 'displays_count', 'messages_count') as $field) { unset($tables['forms_categories'][$field]); }
 
 $tables['messages'] = array(
 'id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => __('ID', 'contact-manager'), 'width' => 5),
@@ -63,6 +65,7 @@ $tables['messages'] = array(
 'receiver' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Receiver', 'contact-manager'), 'width' => 15, 'searchby' => __('the receiver', 'contact-manager')),
 'subject' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Subject', 'contact-manager'), 'width' => 15, 'searchby' => __('the subject', 'contact-manager')),
 'content' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Content', 'contact-manager'), 'width' => 18, 'searchby' => __('the content', 'contact-manager')),
+'keywords' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Keywords', 'contact-manager'), 'width' => 18, 'searchby' => __('the keywords', 'contact-manager')),
 'date' => array('type' => 'datetime', 'modules' => array('general-informations'), 'name' => __('Date', 'contact-manager'), 'width' => 18, 'searchby' => __('the date', 'contact-manager')),
 'date_utc' => array('type' => 'datetime', 'modules' => array('general-informations'), 'name' => __('Date (UTC)', 'contact-manager'), 'width' => 18, 'searchby' => __('the date (UTC)', 'contact-manager')),
 'first_name' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('First name', 'contact-manager'), 'width' => 12, 'searchby' => __('the first name', 'contact-manager')),

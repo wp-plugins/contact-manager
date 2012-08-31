@@ -1,5 +1,6 @@
 <?php global $wpdb;
 $back_office_options = get_option('contact_manager_back_office');
+if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 $is_category = (strstr($_GET['page'], 'category'));
 if ($is_category) { $admin_page = 'form_category'; $table_slug = 'forms_categories'; $attribute = 'category'; }
 else { $admin_page = 'form'; $table_slug = 'forms'; $attribute = 'id'; }
@@ -39,8 +40,8 @@ include 'admin-pages.php';
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
-foreach ($_POST as $key => $value) { $_POST[$key] = str_replace('&nbsp;', ' ', $value); }
-$_POST = array_map('html_entity_decode', $_POST);
+foreach ($_POST as $key => $value) {
+if (is_string($value)) { $_POST[$key] = html_entity_decode(str_replace('&nbsp;', ' ', $value)); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, $admin_page);
 
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
@@ -57,6 +58,7 @@ for ($i = 0; $i < count($keywords); $i++) { $keywords[$i] = strtolower(trim($key
 sort($keywords);
 foreach ($keywords as $keyword) { $keywords_list .= $keyword.', '; }
 $_POST['keywords'] = substr($keywords_list, 0, -2);
+switch ($_POST['maximum_messages_quantity_per_sender']) { case '' : case 'i' : case 'infinite' : case 'u' : $_POST['maximum_messages_quantity_per_sender'] = 'unlimited'; }
 switch ($_POST['maximum_messages_quantity']) { case 'i' : case 'infinite' : case 'u' : $_POST['maximum_messages_quantity'] = 'unlimited'; }
 $members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 sort($members_areas, SORT_NUMERIC);
@@ -126,11 +128,10 @@ if ($item_data) { foreach ($item_data as $key => $value) { $_POST[$key] = $value
 elseif (!headers_sent()) { header('Location: admin.php?page=contact-manager-forms'.($is_category ? '-categories' : '')); exit(); }
 else { echo '<script type="text/javascript">window.location = "admin.php?page=contact-manager-forms'.($is_category ? '-categories' : '').'";</script>'; } }
 
-$_POST = array_map('stripslashes', $_POST);
-$_POST = array_map('htmlspecialchars', $_POST);
 foreach ($_POST as $key => $value) {
-$_POST[$key] = str_replace('&amp;amp;', '&amp;', $value);
-if ($value == '0000-00-00 00:00:00') { $_POST[$key] = ''; } }
+if (is_string($value)) {
+$_POST[$key] = str_replace('&amp;amp;', '&amp;', htmlspecialchars(stripslashes($value)));
+if ($value == '0000-00-00 00:00:00') { $_POST[$key] = ''; } } }
 $undisplayed_modules = (array) $back_office_options[$admin_page.'_page_undisplayed_modules'];
 if (function_exists('commerce_data')) { $currency_code = commerce_data('currency_code'); }
 else { $commerce_manager_options = (array) get_option('commerce_manager');
@@ -217,6 +218,9 @@ echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id
 <h3 id="counters"><strong><?php echo $modules[$admin_page]['counters']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_per_sender"><?php _e('Maximum messages quantity per sender', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity_per_sender" id="maximum_messages_quantity_per_sender" rows="1" cols="25"><?php echo (!is_numeric($_POST['maximum_messages_quantity_per_sender']) ? '' : $_POST['maximum_messages_quantity_per_sender']); ?></textarea>
+<span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for an unlimited quantity.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="displays_count"><?php _e('Displays count', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="displays_count" id="displays_count" rows="1" cols="25"><?php echo $_POST['displays_count']; ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for 0.', 'contact-manager'); ?></span></td></tr>
@@ -257,6 +261,9 @@ echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id
 <span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="invalid_email_address_message"><?php _e('Invalid email address', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="invalid_email_address_message" id="invalid_email_address_message" rows="1" cols="75"><?php echo $_POST['invalid_email_address_message']; ?></textarea><br />
+<span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_reached_message"><?php _e('Maximum messages quantity reached', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="maximum_messages_quantity_reached_message" id="maximum_messages_quantity_reached_message" rows="1" cols="75"><?php echo $_POST['maximum_messages_quantity_reached_message']; ?></textarea><br />
 <span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 </tbody></table>
 </div>
