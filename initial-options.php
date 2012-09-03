@@ -13,9 +13,12 @@ $initial_options[''] = array(
 'commission_amount' => 1,
 'commission2_amount' => 0.1,
 'commission2_enabled' => 'no',
+'default_captcha_type' => 'recaptcha',
+'default_recaptcha_theme' => 'red',
 'encrypted_urls_key' => md5(mt_rand()),
 'encrypted_urls_validity_duration' => 48,
 'getresponse_api_key' => '',
+'invalid_captcha_message' => __('The code you entered for the CAPTCHA is incorrect.', 'contact-manager'),
 'invalid_email_address_message' => __('This email address appears to be invalid.', 'contact-manager'),
 'mailchimp_api_key' => '',
 'maximum_messages_quantity' => 'unlimited',
@@ -33,6 +36,8 @@ $initial_options[''] = array(
 'message_notification_email_subject' => '[message subject]',
 'message_removal_custom_instructions_executed' => 'no',
 'messages_registration_enabled' => 'no',
+'recaptcha_private_key' => '',
+'recaptcha_public_key' => '',
 'sender_affiliate_category_id' => '',
 'sender_affiliate_status' => '',
 'sender_autoresponder' => 'AWeber',
@@ -54,10 +59,13 @@ $initial_options[''] = array(
 'unfilled_fields_message' => __('Please fill out the required fields.', 'contact-manager'),
 'version' => CONTACT_MANAGER_VERSION);
 
+include 'libraries/captchas.php';
+$initial_options['captchas_numbers'] = $captchas_numbers;
+
 
 $initial_options['code'] =
 '[validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
-[other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields]</p>[/validation-content]
+[other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields] [error invalid-captcha]</p>[/validation-content]
 
 <p><label><strong>'.__('Your first name:', 'contact-manager').'</strong>*<br />
 [input first-name size=30 required=yes]<br />
@@ -257,6 +265,7 @@ $initial_options['back_office'] = array(
 	'automatic-display',
 	'autoresponders',
 	'autoresponders-integration',
+	'captcha',
 	'custom-instructions',
 	'membership',
 	'messages-registration',

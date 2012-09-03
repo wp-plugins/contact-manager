@@ -129,6 +129,37 @@ $currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
 <span class="description"><a href="http://www.kleor-editions.com/contact-manager/#forms"><?php _e('How to display a form?', 'contact-manager'); ?></a><br />
 <a href="http://www.kleor-editions.com/contact-manager/#forms-creation"><?php _e('How to create a form?', 'contact-manager'); ?></a></span></td></tr>
 </tbody></table>
+<div id="captcha-module"<?php if (in_array('captcha', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h4 id="captcha"><strong><?php echo $modules['options']['form']['modules']['captcha']['name']; ?></strong></h4>
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="default_captcha_type"><?php _e('Default type', 'contact-manager'); ?></label></strong></th>
+<td><select name="default_captcha_type" id="default_captcha_type">
+<?php include 'libraries/captchas.php';
+$captcha_type = do_shortcode($options['default_captcha_type']);
+asort($captchas_types);
+foreach ($captchas_types as $key => $value) {
+echo '<option value="'.$key.'"'.($captcha_type == $key ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; } ?>
+</select>
+<span class="description"><a href="http://www.kleor-editions.com/contact-manager/#captcha"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="default_recaptcha_theme"><?php _e('Default reCAPTCHA theme', 'contact-manager'); ?></label></strong></th>
+<td><select name="default_recaptcha_theme" id="default_recaptcha_theme">
+<?php include 'libraries/captchas.php';
+$recaptcha_theme = do_shortcode($options['default_recaptcha_theme']);
+asort($recaptcha_themes);
+foreach ($recaptcha_themes as $key => $value) {
+echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; } ?>
+</select>
+<span class="description"><a href="http://www.kleor-editions.com/contact-manager/#recaptcha"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="recaptcha_public_key"><?php _e('reCAPTCHA public key', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="recaptcha_public_key" id="recaptcha_public_key" rows="1" cols="50"><?php echo $options['recaptcha_public_key']; ?></textarea> 
+<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#recaptcha"><?php _e('More informations', 'contact-manager'); ?></a>
+<?php if (function_exists('commerce_manager_admin_menu')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="recaptcha_private_key"><?php _e('reCAPTCHA private key', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="recaptcha_private_key" id="recaptcha_private_key" rows="1" cols="50"><?php echo $options['recaptcha_private_key']; ?></textarea> 
+<span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#recaptcha"><?php _e('More informations', 'contact-manager'); ?></a>
+<?php if (function_exists('commerce_manager_admin_menu')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
+</tbody></table>
+</div>
 <div id="error-messages-module"<?php if (in_array('error-messages', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="error-messages"><strong><?php echo $modules['options']['form']['modules']['error-messages']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
@@ -138,7 +169,9 @@ $currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="unfilled_field_message" id="unfilled_field_message" rows="1" cols="75"><?php echo $options['unfilled_field_message']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="invalid_email_address_message"><?php _e('Invalid email address', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="invalid_email_address_message" id="invalid_email_address_message" rows="1" cols="75"><?php echo $options['invalid_email_address_message']; ?></textarea></td></tr>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_reached_message"><?php _e('Message of maximum messages quantity reached', 'contact-manager'); ?></label></strong></th>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="invalid_captcha_message"><?php _e('Invalid CAPTCHA', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="invalid_captcha_message" id="invalid_captcha_message" rows="1" cols="75"><?php echo $options['invalid_captcha_message']; ?></textarea></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_reached_message"><?php _e('Maximum messages quantity reached', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="maximum_messages_quantity_reached_message" id="maximum_messages_quantity_reached_message" rows="1" cols="75"><?php echo $options['maximum_messages_quantity_reached_message']; ?></textarea></td></tr>
 </tbody></table>
 </div>

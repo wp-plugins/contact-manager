@@ -12,7 +12,7 @@ if ($redirection == '#') { $redirection .= 'contact-form'.$id; }
 foreach (array(
 'strip_accents_js',
 'format_email_address_js') as $function) { add_action('wp_footer', $function); }
-$tags = array('input', 'label', 'option', 'select', 'textarea');
+$tags = array('captcha', 'input', 'label', 'option', 'select', 'textarea');
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
 if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = htmlspecialchars($_SERVER['HTTP_REFERER']); }
 if (isset($_POST[$prefix.'submit'])) {
@@ -44,6 +44,12 @@ if (in_array('email_address', $_GET[$prefix.'fields'])) {
 if ((!strstr($_POST[$prefix.'email_address'], '@')) || (!strstr($_POST[$prefix.'email_address'], '.'))) { $_GET['form_error'] = 'yes'; } }
 foreach ($_GET[$prefix.'required_fields'] as $field) {
 if ($_POST[$prefix.$field] == '') { $_GET[$prefix.'unfilled_fields_error'] = contact_form_data('unfilled_fields_message'); $_GET['form_error'] = 'yes'; } }
+if (isset($_GET[$prefix.'recaptcha_js'])) {
+$resp = recaptcha_check_answer(RECAPTCHA_PRIVATE_KEY, $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
+if (!$resp->is_valid) { $invalid_captcha = 'yes'; } }
+elseif (in_array('captcha', $_GET[$prefix.'fields'])) {
+if (hash('sha256', $_POST[$prefix.'captcha']) != $_POST[$prefix.'valid_captcha']) { $invalid_captcha = 'yes'; } }
+if ($invalid_captcha == 'yes') { $_GET[$prefix.'invalid_captcha_error'] = contact_form_data('invalid_captcha_message'); $_GET['form_error'] = 'yes'; }
 if ($_GET['form_error'] == '') {
 foreach ($_POST as $key => $value) { $_POST[str_replace($prefix, '', $key)] = $value; }
 $_POST['receiver'] = contact_form_data('message_notification_email_receiver');
@@ -103,11 +109,62 @@ if (!stristr($code, '<form')) { $code = '<form id="contact-form'.$id.'" method="
 if (!stristr($code, '</form>')) { $code .= '<div style="display: none;"><input type="hidden" name="referring_url" value="'.$_POST['referring_url'].'" /><input type="hidden" name="'.$prefix.'submit" value="yes" /></div></form>'; }
 $code = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', do_shortcode($code)));
-$content .= $code.$form_js;
+$content .= $_GET[$prefix.'recaptcha_js'].$code.$form_js;
 
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
 if (isset($original[$key])) { $_GET[$key] = $original[$key]; } }
 foreach ($tags as $tag) { remove_shortcode($tag); }
+return $content; }
+
+
+function contact_form_captcha($atts) {
+$form_id = $_GET['contact_form_id'];
+$prefix = 'contact_form'.$form_id.'_';
+$attributes = array(
+'class' => 'captcha',
+'dir' => '',
+'onclick' => '',
+'ondblclick' => '',
+'onkeydown' => '',
+'onkeypress' => '',
+'onkeyup' => '',
+'onmousedown' => '',
+'onmousemove' => '',
+'onmouseout' => '',
+'onmouseover' => '',
+'onmouseup' => '',
+'style' => '',
+'theme' => contact_data('default_recaptcha_theme'),
+'title' => '',
+'type' => contact_data('default_captcha_type'),
+'xmlns' => '');
+foreach ($attributes as $key => $value) {
+if ($atts[$key] == '') { $atts[$key] = $attributes[$key]; }
+if ((is_string($key)) && ($key != 'theme') && ($key != 'type') && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } }
+if ($atts['type'] == 'recaptcha') {
+$_GET[$prefix.'recaptcha_js'] = '<script type="text/javascript">var RecaptchaOptions = { lang: \''.strtolower(substr(WPLANG, 0, 2)).'\', theme: \''.$atts['theme'].'\' };</script>'."\n";
+if (!function_exists('_recaptcha_qsencode')) { include_once dirname(__FILE__).'/libraries/recaptchalib.php'; }
+foreach (array('public', 'private') as $string) {
+if (!defined('RECAPTCHA_'.strtoupper($string).'_KEY')) {
+$key = contact_data('recaptcha_'.$string.'_key');
+if (($key == '') && (function_exists('commerce_data'))) { $key = commerce_data('recaptcha_'.$string.'_key'); }
+define('RECAPTCHA_'.strtoupper($string).'_KEY', $key); } }
+$content = str_replace(' frameborder="0"', '', recaptcha_get_html(RECAPTCHA_PUBLIC_KEY)); }
+else {
+switch ($atts['type']) {
+case 'arithmetic':
+$captchas_numbers = get_option('contact_manager_captchas_numbers');
+$m = mt_rand(0, 15);
+$n = mt_rand(0, 15);
+$string = $captchas_numbers[$m].' + '.$captchas_numbers[$n];
+$valid_captcha = $m + $n; break;
+case 'reversed-string':
+include dirname(__FILE__).'/libraries/captchas.php';
+$n = mt_rand(5, 12);
+for ($i = 0; $i < $n; $i++) { $string .= $captchas_letters[mt_rand(0, 25)]; }
+$valid_captcha = strrev($string); break; }
+$content = '<label for="'.$prefix.'captcha"><span'.$markup.'>'.$string.'</span></label>
+<input type="hidden" name="'.$prefix.'valid_captcha" value="'.hash('sha256', $valid_captcha).'" />'; }
 return $content; }
 
 

@@ -49,6 +49,7 @@ $start_date = trim(mysql_real_escape_string(strip_tags($start_date)));
 if (strlen($start_date) == 10) { $start_date .= ' 00:00:00'; }
 $end_date = trim(mysql_real_escape_string(strip_tags($end_date)));
 if (strlen($end_date) == 10) { $end_date .= ' 23:59:59'; }
+$_GET['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
 $date_criteria = "(date BETWEEN '$start_date' AND '$end_date')";
 
 if (($options) && (contact_manager_user_can($back_office_options, 'manage'))) {
@@ -63,6 +64,8 @@ $options = array(
 'start_date' => $start_date);
 update_option('contact_manager_'.$table_slug, $options); }
 
+$_GET['criteria'] = $_GET['date_criteria'].$_GET['selection_criteria'];
+
 if ($_GET['s'] != '') {
 if ($searchby == '') {
 foreach ($tables[$table_slug] as $key => $value) { $search_criteria .= " OR ".$key." LIKE '%".$_GET['s']."%'"; }
@@ -71,7 +74,9 @@ else {
 $search_column = true; for ($i = 0; $i < $max_columns; $i++) {
 if ((in_array($i, $displayed_columns)) && ($searchby == $columns[$i])) { $search_column = false; } }
 $search_criteria = $searchby." LIKE '%".$_GET['s']."%'"; }
-$search_criteria = 'AND ('.$search_criteria.')'; }
+$_GET['search_criteria'] = str_replace(' ', '%20', '&amp;s='.$_GET['s']);
+$search_criteria = 'AND ('.$search_criteria.')';
+$_GET['criteria'] .= $_GET['search_criteria']; }
 
 $query = $wpdb->get_row("SELECT count(*) as total FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria", OBJECT);
 $n = (int) $query->total;
@@ -106,7 +111,7 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 <div class="alignleft actions">
 <?php _e('Display', 'contact-manager'); ?> <input style="text-align: center;" type="text" name="limit" id="limit" size="2" value="<?php echo $limit; ?>" /> 
 <?php _e('results per page', 'contact-manager'); ?> <input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" />
-</div><?php tablenav_pages($table_slug, $n, $max_paged, $start_date, $end_date, 'top'); ?></div>
+</div><?php tablenav_pages($table_slug, $n, $max_paged, 'top'); ?></div>
 <div style="overflow: auto;">
 <table class="wp-list-table widefat">
 <?php if ($search_column) { $search_table_th = table_th($table_slug, $searchby); $table_ths = $search_table_th; }
@@ -131,7 +136,7 @@ else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($di
 </table>
 </div>
 <div class="tablenav bottom">
-<?php tablenav_pages($table_slug, $n, $max_paged, $start_date, $end_date, 'bottom'); ?>
+<?php tablenav_pages($table_slug, $n, $max_paged, 'bottom'); ?>
 <div class="alignleft actions">
 <input type="hidden" name="submit" value="true" />
 <?php $displayed_columns = $original_displayed_columns;

@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 4.6\n"
+"Project-Id-Version: Contact Manager 4.7\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2011-11-01 17:45+0000\n"
-"PO-Revision-Date: 2012-08-31 06:56+0100\n"
+"PO-Revision-Date: 2012-09-03 08:57+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor\n"
 "MIME-Version: 1.0\n"
@@ -2237,4 +2237,94 @@ msgstr "Vous avez déjà envoyé [contact-form maximum-messages-quantity-per-sen
 
 msgid "Maximum messages quantity reached"
 msgstr "Quantité maximale de messages atteinte"
+
+msgid "Arithmetic operation"
+msgstr "Opération arithmétique"
+
+msgid "Reversed string"
+msgstr "Chaîne inversée"
+
+msgid "Black Glass"
+msgstr "Noir"
+
+msgid "Clean"
+msgstr "Clean"
+
+msgid "Red"
+msgstr "Rouge"
+
+msgid "White"
+msgstr "Blanc"
+
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+msgid "Default type"
+msgstr "Type par défaut"
+
+msgid "Default reCAPTCHA theme"
+msgstr "Thème reCAPTCHA par défaut"
+
+msgid "reCAPTCHA public key"
+msgstr "Clé publique reCAPTCHA"
+
+msgid "reCAPTCHA private key"
+msgstr "Clé privée reCAPTCHA"
+
+msgid "Invalid CAPTCHA message"
+msgstr "Message de CAPTCHA non valide"
+
+msgid "Invalid CAPTCHA"
+msgstr "CAPTCHA non valide"
+
+msgid "The code you entered for the CAPTCHA is incorrect."
+msgstr "Le code que vous avez entré pour le CAPTCHA est incorrect."
+
+msgid "zero"
+msgstr "zéro"
+
+msgid "one"
+msgstr "un"
+
+msgid "two"
+msgstr "deux"
+
+msgid "three"
+msgstr "trois"
+
+msgid "four"
+msgstr "quatre"
+
+msgid "five"
+msgstr "cinq"
+
+msgid "six"
+msgstr "six"
+
+msgid "seven"
+msgstr "sept"
+
+msgid "eight"
+msgstr "huit"
+
+msgid "nine"
+msgstr "neuf"
+
+msgid "ten"
+msgstr "dix"
+
+msgid "eleven"
+msgstr "onze"
+
+msgid "twelve"
+msgstr "douze"
+
+msgid "thirteen"
+msgstr "treize"
+
+msgid "fourteen"
+msgstr "quatorze"
+
+msgid "fifteen"
+msgstr "quinze"
 
