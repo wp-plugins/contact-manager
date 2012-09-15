@@ -1,15 +1,17 @@
-<?php $back_office_options = get_option('contact_manager_back_office');
+<?php global $wpdb; $error = '';
+$back_office_options = (array) get_option('contact_manager_back_office');
 $table_slug = str_replace('-', '_', str_replace('contact-manager-', '', $_GET['page']));
 include 'tables.php';
 include_once 'tables-functions.php';
-$options = get_option(str_replace('-', '_', $_GET['page']));
+$options = (array) get_option(str_replace('-', '_', $_GET['page']));
 $table_name = table_name($table_slug);
 $undisplayed_keys = table_undisplayed_keys($table_slug, $back_office_options);
 foreach ($tables[$table_slug] as $key => $value) {
-if ($value['name'] == '') { unset($tables[$table_slug][$key]); }
-if (($value['searchby'] != '') && (!in_array($key, $undisplayed_keys))) { $searchby_options[$key] = $value['searchby']; } }
+if (!isset($value['name'])) { unset($tables[$table_slug][$key]); }
+if ((isset($value['searchby'])) && (!in_array($key, $undisplayed_keys))) { $searchby_options[$key] = $value['searchby']; } }
 $max_columns = count($tables[$table_slug]);
-if ($tables[$table_slug][$_GET['orderby']] == '') { $_GET['orderby'] = $options['orderby']; }
+if ((!isset($_GET['orderby'])) || ($tables[$table_slug][$_GET['orderby']] == '')) { $_GET['orderby'] = $options['orderby']; }
+if (!isset($_GET['order'])) { $_GET['order'] = ''; }
 switch ($_GET['order']) { case 'asc': case 'desc': break; default: $_GET['order'] = $options['order']; }
 
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
@@ -24,8 +26,8 @@ else {
 $displayed_columns = array();
 for ($i = 0; $i < $max_columns; $i++) {
 $columns[$i] = $_POST['column'.$i];
-if ($_POST['column'.$i.'_displayed'] == 'yes') { $displayed_columns[] = $i; } } }
-$columns_list_displayed = ($_POST['columns_list_displayed'] == 'yes' ? 'yes' : 'no');
+if ((isset($_POST['column'.$i.'_displayed'])) && ($_POST['column'.$i.'_displayed'] == 'yes')) { $displayed_columns[] = $i; } } }
+$columns_list_displayed = (isset($_POST['columns_list_displayed']) ? 'yes' : 'no');
 $limit = (int) $_POST['limit'];
 if ($limit > 1000) { $limit = 1000; }
 elseif ($limit < 1) { $limit = $options['limit']; }
@@ -66,7 +68,8 @@ update_option('contact_manager_'.$table_slug, $options); }
 
 $_GET['criteria'] = $_GET['date_criteria'].$_GET['selection_criteria'];
 
-if ($_GET['s'] != '') {
+$_GET['search_criteria'] = ''; $search_criteria = ''; $search_column = false;
+if ((isset($_GET['s'])) && ($_GET['s'] != '')) {
 if ($searchby == '') {
 foreach ($tables[$table_slug] as $key => $value) { $search_criteria .= " OR ".$key." LIKE '%".$_GET['s']."%'"; }
 $search_criteria = substr($search_criteria, 4); }
@@ -80,7 +83,7 @@ $_GET['criteria'] .= $_GET['search_criteria']; }
 
 $query = $wpdb->get_row("SELECT count(*) as total FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria", OBJECT);
 $n = (int) $query->total;
-$_GET['paged'] = (int) $_REQUEST['paged'];
+$_GET['paged'] = (int) (isset($_REQUEST['paged']) ? $_REQUEST['paged'] : 1);
 if ($_GET['paged'] < 1) { $_GET['paged'] = 1; }
 $max_paged = ceil($n/$limit);
 if ($max_paged < 1) { $max_paged = 1; }
@@ -114,7 +117,7 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 </div><?php tablenav_pages($table_slug, $n, $max_paged, 'top'); ?></div>
 <div style="overflow: auto;">
 <table class="wp-list-table widefat">
-<?php if ($search_column) { $search_table_th = table_th($table_slug, $searchby); $table_ths = $search_table_th; }
+<?php if ($search_column) { $search_table_th = table_th($table_slug, $searchby); $table_ths = $search_table_th; } else { $table_ths = ''; }
 $columns_displayed = array();
 $original_displayed_columns = $displayed_columns;
 foreach ($displayed_columns as $key => $value) {
@@ -123,8 +126,9 @@ $columns_displayed[] = $columns[$value]; }
 for ($i = 0; $i < $max_columns; $i++) { if (in_array($i, $displayed_columns)) { $table_ths .= table_th($table_slug, $columns[$i]); } }
 if ($table_ths != '') { echo '<thead><tr>'.$table_ths.'</tr></thead><tfoot><tr>'.$table_ths.'</tr></tfoot>'; } ?>
 <tbody id="the-list">
-<?php if ($items) { foreach ($items as $item) {
-if ($search_column) { $search_table_td = '<td>'.table_td($table_slug, $searchby, $item).'</td>'; }
+<?php $boolean = false; if ($n > 0) { foreach ($items as $item) {
+$table_tds = '';
+if ($search_column) { $search_table_td = '<td>'.table_td($table_slug, $searchby, $item).'</td>'; } else { $search_table_td = ''; }
 $first = true; for ($i = 0; $i < $max_columns; $i++) {
 if (in_array($i, $displayed_columns)) {
 $table_tds .= '<td'.($first ? ' style="height: 6em;"' : '').'>'.table_td($table_slug, $columns[$i], $item).($first ? row_actions($table_slug, $item) : '').'</td>';
@@ -149,6 +153,7 @@ onclick="if (this.checked == true) { document.getElementById(\'columns-list\').s
 '.($columns_list_displayed == 'yes' ? ' checked="checked"' : '').' /> '.__('Display the columns list', 'contact-manager').'</label>'; ?><br />
 <span id="columns-list"<?php if ($columns_list_displayed == 'no') { echo ' style="display: none;"'; } ?>>
 <?php $j = 0; for ($i = 0; $i < $max_columns; $i++) {
+if (!isset($columns[$i])) { $columns[$i] = 'id'; }
 if ((in_array($columns[$i], $undisplayed_keys)) && (!in_array($i, $displayed_columns))) {
 echo '<input type="hidden" name="column'.$i.'" id="column'.$i.'" value="'.$columns[$i].'" />
 <input type="hidden" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="no" />'; }

@@ -1,4 +1,5 @@
-<?php $options = get_option('contact_manager_back_office');
+<?php global $wpdb; $error = '';
+$options = (array) get_option('contact_manager_back_office');
 include 'admin-pages.php';
 $max_links = count($admin_links);
 $max_menu_items = count($admin_pages);
@@ -13,7 +14,7 @@ foreach (array(
 'custom_icon_used',
 'links_displayed',
 'menu_displayed',
-'title_displayed') as $field) { if ($_POST[$field] != 'yes') { $_POST[$field] = 'no'; } }
+'title_displayed') as $field) { if (!isset($_POST[$field])) { $_POST[$field] = 'no'; } }
 foreach (array(
 'back_office',
 'form',
@@ -28,22 +29,22 @@ else {
 $_POST['displayed_links'] = array();
 for ($i = 0; $i < $max_links; $i++) {
 $_POST['links'][$i] = $_POST['link'.$i];
-if ($_POST['link'.$i.'_displayed'] == 'yes') { $_POST['displayed_links'][] = $i; } } }
+if (isset($_POST['link'.$i.'_displayed'])) { $_POST['displayed_links'][] = $i; } } }
 if (isset($_POST['reset_menu_items'])) {
 foreach (array('menu_items', 'menu_displayed_items') as $field) { $_POST[$field] = $initial_options['back_office'][$field]; } }
 else {
 $_POST['menu_displayed_items'] = array();
 for ($i = 0; $i < $max_menu_items; $i++) {
 $_POST['menu_items'][$i] = $_POST['menu_item'.$i];
-if ($_POST['menu_item'.$i.'_displayed'] == 'yes') { $_POST['menu_displayed_items'][] = $i; } } }
+if (isset($_POST['menu_item'.$i.'_displayed'])) { $_POST['menu_displayed_items'][] = $i; } } }
 $_POST['statistics_page_undisplayed_columns'] = array();
 foreach ($statistics_columns as $key => $value) {
-if (($_POST['statistics_page_'.$key.'_column_displayed'] != 'yes') && ($value['required'] != 'yes')) { $_POST['statistics_page_undisplayed_columns'][] = $key; } }
+if ((!isset($_POST['statistics_page_'.$key.'_column_displayed'])) && ((!isset($value['required'])) || ($value['required'] != 'yes'))) { $_POST['statistics_page_undisplayed_columns'][] = $key; } }
 $_POST['statistics_page_undisplayed_rows'] = array();
 foreach ($statistics_rows as $key => $value) {
-if (($_POST['statistics_page_'.$key.'_row_displayed'] != 'yes') && ($value['required'] != 'yes')) { $_POST['statistics_page_undisplayed_rows'][] = $key; } }
+if ((!isset($_POST['statistics_page_'.$key.'_row_displayed'])) && ((!isset($value['required'])) || ($value['required'] != 'yes'))) { $_POST['statistics_page_undisplayed_rows'][] = $key; } }
 foreach ($initial_options['back_office'] as $key => $value) {
-if ($_POST[$key] != '') { $options[$key] = $_POST[$key]; }
+if ((isset($_POST[$key])) && ($_POST[$key] != '')) { $options[$key] = $_POST[$key]; }
 else { $options[$key] = $value; } }
 update_option('contact_manager_back_office', $options); } }
 
@@ -149,13 +150,13 @@ echo '</select></label>
 <td><?php foreach ($statistics_columns as $key => $value) {
 $name = 'statistics_page_'.$key.'_column_displayed';
 $undisplayed_columns = (array) $options['statistics_page_undisplayed_columns'];
-if ($value['required'] == 'yes') { echo '<input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br />'; }
+if ((isset($value['required'])) && ($value['required'] == 'yes')) { echo '<input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br />'; }
 else { echo '<label><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $undisplayed_columns) ? '' : ' checked="checked"').' /> '.$value['name'].'</label><br />'; } } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Rows displayed', 'contact-manager'); ?></strong></th>
 <td><?php foreach ($statistics_rows as $key => $value) {
 $name = 'statistics_page_'.$key.'_row_displayed';
 $undisplayed_rows = (array) $options['statistics_page_undisplayed_rows'];
-if ($value['required'] == 'yes') { echo '<input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br />'; }
+if ((isset($value['required'])) && ($value['required'] == 'yes')) { echo '<input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br />'; }
 else { echo '<label><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $undisplayed_rows) ? '' : ' checked="checked"').' /> '.$value['name'].'</label><br />'; } } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>

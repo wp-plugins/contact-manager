@@ -1,7 +1,7 @@
-<?php global $wpdb;
-$back_office_options = get_option('contact_manager_back_office');
+<?php global $wpdb; $error = '';
+$back_office_options = (array) get_option('contact_manager_back_office');
 
-if (($_GET['action'] == 'reset') || ($_GET['action'] == 'uninstall')) {
+if ((isset($_GET['action'])) && (($_GET['action'] == 'reset') || ($_GET['action'] == 'uninstall'))) {
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else { if ($_GET['action'] == 'reset') { reset_contact_manager(); } else { uninstall_contact_manager(); } } } ?>
@@ -49,7 +49,7 @@ foreach (array(
 'sender_subscribed_as_a_user',
 'sender_subscribed_to_affiliate_program',
 'sender_subscribed_to_autoresponder',
-'sender_subscribed_to_members_areas') as $field) { if ($_POST[$field] != 'yes') { $_POST[$field] = 'no'; } }
+'sender_subscribed_to_members_areas') as $field) { if (!isset($_POST[$field])) { $_POST[$field] = 'no'; } }
 foreach (array(
 'automatic_display_form_id') as $field) { $_POST[$field] = (int) $_POST[$field]; if ($_POST[$field] < 1) { $_POST[$field] = $initial_options[''][$field]; } }
 foreach (array(
@@ -59,15 +59,16 @@ foreach (array(
 switch ($_POST['maximum_messages_quantity']) { case 0: case '': case 'i': case 'infinite': case 'u': $_POST['maximum_messages_quantity'] = 'unlimited'; }
 if (is_numeric($_POST['maximum_messages_quantity'])) {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages", OBJECT);
-$messages_quantity = (int) $row->total;
+$messages_quantity = (int) (isset($row->total) ? $row->total : 0);
 $n = $messages_quantity - $_POST['maximum_messages_quantity'];
 if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n"); } }
 $members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 sort($members_areas, SORT_NUMERIC);
-foreach ($members_areas as $member_area) { $members_areas_list .= $member_area.', '; }
+$members_areas_list = '';
+foreach ($members_areas as $member_area) { if ($member_area != '') { $members_areas_list .= $member_area.', '; } }
 $_POST['sender_members_areas'] = substr($members_areas_list, 0, -2);
 foreach ($initial_options[''] as $key => $value) {
-if ($_POST[$key] != '') { $options[$key] = $_POST[$key]; }
+if ((isset($_POST[$key])) && ($_POST[$key] != '')) { $options[$key] = $_POST[$key]; }
 else { $options[$key] = $value; } }
 update_option('contact_manager', $options);
 foreach (array(
@@ -76,7 +77,7 @@ foreach (array(
 'message_custom_instructions',
 'message_notification_email_body',
 'message_removal_custom_instructions') as $field) {
-if ($_POST[$field] == '') { $_POST[$field] = $initial_options[$field]; }
+if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = $initial_options[$field]; }
 update_option('contact_manager_'.$field, $_POST[$field]); } } }
 if (!isset($options)) { $options = (array) get_option('contact_manager'); }
 

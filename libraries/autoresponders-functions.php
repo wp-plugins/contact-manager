@@ -1,5 +1,8 @@
 <?php function subscribe_to_autoresponder($autoresponder, $list, $contact) {
 if ($list != '') {
+include dirname(__FILE__).'/personal-informations.php';
+foreach (array_merge($personal_informations, array('ip_address', 'referrer')) as $field) {
+if (!isset($contact[$field])) { $contact[$field] = ''; } }
 $contact['email_address'] = format_email_address($contact['email_address']);
 $contact['website_url'] = format_url($contact['website_url']);
 switch ($autoresponder) {

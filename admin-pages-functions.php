@@ -1,4 +1,5 @@
-<?php load_plugin_textdomain('contact-manager', false, 'contact-manager/languages'); wp_enqueue_script('dashboard');
+<?php load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
+add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("dashboard");'));
 
 
 function contact_manager_pages_links($back_office_options) {
@@ -44,7 +45,7 @@ $links_markup = array(
 $first = true; $links_displayed = array();
 for ($i = 0; $i < count($admin_links); $i++) {
 $link = $links[$i];
-if ((in_array($i, $displayed_links)) && ($links_markup[$link] != '') && (!in_array($link, $links_displayed))) {
+if ((in_array($i, $displayed_links)) && (isset($links_markup[$link])) && (!in_array($link, $links_displayed))) {
 echo '<li>'.($first ? '' : ' | ').$links_markup[$link].'</li>'; $first = false; $links_displayed[] = $link; } }
 echo '</ul>'; } }
 
@@ -78,21 +79,20 @@ $page_undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undis
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Modules displayed', 'contact-manager'); ?></strong></th>
 <td><?php foreach ($modules[$page_slug] as $key => $value) {
 $name = $page_slug.'_page_'.str_replace('-', '_', $key).'_module_displayed';
-if (!strstr($_GET['page'], 'back-office')) { $onmouseover = " onmouseover=\"document.getElementById('".$key."-submodules').style.display = 'block';\""; }
-if ($value['required'] == 'yes') { echo '<label'.$onmouseover.'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br /></label>'; }
+if (strstr($_GET['page'], 'back-office')) { $onmouseover = ""; }
+else { $onmouseover = " onmouseover=\"document.getElementById('".$key."-submodules').style.display = 'block';\""; }
+if ((isset($value['required'])) && ($value['required'] == 'yes')) { echo '<label'.$onmouseover.'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br /></label>'; }
 else {
-if ((($page_slug == 'back_office') || (!strstr($_GET['page'], 'back-office'))) && ($key != $module)) {
-$onclick = " onclick=\"if (this.checked == true) { document.getElementById('".$key."-module').style.display = 'block'; } else { document.getElementById('".$key."-module').style.display = 'none'; } window.location = '#".$module."-module';\""; }
-else { $onclick = ""; }
+if ((($page_slug != 'back_office') && (strstr($_GET['page'], 'back-office'))) || ($key == $module)) { $onclick = ""; }
+else { $onclick = " onclick=\"if (this.checked == true) { document.getElementById('".$key."-module').style.display = 'block'; } else { document.getElementById('".$key."-module').style.display = 'none'; } window.location = '#".$module."-module';\""; }
 echo '<label'.$onmouseover.(((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) ? '' : ' style="display: none;"').'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $page_undisplayed_modules) ? '' : ' checked="checked"').$onclick.' /> '.$value['name'].'<br /></label>'; }
 if (!strstr($_GET['page'], 'back-office')) { echo '<div style="display: none;" id="'.$key.'-submodules">'; }
-if (is_array($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
+if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
 $module_name = $page_slug.'_page_'.str_replace('-', '_', $module_key).'_module_displayed';
-if ($module_value['required'] == 'yes') { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes" checked="checked" disabled="disabled" /> '.$module_value['name'].'<br /></label>'; }
+if ((isset($module_value['required'])) && ($module_value['required'] == 'yes')) { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes" checked="checked" disabled="disabled" /> '.$module_value['name'].'<br /></label>'; }
 else {
-if (($page_slug == 'back_office') || (!strstr($_GET['page'], 'back-office'))) {
-$module_onclick = " onclick=\"if (this.checked == true) { document.getElementById('".$module_key."-module').style.display = 'block'; } else { document.getElementById('".$module_key."-module').style.display = 'none'; } window.location = '#".$module."-module';\""; }
-else { $module_onclick = ""; }
+if (($page_slug != 'back_office') && (strstr($_GET['page'], 'back-office'))) { $module_onclick = ""; }
+else { $module_onclick = " onclick=\"if (this.checked == true) { document.getElementById('".$module_key."-module').style.display = 'block'; } else { document.getElementById('".$module_key."-module').style.display = 'none'; } window.location = '#".$module."-module';\""; }
 echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes"'.(in_array($module_key, $page_undisplayed_modules) ? '' : ' checked="checked"').$module_onclick.' /> '.$module_value['name'].'<br /></label>'; } } }
 if (!strstr($_GET['page'], 'back-office')) { echo '</div>'; } } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -108,7 +108,7 @@ function contact_manager_pages_search_field($type, $searchby, $searchby_options)
 <?php foreach ($searchby_options as $key => $value) {
 echo '<option value="'.$key.'"'.($searchby == $key ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; } ?>
 </select></label><br />
-<input type="text" name="s" id="s" size="40" value="<?php echo $_GET['s']; ?>" />
+<input type="text" name="s" id="s" size="40" value="<?php if (isset($_GET['s'])) { echo $_GET['s']; } ?>" />
 <input type="submit" class="button" name="submit" id="<?php echo $type; ?>-submit" value="<?php _e(ucfirst($type), 'contact-manager'); ?>" /></p>
 <?php }
 
@@ -120,7 +120,7 @@ if ($back_office_options[$page_slug.'_page_summary_displayed'] == 'yes') {
 include 'admin-pages.php';
 $modules = $modules[$page_slug];
 $undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules'];
-foreach ($modules as $key => $value) {
+$list = ''; foreach ($modules as $key => $value) {
 if ((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) {
 if (!in_array($key, $undisplayed_modules)) { $list .= '<li> | <a href="#'.$key.'">'.$value['name'].'</a></li>'; } } }
 if (strlen($list) > 7) { echo '<ul class="subsubsub" style="float: none; white-space: normal;"><li>'.substr($list, 7).'</ul>'; } } }
@@ -152,12 +152,14 @@ return $roles; }
 
 function update_contact_manager_back_office($back_office_options, $page) {
 include 'admin-pages.php';
-if ($_POST[$page.'_page_summary_displayed'] != 'yes') { $_POST[$page.'_page_summary_displayed'] = 'no'; }
+if ((!isset($_POST[$page.'_page_summary_displayed'])) || ($_POST[$page.'_page_summary_displayed'] != 'yes')) { $_POST[$page.'_page_summary_displayed'] = 'no'; }
 $_POST[$page.'_page_undisplayed_modules'] = array();
 foreach ($modules[$page] as $key => $value) {
-if (($_POST[$page.'_page_'.str_replace('-', '_', $key).'_module_displayed'] != 'yes') && ($value['required'] != 'yes')) { $_POST[$page.'_page_undisplayed_modules'][] = $key; }
-if (is_array($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
-if (($_POST[$page.'_page_'.str_replace('-', '_', $module_key).'_module_displayed'] != 'yes') && ($module_value['required'] != 'yes')) { $_POST[$page.'_page_undisplayed_modules'][] = $module_key; } } } }
+if (((!isset($_POST[$page.'_page_'.str_replace('-', '_', $key).'_module_displayed'])) || ($_POST[$page.'_page_'.str_replace('-', '_', $key).'_module_displayed'] != 'yes'))
+ && ((!isset($value['required'])) || ($value['required'] != 'yes'))) { $_POST[$page.'_page_undisplayed_modules'][] = $key; }
+if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
+if (((!isset($_POST[$page.'_page_'.str_replace('-', '_', $module_key).'_module_displayed'])) || ($_POST[$page.'_page_'.str_replace('-', '_', $module_key).'_module_displayed'] != 'yes'))
+ && ((!isset($module_value['required'])) || ($module_value['required'] != 'yes'))) { $_POST[$page.'_page_undisplayed_modules'][] = $module_key; } } } }
 if (!strstr($_GET['page'], 'back-office')) {
 foreach (array('summary_displayed', 'undisplayed_modules') as $option) {
 $back_office_options[$page.'_page_'.$option] = $_POST[$page.'_page_'.$option]; }
@@ -201,7 +203,7 @@ HEADER_FORMAT : 'mmmm yyyy'
 <?php }
 
 
-if (($_GET['action'] != 'delete')
+if (((!isset($_GET['action'])) || ($_GET['action'] != 'delete'))
  && ($_GET['page'] != 'contact-manager')
  && ($_GET['page'] != 'contact-manager-back-office')) {
 add_action('admin_head', 'contact_manager_date_picker_css');

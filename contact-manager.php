@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 4.7
+Version: 4.8
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -36,9 +36,9 @@ if (is_admin()) { include_once dirname(__FILE__).'/admin.php'; }
 
 global $wpdb;
 $contact_manager_options = get_option('contact_manager');
-if (((is_multisite()) || ($contact_manager_options)) && ($contact_manager_options['version'] != CONTACT_MANAGER_VERSION)) {
-include_once dirname(__FILE__).'/admin.php';
-install_contact_manager(); }
+if (((is_multisite()) || ($contact_manager_options)) && ((!isset($contact_manager_options['version']))
+ || ($contact_manager_options['version'] != CONTACT_MANAGER_VERSION))) {
+include_once dirname(__FILE__).'/admin.php'; install_contact_manager(); }
 
 fix_url();
 
@@ -61,12 +61,16 @@ function add_message($message) { include dirname(__FILE__).'/add-message.php'; }
 function contact_data($atts) {
 global $contact_manager_options;
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $part = 0; }
-else { $field = $atts[0]; $default = $atts['default']; $filter = $atts['filter']; $part = (int) $atts['part']; }
+else {
+$field = (isset($atts[0]) ? $atts[0] : '');
+$default = (isset($atts['default']) ? $atts['default'] : '');
+$filter = (isset($atts['filter']) ? $atts['filter'] : '');
+$part = (int) (isset($atts['part']) ? $atts['part'] : 0); }
 $field = str_replace('-', '_', format_nice_name($field));
 if ($field == '') { $field = 'version'; }
 if (($field == 'code') || (substr($field, -10) == 'email_body') || (substr($field, -19) == 'custom_instructions')) { $data = get_option('contact_manager_'.$field); }
-else { $data = $contact_manager_options[$field]; }
-if ($part > 0) { $data = explode(',', $data); $data = trim($data[$part - 1]); }
+else { $data = (isset($contact_manager_options[$field]) ? $contact_manager_options[$field] : ''); }
+if ($part > 0) { $data = explode(',', $data); $data = (isset($data[$part - 1]) ? trim($data[$part - 1]) : ''); }
 $data = (string) do_shortcode($data);
 if ($data == '') { $data = $default; }
 $data = contact_format_data($field, $data);
@@ -75,6 +79,7 @@ return $data; }
 
 
 function contact_decrypt_url($url) {
+if (strstr($url, '?url=')) {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 $url = explode('?url=', $url);
 $url = $url[1];
@@ -84,7 +89,7 @@ $url = explode('|', $url);
 $T = $url[0];
 $url = $url[1];
 $S = time() - $T;
-if ($S > 3600*contact_data('encrypted_urls_validity_duration')) { $url = HOME_URL; }
+if ($S > 3600*contact_data('encrypted_urls_validity_duration')) { $url = HOME_URL; } }
 return $url; }
 
 
@@ -133,6 +138,9 @@ load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 return __(__($string), 'contact-manager'); }
 
 
+function contact_user_data($atts) { include dirname(__FILE__).'/user-data.php'; return $data; }
+
+
 function contact_item_data($type, $atts) { include dirname(__FILE__).'/item-data.php'; return $data; }
 
 
@@ -158,10 +166,12 @@ if (!defined('KLEOR_JQUERY_LOADED')) { define('KLEOR_JQUERY_LOADED', true); ?>
 
 function contact_sql_array($table, $array) {
 foreach ($table as $key => $value) {
-$sql[$key] = $array[$key];
+if (!isset($array[$key])) { $array[$key] = ''; }
+$sql[$key] = ($key == 'password' ? hash('sha256', $array[$key]) : $array[$key]);
+if (isset($value['type'])) {
 if ($value['type'] == 'int') { $sql[$key] = (int) $sql[$key]; }
 elseif ((strstr($value['type'], 'dec')) && (!is_numeric($sql[$key]))) { $sql[$key] = round(100*$sql[$key])/100; }
-elseif (($value['type'] == 'text') || ($value['type'] == 'datetime')) { $sql[$key] = "'".$sql[$key]."'"; } }
+elseif (($value['type'] == 'text') || ($value['type'] == 'datetime')) { $sql[$key] = "'".$sql[$key]."'"; } } }
 return $sql; }
 
 
@@ -171,11 +181,10 @@ if (function_exists($function)) { $array = array_map($function, array($string));
 return $string; }
 
 
-
 for ($i = 0; $i < 4; $i++) {
 foreach (array('contact-content', 'contact-counter', 'contact-form-counter') as $tag) {
 add_shortcode($tag.($i == 0 ? '' : $i), create_function('$atts, $content', 'include_once dirname(__FILE__)."/shortcodes.php"; return '.str_replace('-', '_', $tag).'($atts, $content);')); } }
-add_shortcode('user', create_function('$atts', 'include_once dirname(__FILE__)."/shortcodes.php"; return contact_user_data($atts);'));
+add_shortcode('user', 'contact_user_data');
 add_shortcode('contact-manager', 'contact_data');
 add_shortcode('contact-form', 'contact_form_data');
 add_shortcode('message', 'message_data');

@@ -1,10 +1,11 @@
-<?php include 'tables.php';
+<?php global $wpdb; $error = '';
+include 'tables.php';
 include_once 'tables-functions.php';
-$back_office_options = get_option('contact_manager_back_office');
+$back_office_options = (array) get_option('contact_manager_back_office');
 $undisplayed_rows = (array) $back_office_options['statistics_page_undisplayed_rows'];
 $undisplayed_columns = (array) $back_office_options['statistics_page_undisplayed_columns'];
 include 'admin-pages.php';
-$options = get_option('contact_manager_statistics');
+$options = (array) get_option('contact_manager_statistics');
 
 $tables_names = array(
 'forms' => __('Forms', 'contact-manager'),
@@ -32,7 +33,7 @@ $end_date = $_POST['end_date'];
 $displayed_tables = array();
 for ($i = 0; $i < $max_tables; $i++) {
 $tables_slugs[$i] = $_POST['table'.$i];
-if ($_POST['table'.$i.'_displayed'] == 'yes') { $displayed_tables[] = $i; } } }
+if (isset($_POST['table'.$i.'_displayed'])) { $displayed_tables[] = $i; } } }
 else {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 $displayed_tables = (array) $options['displayed_tables'];
@@ -56,16 +57,17 @@ $options = array(
 'tables' => $tables_slugs);
 update_option('contact_manager_statistics', $options); }
 
-if ($_GET['s'] != '') {
+$_GET['filter_criteria'] = ''; $filter_criteria = '';
+if ((isset($_GET['s'])) && ($_GET['s'] != '')) {
 $_GET['filter_criteria'] = str_replace(' ', '%20', '&amp;'.$filterby.'='.$_GET['s']);
 $filter_criteria = (is_numeric($_GET['s']) ? "AND (".$filterby." = ".$_GET['s'].")" : "AND (".$filterby." = '".$_GET['s']."')"); }
 
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE $date_criteria $selection_criteria $filter_criteria", OBJECT);
-$messages_number = (int) $row->total;
+$messages_number = (int) (isset($row->total) ? $row->total : 0);
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms WHERE $date_criteria $selection_criteria $filter_criteria", OBJECT);
-$forms_number = (int) $row->total;
+$forms_number = (int) (isset($row->total) ? $row->total : 0);
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE $date_criteria $selection_criteria $filter_criteria", OBJECT);
-$forms_categories_number = (int) $row->total;
+$forms_categories_number = (int) (isset($row->total) ? $row->total : 0);
 
 $_GET['criteria'] = $_GET['date_criteria'].$_GET['selection_criteria'].$_GET['filter_criteria'];
 
@@ -82,6 +84,7 @@ $forms_categories_a_tag = '<a style="text-decoration: none;" href="admin.php?pag
 <?php contact_manager_pages_search_field('filter', $filterby, $filterby_options); ?>
 <?php contact_manager_pages_date_picker($start_date, $end_date); ?>
 <?php if (count($undisplayed_rows) < count($statistics_rows)) {
+$global_table_ths = '';
 foreach ($statistics_columns as $key => $value) {
 if (!in_array($key, $undisplayed_columns)) { $global_table_ths .= '<th scope="col" class="manage-column" style="width: '.$value['width'].'%;">'.$value['name'].'</th>'; } }
 echo '
@@ -90,6 +93,7 @@ echo '
 <thead><tr>'.$global_table_ths.'</tr></thead>
 <tfoot><tr>'.$global_table_ths.'</tr></tfoot>
 <tbody>';
+$boolean = false;
 if (!in_array('messages', $undisplayed_rows)) { echo '
 <tr'.($boolean ? '' : ' class="alternate"').'>
 <td><strong>'.$statistics_rows['messages']['name'].'</strong></td>
@@ -118,6 +122,7 @@ echo '</select></label>
 foreach ($displayed_tables as $key => $value) {
 if (in_array($tables_slugs[$value], $tables_displayed)) { unset($displayed_tables[$key]); }
 $tables_displayed[] = $tables_slugs[$value]; }
+$summary = '';
 if (count($displayed_tables) > 1) {
 for ($i = 0; $i < $max_tables; $i++) {
 if (in_array($i, $displayed_tables)) { $summary .= '<li> | <a href="#'.str_replace('_', '-', $tables_slugs[$i]).'">'.$tables_names[$tables_slugs[$i]].'</a></li>'; } }
@@ -127,10 +132,11 @@ for ($i = 0; $i < $max_tables; $i++) {
 if (in_array($i, $displayed_tables)) {
 $table_slug = $tables_slugs[$i];
 $table_name = table_name($table_slug);
-$options = get_option('contact_manager_'.$table_slug);
+$options = (array) get_option('contact_manager_'.$table_slug);
 $columns = (array) $options['columns'];
 $max_columns = count($columns);
 $displayed_columns = (array) $options['displayed_columns'];
+$table_ths = '';
 for ($j = 0; $j < $max_columns; $j++) { if (in_array($j, $displayed_columns)) { $table_ths .= table_th($table_slug, $columns[$j]); } }
 echo $summary.'
 <h3 id="'.str_replace('_', '-', $tables_slugs[$i]).'"><strong>'.$tables_names[$tables_slugs[$i]].'</strong></h3>
@@ -139,8 +145,10 @@ echo $summary.'
 <thead><tr>'.$table_ths.'</tr></thead>
 <tfoot><tr>'.$table_ths.'</tr></tfoot>
 <tbody>';
+$boolean = false;
 $items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $filter_criteria ORDER BY date DESC", OBJECT);
 if ($items) { foreach ($items as $item) {
+$table_tds = '';
 $first = true; for ($j = 0; $j < $max_columns; $j++) {
 if (in_array($j, $displayed_columns)) {
 $table_tds .= '<td'.($first ? ' style="height: 6em;"' : '').'>'.table_td($table_slug, $columns[$j], $item).($first ? row_actions($table_slug, $item) : '').'</td>';

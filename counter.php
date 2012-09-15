@@ -1,31 +1,31 @@
 <?php global $wpdb;
 if ($type == 'contact_form') {
-$_GET['contact_form_data'] = (array) $_GET['contact_form_data'];
-if ((isset($_GET['contact_form_id'])) && ($_GET['contact_form_data']['id'] != $_GET['contact_form_id'])) {
+$_GET['contact_form_data'] = (array) (isset($_GET['contact_form_data']) ? $_GET['contact_form_data'] : array());
+if ((isset($_GET['contact_form_id'])) && ((!isset($_GET['contact_form_data']['id'])) || ($_GET['contact_form_data']['id'] != $_GET['contact_form_id']))) {
 $_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_GET['contact_form_id'], OBJECT); }
 $contact_form_data = $_GET['contact_form_data'];
 extract(shortcode_atts(array('data' => '', 'id' => '', 'limit' => ''), $atts));
 $field = str_replace('-', '_', format_nice_name($data));
-if (($field == '') || ($field == 'messages')) { $field = 'messages_count'; }
-elseif ($field == 'displays') { $field = 'displays_count'; }
+if (strstr($field, 'display')) { $field = 'displays_count'; } else { $field = 'messages_count'; }
 $id = preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY);
 $m = count($id);
 
 if ($m < 2) {
-$id = (int) $id[0];
-if (($id == 0) || ($id == $contact_form_data['id'])) { $data = $contact_form_data[$field]; }
+if ($m == 0) { $id = 0; }
+else { $id = (int) $id[0]; }
+if (($id == 0) || ((isset($contact_form_data['id'])) && ($id == $contact_form_data['id']))) { $data = $contact_form_data[$field]; }
 else {
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
 $contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = $id", OBJECT);
 $_GET['contact_form_id'] = $id; $_GET['contact_form_data'] = $contact_form_data;
-$data = $contact_form_data[$field]; } }
+$data = (isset($contact_form_data[$field]) ? $contact_form_data[$field] : 0); } }
 
 else {
 $data = 0; for ($i = 0; $i < $m; $i++) {
 $id[$i] = (int) $id[$i];
 $contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$id[$i], OBJECT);
-$data = $data + $contact_form_data[$field]; } } }
+$data = $data + (isset($contact_form_data[$field]) ? $contact_form_data[$field] : 0); } } }
 
 else {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
@@ -63,20 +63,21 @@ $date_criteria = "AND (date BETWEEN '".$start_date."' AND '".$end_date."')"; bre
 default: $date_criteria = ''; } }
 
 $status = str_replace('-', '_', format_nice_name($status));
-if ($status != '') { $status_criteria = "AND status = '".$status."'"; }
+if ($status == '') { $status_criteria = ''; }
+else { $status_criteria = "AND status = '".$status."'"; }
 
 if (is_string($table)) {
 if ($field == '') {
 $row = $wpdb->get_row("SELECT count(*) as total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = (int) $row->total; }
+$data = (int) (isset($row->total) ? $row->total : 0); }
 else {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = round(100*$row->total)/100; } }
+$data = round(100*(isset($row->total) ? $row->total : 0))/100; } }
 
 else {
 $data = 0; foreach ($table as $table_name) {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table_name WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = $data + round(100*$row->total)/100; } } }
+$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } } }
 
 if ($limit == '') { $limit = '0'; }
 else { $limit = '0/'.$limit; }
@@ -102,7 +103,7 @@ $_GET['contact_total_limit'] = $limit[$n - 1];
 $_GET['contact_total_number'] = $data;
 $_GET['contact_total_remaining_number'] = $total_remaining_number;
 
-$content[$k] = do_shortcode($content[$k]);
+$content[$k] = (isset($content[$k]) ? do_shortcode($content[$k]) : '');
 
 foreach ($tags as $tag) {
 $_tag = str_replace('-', '_', format_nice_name($tag));

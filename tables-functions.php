@@ -1,5 +1,6 @@
 <?php global $wpdb;
 
+$_GET['selection_criteria'] = ''; $selection_criteria = '';
 foreach (array(
 'category_id',
 'commission_amount',
@@ -32,16 +33,16 @@ global $wpdb;
 switch ($table) {
 case 'forms':
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$item->id, OBJECT);
-$messages_number = (int) $row->total;
+$messages_number = (int) (isset($row->total) ? $row->total : 0);
 $row_actions =
 '<span class="edit"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'">'.__('Edit').'</a></span>
  | <span class="delete"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'&amp;action=delete">'.__('Delete').'</a></span>'
 .($messages_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.__('Messages', 'contact-manager').'</a></span>'); break;
 case 'forms_categories':
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms WHERE category_id = ".$item->id, OBJECT);
-$forms_number = (int) $row->total;
+$forms_number = (int) (isset($row->total) ? $row->total : 0);
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE category_id = ".$item->id, OBJECT);
-$categories_number = (int) $row->total;
+$categories_number = (int) (isset($row->total) ? $row->total : 0);
 $row_actions = 
 '<span class="edit"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'">'.__('Edit').'</a></span>
  | <span class="delete"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'&amp;action=delete">'.__('Delete').'</a></span>'
@@ -70,7 +71,7 @@ $undisplayed_keys = array();
 switch ($table) {
 case 'forms': case 'forms_categories':
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms_categories", OBJECT);
-$n = (int) $row->total; if ($n == 0) { $undisplayed_keys[] = 'category_id'; } break; }
+$n = (int) (isset($row->total) ? $row->total : 0); if ($n == 0) { $undisplayed_keys[] = 'category_id'; } break; }
 foreach ($tables[$table] as $key => $value) {
 foreach ((array) $value['modules'] as $module) {
 if (in_array($module, $undisplayed_modules)) { $undisplayed_keys[] = $key; } } }
@@ -110,6 +111,7 @@ case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.$data.'</a>'; br
 case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == 'http://'.$_SERVER['SERVER_NAME'] ? '/' : str_replace('http://'.$_SERVER['SERVER_NAME'], '', $data)).'</a>'); break;
 case 'keywords':
 $keywords = explode(',', $data);
+$keywords_list = '';
 foreach ($keywords as $keyword) {
 $keyword = strtolower(trim($keyword));
 $keyword = '<a href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;keywords='.$keyword.'">'.$keyword.'</a>';
@@ -123,6 +125,7 @@ elseif ($data == 'inactive') { $table_td = '<span style="color: #e08000;">'.__('
 else { $table_td = $data; } break;
 case 'sender_members_areas':
 $members_areas = array_unique(preg_split('#[^0-9]#', $data, 0, PREG_SPLIT_NO_EMPTY));
+$members_areas_list = '';
 foreach ($members_areas as $member_area) {
 if ((function_exists('membership_manager_admin_menu')) && ($member_area > 0)) { $member_area = '<a href="admin.php?page=membership-manager-member-area&amp;id='.$member_area.'">'.$member_area.'</a>'; }
 $members_areas_list .= $member_area.', '; }

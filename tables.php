@@ -1,6 +1,6 @@
 <?php $tables['forms'] = array(
 'id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => __('ID', 'contact-manager'), 'width' => 5),
-'category_id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => (strstr($_GET['page'], 'categories') ? __('Parent category ID', 'contact-manager') : __('Category ID', 'contact-manager')), 'width' => 12),
+'category_id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => (((isset($_GET['page'])) && (strstr($_GET['page'], 'categories'))) ? __('Parent category ID', 'contact-manager') : __('Category ID', 'contact-manager')), 'width' => 12),
 'name' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Name', 'contact-manager'), 'width' => 18, 'searchby' => __('the name', 'contact-manager')),
 'description' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Description', 'contact-manager'), 'width' => 18, 'searchby' => __('the description', 'contact-manager')),
 'keywords' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Keywords', 'contact-manager'), 'width' => 18, 'searchby' => __('the keywords', 'contact-manager')),

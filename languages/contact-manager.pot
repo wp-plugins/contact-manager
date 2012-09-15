@@ -1,237 +1,238 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 4.7\n"
+"Project-Id-Version: Contact Manager 4.8\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
-"POT-Creation-Date: 2011-11-01 17:45+0000\n"
-"PO-Revision-Date: 2011-11-01 17:45+0000\n"
-"Last-Translator: Kleor\n"
-"Language-Team: Kleor\n"
+"POT-Creation-Date: 2012-04-02 00:00+0000\n"
+"PO-Revision-Date: 2012-04-02 00:00+0000\n"
+"Last-Translator: Kleor <contact@kleor-editions.com>\n"
+"Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 msgid "Allows you to create and manage your contact forms and messages."
 msgstr ""
 
-#: admin-pages-functions.php:5
-msgid "Start"
-msgstr ""
-
-#: admin-pages-functions.php:7
-msgid "End"
-msgstr ""
-
-#: admin-pages-functions.php:9 back-office-page.php:114
-#: back-office-page.php:133 statistics-page.php:113 table-page.php:94
-#: table-page.php:139
-msgid "Display"
-msgstr ""
-
-#: admin-pages-functions.php:82
+#: admin-pages-functions.php:77
 msgid "Display the summary"
 msgstr ""
 
-#: admin-pages-functions.php:83
+#: admin-pages-functions.php:78
 msgid "Modules displayed"
 msgstr ""
 
-#: admin-pages-functions.php:101 back-office-page.php:79
-#: back-office-page.php:93 back-office-page.php:116 back-office-page.php:135
-#: back-office-page.php:158 form-page.php:191 form-page.php:211
-#: form-page.php:244 form-page.php:266 form-page.php:297 form-page.php:328
-#: form-page.php:359 form-page.php:412 form-page.php:471 form-page.php:496
-#: form-page.php:518 form-page.php:565 message-page.php:223
-#: message-page.php:261 message-page.php:331 options-page.php:116
-#: options-page.php:141 options-page.php:156 options-page.php:171
-#: options-page.php:191 options-page.php:211 options-page.php:234
-#: options-page.php:279 options-page.php:325 options-page.php:377
-#: options-page.php:394 options-page.php:408 options-page.php:443
-#: statistics-page.php:114 table-page.php:95 table-page.php:127
+#: admin-pages-functions.php:99 back-office-page.php:78
+#: back-office-page.php:92 back-office-page.php:115 back-office-page.php:134
+#: back-office-page.php:161 form-page.php:190 form-page.php:212
+#: form-page.php:235 form-page.php:274 form-page.php:296 form-page.php:327
+#: form-page.php:358 form-page.php:388 form-page.php:441 form-page.php:494
+#: form-page.php:553 form-page.php:578 form-page.php:600 form-page.php:647
+#: message-page.php:240 message-page.php:278 message-page.php:348
+#: options-page.php:119 options-page.php:179 options-page.php:194
+#: options-page.php:209 options-page.php:229 options-page.php:249
+#: options-page.php:272 options-page.php:333 options-page.php:379
+#: options-page.php:425 options-page.php:477 options-page.php:494
+#: options-page.php:522 options-page.php:557 statistics-page.php:115
+#: table-page.php:113 table-page.php:145
 msgid "Update"
 msgstr ""
 
-#: admin-pages-functions.php:109
+#: admin-pages-functions.php:107
 msgid "all fields"
 msgstr ""
 
-#: admin-pages-functions.php:178
-msgid "Sunday"
+#: admin-pages-functions.php:169
+msgid "Start"
 msgstr ""
 
-#: admin-pages-functions.php:178
-msgid "Monday"
+#: admin-pages-functions.php:171
+msgid "End"
 msgstr ""
 
-#: admin-pages-functions.php:178
-msgid "Tuesday"
-msgstr ""
-
-#: admin-pages-functions.php:178
-msgid "Wednesday"
-msgstr ""
-
-#: admin-pages-functions.php:178
-msgid "Thursday"
-msgstr ""
-
-#: admin-pages-functions.php:178
-msgid "Friday"
-msgstr ""
-
-#: admin-pages-functions.php:178
-msgid "Saturday"
-msgstr ""
-
-#: admin-pages-functions.php:179
-msgid "Sun"
-msgstr ""
-
-#: admin-pages-functions.php:179
-msgid "Mon"
-msgstr ""
-
-#: admin-pages-functions.php:179
-msgid "Tue"
-msgstr ""
-
-#: admin-pages-functions.php:179
-msgid "Wed"
-msgstr ""
-
-#: admin-pages-functions.php:179
-msgid "Thu"
-msgstr ""
-
-#: admin-pages-functions.php:179
-msgid "Fri"
-msgstr ""
-
-#: admin-pages-functions.php:179
-msgid "Sat"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "January"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "February"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "March"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "April"
-msgstr ""
-
-#: admin-pages-functions.php:180 admin-pages-functions.php:181
-msgid "May"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "June"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "July"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "August"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "September"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "October"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "November"
-msgstr ""
-
-#: admin-pages-functions.php:180
-msgid "December"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Jan"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Feb"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Mar"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Apr"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Jun"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Jul"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Aug"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Sep"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Oct"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Nov"
-msgstr ""
-
-#: admin-pages-functions.php:181
-msgid "Dec"
-msgstr ""
-
-#: admin-pages-functions.php:183
-msgid "Previous year"
-msgstr ""
-
-#: admin-pages-functions.php:184
-msgid "Previous month"
+#: admin-pages-functions.php:173 back-office-page.php:113
+#: back-office-page.php:132 statistics-page.php:114 table-page.php:112
+#: table-page.php:161
+msgid "Display"
 msgstr ""
 
 #: admin-pages-functions.php:185
-msgid "Next year"
+msgid "Sunday"
+msgstr ""
+
+#: admin-pages-functions.php:185
+msgid "Monday"
+msgstr ""
+
+#: admin-pages-functions.php:185
+msgid "Tuesday"
+msgstr ""
+
+#: admin-pages-functions.php:185
+msgid "Wednesday"
+msgstr ""
+
+#: admin-pages-functions.php:185
+msgid "Thursday"
+msgstr ""
+
+#: admin-pages-functions.php:185
+msgid "Friday"
+msgstr ""
+
+#: admin-pages-functions.php:185
+msgid "Saturday"
 msgstr ""
 
 #: admin-pages-functions.php:186
-msgid "Next month"
+msgid "Sun"
+msgstr ""
+
+#: admin-pages-functions.php:186
+msgid "Mon"
+msgstr ""
+
+#: admin-pages-functions.php:186
+msgid "Tue"
+msgstr ""
+
+#: admin-pages-functions.php:186
+msgid "Wed"
+msgstr ""
+
+#: admin-pages-functions.php:186
+msgid "Thu"
+msgstr ""
+
+#: admin-pages-functions.php:186
+msgid "Fri"
+msgstr ""
+
+#: admin-pages-functions.php:186
+msgid "Sat"
 msgstr ""
 
 #: admin-pages-functions.php:187
-msgid "Close"
+msgid "January"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "February"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "March"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "April"
+msgstr ""
+
+#: admin-pages-functions.php:187 admin-pages-functions.php:188
+msgid "May"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "June"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "July"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "August"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "September"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "October"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "November"
+msgstr ""
+
+#: admin-pages-functions.php:187
+msgid "December"
 msgstr ""
 
 #: admin-pages-functions.php:188
+msgid "Jan"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Feb"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Mar"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Apr"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Jun"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Jul"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Aug"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Sep"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Oct"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Nov"
+msgstr ""
+
+#: admin-pages-functions.php:188
+msgid "Dec"
+msgstr ""
+
+#: admin-pages-functions.php:190
+msgid "Previous year"
+msgstr ""
+
+#: admin-pages-functions.php:191
+msgid "Previous month"
+msgstr ""
+
+#: admin-pages-functions.php:192
+msgid "Next year"
+msgstr ""
+
+#: admin-pages-functions.php:193
+msgid "Next month"
+msgstr ""
+
+#: admin-pages-functions.php:194
+msgid "Close"
+msgstr ""
+
+#: admin-pages-functions.php:195
 msgid "Choose a date"
 msgstr ""
 
-#: admin-pages-functions.php:189 message-page.php:220 tables.php:59
+#: admin-pages-functions.php:196 message-page.php:237 tables.php:70
 msgid "Date"
 msgstr ""
 
-#: admin-pages.php:2 admin.php:39
+#: admin-pages.php:2 admin.php:42
 msgid "Documentation"
 msgstr ""
 
@@ -239,11 +240,11 @@ msgstr ""
 msgid "Commerce"
 msgstr ""
 
-#: admin-pages.php:4 admin-pages.php:44 admin-pages.php:57 admin-pages.php:126
+#: admin-pages.php:4 admin-pages.php:46 admin-pages.php:59 admin-pages.php:140
 msgid "Affiliation"
 msgstr ""
 
-#: admin-pages.php:5 admin-pages.php:41 admin-pages.php:64 admin-pages.php:123
+#: admin-pages.php:5 admin-pages.php:43 admin-pages.php:67 admin-pages.php:135
 msgid "Membership"
 msgstr ""
 
@@ -251,11 +252,11 @@ msgstr ""
 msgid "Optin"
 msgstr ""
 
-#: admin-pages.php:9 admin.php:30
+#: admin-pages.php:9 admin.php:33
 msgid "Options"
 msgstr ""
 
-#: admin-pages.php:10 admin-pages.php:34 admin-pages.php:110
+#: admin-pages.php:10 admin-pages.php:35 admin-pages.php:119
 msgid "Form"
 msgstr ""
 
@@ -271,8 +272,8 @@ msgstr ""
 msgid "Add Form"
 msgstr ""
 
-#: admin-pages.php:11 admin-pages.php:137 statistics-page.php:10
-#: tables-functions.php:41
+#: admin-pages.php:11 admin-pages.php:151 statistics-page.php:10
+#: tables-functions.php:48
 msgid "Forms"
 msgstr ""
 
@@ -312,12 +313,13 @@ msgstr ""
 msgid "Add Message"
 msgstr ""
 
-#: admin-pages.php:15 admin-pages.php:136 statistics-page.php:12
+#: admin-pages.php:15 admin-pages.php:150 statistics-page.php:12
+#: tables-functions.php:39
 msgid "Messages"
 msgstr ""
 
-#: admin-pages.php:16 message-page.php:215 message-page.php:287
-#: message-page.php:315
+#: admin-pages.php:16 message-page.php:227 message-page.php:304
+#: message-page.php:332
 msgid "Statistics"
 msgstr ""
 
@@ -341,31 +343,31 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-#: admin-pages.php:24 admin-pages.php:129
+#: admin-pages.php:24 admin-pages.php:143
 msgid "<em>Options</em> page"
 msgstr ""
 
-#: admin-pages.php:25 admin-pages.php:47
+#: admin-pages.php:25 admin-pages.php:49
 msgid "<em>Edit Form</em> page"
 msgstr ""
 
-#: admin-pages.php:25 admin-pages.php:47
+#: admin-pages.php:25 admin-pages.php:49
 msgid "<em>Add Form</em> page"
 msgstr ""
 
-#: admin-pages.php:26 admin-pages.php:52
+#: admin-pages.php:26 admin-pages.php:54
 msgid "<em>Edit Form Category</em> page"
 msgstr ""
 
-#: admin-pages.php:26 admin-pages.php:52
+#: admin-pages.php:26 admin-pages.php:54
 msgid "<em>Add Form Category</em> page"
 msgstr ""
 
-#: admin-pages.php:27 admin-pages.php:67
+#: admin-pages.php:27 admin-pages.php:70
 msgid "<em>Edit Message</em> page"
 msgstr ""
 
-#: admin-pages.php:27 admin-pages.php:67
+#: admin-pages.php:27 admin-pages.php:70
 msgid "<em>Add Message</em> page"
 msgstr ""
 
@@ -377,843 +379,1033 @@ msgstr ""
 msgid "<em>Back Office</em> page"
 msgstr ""
 
-#: admin-pages.php:32 admin-pages.php:55
+#: admin-pages.php:32 admin-pages.php:57
 msgid "General informations"
 msgstr ""
 
 #: admin-pages.php:33
+msgid "Gift"
+msgstr ""
+
+#: admin-pages.php:34
 msgid "Counters"
 msgstr ""
 
-#: admin-pages.php:35 admin-pages.php:111
+#: admin-pages.php:36 admin-pages.php:121
 msgid "Error messages"
 msgstr ""
 
-#: admin-pages.php:36 admin-pages.php:112
+#: admin-pages.php:37 admin-pages.php:122
 msgid "Messages registration"
 msgstr ""
 
-#: admin-pages.php:37 admin-pages.php:60 admin-pages.php:114
+#: admin-pages.php:38 admin-pages.php:62 admin-pages.php:124
 msgid "Message confirmation email"
 msgstr ""
 
-#: admin-pages.php:38 admin-pages.php:61 admin-pages.php:115
+#: admin-pages.php:39 admin-pages.php:63 admin-pages.php:125
 msgid "Message notification email"
 msgstr ""
 
-#: admin-pages.php:39 admin-pages.php:62 admin-pages.php:116
+#: admin-pages.php:40 admin-pages.php:64 admin-pages.php:126
 msgid "Autoresponders"
 msgstr ""
 
-#: admin-pages.php:40 admin-pages.php:63 admin-pages.php:122
+#: admin-pages.php:41 admin-pages.php:65 admin-pages.php:133
+msgid "Registration as a client"
+msgstr ""
+
+#: admin-pages.php:42 admin-pages.php:66 admin-pages.php:134
 msgid "Registration to affiliate program"
 msgstr ""
 
-#: admin-pages.php:42 admin-pages.php:65 admin-pages.php:124
+#: admin-pages.php:44 admin-pages.php:68 admin-pages.php:136
 msgid "WordPress"
 msgstr ""
 
-#: admin-pages.php:43 admin-pages.php:66 admin-pages.php:125
+#: admin-pages.php:45 admin-pages.php:69 admin-pages.php:137
 msgid "Custom instructions"
 msgstr ""
 
-#: admin-pages.php:45 admin-pages.php:58 admin-pages.php:127
+#: admin-pages.php:47 admin-pages.php:60 admin-pages.php:141
 msgid "Level 1 commission"
 msgstr ""
 
-#: admin-pages.php:46 admin-pages.php:59 admin-pages.php:128
+#: admin-pages.php:48 admin-pages.php:61 admin-pages.php:142
 msgid "Level 2 commission"
 msgstr ""
 
-#: admin-pages.php:56 form-page.php:283 form-page.php:314 message-page.php:354
-#: message-page.php:377 options-page.php:181 options-page.php:201
+#: admin-pages.php:58 form-page.php:313 form-page.php:344 message-page.php:373
+#: message-page.php:396 options-page.php:219 options-page.php:239
 msgid "Sender"
 msgstr ""
 
-#: admin-pages.php:109
+#: admin-pages.php:118
 msgid "Automatic display"
 msgstr ""
 
-#: admin-pages.php:113
+#: admin-pages.php:120
+msgid "CAPTCHA"
+msgstr ""
+
+#: admin-pages.php:123
 msgid "URLs encryption"
 msgstr ""
 
-#: admin-pages.php:117
+#: admin-pages.php:127
 msgid "Autoresponders integration"
 msgstr ""
 
-#: admin-pages.php:132
+#: admin-pages.php:138
+msgid "New message"
+msgstr ""
+
+#: admin-pages.php:139
+msgid "Message removal"
+msgstr ""
+
+#: admin-pages.php:146
 msgid "Data"
 msgstr ""
 
-#: admin-pages.php:133
+#: admin-pages.php:147
 msgid "Quantity"
 msgstr ""
 
-#: admin-pages.php:138 statistics-page.php:11
+#: admin-pages.php:152 statistics-page.php:11
 msgid "Forms categories"
 msgstr ""
 
-#: admin-pages.php:141
+#: admin-pages.php:155
 msgid "Administrator"
 msgstr ""
 
-#: admin-pages.php:142
+#: admin-pages.php:156
 msgid "Editor"
 msgstr ""
 
-#: admin-pages.php:143
+#: admin-pages.php:157
 msgid "Author"
 msgstr ""
 
-#: admin-pages.php:144
+#: admin-pages.php:158
 msgid "Contributor"
 msgstr ""
 
-#: admin-pages.php:145
+#: admin-pages.php:159
 msgid "Subscriber"
 msgstr ""
 
-#: admin.php:28
+#: admin.php:8 initial-options.php:249
+msgid "Contact"
+msgstr ""
+
+#: admin.php:30
 msgid "Uninstall"
 msgstr ""
 
-#: admin.php:29
+#: admin.php:32
 msgid "Reset"
 msgstr ""
 
-#: back-office-page.php:7 form-page.php:9 form-page.php:40 message-page.php:6
-#: message-page.php:39 options-page.php:6 options-page.php:32
+#: back-office-page.php:7 form-page.php:10 form-page.php:41 message-page.php:7
+#: message-page.php:43 options-page.php:6 options-page.php:32
 msgid "You don't have sufficient permissions."
 msgstr ""
 
-#: back-office-page.php:56 options-page.php:90
+#: back-office-page.php:55 options-page.php:93
 msgid "Settings saved."
 msgstr ""
 
-#: back-office-page.php:68
+#: back-office-page.php:67
 msgid "Access"
 msgstr ""
 
-#: back-office-page.php:72
+#: back-office-page.php:71
 msgid "Minimum role to access the back office"
 msgstr ""
 
-#: back-office-page.php:73
+#: back-office-page.php:72
 msgid "Management"
 msgstr ""
 
-#: back-office-page.php:77
+#: back-office-page.php:76
 msgid "Minimum role to change options and add, edit or delete items"
 msgstr ""
 
-#: back-office-page.php:88
+#: back-office-page.php:87
 msgid "Use a custom icon"
 msgstr ""
 
-#: back-office-page.php:89
+#: back-office-page.php:88
 msgid "Icon URL"
 msgstr ""
 
-#: back-office-page.php:91 back-office-page.php:111 form-page.php:185
-#: message-page.php:239 message-page.php:242 message-page.php:259
+#: back-office-page.php:90 back-office-page.php:110 form-page.php:205
+#: message-page.php:256 message-page.php:259 message-page.php:276
 msgid "Link"
 msgstr ""
 
-#: back-office-page.php:102
+#: back-office-page.php:101
 msgid "Display the title"
 msgstr ""
 
-#: back-office-page.php:103
+#: back-office-page.php:102
 msgid "Title"
 msgstr ""
 
-#: back-office-page.php:106
+#: back-office-page.php:105
 msgid "Display the links"
 msgstr ""
 
-#: back-office-page.php:107
+#: back-office-page.php:106
 msgid "Links"
 msgstr ""
 
-#: back-office-page.php:108
+#: back-office-page.php:107
 msgid "Reset the links"
 msgstr ""
 
-#: back-office-page.php:125
+#: back-office-page.php:124
 msgid "Display the menu"
 msgstr ""
 
-#: back-office-page.php:126
+#: back-office-page.php:125
 msgid "Pages"
 msgstr ""
 
-#: back-office-page.php:127
+#: back-office-page.php:126
 msgid "Reset the pages"
 msgstr ""
 
-#: back-office-page.php:130
+#: back-office-page.php:129
 msgid "Page"
 msgstr ""
 
-#: back-office-page.php:145
+#: back-office-page.php:148
 msgid "Columns displayed"
 msgstr ""
 
-#: back-office-page.php:151
+#: back-office-page.php:154
 msgid "Rows displayed"
 msgstr ""
 
-#: back-office-page.php:163 form-page.php:568 message-page.php:533
-#: options-page.php:447
+#: back-office-page.php:166 form-page.php:650 message-page.php:590
+#: options-page.php:561
 msgid "Save Changes"
 msgstr ""
 
-#: form-page.php:20
+#: form-page.php:21
 msgid "Category deleted."
 msgstr ""
 
-#: form-page.php:20
+#: form-page.php:21
 msgid "Form deleted."
 msgstr ""
 
-#: form-page.php:29
+#: form-page.php:30
 msgid "Do you really want to permanently delete this category?"
 msgstr ""
 
-#: form-page.php:29
+#: form-page.php:30
 msgid "Do you really want to permanently delete this form?"
 msgstr ""
 
-#: form-page.php:30 form-page.php:257 form-page.php:280 form-page.php:311
-#: form-page.php:343 form-page.php:375 form-page.php:402 form-page.php:408
-#: form-page.php:428 form-page.php:461 form-page.php:467 form-page.php:485
-#: form-page.php:510 form-page.php:534 form-page.php:556 message-page.php:29
-#: options-page.php:23 options-page.php:315 options-page.php:321
-#: options-page.php:367 options-page.php:373 tables-functions.php:66
+#: form-page.php:31 form-page.php:287 form-page.php:310 form-page.php:341
+#: form-page.php:372 form-page.php:404 form-page.php:431 form-page.php:437
+#: form-page.php:457 form-page.php:484 form-page.php:490 form-page.php:510
+#: form-page.php:543 form-page.php:549 form-page.php:567 form-page.php:592
+#: form-page.php:616 form-page.php:638 message-page.php:33 options-page.php:23
+#: options-page.php:369 options-page.php:375 options-page.php:415
+#: options-page.php:421 options-page.php:467 options-page.php:473
+#: tables-functions.php:97
 msgid "Yes"
 msgstr ""
 
-#: form-page.php:77 initial-options.php:47
+#: form-page.php:79 initial-options.php:59
 msgid "Please fill out the required fields."
 msgstr ""
 
-#: form-page.php:80 form-page.php:113
+#: form-page.php:82 form-page.php:116
 msgid "This name is not available."
 msgstr ""
 
-#: form-page.php:140
+#: form-page.php:144
 msgid "Category updated."
 msgstr ""
 
-#: form-page.php:140
+#: form-page.php:144
 msgid "Form updated."
 msgstr ""
 
-#: form-page.php:140
+#: form-page.php:144
 msgid "Category saved."
 msgstr ""
 
-#: form-page.php:140
+#: form-page.php:144
 msgid "Form saved."
 msgstr ""
 
-#: form-page.php:147
+#: form-page.php:151
 msgid "Fields marked with * are required."
 msgstr ""
 
-#: form-page.php:148
+#: form-page.php:152
 msgid ""
 "You can apply the default option of the category by leaving the "
 "corresponding field blank."
 msgstr ""
 
-#: form-page.php:158 form-page.php:222 form-page.php:253 form-page.php:276
-#: form-page.php:307 form-page.php:338 form-page.php:370 form-page.php:423
-#: form-page.php:481 form-page.php:506 form-page.php:529
+#: form-page.php:162 form-page.php:201 form-page.php:246 form-page.php:283
+#: form-page.php:306 form-page.php:337 form-page.php:368 form-page.php:399
+#: form-page.php:452 form-page.php:505 form-page.php:563 form-page.php:588
+#: form-page.php:611
 msgid "Click here to configure the default options of the parent category."
 msgstr ""
 
-#: form-page.php:158 form-page.php:222 form-page.php:253 form-page.php:276
-#: form-page.php:307 form-page.php:338 form-page.php:370 form-page.php:423
-#: form-page.php:481 form-page.php:506 form-page.php:529
+#: form-page.php:162 form-page.php:201 form-page.php:246 form-page.php:283
+#: form-page.php:306 form-page.php:337 form-page.php:368 form-page.php:399
+#: form-page.php:452 form-page.php:505 form-page.php:563 form-page.php:588
+#: form-page.php:611
 msgid "Click here to configure the default options of the category."
 msgstr ""
 
-#: form-page.php:160 message-page.php:208 tables.php:2 tables.php:55
+#: form-page.php:164 message-page.php:220 tables.php:2 tables.php:64
 msgid "ID"
 msgstr ""
 
-#: form-page.php:161 message-page.php:209
+#: form-page.php:165 message-page.php:221
 msgid "The ID can not be changed."
 msgstr ""
 
-#: form-page.php:164
+#: form-page.php:168
 msgid "Parent category"
 msgstr ""
 
-#: form-page.php:164 form-page.php:381 form-page.php:440 message-page.php:427
-#: message-page.php:471 options-page.php:294 options-page.php:346
+#: form-page.php:168 form-page.php:410 form-page.php:463 form-page.php:522
+#: message-page.php:446 message-page.php:484 message-page.php:528
+#: options-page.php:348 options-page.php:394 options-page.php:446
 msgid "Category"
 msgstr ""
 
-#: form-page.php:166 form-page.php:384 form-page.php:443 message-page.php:429
-#: message-page.php:473 options-page.php:297 options-page.php:349
+#: form-page.php:170 form-page.php:413 form-page.php:466 form-page.php:525
+#: message-page.php:448 message-page.php:486 message-page.php:530
+#: options-page.php:351 options-page.php:397 options-page.php:449
 msgid "None "
 msgstr ""
 
-#: form-page.php:171
+#: form-page.php:175
 msgid "The options of this category will apply by default to the category."
 msgstr ""
 
-#: form-page.php:171
+#: form-page.php:175
 msgid "The options of this category will apply by default to the form."
 msgstr ""
 
-#: form-page.php:173 form-page.php:389 form-page.php:435 form-page.php:448
-#: message-page.php:213 message-page.php:285 message-page.php:313
-#: message-page.php:434 message-page.php:466 message-page.php:478
-#: options-page.php:113 options-page.php:302 options-page.php:341
-#: options-page.php:354 tables-functions.php:31 tables-functions.php:39
-#: tables-functions.php:44
+#: form-page.php:177 form-page.php:418 form-page.php:471 form-page.php:517
+#: form-page.php:530 message-page.php:225 message-page.php:302
+#: message-page.php:330 message-page.php:453 message-page.php:491
+#: message-page.php:523 message-page.php:535 options-page.php:116
+#: options-page.php:356 options-page.php:402 options-page.php:441
+#: options-page.php:454 tables-functions.php:37 tables-functions.php:46
+#: tables-functions.php:51
 msgid "Edit"
 msgstr ""
 
-#: form-page.php:174 form-page.php:390 form-page.php:436 form-page.php:449
-#: message-page.php:214 message-page.php:286 message-page.php:314
-#: message-page.php:435 message-page.php:467 message-page.php:479
-#: options-page.php:114 options-page.php:303 options-page.php:342
-#: options-page.php:355 tables-functions.php:32 tables-functions.php:40
-#: tables-functions.php:45
+#: form-page.php:178 form-page.php:419 form-page.php:472 form-page.php:518
+#: form-page.php:531 message-page.php:226 message-page.php:303
+#: message-page.php:331 message-page.php:454 message-page.php:492
+#: message-page.php:524 message-page.php:536 options-page.php:117
+#: options-page.php:357 options-page.php:403 options-page.php:442
+#: options-page.php:455 tables-functions.php:38 tables-functions.php:47
+#: tables-functions.php:52
 msgid "Delete"
 msgstr ""
 
-#: form-page.php:176 tables.php:4
+#: form-page.php:180 tables.php:4
 msgid "Name"
 msgstr ""
 
-#: form-page.php:178 tables.php:5
+#: form-page.php:182 tables.php:5
 msgid "Description"
 msgstr ""
 
-#: form-page.php:180 tables.php:6
+#: form-page.php:184 message-page.php:234 tables.php:6 tables.php:69
 msgid "Keywords"
 msgstr ""
 
-#: form-page.php:182
+#: form-page.php:186 message-page.php:236
 msgid "Separate the keywords with commas."
 msgstr ""
 
-#: form-page.php:183 tables.php:7
-msgid "Gift download URL"
-msgstr ""
-
-#: form-page.php:186
-msgid "You can specify several URLs."
-msgstr ""
-
-#: form-page.php:186 form-page.php:294 form-page.php:325 form-page.php:356
-#: form-page.php:378 form-page.php:398 form-page.php:431 form-page.php:457
-#: form-page.php:488 form-page.php:515 message-page.php:362
-#: message-page.php:385 message-page.php:408 message-page.php:424
-#: message-page.php:442 message-page.php:462 message-page.php:486
-#: message-page.php:504 message-page.php:526 options-page.php:105
-#: options-page.php:165 options-page.php:189 options-page.php:209
-#: options-page.php:220 options-page.php:232 options-page.php:243
-#: options-page.php:264 options-page.php:272 options-page.php:275
-#: options-page.php:291 options-page.php:311 options-page.php:337
-#: options-page.php:363 options-page.php:387 options-page.php:406
-#: options-page.php:417
-msgid "More informations"
-msgstr ""
-
-#: form-page.php:187
-msgid "How to encrypt a download URL?"
-msgstr ""
-
-#: form-page.php:188 tables.php:8
+#: form-page.php:187 tables.php:7
 msgid "Creation date"
 msgstr ""
 
-#: form-page.php:200 tables.php:10
-msgid "Displays count"
-msgstr ""
-
-#: form-page.php:202 form-page.php:205 message-page.php:290
-#: message-page.php:318
-msgid "Leave this field blank for 0."
-msgstr ""
-
-#: form-page.php:203 tables.php:11
-msgid "Messages count"
+#: form-page.php:203
+msgid "Download URL"
 msgstr ""
 
 #: form-page.php:206
+msgid "You can specify several URLs."
+msgstr ""
+
+#: form-page.php:206 form-page.php:210 form-page.php:324 form-page.php:355
+#: form-page.php:385 form-page.php:407 form-page.php:427 form-page.php:460
+#: form-page.php:480 form-page.php:513 form-page.php:539 form-page.php:570
+#: form-page.php:597 message-page.php:381 message-page.php:404
+#: message-page.php:427 message-page.php:443 message-page.php:461
+#: message-page.php:481 message-page.php:499 message-page.php:519
+#: message-page.php:543 message-page.php:561 message-page.php:583
+#: options-page.php:108 options-page.php:143 options-page.php:152
+#: options-page.php:155 options-page.php:159 options-page.php:203
+#: options-page.php:227 options-page.php:247 options-page.php:258
+#: options-page.php:270 options-page.php:285 options-page.php:306
+#: options-page.php:315 options-page.php:324 options-page.php:328
+#: options-page.php:345 options-page.php:365 options-page.php:391
+#: options-page.php:411 options-page.php:437 options-page.php:463
+#: options-page.php:487 options-page.php:508 options-page.php:518
+#: options-page.php:531
+msgid "More informations"
+msgstr ""
+
+#: form-page.php:207
+msgid "How to encrypt a download URL?"
+msgstr ""
+
+#: form-page.php:208 tables.php:10
+msgid "Instructions to the sender"
+msgstr ""
+
+#: form-page.php:210
+msgid "You can offer a gift to senders."
+msgstr ""
+
+#: form-page.php:221 tables.php:11
+msgid "Maximum messages quantity per sender"
+msgstr ""
+
+#: form-page.php:223 options-page.php:192
+msgid "Leave this field blank for an unlimited quantity."
+msgstr ""
+
+#: form-page.php:224 tables.php:12
+msgid "Displays count"
+msgstr ""
+
+#: form-page.php:226 form-page.php:229 message-page.php:307
+#: message-page.php:335
+msgid "Leave this field blank for 0."
+msgstr ""
+
+#: form-page.php:227 tables.php:13
+msgid "Messages count"
+msgstr ""
+
+#: form-page.php:230
 msgid "Display the messages"
 msgstr ""
 
-#: form-page.php:208
+#: form-page.php:232
 msgid "Re-count the messages"
 msgstr ""
 
-#: form-page.php:209
+#: form-page.php:233
 msgid "Re-count the messages of all forms"
 msgstr ""
 
-#: form-page.php:222 form-page.php:253 form-page.php:276 form-page.php:307
-#: form-page.php:338 form-page.php:370 form-page.php:423 form-page.php:481
-#: form-page.php:506 form-page.php:529 message-page.php:271
-#: message-page.php:351 message-page.php:374 message-page.php:396
-#: message-page.php:420 message-page.php:458 message-page.php:501
-#: message-page.php:521
+#: form-page.php:246 form-page.php:283 form-page.php:306 form-page.php:337
+#: form-page.php:368 form-page.php:399 form-page.php:452 form-page.php:505
+#: form-page.php:563 form-page.php:588 form-page.php:611 message-page.php:288
+#: message-page.php:370 message-page.php:393 message-page.php:415
+#: message-page.php:439 message-page.php:477 message-page.php:515
+#: message-page.php:558 message-page.php:578
 msgid "Click here to configure the default options."
 msgstr ""
 
-#: form-page.php:223 options-page.php:124 tables.php:12
+#: form-page.php:247 options-page.php:127 tables.php:14
 msgid "Code"
 msgstr ""
 
-#: form-page.php:225 options-page.php:126
+#: form-page.php:249 options-page.php:129
 msgid "How to display a form?"
 msgstr ""
 
-#: form-page.php:226 options-page.php:127
+#: form-page.php:250 options-page.php:130
 msgid "How to create a form?"
 msgstr ""
 
-#: form-page.php:227 form-page.php:234 form-page.php:237 form-page.php:240
-#: form-page.php:264 form-page.php:285 form-page.php:288 form-page.php:291
-#: form-page.php:295 form-page.php:316 form-page.php:319 form-page.php:322
-#: form-page.php:326 form-page.php:357 form-page.php:516 form-page.php:545
-#: form-page.php:561
+#: form-page.php:251 form-page.php:258 form-page.php:261 form-page.php:264
+#: form-page.php:267 form-page.php:270 form-page.php:294 form-page.php:315
+#: form-page.php:318 form-page.php:321 form-page.php:325 form-page.php:346
+#: form-page.php:349 form-page.php:352 form-page.php:356 form-page.php:386
+#: form-page.php:598 form-page.php:627 form-page.php:643
 msgid "Leave this field blank to apply the default option."
 msgstr ""
 
-#: form-page.php:232 options-page.php:132
+#: form-page.php:256 options-page.php:166
 msgid "Unfilled required fields"
 msgstr ""
 
-#: form-page.php:235 options-page.php:134
+#: form-page.php:259 options-page.php:168
 msgid "Unfilled required field"
 msgstr ""
 
-#: form-page.php:238 options-page.php:136
+#: form-page.php:262 options-page.php:170
 msgid "Invalid email address"
 msgstr ""
 
-#: form-page.php:254 options-page.php:150
+#: form-page.php:265 options-page.php:172
+msgid "Invalid CAPTCHA"
+msgstr ""
+
+#: form-page.php:268 options-page.php:174
+msgid "Maximum messages quantity reached"
+msgstr ""
+
+#: form-page.php:284 options-page.php:188
 msgid "Save messages in the database"
 msgstr ""
 
-#: form-page.php:256 form-page.php:279 form-page.php:310 form-page.php:342
-#: form-page.php:350 form-page.php:374 form-page.php:383 form-page.php:394
-#: form-page.php:401 form-page.php:407 form-page.php:427 form-page.php:442
-#: form-page.php:453 form-page.php:460 form-page.php:466 form-page.php:484
-#: form-page.php:491 form-page.php:509 form-page.php:533 form-page.php:555
+#: form-page.php:286 form-page.php:309 form-page.php:340 form-page.php:371
+#: form-page.php:379 form-page.php:403 form-page.php:412 form-page.php:423
+#: form-page.php:430 form-page.php:436 form-page.php:456 form-page.php:465
+#: form-page.php:476 form-page.php:483 form-page.php:489 form-page.php:509
+#: form-page.php:524 form-page.php:535 form-page.php:542 form-page.php:548
+#: form-page.php:566 form-page.php:573 form-page.php:591 form-page.php:615
+#: form-page.php:637
 msgid "Default option"
 msgstr ""
 
-#: form-page.php:258 form-page.php:281 form-page.php:312 form-page.php:344
-#: form-page.php:376 form-page.php:403 form-page.php:409 form-page.php:429
-#: form-page.php:462 form-page.php:468 form-page.php:486 form-page.php:511
-#: form-page.php:535 form-page.php:557 options-page.php:316
-#: options-page.php:322 options-page.php:368 options-page.php:374
-#: tables-functions.php:67
+#: form-page.php:288 form-page.php:311 form-page.php:342 form-page.php:373
+#: form-page.php:405 form-page.php:432 form-page.php:438 form-page.php:458
+#: form-page.php:485 form-page.php:491 form-page.php:511 form-page.php:544
+#: form-page.php:550 form-page.php:568 form-page.php:593 form-page.php:617
+#: form-page.php:639 options-page.php:370 options-page.php:376
+#: options-page.php:416 options-page.php:422 options-page.php:468
+#: options-page.php:474 tables-functions.php:98
 msgid "No"
 msgstr ""
 
-#: form-page.php:260 options-page.php:153
+#: form-page.php:290 options-page.php:191
 msgid "You can save only the latest messages to ease your database."
 msgstr ""
 
-#: form-page.php:261 options-page.php:151 tables.php:17
+#: form-page.php:291 options-page.php:189 tables.php:21
 msgid "Maximum messages quantity"
 msgstr ""
 
-#: form-page.php:263
+#: form-page.php:293
 msgid "Enter <em><strong>i</strong></em> for an unlimited quantity."
 msgstr ""
 
-#: form-page.php:277 message-page.php:353 options-page.php:180
+#: form-page.php:307 message-page.php:372 options-page.php:218
 msgid "Send a message confirmation email"
 msgstr ""
 
-#: form-page.php:286 form-page.php:317 message-page.php:356
-#: message-page.php:379 options-page.php:183 options-page.php:203
+#: form-page.php:316 form-page.php:347 message-page.php:228
+#: message-page.php:375 message-page.php:398 options-page.php:221
+#: options-page.php:241 tables.php:66
 msgid "Receiver"
 msgstr ""
 
-#: form-page.php:289 form-page.php:320 message-page.php:216
-#: message-page.php:358 message-page.php:381 options-page.php:185
-#: options-page.php:205 tables.php:57
+#: form-page.php:319 form-page.php:350 message-page.php:230
+#: message-page.php:377 message-page.php:400 options-page.php:223
+#: options-page.php:243 tables.php:67
 msgid "Subject"
 msgstr ""
 
-#: form-page.php:292 form-page.php:323 message-page.php:360
-#: message-page.php:383 options-page.php:187 options-page.php:207
+#: form-page.php:322 form-page.php:353 message-page.php:379
+#: message-page.php:402 options-page.php:225 options-page.php:245
 msgid "Body"
 msgstr ""
 
-#: form-page.php:294 form-page.php:325 message-page.php:362
-#: message-page.php:385 options-page.php:189 options-page.php:209
+#: form-page.php:324 form-page.php:355 message-page.php:381
+#: message-page.php:404 options-page.php:227 options-page.php:247
 msgid ""
 "You can insert shortcodes into <em>Sender</em>, <em>Receiver</em>, "
 "<em>Subject</em> and <em>Body</em> fields to display informations about the "
 "sender, the message and the form."
 msgstr ""
 
-#: form-page.php:308 message-page.php:376 options-page.php:200
+#: form-page.php:338 message-page.php:395 options-page.php:238
 msgid "Send a message notification email"
 msgstr ""
 
-#: form-page.php:340 message-page.php:398 options-page.php:222
+#: form-page.php:369 message-page.php:417 options-page.php:260
 msgid "Subscribe the sender to an autoresponder list"
 msgstr ""
 
-#: form-page.php:346 message-page.php:399 options-page.php:223
+#: form-page.php:375 message-page.php:418 options-page.php:261
 msgid "Autoresponder"
 msgstr ""
 
-#: form-page.php:354 message-page.php:406 options-page.php:230
+#: form-page.php:383 message-page.php:425 options-page.php:268
 msgid "List"
 msgstr ""
 
-#: form-page.php:356 message-page.php:408 options-page.php:232
+#: form-page.php:385 message-page.php:427 options-page.php:270
 msgid "For some autoresponders, you must enter the list ID."
 msgstr ""
 
-#: form-page.php:371 form-page.php:530 message-page.php:272
-#: message-page.php:421 options-page.php:288 options-page.php:418
+#: form-page.php:400 message-page.php:440 options-page.php:342
+msgid ""
+"To subscribe the senders as clients, you must have installed and activated "
+"<a href=\"http://www.kleor-editions.com/commerce-manager\">Commerce Manager</"
+"a>."
+msgstr ""
+
+#: form-page.php:401 message-page.php:443 options-page.php:345
+msgid "Subscribe the sender as a client"
+msgstr ""
+
+#: form-page.php:421 form-page.php:474 form-page.php:533 message-page.php:308
+#: message-page.php:336 message-page.php:456 message-page.php:494
+#: message-page.php:538 options-page.php:359 options-page.php:405
+#: options-page.php:457
+msgid "Status"
+msgstr ""
+
+#: form-page.php:424 form-page.php:477 form-page.php:536 message-page.php:458
+#: message-page.php:496 message-page.php:540 options-page.php:362
+#: options-page.php:408 options-page.php:460 tables-functions.php:121
+msgid "Active"
+msgstr ""
+
+#: form-page.php:425 form-page.php:478 form-page.php:537 message-page.php:459
+#: message-page.php:497 message-page.php:541 options-page.php:363
+#: options-page.php:409 options-page.php:461 tables-functions.php:122
+msgid "Inactive"
+msgstr ""
+
+#: form-page.php:428 form-page.php:481 form-page.php:540 message-page.php:463
+#: message-page.php:501 message-page.php:545 options-page.php:366
+#: options-page.php:412 options-page.php:464
+msgid "Send a registration confirmation email"
+msgstr ""
+
+#: form-page.php:434 form-page.php:487 form-page.php:546 message-page.php:465
+#: message-page.php:503 message-page.php:547 options-page.php:372
+#: options-page.php:418 options-page.php:470
+msgid "Send a registration notification email"
+msgstr ""
+
+#: form-page.php:453 form-page.php:612 message-page.php:289
+#: message-page.php:478 options-page.php:388 options-page.php:532
 msgid ""
 "To use affiliation, you must have installed and activated <a href=\"http://"
 "www.kleor-editions.com/affiliation-manager\">Affiliation Manager</a>."
 msgstr ""
 
-#: form-page.php:372 message-page.php:424 options-page.php:291
+#: form-page.php:454 message-page.php:481 options-page.php:391
 msgid "Subscribe the sender to affiliate program"
 msgstr ""
 
-#: form-page.php:392 form-page.php:451 message-page.php:291
-#: message-page.php:319 message-page.php:437 message-page.php:481
-#: options-page.php:305 options-page.php:357
-msgid "Status"
-msgstr ""
-
-#: form-page.php:395 form-page.php:454 message-page.php:439
-#: message-page.php:483 options-page.php:308 options-page.php:360
-#: tables-functions.php:83
-msgid "Active"
-msgstr ""
-
-#: form-page.php:396 form-page.php:455 message-page.php:440
-#: message-page.php:484 options-page.php:309 options-page.php:361
-#: tables-functions.php:84
-msgid "Inactive"
-msgstr ""
-
-#: form-page.php:399 form-page.php:458 message-page.php:444
-#: message-page.php:488 options-page.php:312 options-page.php:364
-msgid "Send a registration confirmation email"
-msgstr ""
-
-#: form-page.php:405 form-page.php:464 message-page.php:446
-#: message-page.php:490 options-page.php:318 options-page.php:370
-msgid "Send a registration notification email"
-msgstr ""
-
-#: form-page.php:424 message-page.php:459 options-page.php:334
+#: form-page.php:506 message-page.php:516 options-page.php:434
 msgid ""
 "To use membership, you must have installed and activated <a href=\"http://"
 "www.kleor-editions.com/membership-manager\">Membership Manager</a>."
 msgstr ""
 
-#: form-page.php:425 message-page.php:462 options-page.php:337
+#: form-page.php:507 message-page.php:519 options-page.php:437
 msgid "Subscribe the sender to a member area"
 msgstr ""
 
-#: form-page.php:432 message-page.php:463 options-page.php:338
+#: form-page.php:514 message-page.php:520 options-page.php:438
 msgid "Members areas"
 msgstr ""
 
-#: form-page.php:437 message-page.php:468 options-page.php:343
+#: form-page.php:519 message-page.php:525 options-page.php:443
 msgid "Separate the IDs of the members areas with commas."
 msgstr ""
 
-#: form-page.php:482 message-page.php:504 options-page.php:387
+#: form-page.php:564 message-page.php:561 options-page.php:487
 msgid "Subscribe the sender as a user"
 msgstr ""
 
-#: form-page.php:489 message-page.php:505 options-page.php:388
+#: form-page.php:571 message-page.php:562 options-page.php:488
 msgid "Role"
 msgstr ""
 
-#: form-page.php:507 message-page.php:523 options-page.php:403
+#: form-page.php:589 message-page.php:580 options-page.php:505
+#: options-page.php:515
 msgid "Execute custom instructions"
 msgstr ""
 
-#: form-page.php:513 message-page.php:524 options-page.php:404
+#: form-page.php:595 message-page.php:581 options-page.php:506
+#: options-page.php:516
 msgid "PHP code"
 msgstr ""
 
-#: form-page.php:515 message-page.php:526 options-page.php:406
+#: form-page.php:597 message-page.php:583
 msgid ""
 "You can add custom instructions that will be executed just after the sending "
 "of the message."
 msgstr ""
 
-#: form-page.php:531 options-page.php:420
+#: form-page.php:613 options-page.php:534
 msgid "Use affiliation"
 msgstr ""
 
-#: form-page.php:542 message-page.php:278 options-page.php:426
+#: form-page.php:624 message-page.php:295 options-page.php:540
 msgid ""
 "The level 1 commission is awarded to the affiliate who referred the message."
 msgstr ""
 
-#: form-page.php:543 form-page.php:559 message-page.php:288
-#: message-page.php:316 options-page.php:427 options-page.php:438
+#: form-page.php:625 form-page.php:641 message-page.php:305
+#: message-page.php:333 options-page.php:541 options-page.php:552
 msgid "Amount"
 msgstr ""
 
-#: form-page.php:552 message-page.php:306 options-page.php:435
+#: form-page.php:634 message-page.php:323 options-page.php:549
 msgid ""
 "The level 2 commission is awarded to the referrer of the affiliate who "
 "referred the message."
 msgstr ""
 
-#: form-page.php:553 options-page.php:437
+#: form-page.php:635 options-page.php:551
 msgid "Award a level 2 commission"
 msgstr ""
 
-#: form-page.php:568
+#: form-page.php:650
 msgid "Save Category"
 msgstr ""
 
-#: form-page.php:568
+#: form-page.php:650
 msgid "Save Form"
 msgstr ""
 
-#: index.php:3
-msgid "Filter by"
+#: initial-options.php:21
+msgid "The code you entered for the CAPTCHA is incorrect."
 msgstr ""
 
-#: index.php:4
-msgid "Search by"
-msgstr ""
-
-#: index.php:5
-msgid "active"
-msgstr ""
-
-#: index.php:6
-msgid "bottom"
-msgstr ""
-
-#: index.php:7
-msgid "inactive"
-msgstr ""
-
-#: index.php:8
-msgid "no"
-msgstr ""
-
-#: index.php:9
-msgid "paid"
-msgstr ""
-
-#: index.php:10
-msgid "top"
-msgstr ""
-
-#: index.php:11
-msgid "unlimited"
-msgstr ""
-
-#: index.php:12
-msgid "unpaid"
-msgstr ""
-
-#: index.php:13
-msgid "yes"
-msgstr ""
-
-#: initial-options.php:18
+#: initial-options.php:22
 msgid "This email address appears to be invalid."
 msgstr ""
 
 #: initial-options.php:25
+msgid ""
+"You have already sent [contact-form maximum-messages-quantity-per-sender] "
+"messages through this form."
+msgstr ""
+
+#: initial-options.php:31
 msgid "We Have Received Your Message"
 msgstr ""
 
-#: initial-options.php:46
+#: initial-options.php:58
 msgid "This field is required."
 msgstr ""
 
-#: initial-options.php:52 initial-options.php:77
+#: initial-options.php:67 initial-options.php:102
 msgid ""
 "Your message has been sent successfully. If it requires an answer, we should "
 "respond within 48 hours."
 msgstr ""
 
-#: initial-options.php:55
+#: initial-options.php:70
 msgid "Your first name:"
 msgstr ""
 
-#: initial-options.php:58
+#: initial-options.php:74
 msgid "Your last name:"
 msgstr ""
 
-#: initial-options.php:61
+#: initial-options.php:78
 msgid "Your email address:"
 msgstr ""
 
-#: initial-options.php:64
+#: initial-options.php:82
 msgid "Your website:"
 msgstr ""
 
-#: initial-options.php:67
+#: initial-options.php:86
 msgid "Subject of your message:"
 msgstr ""
 
-#: initial-options.php:70 initial-options.php:79
+#: initial-options.php:90 initial-options.php:104
 msgid "Your message:"
 msgstr ""
 
-#: initial-options.php:73
+#: initial-options.php:94
+msgid "Receive a copy of this message"
+msgstr ""
+
+#: initial-options.php:96
 msgid "Send"
 msgstr ""
 
-#: initial-options.php:81
+#: initial-options.php:100
+msgid "Hi"
+msgstr ""
+
+#: initial-options.php:106
 msgid "Subject:"
 msgstr ""
 
-#: initial-options.php:100
+#: initial-options.php:125
 msgid "Sent through this form:"
 msgstr ""
 
-#: initial-options.php:215
-msgid "Contact"
+#: languages/index.php:3
+msgid "Filter"
 msgstr ""
 
-#: message-page.php:19
+#: languages/index.php:4
+msgid "Filter by"
+msgstr ""
+
+#: languages/index.php:5
+msgid "Search"
+msgstr ""
+
+#: languages/index.php:6
+msgid "Search by"
+msgstr ""
+
+#: languages/index.php:7
+msgid "active"
+msgstr ""
+
+#: languages/index.php:8
+msgid "bottom"
+msgstr ""
+
+#: languages/index.php:9
+msgid "inactive"
+msgstr ""
+
+#: languages/index.php:10
+msgid "no"
+msgstr ""
+
+#: languages/index.php:11
+msgid "paid"
+msgstr ""
+
+#: languages/index.php:12
+msgid "top"
+msgstr ""
+
+#: languages/index.php:13
+msgid "unlimited"
+msgstr ""
+
+#: languages/index.php:14
+msgid "unpaid"
+msgstr ""
+
+#: languages/index.php:15
+msgid "yes"
+msgstr ""
+
+#: libraries/captchas.php:2
+msgid "Arithmetic operation"
+msgstr ""
+
+#: libraries/captchas.php:4
+msgid "Reversed string"
+msgstr ""
+
+#: libraries/captchas.php:7
+msgid "Black Glass"
+msgstr ""
+
+#: libraries/captchas.php:8
+msgid "Clean"
+msgstr ""
+
+#: libraries/captchas.php:9
+msgid "Red"
+msgstr ""
+
+#: libraries/captchas.php:10
+msgid "White"
+msgstr ""
+
+#: libraries/captchas.php:13
+msgid "zero"
+msgstr ""
+
+#: libraries/captchas.php:14
+msgid "one"
+msgstr ""
+
+#: libraries/captchas.php:15
+msgid "two"
+msgstr ""
+
+#: libraries/captchas.php:16
+msgid "three"
+msgstr ""
+
+#: libraries/captchas.php:17
+msgid "four"
+msgstr ""
+
+#: libraries/captchas.php:18
+msgid "five"
+msgstr ""
+
+#: libraries/captchas.php:19
+msgid "six"
+msgstr ""
+
+#: libraries/captchas.php:20
+msgid "seven"
+msgstr ""
+
+#: libraries/captchas.php:21
+msgid "eight"
+msgstr ""
+
+#: libraries/captchas.php:22
+msgid "nine"
+msgstr ""
+
+#: libraries/captchas.php:23
+msgid "ten"
+msgstr ""
+
+#: libraries/captchas.php:24
+msgid "eleven"
+msgstr ""
+
+#: libraries/captchas.php:25
+msgid "twelve"
+msgstr ""
+
+#: libraries/captchas.php:26
+msgid "thirteen"
+msgstr ""
+
+#: libraries/captchas.php:27
+msgid "fourteen"
+msgstr ""
+
+#: libraries/captchas.php:28
+msgid "fifteen"
+msgstr ""
+
+#: message-page.php:23
 msgid "Message deleted."
 msgstr ""
 
-#: message-page.php:28
+#: message-page.php:32
 msgid "Do you really want to permanently delete this message?"
 msgstr ""
 
-#: message-page.php:195
+#: message-page.php:207
 msgid "Message updated."
 msgstr ""
 
-#: message-page.php:195
+#: message-page.php:207
 msgid "Message saved."
 msgstr ""
 
-#: message-page.php:210 options-page.php:111 tables.php:56
+#: message-page.php:222 options-page.php:114 tables.php:65
 msgid "Form ID"
 msgstr ""
 
-#: message-page.php:218 tables.php:58
+#: message-page.php:232 tables.php:68
 msgid "Content"
 msgstr ""
 
-#: message-page.php:231 tables.php:61
+#: message-page.php:248 tables.php:72
 msgid "First name"
 msgstr ""
 
-#: message-page.php:233 tables.php:62
+#: message-page.php:250 tables.php:73
 msgid "Last name"
 msgstr ""
 
-#: message-page.php:235 tables.php:63
+#: message-page.php:252 tables.php:74
 msgid "Email address"
 msgstr ""
 
-#: message-page.php:237
+#: message-page.php:254
 msgid "Website name"
 msgstr ""
 
-#: message-page.php:240 tables.php:65
+#: message-page.php:257 tables.php:76
 msgid "Website URL"
 msgstr ""
 
-#: message-page.php:243 tables.php:66
+#: message-page.php:260 tables.php:77
 msgid "Address"
 msgstr ""
 
-#: message-page.php:245 tables.php:67
+#: message-page.php:262 tables.php:78
 msgid "Postcode"
 msgstr ""
 
-#: message-page.php:247 tables.php:68
+#: message-page.php:264 tables.php:79
 msgid "Town"
 msgstr ""
 
-#: message-page.php:249 tables.php:69
+#: message-page.php:266 tables.php:80
 msgid "Country"
 msgstr ""
 
-#: message-page.php:251 tables.php:70
+#: message-page.php:268 tables.php:81
 msgid "Phone number"
 msgstr ""
 
-#: message-page.php:253 tables.php:71
+#: message-page.php:270 tables.php:82
 msgid "IP address"
 msgstr ""
 
-#: message-page.php:255 tables.php:72
+#: message-page.php:272 tables.php:83
 msgid "User agent"
 msgstr ""
 
-#: message-page.php:257 tables.php:73
+#: message-page.php:274 tables.php:84
 msgid "Referring URL"
 msgstr ""
 
-#: message-page.php:279 message-page.php:307 tables.php:74 tables.php:79
+#: message-page.php:296 message-page.php:324 tables.php:85 tables.php:90
 msgid "Referrer"
 msgstr ""
 
-#: message-page.php:281
+#: message-page.php:298
 msgid "Affiliate who referred this message (ID, login name or email address)"
 msgstr ""
 
-#: message-page.php:293 message-page.php:321
+#: message-page.php:310 message-page.php:338
 msgid "None"
 msgstr ""
 
-#: message-page.php:294 message-page.php:322 tables-functions.php:76
+#: message-page.php:311 message-page.php:339 tables-functions.php:107
 msgid "Unpaid"
 msgstr ""
 
-#: message-page.php:295 message-page.php:323 tables-functions.php:75
+#: message-page.php:312 message-page.php:340 tables-functions.php:106
 msgid "Paid"
 msgstr ""
 
-#: message-page.php:297 message-page.php:325
+#: message-page.php:314 message-page.php:342
 msgid "Payment date"
 msgstr ""
 
-#: message-page.php:299 message-page.php:327
+#: message-page.php:316 message-page.php:344
 msgid ""
 "Leave this field blank if the commission is not paid, or for the current "
 "date if the commission is paid."
 msgstr ""
 
-#: message-page.php:309
+#: message-page.php:326
 msgid ""
 "Leave this field blank for the referrer of the affiliate who referred this "
 "message."
 msgstr ""
 
-#: message-page.php:341
+#: message-page.php:360
 msgid ""
 "Complete the fields below with the informations about the sender, the "
 "message and the form"
 msgstr ""
 
-#: message-page.php:533
+#: message-page.php:590
 msgid "Save Message"
 msgstr ""
 
@@ -1235,93 +1427,131 @@ msgid ""
 "Manager?"
 msgstr ""
 
-#: options-page.php:96
+#: options-page.php:99
 msgid "You can reset an option by leaving the corresponding field blank."
 msgstr ""
 
-#: options-page.php:104
+#: options-page.php:107
 msgid "Enable automatic display"
 msgstr ""
 
-#: options-page.php:106
+#: options-page.php:109
 msgid "Location"
 msgstr ""
 
-#: options-page.php:108
+#: options-page.php:111
 msgid "On the top of posts"
 msgstr ""
 
-#: options-page.php:109
+#: options-page.php:112
 msgid "On the bottom of posts"
 msgstr ""
 
-#: options-page.php:154
-msgid "Leave this field blank for an unlimited quantity."
+#: options-page.php:135
+msgid "Default type"
 msgstr ""
 
-#: options-page.php:165
+#: options-page.php:144
+msgid "Default reCAPTCHA theme"
+msgstr ""
+
+#: options-page.php:153
+msgid "reCAPTCHA public key"
+msgstr ""
+
+#: options-page.php:156 options-page.php:160 options-page.php:307
+#: options-page.php:316 options-page.php:325 options-page.php:329
+msgid "Leave this field blank to apply the Commerce Manager's option."
+msgstr ""
+
+#: options-page.php:157
+msgid "reCAPTCHA private key"
+msgstr ""
+
+#: options-page.php:203
 msgid "You can encrypt the download URLs."
 msgstr ""
 
-#: options-page.php:166
+#: options-page.php:204
 msgid "Validity duration"
 msgstr ""
 
-#: options-page.php:167
+#: options-page.php:205
 msgid "hours"
 msgstr ""
 
-#: options-page.php:168
+#: options-page.php:206
 msgid "Encryption key"
 msgstr ""
 
-#: options-page.php:220 options-page.php:243
+#: options-page.php:258 options-page.php:285
 msgid ""
 "You must make some adjustments so that the subscription works with some "
 "autoresponders."
 msgstr ""
 
-#: options-page.php:249
+#: options-page.php:282 options-page.php:342
+msgid "Click here to configure the options of Commerce Manager."
+msgstr ""
+
+#: options-page.php:291
 msgid "Click here to read the instructions for integration."
 msgstr ""
 
-#: options-page.php:256
+#: options-page.php:298
 msgid ""
 "You have no adjustment to make so that the subscription works with "
 "CyberMailing."
 msgstr ""
 
-#: options-page.php:262
+#: options-page.php:304 options-page.php:313
 msgid "API key"
 msgstr ""
 
-#: options-page.php:270
+#: options-page.php:322
 msgid "Account ID"
 msgstr ""
 
-#: options-page.php:273
+#: options-page.php:326
 msgid "Activation code"
 msgstr ""
 
-#: options-page.php:288
+#: options-page.php:350 options-page.php:361 options-page.php:368
+#: options-page.php:374
+msgid "Commerce Manager's option"
+msgstr ""
+
+#: options-page.php:388
 msgid "Click here to configure the options of Affiliation Manager."
 msgstr ""
 
-#: options-page.php:296 options-page.php:307 options-page.php:314
-#: options-page.php:320
+#: options-page.php:396 options-page.php:407 options-page.php:414
+#: options-page.php:420
 msgid "Affiliation Manager's option"
 msgstr ""
 
-#: options-page.php:334
+#: options-page.php:434
 msgid "Click here to configure the options of Membership Manager."
 msgstr ""
 
-#: options-page.php:348 options-page.php:359 options-page.php:366
-#: options-page.php:372
+#: options-page.php:448 options-page.php:459 options-page.php:466
+#: options-page.php:472
 msgid "Member area's option"
 msgstr ""
 
-#: options-page.php:417
+#: options-page.php:508
+msgid ""
+"You can add custom instructions that will be executed just after the sending "
+"of a message."
+msgstr ""
+
+#: options-page.php:518
+msgid ""
+"You can add custom instructions that will be executed just after the removal "
+"of a message."
+msgstr ""
+
+#: options-page.php:531
 msgid "You can award a commission to the affiliate who referred a message."
 msgstr ""
 
@@ -1357,111 +1587,111 @@ msgstr ""
 msgid "referrer"
 msgstr ""
 
-#: statistics-page.php:87
+#: statistics-page.php:88
 msgid "Global statistics"
 msgstr ""
 
-#: statistics-page.php:110
+#: statistics-page.php:111
 msgid "Table"
 msgstr ""
 
-#: table-page.php:95
+#: table-page.php:113
 msgid "results per page"
 msgstr ""
 
-#: table-page.php:126
+#: table-page.php:144
 msgid "Reset the columns"
 msgstr ""
 
-#: table-page.php:128 table-page.php:149
+#: table-page.php:146 table-page.php:171
 msgid "Uncheck all columns"
 msgstr ""
 
-#: table-page.php:128 table-page.php:152
+#: table-page.php:146 table-page.php:174
 msgid "Check all columns"
 msgstr ""
 
-#: table-page.php:131
+#: table-page.php:149
 msgid "Display the columns list"
 msgstr ""
 
-#: table-page.php:135
+#: table-page.php:157
 msgid "Column"
 msgstr ""
 
-#: tables-functions.php:21
+#: tables-functions.php:24
 msgid "No forms"
 msgstr ""
 
-#: tables-functions.php:22
+#: tables-functions.php:25
 msgid "No categories"
 msgstr ""
 
-#: tables-functions.php:23
+#: tables-functions.php:26
 msgid "No messages"
 msgstr ""
 
-#: tables-functions.php:42
+#: tables-functions.php:49
 msgid "Subcategories"
 msgstr ""
 
-#: tables-functions.php:80
+#: tables-functions.php:118
 msgid "Unlimited"
 msgstr ""
 
-#: tables-functions.php:111
+#: tables-functions.php:149
 msgid "form"
 msgstr ""
 
-#: tables-functions.php:111
+#: tables-functions.php:149
 msgid "forms"
 msgstr ""
 
-#: tables-functions.php:112
+#: tables-functions.php:150
 msgid "category"
 msgstr ""
 
-#: tables-functions.php:112
+#: tables-functions.php:150
 msgid "categories"
 msgstr ""
 
-#: tables-functions.php:113
+#: tables-functions.php:151
 msgid "message"
 msgstr ""
 
-#: tables-functions.php:113
+#: tables-functions.php:151
 msgid "messages"
 msgstr ""
 
-#: tables-functions.php:114
+#: tables-functions.php:152
 msgid "item"
 msgstr ""
 
-#: tables-functions.php:114
+#: tables-functions.php:152
 msgid "items"
 msgstr ""
 
-#: tables-functions.php:119
+#: tables-functions.php:157
 msgid "Go to the first page"
 msgstr ""
 
-#: tables-functions.php:120
+#: tables-functions.php:158
 msgid "Go to the previous page"
 msgstr ""
 
-#: tables-functions.php:121
+#: tables-functions.php:159
 msgid "Current page"
 msgstr ""
 
-#: tables-functions.php:121
+#: tables-functions.php:159
 msgid "of"
 msgstr ""
 
-#: tables-functions.php:122
+#: tables-functions.php:160
 msgid "Go to the next page"
 msgstr ""
 
-#: tables-functions.php:123
+#: tables-functions.php:161
 msgid "Go to the last page"
 msgstr ""
 
@@ -1481,482 +1711,342 @@ msgstr ""
 msgid "the description"
 msgstr ""
 
-#: tables.php:6
+#: tables.php:6 tables.php:69
 msgid "the keywords"
 msgstr ""
 
 #: tables.php:7
-msgid "the gift download URL"
-msgstr ""
-
-#: tables.php:8
 msgid "the creation date"
 msgstr ""
 
-#: tables.php:9
+#: tables.php:8
 msgid "Creation date (UTC)"
 msgstr ""
 
-#: tables.php:9
+#: tables.php:8
 msgid "the creation date (UTC)"
 msgstr ""
 
+#: tables.php:9
+msgid "Gift download URL"
+msgstr ""
+
+#: tables.php:9
+msgid "the gift download URL"
+msgstr ""
+
 #: tables.php:10
-msgid "the displays count"
-msgstr ""
-
-#: tables.php:11
-msgid "the messages count"
-msgstr ""
-
-#: tables.php:12
-msgid "the code"
-msgstr ""
-
-#: tables.php:13
-msgid "Unfilled fields message"
-msgstr ""
-
-#: tables.php:14
-msgid "Unfilled field's message"
-msgstr ""
-
-#: tables.php:15
-msgid "Invalid email address message"
-msgstr ""
-
-#: tables.php:16
-msgid "Messages registration enabled"
-msgstr ""
-
-#: tables.php:17
-msgid "the maximum messages quantity"
-msgstr ""
-
-#: tables.php:18
-msgid "Message confirmation email sent"
-msgstr ""
-
-#: tables.php:19
-msgid "Sender of the message confirmation email"
-msgstr ""
-
-#: tables.php:20
-msgid "Receiver of the message confirmation email"
-msgstr ""
-
-#: tables.php:21
-msgid "Subject of the message confirmation email"
-msgstr ""
-
-#: tables.php:22
-msgid "Body of the message confirmation email"
-msgstr ""
-
-#: tables.php:23
-msgid "Message notification email sent"
-msgstr ""
-
-#: tables.php:24
-msgid "Sender of the message notification email"
-msgstr ""
-
-#: tables.php:25
-msgid "Receiver of the message notification email"
-msgstr ""
-
-#: tables.php:26
-msgid "Subject of the message notification email"
-msgstr ""
-
-#: tables.php:27
-msgid "Body of the message notification email"
-msgstr ""
-
-#: tables.php:28
-msgid "Senders subscribed to an autoresponder list"
-msgstr ""
-
-#: tables.php:29
-msgid "Senders autoresponder"
-msgstr ""
-
-#: tables.php:29
-msgid "the senders autoresponder"
-msgstr ""
-
-#: tables.php:30
-msgid "Senders autoresponder list"
-msgstr ""
-
-#: tables.php:30
-msgid "the senders autoresponder list"
-msgstr ""
-
-#: tables.php:31
-msgid "Senders subscribed to affiliate program"
-msgstr ""
-
-#: tables.php:32
-msgid "Senders affiliate category ID"
-msgstr ""
-
-#: tables.php:33
-msgid "Senders affiliate status"
-msgstr ""
-
-#: tables.php:34 tables.php:40
-msgid "Registration confirmation email sent"
-msgstr ""
-
-#: tables.php:34 tables.php:35
-msgid "(Affiliation)"
-msgstr ""
-
-#: tables.php:35 tables.php:41
-msgid "Registration notification email sent"
-msgstr ""
-
-#: tables.php:36
-msgid "Senders subscribed to a member area"
-msgstr ""
-
-#: tables.php:37
-msgid "Senders members areas"
-msgstr ""
-
-#: tables.php:37
-msgid "the senders members areas"
-msgstr ""
-
-#: tables.php:38
-msgid "Senders member category ID"
-msgstr ""
-
-#: tables.php:39
-msgid "Senders member status"
-msgstr ""
-
-#: tables.php:40 tables.php:41
-msgid "(Membership)"
-msgstr ""
-
-#: tables.php:42
-msgid "Senders subscribed as users"
-msgstr ""
-
-#: tables.php:43
-msgid "Senders user role"
-msgstr ""
-
-#: tables.php:44
-msgid "Custom instructions executed"
-msgstr ""
-
-#: tables.php:45
-msgid "PHP code of the custom instructions"
-msgstr ""
-
-#: tables.php:45
-msgid "the PHP code of the custom instructions"
-msgstr ""
-
-#: tables.php:46
-msgid "Affiliation enabled"
-msgstr ""
-
-#: tables.php:47 tables.php:49 tables.php:75 tables.php:80
-msgid "Commission amount"
-msgstr ""
-
-#: tables.php:47 tables.php:49 tables.php:75 tables.php:80
-msgid "the commission amount"
-msgstr ""
-
-#: tables.php:48
-msgid "Commission enabled"
-msgstr ""
-
-#: tables.php:48 tables.php:49 tables.php:79 tables.php:80 tables.php:81
-#: tables.php:82 tables.php:83
-msgid "(level 2)"
-msgstr ""
-
-#: tables.php:57
-msgid "the subject"
-msgstr ""
-
-#: tables.php:58
-msgid "the content"
-msgstr ""
-
-#: tables.php:59
-msgid "the date"
-msgstr ""
-
-#: tables.php:60
-msgid "Date (UTC)"
-msgstr ""
-
-#: tables.php:60
-msgid "the date (UTC)"
-msgstr ""
-
-#: tables.php:61
-msgid "the first name"
-msgstr ""
-
-#: tables.php:62
-msgid "the last name"
-msgstr ""
-
-#: tables.php:63
-msgid "the email address"
-msgstr ""
-
-#: tables.php:64
-msgid "Website"
-msgstr ""
-
-#: tables.php:64
-msgid "the website name"
-msgstr ""
-
-#: tables.php:65
-msgid "the website URL"
-msgstr ""
-
-#: tables.php:66
-msgid "the address"
-msgstr ""
-
-#: tables.php:67
-msgid "the postcode"
-msgstr ""
-
-#: tables.php:68
-msgid "the town"
-msgstr ""
-
-#: tables.php:69
-msgid "the country"
-msgstr ""
-
-#: tables.php:70
-msgid "the phone number"
-msgstr ""
-
-#: tables.php:71
-msgid "the IP address"
-msgstr ""
-
-#: tables.php:72
-msgid "the user agent"
-msgstr ""
-
-#: tables.php:73
-msgid "the referring URL"
-msgstr ""
-
-#: tables.php:74 tables.php:79
-msgid "the referrer"
-msgstr ""
-
-#: tables.php:76 tables.php:81
-msgid "Commission status"
-msgstr ""
-
-#: tables.php:77 tables.php:82
-msgid "Commission's payment date"
-msgstr ""
-
-#: tables.php:77 tables.php:82
-msgid "the commission's payment date"
-msgstr ""
-
-#: tables.php:78 tables.php:83
-msgid "Commission's payment date (UTC)"
-msgstr ""
-
-#: tables.php:78 tables.php:83
-msgid "the commission's payment date (UTC)"
-msgstr ""
-
-msgid "Filter"
-msgstr ""
-
-msgid "Search"
-msgstr ""
-
-msgid "Hi"
-msgstr ""
-
-msgid "Gift"
-msgstr ""
-
-msgid "Download URL"
-msgstr ""
-
-msgid "Instructions to the sender"
-msgstr ""
-
 msgid "the instructions to the sender"
 msgstr ""
 
-msgid "You can offer a gift to senders."
-msgstr ""
-
-msgid "New message"
-msgstr ""
-
-msgid "Message removal"
-msgstr ""
-
-msgid "You can add custom instructions that will be executed just after the sending of a message."
-msgstr ""
-
-msgid "You can add custom instructions that will be executed just after the removal of a message."
-msgstr ""
-
-msgid "the receiver"
-msgstr ""
-
-msgid "Receive a copy of this message"
-msgstr ""
-
-msgid "(Commerce)"
-msgstr ""
-
-msgid "Senders subscribed as clients"
-msgstr ""
-
-msgid "Senders client status"
-msgstr ""
-
-msgid "Registration as a client"
-msgstr ""
-
-msgid "Click here to configure the options of Commerce Manager."
-msgstr ""
-
-msgid ""
-"To subscribe the senders as clients, you must have installed and activated <a href=\"http://"
-"www.kleor-editions.com/commerce-manager\">Commerce Manager</a>."
-msgstr ""
-
-msgid "Subscribe the sender as a client"
-msgstr ""
-
-msgid "Commerce Manager's option"
-msgstr ""
-
-msgid "Leave this field blank to apply the Commerce Manager's option."
-msgstr ""
-
-msgid "Senders client category ID"
-msgstr ""
-
-msgid "Message of maximum messages quantity reached"
-msgstr ""
-
-msgid "Maximum messages quantity per sender"
-msgstr ""
-
+#: tables.php:11
 msgid "the maximum messages quantity per sender"
 msgstr ""
 
-msgid "You have already sent [contact-form maximum-messages-quantity-per-sender] messages through this form."
+#: tables.php:12
+msgid "the displays count"
 msgstr ""
 
-msgid "Maximum messages quantity reached"
+#: tables.php:13
+msgid "the messages count"
 msgstr ""
 
-msgid "Arithmetic operation"
+#: tables.php:14
+msgid "the code"
 msgstr ""
 
-msgid "Reversed string"
+#: tables.php:15
+msgid "Unfilled fields message"
 msgstr ""
 
-msgid "Black Glass"
+#: tables.php:16
+msgid "Unfilled field's message"
 msgstr ""
 
-msgid "Clean"
+#: tables.php:17
+msgid "Invalid email address message"
 msgstr ""
 
-msgid "Red"
-msgstr ""
-
-msgid "White"
-msgstr ""
-
-msgid "CAPTCHA"
-msgstr ""
-
-msgid "Default type"
-msgstr ""
-
-msgid "Default reCAPTCHA theme"
-msgstr ""
-
-msgid "reCAPTCHA public key"
-msgstr ""
-
-msgid "reCAPTCHA private key"
-msgstr ""
-
+#: tables.php:18
 msgid "Invalid CAPTCHA message"
 msgstr ""
 
-msgid "Invalid CAPTCHA"
+#: tables.php:19
+msgid "Message of maximum messages quantity reached"
 msgstr ""
 
-msgid "The code you entered for the CAPTCHA is incorrect."
+#: tables.php:20
+msgid "Messages registration enabled"
 msgstr ""
 
-msgid "zero"
+#: tables.php:21
+msgid "the maximum messages quantity"
 msgstr ""
 
-msgid "one"
+#: tables.php:22
+msgid "Message confirmation email sent"
 msgstr ""
 
-msgid "two"
+#: tables.php:23
+msgid "Sender of the message confirmation email"
 msgstr ""
 
-msgid "three"
+#: tables.php:24
+msgid "Receiver of the message confirmation email"
 msgstr ""
 
-msgid "four"
+#: tables.php:25
+msgid "Subject of the message confirmation email"
 msgstr ""
 
-msgid "five"
+#: tables.php:26
+msgid "Body of the message confirmation email"
 msgstr ""
 
-msgid "six"
+#: tables.php:27
+msgid "Message notification email sent"
 msgstr ""
 
-msgid "seven"
+#: tables.php:28
+msgid "Sender of the message notification email"
 msgstr ""
 
-msgid "eight"
+#: tables.php:29
+msgid "Receiver of the message notification email"
 msgstr ""
 
-msgid "nine"
+#: tables.php:30
+msgid "Subject of the message notification email"
 msgstr ""
 
-msgid "ten"
+#: tables.php:31
+msgid "Body of the message notification email"
 msgstr ""
 
-msgid "eleven"
+#: tables.php:32
+msgid "Senders subscribed to an autoresponder list"
 msgstr ""
 
-msgid "twelve"
+#: tables.php:33
+msgid "Senders autoresponder"
 msgstr ""
 
-msgid "thirteen"
+#: tables.php:33
+msgid "the senders autoresponder"
 msgstr ""
 
-msgid "fourteen"
+#: tables.php:34
+msgid "Senders autoresponder list"
 msgstr ""
 
-msgid "fifteen"
+#: tables.php:34
+msgid "the senders autoresponder list"
+msgstr ""
+
+#: tables.php:35
+msgid "Senders subscribed as clients"
+msgstr ""
+
+#: tables.php:36
+msgid "Senders client category ID"
+msgstr ""
+
+#: tables.php:37
+msgid "Senders client status"
+msgstr ""
+
+#: tables.php:38 tables.php:43 tables.php:49
+msgid "Registration confirmation email sent"
+msgstr ""
+
+#: tables.php:38 tables.php:39
+msgid "(Commerce)"
+msgstr ""
+
+#: tables.php:39 tables.php:44 tables.php:50
+msgid "Registration notification email sent"
+msgstr ""
+
+#: tables.php:40
+msgid "Senders subscribed to affiliate program"
+msgstr ""
+
+#: tables.php:41
+msgid "Senders affiliate category ID"
+msgstr ""
+
+#: tables.php:42
+msgid "Senders affiliate status"
+msgstr ""
+
+#: tables.php:43 tables.php:44
+msgid "(Affiliation)"
+msgstr ""
+
+#: tables.php:45
+msgid "Senders subscribed to a member area"
+msgstr ""
+
+#: tables.php:46
+msgid "Senders members areas"
+msgstr ""
+
+#: tables.php:46
+msgid "the senders members areas"
+msgstr ""
+
+#: tables.php:47
+msgid "Senders member category ID"
+msgstr ""
+
+#: tables.php:48
+msgid "Senders member status"
+msgstr ""
+
+#: tables.php:49 tables.php:50
+msgid "(Membership)"
+msgstr ""
+
+#: tables.php:51
+msgid "Senders subscribed as users"
+msgstr ""
+
+#: tables.php:52
+msgid "Senders user role"
+msgstr ""
+
+#: tables.php:53
+msgid "Custom instructions executed"
+msgstr ""
+
+#: tables.php:54
+msgid "PHP code of the custom instructions"
+msgstr ""
+
+#: tables.php:55
+msgid "Affiliation enabled"
+msgstr ""
+
+#: tables.php:56 tables.php:58 tables.php:86 tables.php:91
+msgid "Commission amount"
+msgstr ""
+
+#: tables.php:56 tables.php:58 tables.php:86 tables.php:91
+msgid "the commission amount"
+msgstr ""
+
+#: tables.php:57
+msgid "Commission enabled"
+msgstr ""
+
+#: tables.php:57 tables.php:58 tables.php:90 tables.php:91 tables.php:92
+#: tables.php:93 tables.php:94
+msgid "(level 2)"
+msgstr ""
+
+#: tables.php:66
+msgid "the receiver"
+msgstr ""
+
+#: tables.php:67
+msgid "the subject"
+msgstr ""
+
+#: tables.php:68
+msgid "the content"
+msgstr ""
+
+#: tables.php:70
+msgid "the date"
+msgstr ""
+
+#: tables.php:71
+msgid "Date (UTC)"
+msgstr ""
+
+#: tables.php:71
+msgid "the date (UTC)"
+msgstr ""
+
+#: tables.php:72
+msgid "the first name"
+msgstr ""
+
+#: tables.php:73
+msgid "the last name"
+msgstr ""
+
+#: tables.php:74
+msgid "the email address"
+msgstr ""
+
+#: tables.php:75
+msgid "Website"
+msgstr ""
+
+#: tables.php:75
+msgid "the website name"
+msgstr ""
+
+#: tables.php:76
+msgid "the website URL"
+msgstr ""
+
+#: tables.php:77
+msgid "the address"
+msgstr ""
+
+#: tables.php:78
+msgid "the postcode"
+msgstr ""
+
+#: tables.php:79
+msgid "the town"
+msgstr ""
+
+#: tables.php:80
+msgid "the country"
+msgstr ""
+
+#: tables.php:81
+msgid "the phone number"
+msgstr ""
+
+#: tables.php:82
+msgid "the IP address"
+msgstr ""
+
+#: tables.php:83
+msgid "the user agent"
+msgstr ""
+
+#: tables.php:84
+msgid "the referring URL"
+msgstr ""
+
+#: tables.php:85 tables.php:90
+msgid "the referrer"
+msgstr ""
+
+#: tables.php:87 tables.php:92
+msgid "Commission status"
+msgstr ""
+
+#: tables.php:88 tables.php:93
+msgid "Commission's payment date"
+msgstr ""
+
+#: tables.php:88 tables.php:93
+msgid "the commission's payment date"
+msgstr ""
+
+#: tables.php:89 tables.php:94
+msgid "Commission's payment date (UTC)"
+msgstr ""
+
+#: tables.php:89 tables.php:94
+msgid "the commission's payment date (UTC)"
+msgstr ""
+
+msgid "Save"
 msgstr ""

@@ -128,17 +128,20 @@ $initial_options['message_notification_email_body'] =
 $initial_options['message_removal_custom_instructions'] = '';
 
 
+if (isset($variables)) { $original['variables'] = $variables; }
 $variables = array(
 'displayed_columns',
 'displayed_links',
 'first_columns',
+'id',
 'last_columns',
 'links',
 'menu_displayed_items',
 'menu_items',
 'pages_titles',
 'table',
-'table_slug');
+'table_slug',
+'tables');
 foreach ($variables as $variable) { if (isset($$variable)) { $original[$variable] = $$variable; unset($$variable); } }
 
 
@@ -171,7 +174,7 @@ case 'messages': $first_columns = array(
 
 $last_columns = array();
 foreach ($table as $key => $value) {
-if ((!in_array($key, $first_columns)) && ($value['name'] != '')) { $last_columns[] = $key; } }
+if ((!in_array($key, $first_columns)) && (isset($value['name'])) && ($value['name'] != '')) { $last_columns[] = $key; } }
 $displayed_columns = array();
 for ($i = 0; $i < count($first_columns); $i++) { $displayed_columns[] = $i; }
 
@@ -202,9 +205,9 @@ $menu_items = array();
 $pages_titles = array();
 foreach ($admin_pages as $key => $value) {
 $menu_items[] = $key;
-$id = $_GET['id']; unset($_GET['id']);
+if (isset($_GET['id'])) { $id = $_GET['id']; unset($_GET['id']); }
 $pages_titles[$key] = $value['menu_title'];
-$_GET['id'] = $id; }
+if (isset($id)) { $_GET['id'] = $id; unset($id); } }
 $menu_displayed_items = array();
 foreach ($menu_items as $key => $value) {
 if (!in_array($value, array(
@@ -281,3 +284,4 @@ $initial_options['back_office'] = array(
 
 
 foreach ($variables as $variable) { if (isset($original[$variable])) { $$variable = $original[$variable]; } }
+if (isset($original['variables'])) { $variables = $original['variables']; }

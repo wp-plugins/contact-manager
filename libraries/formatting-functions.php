@@ -1,5 +1,5 @@
 <?php function fix_url() {
-$url = $_SERVER['REQUEST_URI'];
+$url = $_SERVER['REQUEST_URI']; $error = false;
 if (strstr($url, '&amp;')) { $url = str_replace('&amp;', '&', $url); $error = true; }
 if (($error) && (!headers_sent())) { header('Location: '.$url); exit; } }
 
@@ -60,7 +60,7 @@ string = string.toLowerCase();
 string = string.replace(/[ _]/gi, '-');
 var strings = string.split('-');
 var n = strings.length;
-var i = 0; while (i != n) { strings[i] = (strings[i]).substr(0, 1).toUpperCase()+(strings[i]).substr(1); i = i + 1; }
+for (i = 0; i < n; i++) { strings[i] = (strings[i]).substr(0, 1).toUpperCase()+(strings[i]).substr(1); }
 string = strings.join('-');
 return string; }
 </script>
