@@ -57,7 +57,7 @@ $initial_options[''] = array(
 'sg_autorepondeur_activation_code' => '',
 'unfilled_field_message' => __('This field is required.', 'contact-manager'),
 'unfilled_fields_message' => __('Please fill out the required fields.', 'contact-manager'),
-'version' => CONTACT_MANAGER_VERSION);
+'version' => '');
 
 include 'libraries/captchas.php';
 $initial_options['captchas_numbers'] = $captchas_numbers;

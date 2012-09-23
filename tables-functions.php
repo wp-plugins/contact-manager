@@ -80,9 +80,9 @@ return $undisplayed_keys; }
 
 function table_data($table, $column, $item) {
 switch ($table) {
-case 'forms': $_GET['contact_form_id'] = $item->id; $_GET['contact_form_data'] = $item; $data = contact_form_data($column); break;
-case 'forms_categories': $_GET['contact_form_category_id'] = $item->id; $_GET['contact_form_category_data'] = $item; $data = contact_form_category_data($column); break;
-case 'messages': $_GET['message_data'] = $item; $data = message_data($column); break;
+case 'forms': $_GET['contact_form_id'] = $item->id; $_GET['contact_form_data'] = (array) $item; $data = contact_form_data($column); break;
+case 'forms_categories': $_GET['contact_form_category_id'] = $item->id; $_GET['contact_form_category_data'] = (array) $item; $data = contact_form_category_data($column); break;
+case 'messages': $_GET['message_data'] = (array) $item; $data = message_data($column); break;
 default: $data = contact_format_data($column, $item->$column); }
 return $data; }
 

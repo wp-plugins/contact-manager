@@ -32,9 +32,10 @@ if (is_numeric($maximum_messages_quantity_per_sender)) { $_GET[$prefix.'required
 else { $_GET[$prefix.'required_fields'] = array(); }
 $_GET[$prefix.'fields'] = $_GET[$prefix.'required_fields'];
 $_GET[$prefix.'checkbox_fields'] = array();
+$_GET[$prefix.'radio_fields'] = array();
 foreach (array('invalid_email_address_message', 'unfilled_field_message') as $key) { $_ENV[$prefix.$key] = contact_form_data($key); }
 $code = contact_form_data('code');
-foreach (array('checkbox_fields', 'fields', 'required_fields') as $array) { $_GET[$prefix.$array] = array_unique($_GET[$prefix.$array]); }
+foreach (array('checkbox_fields', 'fields', 'radio_fields', 'required_fields') as $array) { $_GET[$prefix.$array] = array_unique($_GET[$prefix.$array]); }
 
 if (isset($_POST[$prefix.'submit'])) {
 $_ENV['form_error'] = '';
@@ -89,9 +90,11 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displ
 $required_fields_js = '';
 foreach ($_GET[$prefix.'required_fields'] as $field) {
 $required_fields_js .= '
-if '.(in_array($field, $_GET[$prefix.'checkbox_fields']) ? '(form.'.$prefix.$field.'.checked == false)' : '(form.'.$prefix.$field.'.value == "")').' {
+'.(in_array($field, $_GET[$prefix.'radio_fields']) ? 'var '.$prefix.$field.'_checked = false;
+for (i = 0; i < form.'.$prefix.$field.'.length; i++) { if (form.'.$prefix.$field.'[i].checked == true) { '.$prefix.$field.'_checked = true; } }
+if (!'.$prefix.$field.'_checked)' : (in_array($field, $_GET[$prefix.'checkbox_fields']) ? 'if (form.'.$prefix.$field.'.checked == false)' : 'if (form.'.$prefix.$field.'.value == "")')).' {
 if (document.getElementById("'.$prefix.$field.'_error")) { document.getElementById("'.$prefix.$field.'_error").innerHTML = "'.$_ENV[$prefix.'unfilled_field_message'].'"; }
-if (!error) { form.'.$prefix.$field.'.focus(); } error = true; }
+'.(in_array($field, $_GET[$prefix.'radio_fields']) ? '' : 'if (!error) { form.'.$prefix.$field.'.focus(); } ').'error = true; }
 else if (document.getElementById("'.$prefix.$field.'_error")) { document.getElementById("'.$prefix.$field.'_error").innerHTML = ""; }'; }
 $form_js = '
 <script type="text/javascript">
@@ -127,6 +130,7 @@ function contact_form_captcha($atts) {
 $form_id = $_GET['contact_form_id'];
 $prefix = 'contact_form'.$form_id.'_';
 $attributes = array(
+'answer' => '',
 'class' => 'captcha',
 'dir' => '',
 'onclick' => '',
@@ -139,15 +143,17 @@ $attributes = array(
 'onmouseout' => '',
 'onmouseover' => '',
 'onmouseup' => '',
+'question' => '',
 'style' => '',
 'theme' => contact_data('default_recaptcha_theme'),
 'title' => '',
 'type' => contact_data('default_captcha_type'),
 'xmlns' => '');
+if ((isset($atts['answer'])) && (isset($atts['question']))) { $atts['type'] = 'question'; }
 $markup = '';
 foreach ($attributes as $key => $value) {
 if ((!isset($atts[$key])) || ($atts[$key] == '')) { $atts[$key] = $attributes[$key]; }
-if ((is_string($key)) && ($key != 'theme') && ($key != 'type') && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } }
+if ((is_string($key)) && ($key != 'answer') && ($key != 'question') && ($key != 'theme') && ($key != 'type') && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } }
 if ($atts['type'] == 'recaptcha') {
 $_ENV[$prefix.'recaptcha_js'] = '<script type="text/javascript">var RecaptchaOptions = { lang: \''.strtolower(substr(WPLANG, 0, 2)).'\', theme: \''.$atts['theme'].'\' };</script>'."\n";
 if (!function_exists('_recaptcha_qsencode')) { include_once dirname(__FILE__).'/libraries/recaptchalib.php'; }
@@ -165,6 +171,9 @@ $m = mt_rand(0, 15);
 $n = mt_rand(0, 15);
 $string = $captchas_numbers[$m].' + '.$captchas_numbers[$n];
 $valid_captcha = $m + $n; break;
+case 'question':
+$string = $atts['question'];
+$valid_captcha = $atts['answer']; break;
 case 'reversed-string':
 include dirname(__FILE__).'/libraries/captchas.php';
 $n = mt_rand(5, 12);
@@ -256,6 +265,7 @@ default: if ($atts['type'] == '') { $atts['type'] = 'text'; } }
 $id_markup = '';
 switch ($atts['type']) {
 case 'checkbox': $_GET[$prefix.'checkbox_fields'][] = $name; break;
+case 'radio': $_GET[$prefix.'radio_fields'][] = $name; break;
 case 'password': case 'text':
 if ($atts['size'] == '') { $atts['size'] = '30'; }
 $id_markup = ' id="'.$prefix.$name.'"'; break; }
@@ -265,7 +275,9 @@ if (isset($_POST[$prefix.'submit'])) {
 if ((!strstr($_POST[$prefix.$name], '@')) || (!strstr($_POST[$prefix.$name], '.'))) {
 $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'invalid_email_address_message']; } } }
 if ($name != 'submit') {
-if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] != '')) { $atts['value'] = $_POST[$prefix.$name]; }
+if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] != '')) {
+if ($atts['type'] == 'radio') { $atts['checked'] = ($_POST[$prefix.$name] == $atts['value'] ? 'checked' : ''); }
+else { $atts['value'] = $_POST[$prefix.$name]; } }
 elseif ((isset($_POST[$prefix.'submit'])) && ($atts['required'] == 'yes')) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'unfilled_field_message']; } }
 foreach (array($name, str_replace('_', '-', $name)) as $key) {
 if (($atts['value'] == '') && (isset($_GET[$key]))) { $atts['value'] = utf8_encode(htmlspecialchars($_GET[$key])); } }

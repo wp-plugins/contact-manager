@@ -47,7 +47,6 @@ add_filter('plugin_row_meta', 'contact_manager_row_meta', 10, 2);
 
 function install_contact_manager() {
 global $wpdb;
-$results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."options CHANGE option_name option_name VARCHAR(128) NOT NULL");
 load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 include 'initial-options.php';
 foreach ($initial_options as $key => $value) {
@@ -55,22 +54,29 @@ $_key = ($key == '' ? '' : '_'.$key);
 if (is_array($value)) {
 $options = (array) get_option('contact_manager'.$_key);
 foreach ($value as $option => $initial_value) {
-if (($option == 'menu_title') || ($option == 'pages_titles') || ($option == 'version')
- || (!isset($options[$option])) || ($options[$option] == '')) { $options[$option] = $initial_value; } }
+if (($option == 'menu_title') || ($option == 'pages_titles') || (!isset($options[$option]))
+ || ($options[$option] == '')) { $options[$option] = $initial_value; } }
 update_option('contact_manager'.$_key, $options); }
 else { add_option('contact_manager'.$_key, $value); } }
 
 include_once ABSPATH.'wp-admin/includes/upgrade.php';
-if (!empty($wpdb->charset)) { $charset_collate = 'DEFAULT CHARACTER SET '.$wpdb->charset; }
+$charset_collate = '';
+if (!empty($wpdb->charset)) { $charset_collate .= 'DEFAULT CHARACTER SET '.$wpdb->charset; }
 if (!empty($wpdb->collate)) { $charset_collate .= ' COLLATE '.$wpdb->collate; }
 include 'tables.php';
-foreach ($tables as $table_slug => $table) {
+$error = false; foreach ($tables as $table_slug => $table) {
 $list = ''; foreach ($table as $key => $value) { $list .= "
 ".$key." ".$value['type']." ".($key == "id" ? "auto_increment" : "NOT NULL").","; }
 $sql = "CREATE TABLE ".$wpdb->prefix."contact_manager_".$table_slug." (".$list."
 PRIMARY KEY  (id)) $charset_collate;"; dbDelta($sql);
 foreach ($table as $key => $value) { if (isset($value['default'])) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET ".$key." = '".$value['default']."' WHERE ".$key." = ''"); } } } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET ".$key." = '".$value['default']."' WHERE ".$key." = ''"); } }
+$columns_number = (int) mysql_num_fields(mysql_query("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = 0"));
+if ($columns_number < count($table)) { $error = true; } }
+if (!$error) {
+$options = (array) get_option('contact_manager');
+$options['version'] = CONTACT_MANAGER_VERSION;
+update_option('contact_manager', $options); } }
 
 register_activation_hook('contact-manager/contact-manager.php', 'install_contact_manager');
 

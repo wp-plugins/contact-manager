@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 4.8\n"
+"Project-Id-Version: Contact Manager 4.8.2\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2012-09-13 21:57+0100\n"
+"PO-Revision-Date: 2012-09-23 10:17+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -2483,4 +2483,7 @@ msgstr "la date de paiement de la commission (UTC)"
 
 msgid "Save"
 msgstr "Enregistrer"
+
+msgid "Question"
+msgstr "Question"
 

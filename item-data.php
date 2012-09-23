@@ -9,10 +9,11 @@ if ((isset($_GET[$type.'_id'])) && ((!isset($_GET[$type.'_data']['id'])) || ($_G
 $n = $_GET[$type.'_id']; $_GET[$type.$n.'_data'] = (array) (isset($_GET[$type.$n.'_data']) ? $_GET[$type.$n.'_data'] : array());
 if ((isset($_GET[$type.$n.'_data']['id'])) && ($_GET[$type.$n.'_data']['id'] == $_GET[$type.'_id'])) { $_GET[$type.'_data'] = $_GET[$type.$n.'_data']; }
 else { $_GET[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = ".$_GET[$type.'_id'], OBJECT); } }
-if ((!is_admin()) && ($type == 'message') && (!isset($_GET[$type.'_data']['email_address']))) {
+if (!is_admin()) {
+if (($type == 'message') && (!isset($_GET[$type.'_data']['email_address']))) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE ip_address = '".$_SERVER['REMOTE_ADDR']."' ORDER BY date DESC LIMIT 1", OBJECT);
 if ($result) { $_GET[$type.'_data'] = (array) $result; } }
-if (isset($_GET[$type.'_data']['id'])) { $n = $_GET[$type.'_data']['id']; $_GET[$type.$n.'_data'] = $_GET[$type.'_data']; }
+if (isset($_GET[$type.'_data']['id'])) { $n = $_GET[$type.'_data']['id']; $_GET[$type.$n.'_data'] = $_GET[$type.'_data']; } }
 $item_data = $_GET[$type.'_data'];
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; $part = 0; }
 else {

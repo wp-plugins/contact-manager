@@ -1,5 +1,6 @@
 <?php $captchas_types = array(
 'arithmetic' => __('Arithmetic operation', 'contact-manager'),
+'question' => __('Question', 'contact-manager'),
 'recaptcha' => 'reCAPTCHA',
 'reversed-string' => __('Reversed string', 'contact-manager'));
 

@@ -39,23 +39,53 @@ case 'messages': $table = $wpdb->prefix.'contact_manager_messages'; $field = '';
 default: $table = $wpdb->prefix.'contact_manager_messages'; $field = ''; }
 
 $range = str_replace('_', '-', format_nice_name($range));
+$time = time() + 3600*UTC_OFFSET;
 if (is_numeric($range)) {
-$end_date = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET);
-$start_date = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET - 86400*$range);
+$end_date = date('Y-m-d H:i:s', $time);
+$start_date = date('Y-m-d H:i:s', $time - 86400*$range);
 $date_criteria = "AND (date BETWEEN '".$start_date."' AND '".$end_date."')"; }
 else { switch ($range) {
-case 'previous-month':
-$Y = (int) date('Y', time() + 3600*UTC_OFFSET);
-$M = (int) date('n', time() + 3600*UTC_OFFSET);
+case 'previous-week':
+$N = (int) date('N', $time);
+$start_date = date('Y-m-d', $time - 86400*($N + 6)).' 00:00:00';
+$end_date = date('Y-m-d', $time - 86400*$N).' 23:59:59';
+$date_criteria = "AND (date BETWEEN '".$start_date."' AND '".$end_date."')"; break;
+case 'previous-half-month':
+$j = (int) date('j', $time);
+if ($j <= 15) {
+$Y = (int) date('Y', $time);
+$M = (int) date('n', $time);
 if ($M == 1) { $m = 12; $y = $Y - 1; }
 else { $m = $M - 1; $y = $Y; }
-if ($M < 10) { $M = '0'.$M; }
+if ($m < 10) { $m = '0'.$m; }
+$start_date = $y.'-'.$m.'-16 00:00:00';
+$end_date = date('Y-m-d H:i:s', mktime(0, 0, 0, $M, 1, $Y) - 1); }
+else {
+$start_date = date('Y-m', $time).'-01 00:00:00';
+$end_date = date('Y-m', $time).'-15 23:59:59'; }
+$date_criteria = "AND (date BETWEEN '".$start_date."' AND '".$end_date."')"; break;
+case 'previous-month':
+case 'previous-bimester':
+case 'previous-trimester':
+case 'previous-quadrimester':
+case 'previous-semester':
+switch ($range) {
+case 'previous-month': $months_number = 1; break;
+case 'previous-bimester': $months_number = 2; break;
+case 'previous-trimester': $months_number = 3; break;
+case 'previous-quadrimester': $months_number = 4; break;
+case 'previous-semester': $months_number = 6; }
+$Y = (int) date('Y', $time);
+$M = (int) date('n', $time);
+$M = $M - ($M - 1)%$months_number;
+if ($M == 1) { $m = 13 - $months_number; $y = $Y - 1; }
+else { $m = $M - $months_number; $y = $Y; }
 if ($m < 10) { $m = '0'.$m; }
 $start_date = $y.'-'.$m.'-01 00:00:00';
-$end_date = $Y.'-'.$M.'-01 00:00:00';
+$end_date = date('Y-m-d H:i:s', mktime(0, 0, 0, $M, 1, $Y) - 1);
 $date_criteria = "AND (date BETWEEN '".$start_date."' AND '".$end_date."')"; break;
 case 'previous-year':
-$Y = (int) date('Y', time() + 3600*UTC_OFFSET);
+$Y = (int) date('Y', $time);
 $y = $Y - 1;
 $start_date = $y.'-01-01 00:00:00';
 $end_date = $y.'-12-31 23:59:59';
