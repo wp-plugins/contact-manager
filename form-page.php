@@ -42,7 +42,7 @@ if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 foreach ($_POST as $key => $value) {
-if (is_string($value)) { $_POST[$key] = html_entity_decode(str_replace('&nbsp;', ' ', $value)); } }
+if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, $admin_page);
 
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
@@ -84,11 +84,11 @@ if ($_POST['displays_count'] < $_POST['messages_count']) { $_POST['displays_coun
 if (!isset($_GET['id'])) {
 if ($_POST['name'] == '') { $error .= ' '.__('Please fill out the required fields.', 'contact-manager'); }
 elseif ($is_category) {
-$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".$_POST['name']."'", OBJECT);
+$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."'", OBJECT);
 if ($result) { $error .= ' '.__('This name is not available.', 'contact-manager'); } }
 if ($error == '') {
 if ($is_category) { $result = false; }
-else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms WHERE name = '".$_POST['name']."' AND date = '".$_POST['date']."'", OBJECT); }
+else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND date = '".$_POST['date']."'", OBJECT); }
 if (!$result) {
 $updated = true;
 $sql = contact_sql_array($tables[$table_slug], $_POST);
@@ -116,11 +116,11 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 	displays_count = ".$displays_count.",
 	messages_count = ".$messages_count." WHERE id = ".$form->id); } } }
 if ($_POST['name'] != '') {
-if (!$is_category) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".$_POST['name']."' WHERE id = ".$_GET['id']); }
+if (!$is_category) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); }
 else {
-$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".$_POST['name']."' AND id != ".$_GET['id'], OBJECT);
+$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND id != ".$_GET['id'], OBJECT);
 if ($result) { $error .= ' '.__('This name is not available.', 'contact-manager'); }
-else { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".$_POST['name']."' WHERE id = ".$_GET['id']); } } }
+else { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); } } }
 $sql = contact_sql_array($tables[$table_slug], $_POST);
 $list = '';
 foreach ($tables[$table_slug] as $key => $value) { switch ($key) {
