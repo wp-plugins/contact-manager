@@ -5,7 +5,7 @@ if ((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) { incl
 function contact_manager_admin_menu() {
 include 'admin-pages.php';
 $options = (array) get_option('contact_manager_back_office');
-if ($options['menu_title'] == '') { $options['menu_title'] = __('Contact', 'contact-manager'); }
+if (((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) || ($options['menu_title'] == '')) { $options['menu_title'] = __('Contact', 'contact-manager'); }
 $menu_items = (array) $options['menu_items'];
 $numbers = (array) $options['menu_displayed_items'];
 $menu_displayed_items = array();

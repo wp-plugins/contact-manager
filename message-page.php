@@ -44,7 +44,7 @@ if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 foreach ($_POST as $key => $value) {
-if (is_string($value)) { $_POST[$key] = html_entity_decode(str_replace('&nbsp;', ' ', $value)); } }
+if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, 'message');
 
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
