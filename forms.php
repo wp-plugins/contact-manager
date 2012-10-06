@@ -14,7 +14,7 @@ if ($redirection == '#') { $redirection .= 'contact-form'.$id; }
 foreach (array(
 'strip_accents_js',
 'format_email_address_js') as $function) { add_action('wp_footer', $function); }
-$tags = array('captcha', 'input', 'label', 'option', 'select', 'textarea');
+$tags = array('captcha', 'country-selector', 'input', 'label', 'option', 'select', 'textarea');
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
 if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_SERVER['HTTP_REFERER']) ? htmlspecialchars($_SERVER['HTTP_REFERER']) : ''); }
 if (isset($_POST[$prefix.'submit'])) {
@@ -22,9 +22,13 @@ foreach ($_POST as $key => $value) {
 if (is_string($value)) {
 $value = str_replace(array('[', ']'), array('&#91;', '&#93;'), quotes_entities($value));
 $_POST[$key] = str_replace('\\&', '&', trim(mysql_real_escape_string($value))); } }
+if (isset($_POST[$prefix.'country_code'])) {
+include dirname(__FILE__).'/countries/countries.php';
+$key = $_POST[$prefix.'country_code'];
+if (isset($countries[$key])) { $_POST[$prefix.'country'] = $countries[$key]; } }
+if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = format_email_address($_POST[$prefix.'email_address']); }
 if (isset($_POST[$prefix.'first_name'])) { $_POST[$prefix.'first_name'] = format_name($_POST[$prefix.'first_name']); }
 if (isset($_POST[$prefix.'last_name'])) { $_POST[$prefix.'last_name'] = format_name($_POST[$prefix.'last_name']); }
-if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = format_email_address($_POST[$prefix.'email_address']); }
 if (isset($_POST[$prefix.'website_url'])) { $_POST[$prefix.'website_url'] = format_url($_POST[$prefix.'website_url']); }
 $_POST['referring_url'] = html_entity_decode($_POST['referring_url']); }
 $maximum_messages_quantity_per_sender = contact_form_data('maximum_messages_quantity_per_sender');
@@ -93,9 +97,9 @@ $required_fields_js .= '
 '.(in_array($field, $_GET[$prefix.'radio_fields']) ? 'var '.$prefix.$field.'_checked = false;
 for (i = 0; i < form.'.$prefix.$field.'.length; i++) { if (form.'.$prefix.$field.'[i].checked == true) { '.$prefix.$field.'_checked = true; } }
 if (!'.$prefix.$field.'_checked)' : (in_array($field, $_GET[$prefix.'checkbox_fields']) ? 'if (form.'.$prefix.$field.'.checked == false)' : 'if (form.'.$prefix.$field.'.value == "")')).' {
-if (document.getElementById("'.$prefix.$field.'_error")) { document.getElementById("'.$prefix.$field.'_error").innerHTML = "'.$_ENV[$prefix.'unfilled_field_message'].'"; }
+if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) { document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = "'.$_ENV[$prefix.'unfilled_field_message'].'"; }
 '.(in_array($field, $_GET[$prefix.'radio_fields']) ? '' : 'if (!error) { form.'.$prefix.$field.'.focus(); } ').'error = true; }
-else if (document.getElementById("'.$prefix.$field.'_error")) { document.getElementById("'.$prefix.$field.'_error").innerHTML = ""; }'; }
+else if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) { document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = ""; }'; }
 $form_js = '
 <script type="text/javascript">
 '.($focus == 'yes' ? (isset($_ENV['form_focus']) ? $_ENV['form_focus'] : '') : '').'
@@ -414,7 +418,7 @@ if ((function_exists('affiliation_session')) && (affiliation_session())) { $_POS
 elseif ((function_exists('commerce_session')) && (commerce_session())) { $_POST[$prefix.$name] = client_data($name); }
 elseif ((function_exists('membership_session')) && (membership_session(''))) { $_POST[$prefix.$name] = member_data($name); }
 elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $_POST[$prefix.$name] = contact_user_data($name); } } }
-if ((isset($_POST[$prefix.'submit'])) && ($atts['required'] == 'yes') && ($_POST[$prefix.$name] == '')) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'unfilled_field_message']; }
+if ((isset($_POST[$prefix.'submit'])) && ($atts['required'] == 'yes') && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'unfilled_field_message']; }
 if (((!isset($_ENV['form_focus'])) || ($_ENV['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $_ENV['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
 foreach ($attributes as $key => $value) {
 switch ($key) {
@@ -477,7 +481,7 @@ if ((function_exists('affiliation_session')) && (affiliation_session())) { $_POS
 elseif ((function_exists('commerce_session')) && (commerce_session())) { $_POST[$prefix.$name] = client_data($name); }
 elseif ((function_exists('membership_session')) && (membership_session(''))) { $_POST[$prefix.$name] = member_data($name); }
 elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $_POST[$prefix.$name] = contact_user_data($name); } } }
-if ((isset($_POST[$prefix.'submit'])) && ($atts['required'] == 'yes') && ($_POST[$prefix.$name] == '')) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'unfilled_field_message']; }
+if ((isset($_POST[$prefix.'submit'])) && ($atts['required'] == 'yes') && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'unfilled_field_message']; }
 if (((!isset($_ENV['form_focus'])) || ($_ENV['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $_ENV['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
 foreach ($attributes as $key => $value) {
 switch ($key) {
@@ -494,3 +498,62 @@ $content = explode('[other]', do_shortcode($content));
 if ((isset($_ENV['form_error'])) && ($_ENV['form_error'] == 'yes')) { $n = 1; } else { $n = 0; }
 if (!isset($content[$n])) { $content[$n] = ''; }
 return $content[$n]; } }
+
+
+function contact_form_country_selector($atts) {
+$form_id = $_GET['contact_form_id'];
+$prefix = 'contact_form'.$form_id.'_';
+$attributes = array(
+'class' => '',
+'dir' => '',
+'disabled' => '',
+'multiple' => '',
+'onblur' => '',
+'onchange' => '',
+'onclick' => '',
+'ondblclick' => '',
+'onfocus' => '',
+'onkeydown' => '',
+'onkeypress' => '',
+'onkeyup' => '',
+'onmousedown' => '',
+'onmousemove' => '',
+'onmouseout' => '',
+'onmouseover' => '',
+'onmouseup' => '',
+'required' => 'no',
+'size' => '',
+'style' => '',
+'tabindex' => '',
+'title' => '',
+'xmlns' => '');
+$markup = '';
+foreach ($attributes as $key => $value) {
+if ((!isset($atts[$key])) || ($atts[$key] == '')) { $atts[$key] = $attributes[$key]; } }
+
+$name = 'country_code';
+$_GET[$prefix.'fields'][] = $name;
+$_GET[$prefix.'fields'][] = 'country';
+if (in_array($name, $_GET[$prefix.'required_fields'])) { $atts['required'] = 'yes'; }
+foreach (array($name, str_replace('_', '-', $name)) as $key) {
+if (((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == '')) && (isset($_GET[$key]))) { $_POST[$prefix.$name] = utf8_encode(htmlspecialchars($_GET[$key])); } }
+if (!isset($_POST[$prefix.$name])) {
+if (((!isset($_POST[$prefix.'country'])) || ($_POST[$prefix.'country'] == '')) && (isset($_GET['country']))) { $_POST[$prefix.'country'] = utf8_encode(htmlspecialchars($_GET['country'])); }
+if ((!isset($_POST[$prefix.'submit'])) && ((!isset($_POST[$prefix.'country'])) || ($_POST[$prefix.'country'] == ''))) {
+if ((function_exists('affiliation_session')) && (affiliation_session())) { $_POST[$prefix.'country'] = affiliate_data('country'); }
+elseif ((function_exists('commerce_session')) && (commerce_session())) { $_POST[$prefix.'country'] = client_data('country'); }
+elseif ((function_exists('membership_session')) && (membership_session(''))) { $_POST[$prefix.'country'] = member_data('country'); }
+elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $_POST[$prefix.'country'] = contact_user_data('country'); } } }
+include dirname(__FILE__).'/countries/countries.php';
+$countries_list = '<option value="">--</option>'."\n";
+foreach ($countries as $country_code => $country) {
+if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] == $country_code)) { $_POST[$prefix.'country'] = $country; }
+elseif ((isset($_POST[$prefix.'country'])) && ($_POST[$prefix.'country'] == $country)) { $_POST[$prefix.$name] = $country_code; }
+$countries_list .= '<option value="'.$country_code.'"'.(((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] == $country_code)) ? ' selected="selected"' : '').'>'.$country.'</option>'."\n"; }
+if ((isset($_POST[$prefix.'submit'])) && ($atts['required'] == 'yes') && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $_ENV[$prefix.'country_error'] = $_ENV[$prefix.'unfilled_field_message']; }
+if (((!isset($_ENV['form_focus'])) || ($_ENV['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $_ENV['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
+foreach ($attributes as $key => $value) {
+switch ($key) {
+case 'required': if ($atts['required'] == 'yes') { $_GET[$prefix.'required_fields'][] = $name; } break;
+default: if ((is_string($key)) && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } } }
+return '<select name="'.$prefix.$name.'" id="'.$prefix.'country"'.$markup.'>'.$countries_list.'</select>'; }
