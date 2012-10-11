@@ -23,6 +23,7 @@ return $string; }
 
 
 function contact_counter($atts, $content) {
+$type = '';
 include dirname(__FILE__).'/counter.php';
 return $content[$k]; }
 
