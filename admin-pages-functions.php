@@ -44,7 +44,7 @@ $links_markup = array(
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Optin Manager']['name'].'</a>' : '<a href="http://www.kleor-editions.com/optin-manager">'.$admin_links['Optin Manager']['name'].'</a>'));
 $first = true; $links_displayed = array();
 for ($i = 0; $i < count($admin_links); $i++) {
-$link = $links[$i];
+$link = (isset($links[$i]) ? $links[$i] : '');
 if ((in_array($i, $displayed_links)) && (isset($links_markup[$link])) && (!in_array($link, $links_displayed))) {
 echo '<li>'.($first ? '' : ' | ').$links_markup[$link].'</li>'; $first = false; $links_displayed[] = $link; } }
 echo '</ul>'; } }
@@ -58,7 +58,7 @@ include 'admin-pages.php';
 echo '<ul class="subsubsub" style="margin: 0 0 1em; float: left; white-space: normal;">';
 $first = true; $items_displayed = array();
 for ($i = 0; $i < count($admin_pages); $i++) {
-$item = $menu_items[$i];
+$item = (isset($menu_items[$i]) ? $menu_items[$i] : '');
 if ((in_array($i, $menu_displayed_items)) && (!in_array($item, $items_displayed))) {
 $slug = 'contact-manager'.($item == '' ? '' : '-'.str_replace('_', '-', $item));
 echo '<li>'.($first ? '' : ' | ').'<a href="admin.php?page='.$slug.'"'.($_GET['page'] == $slug ? ' class="current"' : '').'>'.$admin_pages[$item]['menu_title'].'</a></li>';

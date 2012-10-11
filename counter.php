@@ -31,6 +31,14 @@ else {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 extract(shortcode_atts(array('data' => '', 'limit' => '', 'range' => '', 'status' => ''), $atts));
 
+$datas = explode('+', $data);
+$m = count($datas);
+if ($m > 1) {
+$atts['limit'] = '';
+$data = 0; for ($i = 0; $i < $m; $i++) {
+$atts['data'] = $datas[$i];
+$data = $data + contact_counter($atts, '[total-number]'); } }
+else {
 $data = str_replace('_', '-', format_nice_name($data));
 switch ($data) {
 case 'forms': $table = $wpdb->prefix.'contact_manager_forms'; $field = ''; break;
@@ -107,11 +115,12 @@ $data = round(100*(isset($row->total) ? $row->total : 0))/100; } }
 else {
 $data = 0; foreach ($table as $table_name) {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table_name WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } } }
+$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } } } }
 
+$limit = str_replace(array('?', ',', ';'), '.', $limit);
 if ($limit == '') { $limit = '0'; }
 else { $limit = '0/'.$limit; }
-$limit = preg_split('#[^0-9]#', $limit, 0, PREG_SPLIT_NO_EMPTY);
+$limit = preg_split('#[^0-9.]#', $limit, 0, PREG_SPLIT_NO_EMPTY);
 $n = count($limit);
 
 $i = 0; while (($i < $n) && ($limit[$i] <= $data)) { $k = $i; $i = $i + 1; }

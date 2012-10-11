@@ -184,7 +184,7 @@ $$field = str_replace(array("\\t", '\\', '&#91;', '&#93;'), array('	', '', '[', 
 if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender); } }
 
 if ((function_exists('referrer_data')) && ($message['referrer'] != '') && (!strstr($message['referrer'], '@'))) {
-if (affiliation_data('message_notification_email_deactivated') != 'yes') {
+if (affiliation_data('message_notification_email_disabled') != 'yes') {
 $_GET['referrer'] = $message['referrer'];
 if (referrer_data('status') == 'active') {
 $sent = referrer_data('message_notification_email_sent');
