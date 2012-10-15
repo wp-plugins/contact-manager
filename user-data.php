@@ -20,16 +20,14 @@ case 'email_address': $field = 'user_email'; break;
 case 'id': $field = 'ID'; break;
 case 'login': $field = 'user_login'; break;
 case 'website_url': $field = 'user_url'; break; }
-if (($id == 0) || ((isset($user_data['ID'])) && ($id == $user_data['ID']))) {
-$data = (isset($user_data[$field]) ? $user_data[$field] : ''); }
-else {
+if (($id > 0) && ((!isset($user_data['ID'])) || ($id != $user_data['ID']))) {
 foreach (array('user_id', 'user_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
 if ((!isset($_GET['user'.$id.'_data'])) || (!isset($_GET['user'.$id.'_data']['ID'])) || ($_GET['user'.$id.'_data']['ID'] != $id)) {
 $_GET['user'.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$id, OBJECT); }
 $user_data = $_GET['user'.$id.'_data'];
-$_GET['user_id'] = $id; $_GET['user_data'] = $user_data;
-$data = (isset($user_data[$field]) ? $user_data[$field] : ''); }
+$_GET['user_id'] = $id; $_GET['user_data'] = $user_data; }
+$data = (isset($user_data[$field]) ? $user_data[$field] : '');
 switch ($field) {
 case 'first_name': case 'last_name': if (($data == '') && (isset($_GET['user_id']))) {
 $result = $wpdb->get_row("SELECT meta_value FROM ".$wpdb->base_prefix."usermeta WHERE meta_key = '".$field."' AND user_id = ".$_GET['user_id'], OBJECT);
