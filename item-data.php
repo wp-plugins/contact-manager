@@ -26,16 +26,14 @@ $id = (int) (isset($atts[$attribute]) ? do_shortcode(str_replace(array('(', ')')
 $part = (int) (isset($atts['part']) ? $atts['part'] : 0); }
 $field = str_replace('-', '_', format_nice_name($field));
 if ($field == '') { $field = $default_field; }
-if (($id == 0) || ((isset($item_data['id'])) && ($id == $item_data['id']))) {
-$data = (isset($item_data[$field]) ? $item_data[$field] : ''); }
-elseif ($id > 0) {
+if (($id > 0) && ((!isset($item_data['id'])) || ($id != $item_data['id']))) {
 foreach (array($type.'_id', $type.'_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
 if ((!isset($_GET[$type.$id.'_data'])) || (!isset($_GET[$type.$id.'_data']['id'])) || ($_GET[$type.$id.'_data']['id'] != $id)) {
 $_GET[$type.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = $id", OBJECT); }
 $item_data = $_GET[$type.$id.'_data'];
-if ($attribute == 'id') { $_GET[$type.'_id'] = $id; $_GET[$type.'_data'] = $item_data; }
-$data = (isset($item_data[$field]) ? $item_data[$field] : ''); }
+if ($attribute == 'id') { $_GET[$type.'_id'] = $id; $_GET[$type.'_data'] = $item_data; } }
+$data = (isset($item_data[$field]) ? $item_data[$field] : '');
 if ($part > 0) { $data = explode(',', $data); $data = (isset($data[$part - 1]) ? trim($data[$part - 1]) : ''); }
 switch ($type) {
 case 'contact_form': case 'contact_form_category':

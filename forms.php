@@ -41,7 +41,8 @@ foreach (array('invalid_email_address_message', 'unfilled_field_message') as $ke
 $code = contact_form_data('code');
 foreach (array('checkbox_fields', 'fields', 'radio_fields', 'required_fields') as $array) { $_GET[$prefix.$array] = array_unique($_GET[$prefix.$array]); }
 
-if (isset($_POST[$prefix.'submit'])) {
+if ((isset($_POST[$prefix.'submit'])) && (!isset($_ENV[$prefix.'processed']))) {
+$_ENV[$prefix.'processed'] = 'yes';
 $_ENV['form_error'] = '';
 if (is_numeric($maximum_messages_quantity_per_sender)) {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST[$prefix.'email_address']."' AND form_id = ".$id, OBJECT);
@@ -361,14 +362,14 @@ $attributes = array(
 'xmlns' => '');
 $markup = '';
 foreach ($attributes as $key => $value) {
-if ((!isset($atts[$key])) || ($atts[$key] == '')) { $atts[$key] = $attributes[$key]; } }
+if ($key == 'value') { if (!isset($atts[$key])) { $atts[$key] = $content; } }
+elseif ((!isset($atts[$key])) || ($atts[$key] == '')) { $atts[$key] = $attributes[$key]; } }
 
 $content = do_shortcode($content);
 $name = $_GET['contact_field_name'];
-if ($atts['value'] == '') { $atts['value'] = $content; }
 if ((isset($_POST[$prefix.$name])) && ((isset($_POST[$prefix.'submit'])) || ($atts['selected'] == ''))) { $atts['selected'] = ($_POST[$prefix.$name] == $atts['value'] ? 'selected' : ''); }
 $atts['value'] = quotes_entities($atts['value']);
-foreach ($attributes as $key => $value) { if ((is_string($key)) && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } }
+foreach ($attributes as $key => $value) { if ((is_string($key)) && (($key == 'value') || ($atts[$key] != ''))) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } }
 
 return '<option'.$markup.'>'.$content.'</option>'; }
 
