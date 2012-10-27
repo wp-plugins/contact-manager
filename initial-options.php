@@ -47,6 +47,7 @@ $initial_options[''] = array(
 'sender_member_category_id' => '',
 'sender_member_status' => '',
 'sender_members_areas' => '',
+'sender_members_areas_modifications' => '',
 'sender_subscribed_as_a_client' => 'no',
 'sender_subscribed_as_a_user' => 'no',
 'sender_subscribed_to_affiliate_program' => 'no',

@@ -203,6 +203,29 @@ HEADER_FORMAT : 'mmmm yyyy'
 <?php }
 
 
+function contact_manager_format_members_areas_modifications($content) {
+if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+$array = explode(',', $content);
+$modifications = array();
+foreach ($array as $string) {
+$string = explode('(', trim(str_replace(')', '', $string)));
+if (count($string) == 2) {
+$id = (int) preg_replace('/[^0-9]/', '', $string[0]);
+$sign = (substr($string[0], 0, 1) == '-' ? '-' : '+');
+$d = preg_split('#[^0-9]#', trim($string[1]), 0, PREG_SPLIT_NO_EMPTY);
+for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : 0); }
+if ((strstr($string[1], '/')) || (strstr($string[1], '-'))) {
+$date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])); }
+else { $date = $d[0].':'.$d[1].':'.$d[2].':'.$d[3]; }
+$modifications[$id] = array('sign' => $sign, 'date' => $date); } }
+$members_areas = array();
+foreach ($modifications as $key => $value) { $members_areas[] = $key; }
+sort($members_areas, SORT_NUMERIC);
+$content = '';
+foreach ($members_areas as $key) { $content .= $modifications[$key]['sign'].$key." (".$modifications[$key]['date']."),\n" ; }
+return $content; }
+
+
 if (((!isset($_GET['action'])) || ($_GET['action'] != 'delete'))
  && ($_GET['page'] != 'contact-manager')
  && ($_GET['page'] != 'contact-manager-back-office')) {

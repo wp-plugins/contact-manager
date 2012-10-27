@@ -16,9 +16,10 @@ return $content[$n]; }
 
 
 function contact_counter_tag($atts) {
-extract(shortcode_atts(array('data' => '', 'filter' => ''), $atts));
+extract(shortcode_atts(array('data' => '', 'decimals' => '', 'filter' => ''), $atts));
 $string = $_GET['contact_'.str_replace('-', '_', format_nice_name($data))];
 $string = contact_filter_data($filter, $string);
+$string = contact_decimals_data($decimals, $string);
 return $string; }
 
 

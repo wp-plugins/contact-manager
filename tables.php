@@ -44,6 +44,7 @@
 'affiliation_registration_notification_email_sent' => array('type' => 'text', 'modules' => array('registration-to-affiliate-program'), 'name' => __('Registration notification email sent', 'contact-manager').' '.__('(Affiliation)', 'contact-manager'), 'width' => 15),
 'sender_subscribed_to_members_areas' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders subscribed to a member area', 'contact-manager'), 'width' => 18),
 'sender_members_areas' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders members areas', 'contact-manager'), 'width' => 12, 'searchby' => __('the senders members areas', 'contact-manager')),
+'sender_members_areas_modifications' => array('type' => 'text', 'modules' => array('membership')),
 'sender_member_category_id' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders member category ID', 'contact-manager'), 'width' => 15),
 'sender_member_status' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders member status', 'contact-manager'), 'width' => 15),
 'membership_registration_confirmation_email_sent' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Registration confirmation email sent', 'contact-manager').' '.__('(Membership)', 'contact-manager'), 'width' => 15),

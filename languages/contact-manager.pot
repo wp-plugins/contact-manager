@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 4.8.4\n"
+"Project-Id-Version: Contact Manager 5.0\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -2052,4 +2052,10 @@ msgid "Save"
 msgstr ""
 
 msgid "Question"
+msgstr ""
+
+msgid "Automatic modifications"
+msgstr ""
+
+msgid "You can automatically modify the members areas to which the member can access when a certain date is reached."
 msgstr ""

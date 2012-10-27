@@ -15,13 +15,12 @@ $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$tabl
 if ($result) { $_GET[$type.'_data'] = (array) $result; } }
 if (isset($_GET[$type.'_data']['id'])) { $n = $_GET[$type.'_data']['id']; $_GET[$type.$n.'_data'] = $_GET[$type.'_data']; } }
 $item_data = $_GET[$type.'_data'];
-if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; $part = 0; }
+if (is_string($atts)) { $field = $atts; $decimals = ''; $default = ''; $filter = ''; $id = 0; $part = 0; }
 else {
 $field = (isset($atts[0]) ? $atts[0] : '');
-$default = (isset($atts['default']) ? $atts['default'] : '');
-if (isset($atts['default'])) { unset($atts['default']); }
-$filter = (isset($atts['filter']) ? $atts['filter'] : '');
-if (isset($atts['filter'])) { unset($atts['filter']); }
+foreach (array('decimals', 'default', 'filter') as $key) {
+$$key = (isset($atts[$key]) ? $atts[$key] : '');
+if (isset($atts[$key])) { unset($atts[$key]); } }
 $id = (int) (isset($atts[$attribute]) ? do_shortcode(str_replace(array('(', ')'), array('[', ']'), $atts[$attribute])) : 0);
 $part = (int) (isset($atts['part']) ? $atts['part'] : 0); }
 $field = str_replace('-', '_', format_nice_name($field));
@@ -51,5 +50,6 @@ $data = (string) do_shortcode($data);
 if ($data == '') { $data = $default; }
 $data = contact_format_data($field, $data);
 $data = contact_filter_data($filter, $data);
+$data = contact_decimals_data($decimals, $data);
 foreach (array($type.'_id', $type.'_data') as $key) {
 if (isset($original[$key])) { $_GET[$key] = $original[$key]; } }

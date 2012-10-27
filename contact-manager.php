@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 4.8.4
+Version: 5.0
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -60,11 +60,10 @@ function add_message($message) { include dirname(__FILE__).'/add-message.php'; }
 
 function contact_data($atts) {
 global $contact_manager_options;
-if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $part = 0; }
+if (is_string($atts)) { $field = $atts; $decimals = ''; $default = ''; $filter = ''; $part = 0; }
 else {
 $field = (isset($atts[0]) ? $atts[0] : '');
-$default = (isset($atts['default']) ? $atts['default'] : '');
-$filter = (isset($atts['filter']) ? $atts['filter'] : '');
+foreach (array('decimals', 'default', 'filter') as $key) { $$key = (isset($atts[$key]) ? $atts[$key] : ''); }
 $part = (int) (isset($atts['part']) ? $atts['part'] : 0); }
 $field = str_replace('-', '_', format_nice_name($field));
 if ($field == '') { $field = 'version'; }
@@ -77,6 +76,16 @@ $data = (string) do_shortcode($data);
 if ($data == '') { $data = $default; }
 $data = contact_format_data($field, $data);
 $data = contact_filter_data($filter, $data);
+$data = contact_decimals_data($decimals, $data);
+return $data; }
+
+
+function contact_decimals_data($decimals, $data) {
+if (($decimals != '') && (is_numeric($data))) {
+$decimals = explode('/', $decimals);
+for ($i = 0; $i < count($decimals); $i++) { $decimals[$i] = (int) $decimals[$i]; }
+if ($data == round($data)) { $data = number_format($data, min($decimals), '.', ''); }
+else { $data = number_format($data, max($decimals), '.', ''); } }
 return $data; }
 
 

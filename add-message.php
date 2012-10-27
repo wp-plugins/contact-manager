@@ -120,6 +120,8 @@ add_client($client); } }
 if ((function_exists('add_member')) && ($message['sender_subscribed_to_members_areas'] == 'yes')) {
 if ($_GET['member_id'] > 0) {
 update_member_members_areas($_GET['member_id'], $message['sender_members_areas'], 'add');
+if (function_exists('update_member_members_areas_modifications')) {
+update_member_members_areas_modifications($_GET['member_id'], $message['sender_members_areas_modifications'], 'add'); }
 if ($message['sender_member_category_id'] > 0) {
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET category_id = ".$message['sender_member_category_id']." WHERE id = ".$_GET['member_id']); } }
 elseif ($message['email_address'] != '') {
@@ -130,6 +132,7 @@ $member['members_areas'] = $message['sender_members_areas'];
 $members_areas = array_unique(preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 if (count($members_areas) == 1) { $_GET['member_area_id'] = (int) $members_areas[0]; }
 elseif (isset($_GET['member_area_id'])) { unset($_GET['member_area_id']); }
+$member['members_areas_modifications'] = $message['sender_members_areas_modifications'];
 if (!isset($member['login'])) { $member['login'] = $member['email_address']; }
 $login = $member['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."membership_manager_members WHERE login = '".$member['login']."'", OBJECT);

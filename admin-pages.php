@@ -105,6 +105,7 @@ $add_message_fields = array(
 'affiliation_registration_notification_email_sent',
 'sender_subscribed_to_members_areas',
 'sender_members_areas',
+'sender_members_areas_modifications',
 'sender_member_category_id',
 'sender_member_status',
 'membership_registration_confirmation_email_sent',

@@ -163,6 +163,7 @@ sort($members_areas, SORT_NUMERIC);
 $members_areas_list = '';
 foreach ($members_areas as $member_area) { if ($member_area != '') { $members_areas_list .= $member_area.', '; } }
 $_POST['sender_members_areas'] = substr($members_areas_list, 0, -2);
+$_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
 if ($error == '') {
 $result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".$_POST['subject']."' AND content = '".$_POST['content']."' AND date = '".$_POST['date']."'", OBJECT);
 if (!$result) { $updated = true; add_message($_POST); } } } }
@@ -541,6 +542,10 @@ echo '<option value="'.$category->id.'"'.($_POST['sender_affiliate_category_id']
 <a style="text-decoration: none;" href="admin.php?page=membership-manager-member-area&amp;id='.$_POST['sender_members_areas'].'">'.__('Edit').'</a> | 
 <a style="text-decoration: none;" href="admin.php?page=membership-manager-member-area&amp;id='.$_POST['sender_members_areas'].'&amp;action=delete">'.__('Delete').'</a>'; } ?><br />
 <span class="description"><?php _e('Separate the IDs of the members areas with commas.', 'contact-manager'); ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas_modifications"><?php _e('Automatic modifications', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50"><?php echo $_POST['sender_members_areas_modifications']; ?></textarea>
+<span class="description"><?php _e('You can automatically modify the members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
+ <a href="http://www.kleor-editions.com/membership-manager/documentation/#members-areas-modifications"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."membership_manager_members_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_member_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
