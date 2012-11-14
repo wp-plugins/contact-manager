@@ -22,14 +22,18 @@ $modules['back_office'] = array(
 'top' => array('name' => __('Top', 'contact-manager')),
 'menu' => array('name' => __('Menu', 'contact-manager')),
 'options-page' => array('name' => __('<em>Options</em> page', 'contact-manager')),
-'form-page' => array('name' => (isset($_GET['id']) ? __('<em>Edit Form</em> page', 'contact-manager') : __('<em>Add Form</em> page', 'contact-manager'))),
-'form-category-page' => array('name' => (isset($_GET['id']) ? __('<em>Edit Form Category</em> page', 'contact-manager') : __('<em>Add Form Category</em> page', 'contact-manager'))),
-'message-page' => array('name' => (isset($_GET['id']) ? __('<em>Edit Message</em> page', 'contact-manager') : __('<em>Add Message</em> page', 'contact-manager'))),
+'form-page' => array('name' => (isset($_GET['id']) ? __('<em>Edit Form</em> page', 'contact-manager') : __('<em>Add Form</em> page', 'contact-manager')), 'modules' => array(
+	'form-page-custom-fields' => array('name' => __('Custom fields', 'contact-manager')))),
+'form-category-page' => array('name' => (isset($_GET['id']) ? __('<em>Edit Form Category</em> page', 'contact-manager') : __('<em>Add Form Category</em> page', 'contact-manager')), 'modules' => array(
+	'form-category-page-custom-fields' => array('name' => __('Custom fields', 'contact-manager')))),
+'message-page' => array('name' => (isset($_GET['id']) ? __('<em>Edit Message</em> page', 'contact-manager') : __('<em>Add Message</em> page', 'contact-manager')), 'modules' => array(
+	'message-page-custom-fields' => array('name' => __('Custom fields', 'contact-manager')))),
 'statistics-page' => array('name' => __('<em>Statistics</em> page', 'contact-manager')),
 'back-office-page' => array('name' => __('<em>Back Office</em> page', 'contact-manager'), 'required' => 'yes'));
 
 $modules['form'] = array(
 'general-informations' => array('name' => __('General informations', 'contact-manager'), 'required' => 'yes'),
+'custom-fields' => array('name' => __('Custom fields', 'contact-manager')),
 'gift' => array('name' => __('Gift', 'contact-manager')),
 'counters' => array('name' => __('Counters', 'contact-manager')),
 'form' => array('name' => __('Form', 'contact-manager'), 'modules' => array(
@@ -56,6 +60,7 @@ $modules['form_category'] = array_merge($modules['form_category'], array(
 $modules['message'] = array(
 'general-informations' => array('name' => __('General informations', 'contact-manager'), 'required' => 'yes'),
 'sender' => array('name' => __('Sender', 'contact-manager')),
+'custom-fields' => array('name' => __('Custom fields', 'contact-manager')),
 'affiliation' => array('name' => __('Affiliation', 'contact-manager'), 'modules' => array(
 	'level-1-commission' => array('name' => __('Level 1 commission', 'contact-manager')),
 	'level-2-commission' => array('name' => __('Level 2 commission', 'contact-manager')))),

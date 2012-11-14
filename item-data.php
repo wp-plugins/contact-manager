@@ -10,7 +10,8 @@ $n = $_GET[$type.'_id']; $_GET[$type.$n.'_data'] = (array) (isset($_GET[$type.$n
 if ((isset($_GET[$type.$n.'_data']['id'])) && ($_GET[$type.$n.'_data']['id'] == $_GET[$type.'_id'])) { $_GET[$type.'_data'] = $_GET[$type.$n.'_data']; }
 else { $_GET[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = ".$_GET[$type.'_id'], OBJECT); } }
 if (!is_admin()) {
-if (($type == 'message') && (!isset($_GET[$type.'_data']['email_address']))) {
+if (($type == 'message') && (!isset($_GET[$type.'_data']['email_address'])) && (!isset($_ENV[$type.'_searched_by_ip_address']))) {
+$_ENV[$type.'_searched_by_ip_address'] = 'yes';
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE ip_address = '".$_SERVER['REMOTE_ADDR']."' ORDER BY date DESC LIMIT 1", OBJECT);
 if ($result) { $_GET[$type.'_data'] = (array) $result; } }
 if (isset($_GET[$type.'_data']['id'])) { $n = $_GET[$type.'_data']['id']; $_GET[$type.$n.'_data'] = $_GET[$type.'_data']; } }
@@ -32,6 +33,9 @@ if ((!isset($_GET[$type.$id.'_data'])) || (!isset($_GET[$type.$id.'_data']['id']
 $_GET[$type.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = $id", OBJECT); }
 $item_data = $_GET[$type.$id.'_data'];
 if ($attribute == 'id') { $_GET[$type.'_id'] = $id; $_GET[$type.'_data'] = $item_data; } }
+if ((!isset($item_data[$field])) && (isset($item_data['custom_fields'])) && (substr($field, 0, 13) == 'custom_field_')) {
+$item_custom_fields = (array) unserialize(stripslashes($item_data['custom_fields']));
+foreach ($item_custom_fields as $key => $value) { $item_data['custom_field_'.$key] = $value; } }
 $data = (isset($item_data[$field]) ? $item_data[$field] : '');
 if ($part > 0) { $data = explode(',', $data); $data = (isset($data[$part - 1]) ? trim($data[$part - 1]) : ''); }
 switch ($type) {

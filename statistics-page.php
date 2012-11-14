@@ -132,12 +132,18 @@ for ($i = 0; $i < $max_tables; $i++) {
 if (in_array($i, $displayed_tables)) {
 $table_slug = $tables_slugs[$i];
 $table_name = table_name($table_slug);
+$custom_fields = (array) $back_office_options[single_page_slug($table_slug).'_page_custom_fields'];
+foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
+asort($custom_fields); foreach ($custom_fields as $key => $value) {
+$tables[$table_slug]['custom_field_'.$key] = array('modules' => array('custom-fields'), 'name' => $value, 'width' => 18); }
 $options = (array) get_option('contact_manager_'.$table_slug);
 $columns = (array) $options['columns'];
 $max_columns = count($columns);
+for ($k = 0; $k < $max_columns; $k++) {
+if (!isset($tables[$table_slug][$columns[$k]])) { $columns[$k] = 'id'; } }
 $displayed_columns = (array) $options['displayed_columns'];
 $table_ths = '';
-for ($j = 0; $j < $max_columns; $j++) { if (in_array($j, $displayed_columns)) { $table_ths .= table_th($table_slug, $columns[$j]); } }
+for ($j = 0; $j < $max_columns; $j++) { if (in_array($j, $displayed_columns)) { $table_ths .= table_th($tables, $table_slug, $columns[$j]); } }
 echo $summary.'
 <h3 id="'.str_replace('_', '-', $tables_slugs[$i]).'"><strong>'.$tables_names[$tables_slugs[$i]].'</strong></h3>
 <div style="overflow: auto;">

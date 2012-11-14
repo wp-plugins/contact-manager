@@ -5,7 +5,11 @@ include 'tables.php';
 include_once 'tables-functions.php';
 $options = (array) get_option(str_replace('-', '_', $_GET['page']));
 $table_name = table_name($table_slug);
-$undisplayed_keys = table_undisplayed_keys($table_slug, $back_office_options);
+$custom_fields = (array) $back_office_options[single_page_slug($table_slug).'_page_custom_fields'];
+foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
+asort($custom_fields); foreach ($custom_fields as $key => $value) {
+$tables[$table_slug]['custom_field_'.$key] = array('modules' => array('custom-fields'), 'name' => $value, 'width' => 18); }
+$undisplayed_keys = table_undisplayed_keys($tables, $table_slug, $back_office_options);
 foreach ($tables[$table_slug] as $key => $value) {
 if (!isset($value['name'])) { unset($tables[$table_slug][$key]); }
 if ((isset($value['searchby'])) && (!in_array($key, $undisplayed_keys))) { $searchby_options[$key] = $value['searchby']; } }
@@ -41,6 +45,8 @@ else { $start_date = $options['start_date']; }
 if (isset($_GET['end_date'])) { $end_date = $_GET['end_date']; }
 else { $end_date = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET); }
 $columns = (array) $options['columns'];
+for ($i = 0; $i < $max_columns; $i++) {
+if ((!isset($columns[$i])) || (!isset($tables[$table_slug][$columns[$i]]))) { $columns[$i] = 'id'; } }
 $columns_list_displayed = $options['columns_list_displayed'];
 $displayed_columns = (array) $options['displayed_columns'];
 $limit = $options['limit'];
@@ -71,7 +77,8 @@ $_GET['criteria'] = $_GET['date_criteria'].$_GET['selection_criteria'];
 $_GET['search_criteria'] = ''; $search_criteria = ''; $search_column = false;
 if ((isset($_GET['s'])) && ($_GET['s'] != '')) {
 if ($searchby == '') {
-foreach ($tables[$table_slug] as $key => $value) { $search_criteria .= " OR ".$key." LIKE '%".$_GET['s']."%'"; }
+foreach ($tables[$table_slug] as $key => $value) {
+if (substr($key, 0, 13) != 'custom_field_') { $search_criteria .= " OR ".$key." LIKE '%".$_GET['s']."%'"; } }
 $search_criteria = substr($search_criteria, 4); }
 else {
 $search_column = true; for ($i = 0; $i < $max_columns; $i++) {
@@ -91,16 +98,13 @@ if ($_GET['paged'] > $max_paged) { $_GET['paged'] = $max_paged; }
 $start = ($_GET['paged'] - 1)*$limit;
 
 if ($n > 0) {
-if ($table_slug == 'messages') { $items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria ORDER BY ".$_GET['orderby']." ".strtoupper($_GET['order'])." LIMIT $start, $limit", OBJECT); }
-else {
-$items = $wpdb->get_results("SELECT id, category_id, ".$_GET['orderby']." FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria ORDER BY ".$_GET['orderby']." ".strtoupper($_GET['order']), OBJECT);
-foreach ($items as $item) { $datas[$item->id] = table_data($table_slug, $_GET['orderby'], $item); }
+$items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria", OBJECT);
+foreach ($items as $item) { $all_datas[$item->id] = $item; $datas[$item->id] = table_data($table_slug, $_GET['orderby'], $item); }
 if ($_GET['order'] == 'asc') { asort($datas); } else { arsort($datas); }
-foreach ($datas as $key => $value) { $array[] = array('id' => $key, 'data' => $value); }
-for ($i = $start; $i < $start + $limit; $i++) { if (isset($array[$i])) { $ids[] = $array[$i]['id']; } }
-$items = array();
-foreach ($ids as $id) { $items[] = $wpdb->get_row("SELECT * FROM $table_name WHERE id = ".$id, OBJECT); }
-foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?>
+$array = array(); foreach ($datas as $key => $value) { $array[] = array('id' => $key, 'data' => $value); }
+$ids = array(); for ($i = $start; $i < $start + $limit; $i++) { if (isset($array[$i])) { $ids[] = $array[$i]['id']; } }
+$items = array(); foreach ($ids as $id) { $items[] = $all_datas[$id]; }
+foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } ?>
 
 <div class="wrap">
 <div id="poststuff">
@@ -117,13 +121,13 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 </div><?php tablenav_pages($table_slug, $n, $max_paged, 'top'); ?></div>
 <div style="overflow: auto;">
 <table class="wp-list-table widefat">
-<?php if ($search_column) { $search_table_th = table_th($table_slug, $searchby); $table_ths = $search_table_th; } else { $table_ths = ''; }
+<?php if ($search_column) { $search_table_th = table_th($tables, $table_slug, $searchby); $table_ths = $search_table_th; } else { $table_ths = ''; }
 $columns_displayed = array();
 $original_displayed_columns = $displayed_columns;
 foreach ($displayed_columns as $key => $value) {
 if (in_array($columns[$value], $columns_displayed)) { unset($displayed_columns[$key]); }
 $columns_displayed[] = $columns[$value]; }
-for ($i = 0; $i < $max_columns; $i++) { if (in_array($i, $displayed_columns)) { $table_ths .= table_th($table_slug, $columns[$i]); } }
+for ($i = 0; $i < $max_columns; $i++) { if (in_array($i, $displayed_columns)) { $table_ths .= table_th($tables, $table_slug, $columns[$i]); } }
 if ($table_ths != '') { echo '<thead><tr>'.$table_ths.'</tr></thead><tfoot><tr>'.$table_ths.'</tr></tfoot>'; } ?>
 <tbody id="the-list">
 <?php $boolean = false; if ($n > 0) { foreach ($items as $item) {

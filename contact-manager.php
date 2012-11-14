@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.0
+Version: 5.3
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -34,11 +34,14 @@ define('CONTACT_MANAGER_VERSION', $plugin_data['Version']);
 if (!function_exists('fix_url')) { include_once dirname(__FILE__).'/libraries/formatting-functions.php'; }
 if (is_admin()) { include_once dirname(__FILE__).'/admin.php'; }
 
+function install_contact_manager() { include dirname(__FILE__).'/install.php'; }
+
+register_activation_hook(__FILE__, 'install_contact_manager');
+
 global $wpdb;
 $contact_manager_options = get_option('contact_manager');
 if (((is_multisite()) || ($contact_manager_options)) && ((!isset($contact_manager_options['version']))
- || ($contact_manager_options['version'] != CONTACT_MANAGER_VERSION))) {
-include_once dirname(__FILE__).'/admin.php'; install_contact_manager(); }
+ || ($contact_manager_options['version'] != CONTACT_MANAGER_VERSION))) { install_contact_manager(); }
 
 fix_url();
 
@@ -58,6 +61,24 @@ add_filter('the_content', 'add_contact_form_in_posts');
 function add_message($message) { include dirname(__FILE__).'/add-message.php'; }
 
 
+function contact_cron() {
+$cron = get_option('contact_manager_cron');
+if ($cron) {
+if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+$current_timestamp = time();
+$installation = (array) $cron['previous_installation'];
+if ($installation['version'] != CONTACT_MANAGER_VERSION) {
+$cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'number' => 0, 'timestamp' => $current_timestamp); }
+elseif (($installation['number'] < 8) && (($current_timestamp - $installation['timestamp']) >= 60*pow(2, $installation['number']))) {
+$cron['previous_installation']['timestamp'] = $current_timestamp; }
+if ($cron['previous_installation'] != $installation) {
+update_option('contact_manager_cron', $cron);
+wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } } }
+
+if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
+foreach (array('admin_footer', 'wp_footer') as $hook) { add_action($hook, 'contact_cron'); } }
+
+
 function contact_data($atts) {
 global $contact_manager_options;
 if (is_string($atts)) { $field = $atts; $decimals = ''; $default = ''; $filter = ''; $part = 0; }
@@ -68,8 +89,7 @@ $part = (int) (isset($atts['part']) ? $atts['part'] : 0); }
 $field = str_replace('-', '_', format_nice_name($field));
 if ($field == '') { $field = 'version'; }
 if (($field == 'code') || (substr($field, -10) == 'email_body') || (substr($field, -19) == 'custom_instructions')) {
-$data = get_option('contact_manager_'.$field);
-if (!$data) { $data = get_option(substr('contact_manager_'.$field, 0, 64)); } }
+$data = get_option(substr('contact_manager_'.$field, 0, 64)); }
 else { $data = (isset($contact_manager_options[$field]) ? $contact_manager_options[$field] : ''); }
 if ($part > 0) { $data = explode(',', $data); $data = (isset($data[$part - 1]) ? trim($data[$part - 1]) : ''); }
 $data = (string) do_shortcode($data);
@@ -120,7 +140,8 @@ return $data; }
 
 
 function contact_format_data($field, $data) {
-$data = quotes_entities_decode(do_shortcode($data));
+$data = do_shortcode($data);
+if ($field != 'code') { $data = quotes_entities_decode($data); }
 if ((strstr($field, 'date')) && ($data == '0000-00-00 00:00:00')) { $data = ''; }
 elseif (substr($field, -13) == 'email_address') { $data = format_email_address($data); }
 elseif (substr($field, -12) == 'instructions') { $data = format_instructions($data); }

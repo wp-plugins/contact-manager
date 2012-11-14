@@ -60,6 +60,11 @@ $_POST['email_address'] = format_email_address($_POST['email_address']);
 $_POST['form_id'] = (int) $_POST['form_id'];
 $_GET['contact_form_id'] = $_POST['form_id'];
 if ($_POST['form_id'] > 0) { $_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_POST['form_id'], OBJECT); }
+$custom_fields = (array) $back_office_options['message_page_custom_fields'];
+$item_custom_fields = array();
+foreach ($custom_fields as $key => $value) {
+if ((isset($_POST['custom_field_'.$key])) && ($_POST['custom_field_'.$key] != '')) { $item_custom_fields[$key] = $_POST['custom_field_'.$key]; } }
+if ($item_custom_fields != array()) { $_POST['custom_fields'] = serialize($item_custom_fields); }
 if ($_POST['referrer'] != '') {
 if (is_numeric($_POST['referrer'])) {
 $_POST['referrer'] = preg_replace('/[^0-9]/', '', $_POST['referrer']);
@@ -284,6 +289,24 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? __('Message update
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="referring_url"><?php _e('Referring URL', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="referring_url" id="referring_url" rows="1" cols="75"><?php echo $_POST['referring_url']; ?></textarea> 
 <?php $url = htmlspecialchars(message_data(array(0 => 'referring_url', 'part' => 1, 'id' => (isset($_GET['id']) ? $_GET['id'] : 0)))); if ($url != '') { ?><a style="vertical-align: 25%;" href="<?php echo $url; ?>"><?php _e('Link', 'contact-manager'); ?></a><?php } ?></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr>
+</tbody></table>
+</div></div>
+
+<div class="postbox" id="custom-fields-module"<?php if (in_array('custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h3 id="custom-fields"><strong><?php echo $modules['message']['custom-fields']['name']; ?></strong></h3>
+<div class="inside">
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><span class="description"><a href="admin.php?page=contact-manager-back-office#message-page-custom-fields"><?php _e('Click here to add a new custom field.', 'contact-manager'); ?></a>
+ <a href="http://www.kleor-editions.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<?php $custom_fields = (array) $back_office_options['message_page_custom_fields'];
+$item_custom_fields = (array) unserialize(htmlspecialchars_decode($_POST['custom_fields']));
+foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
+asort($custom_fields); $content = ''; foreach ($custom_fields as $key => $value) {
+$content .= '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="custom_field_'.$key.'">'.htmlspecialchars($value).'</label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_field_'.$key.'" id="custom_field_'.$key.'" rows="1" cols="75">'.htmlspecialchars((isset($item_custom_fields[$key]) ? $item_custom_fields[$key] : '')).'</textarea></td></tr>'; }
+echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td>'.__('You have no custom field currently.', 'contact-manager').'</td></tr>'; } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr>
 </tbody></table>
 </div></div>

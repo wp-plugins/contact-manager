@@ -54,19 +54,21 @@ case 'messages': $row_actions =
 return '<div class="row-actions" style="margin-top: 2em; position: absolute;">'.$row_actions.'</div>'; }
 
 
+function single_page_slug($table) {
+switch ($table) {
+case 'forms_categories': $page = 'form_category'; break;
+default: $page = substr($table, 0, -1); }
+return $page; }
+
+
 function table_name($table) {
 global $wpdb;
 return $wpdb->prefix.'contact_manager_'.$table; }
 
 
-function table_undisplayed_keys($table, $back_office_options) {
+function table_undisplayed_keys($tables, $table, $back_office_options) {
 global $wpdb;
-include 'tables.php';
-$undisplayed_modules = array();
-switch ($table) {
-case 'forms': $undisplayed_modules = (array) $back_office_options['form_page_undisplayed_modules']; break;
-case 'forms_categories': $undisplayed_modules = (array) $back_office_options['form_category_page_undisplayed_modules']; break;
-case 'messages': $undisplayed_modules = (array) $back_office_options['message_page_undisplayed_modules']; break; }
+$undisplayed_modules = (array) $back_office_options[single_page_slug($table).'_page_undisplayed_modules'];
 $undisplayed_keys = array();
 switch ($table) {
 case 'forms': case 'forms_categories':
@@ -107,6 +109,14 @@ else { $table_td = $data; } break;
 case 'commission_status': case 'commission2_status': if ($data == 'paid') { $table_td = '<a style="color: #008000;" href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'=paid">'.__('Paid', 'contact-manager').'</a>'; }
 elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'=unpaid">'.__('Unpaid', 'contact-manager').'</a>'; }
 else { $table_td = $data; } break;
+case 'custom_fields':
+$back_office_options = (array) get_option('contact_manager_back_office');
+$custom_fields = (array) $back_office_options[single_page_slug($table).'_page_custom_fields'];
+$item_custom_fields = (array) unserialize(htmlspecialchars_decode($data));
+foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
+asort($custom_fields); $table_td = '';
+foreach ($custom_fields as $key => $value) {
+if ((isset($item_custom_fields[$key])) && ($item_custom_fields[$key] != '')) { $table_td .= htmlspecialchars($value).' => '.htmlspecialchars($item_custom_fields[$key]).',<br />'; } } break;
 case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.$data.'</a>'; break;
 case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == 'http://'.$_SERVER['SERVER_NAME'] ? '/' : str_replace('http://'.$_SERVER['SERVER_NAME'], '', $data)).'</a>'); break;
 case 'keywords':
@@ -136,8 +146,7 @@ default: $table_td = $data; }
 return $table_td; }
 
 
-function table_th($table, $column) {
-include 'tables.php';
+function table_th($tables, $table, $column) {
 if (strstr($_GET['page'], 'statistics')) { $table_th = '<th scope="col" class="manage-column" style="width: '.$tables[$table][$column]['width'].'%;">'.$tables[$table][$column]['name'].'</th>'; }
 else {
 $reverse_order = ($_GET['order'] == 'asc' ? 'desc' : 'asc');

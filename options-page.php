@@ -79,7 +79,7 @@ foreach (array(
 'message_notification_email_body',
 'message_removal_custom_instructions') as $field) {
 if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = $initial_options[$field]; }
-update_option('contact_manager_'.$field, $_POST[$field]); } } }
+update_option(substr('contact_manager_'.$field, 0, 64), $_POST[$field]); } } }
 if (!isset($options)) { $options = (array) get_option('contact_manager'); }
 
 foreach ($options as $key => $value) {

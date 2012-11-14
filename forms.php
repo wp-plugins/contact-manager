@@ -62,6 +62,9 @@ if (hash('sha256', $_POST[$prefix.'captcha']) != $_POST[$prefix.'valid_captcha']
 if ($invalid_captcha == 'yes') { $_ENV[$prefix.'invalid_captcha_error'] = contact_form_data('invalid_captcha_message'); $_ENV['form_error'] = 'yes'; }
 if ($_ENV['form_error'] == '') {
 foreach ($_POST as $key => $value) { $_POST[str_replace($prefix, '', $key)] = $value; }
+$custom_fields = array(); foreach ($_POST as $key => $value) {
+if ((substr($key, 0, 13) == 'custom_field_') && ($value != '')) { $custom_fields[substr($key, 13)] = stripslashes(quotes_entities_decode($value)); } }
+if ($custom_fields != array()) { $_POST['custom_fields'] = serialize($custom_fields); }
 foreach (array('email_address', 'content', 'subject') as $field) {
 if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
 $_POST['receiver'] = contact_form_data('message_notification_email_receiver');

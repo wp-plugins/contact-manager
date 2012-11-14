@@ -79,6 +79,11 @@ for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : 0); }
 $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['date'] = date('Y-m-d H:i:s', $time);
 $_POST['date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); }
+$custom_fields = (array) $back_office_options[$admin_page.'_page_custom_fields'];
+$item_custom_fields = array();
+foreach ($custom_fields as $key => $value) {
+if ((isset($_POST['custom_field_'.$key])) && ($_POST['custom_field_'.$key] != '')) { $item_custom_fields[$key] = $_POST['custom_field_'.$key]; } }
+if ($item_custom_fields != array()) { $_POST['custom_fields'] = serialize($item_custom_fields); }
 if (!$is_category) {
 if ($_POST['displays_count'] < $_POST['messages_count']) { $_POST['displays_count'] = $_POST['messages_count']; } }
 
@@ -193,6 +198,24 @@ echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id
 <span class="description"><?php _e('Separate the keywords with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="date"><?php _e('Creation date', 'contact-manager'); ?></label></strong></th>
 <td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="date" id="date" size="20" value="<?php echo ($_POST['date'] != '' ? $_POST['date'] : date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET)); ?>" /></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr>
+</tbody></table>
+</div></div>
+
+<div class="postbox" id="custom-fields-module"<?php if (in_array('custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h3 id="custom-fields"><strong><?php echo $modules[$admin_page]['custom-fields']['name']; ?></strong></h3>
+<div class="inside">
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><span class="description"><a href="admin.php?page=contact-manager-back-office#<?php echo str_replace('_', '-', $admin_page); ?>-page-custom-fields"><?php _e('Click here to add a new custom field.', 'contact-manager'); ?></a>
+ <a href="http://www.kleor-editions.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<?php $custom_fields = (array) $back_office_options[$admin_page.'_page_custom_fields'];
+$item_custom_fields = (array) unserialize(htmlspecialchars_decode($_POST['custom_fields']));
+foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
+asort($custom_fields); $content = ''; foreach ($custom_fields as $key => $value) {
+$content .= '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="custom_field_'.$key.'">'.htmlspecialchars($value).'</label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_field_'.$key.'" id="custom_field_'.$key.'" rows="1" cols="75">'.htmlspecialchars((isset($item_custom_fields[$key]) ? $item_custom_fields[$key] : '')).'</textarea></td></tr>'; }
+echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td>'.__('You have no custom field currently.', 'contact-manager').'</td></tr>'; } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr>
 </tbody></table>
 </div></div>

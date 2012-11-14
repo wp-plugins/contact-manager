@@ -58,9 +58,9 @@ $initial_options[''] = array(
 'sg_autorepondeur_activation_code' => '',
 'unfilled_field_message' => __('This field is required.', 'contact-manager'),
 'unfilled_fields_message' => __('Please fill out the required fields.', 'contact-manager'),
-'version' => '');
+'version' => CONTACT_MANAGER_VERSION);
 
-include 'libraries/captchas.php';
+include dirname(__FILE__).'/libraries/captchas.php';
 $initial_options['captchas_numbers'] = $captchas_numbers;
 
 
@@ -95,6 +95,10 @@ $initial_options['code'] =
 <p><label>[input message-confirmation-email-sent value=yes] '.__('Receive a copy of this message', 'contact-manager').'</label></p>
 
 <div>[input submit value="'.__('Send', 'contact-manager').'"]</div>';
+
+
+$initial_options['cron'] = array(
+'previous_installation' => array('version' => '', 'number' => 0, 'timestamp' => 0));
 
 
 $initial_options['message_confirmation_email_body'] =
@@ -146,7 +150,7 @@ $variables = array(
 foreach ($variables as $variable) { if (isset($$variable)) { $original[$variable] = $$variable; unset($$variable); } }
 
 
-include 'tables.php';
+include dirname(__FILE__).'/tables.php';
 foreach ($tables as $table_slug => $table) {
 switch ($table_slug) {
 case 'forms': $first_columns = array(
@@ -197,7 +201,7 @@ $initial_options['statistics'] = array(
 'tables' => array('messages', 'forms', 'forms_categories'));
 
 
-include 'admin-pages.php';
+include dirname(__FILE__).'/admin-pages.php';
 $links = array();
 foreach ($admin_links as $key => $value) { $links[] = $key; }
 $displayed_links = array();
@@ -218,16 +222,22 @@ $menu_displayed_items[] = $key; } }
 
 $initial_options['back_office'] = array(
 'back_office_page_summary_displayed' => 'yes',
-'back_office_page_undisplayed_modules' => array('icon'),
+'back_office_page_undisplayed_modules' => array(
+	'form-page-custom-fields',
+	'form-category-page-custom-fields',
+	'icon',
+	'message-page-custom-fields'),
 'displayed_links' => $displayed_links,
 'custom_icon_url' => CONTACT_MANAGER_URL.'images/icon.png',
 'custom_icon_used' => 'no',
 'links' => $links,
 'links_displayed' => 'yes',
+'form_category_page_custom_fields' => array(),
 'form_category_page_summary_displayed' => 'yes',
 'form_category_page_undisplayed_modules' => array(
 	'affiliation',
 	'autoresponders',
+	'custom-fields',
 	'custom-instructions',
 	'gift',
 	'membership',
@@ -235,11 +245,13 @@ $initial_options['back_office'] = array(
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
+'form_page_custom_fields' => array(),
 'form_page_summary_displayed' => 'yes',
 'form_page_undisplayed_modules' => array(
 	'affiliation',
 	'autoresponders',
 	'counters',
+	'custom-fields',
 	'custom-instructions',
 	'gift',
 	'membership',
@@ -251,10 +263,12 @@ $initial_options['back_office'] = array(
 'menu_displayed_items' => $menu_displayed_items,
 'menu_items' => $menu_items,
 'menu_title' => __('Contact', 'contact-manager'),
+'message_page_custom_fields' => array(),
 'message_page_summary_displayed' => 'yes',
 'message_page_undisplayed_modules' => array(
 	'affiliation',
 	'autoresponders',
+	'custom-fields',
 	'custom-instructions',
 	'membership',
 	'registration-as-a-client',

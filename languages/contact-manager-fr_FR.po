@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.0\n"
+"Project-Id-Version: Contact Manager 5.3\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2012-10-27 04:19+0100\n"
+"PO-Revision-Date: 2012-11-13 02:43+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -2492,4 +2492,25 @@ msgstr "Modifications automatiques"
 
 msgid "You can automatically modify the members areas to which the member can access when a certain date is reached."
 msgstr "Vous pouvez modifier automatiquement les espaces membres auxquels le membre peut accéder lorsqu'une certaine date est atteinte."
+
+msgid "Custom fields"
+msgstr "Champs personnalisés"
+
+msgid "the custom fields"
+msgstr "les champs personnalisés"
+
+msgid "Click here to add a new custom field."
+msgstr "Cliquez ici pour ajouter un nouveau champ personnalisé."
+
+msgid "You have no custom field currently."
+msgstr "Vous n'avez aucun champ personnalisé actuellement."
+
+msgid "You can create custom fields to record additional datas."
+msgstr "Vous pouvez créer des champs personnalisés afin d'enregistrer des données supplémentaires."
+
+msgid "Key"
+msgstr "Clé"
+
+msgid "Letters, numbers and hyphens only"
+msgstr "Lettres, chiffres et tirets uniquement"
 
