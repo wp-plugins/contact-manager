@@ -37,22 +37,26 @@ else { $_GET[$prefix.'required_fields'] = array(); }
 $_GET[$prefix.'fields'] = $_GET[$prefix.'required_fields'];
 $_GET[$prefix.'checkbox_fields'] = array();
 $_GET[$prefix.'radio_fields'] = array();
-foreach (array('invalid_email_address_message', 'unfilled_field_message') as $key) { $_ENV[$prefix.$key] = contact_form_data($key); }
+foreach (array(
+'failed_upload_message',
+'invalid_email_address_message',
+'too_large_file_message',
+'unauthorized_extension_message',
+'unfilled_field_message') as $key) { $_ENV[$prefix.$key] = contact_form_data($key); }
 $code = contact_form_data('code');
 foreach (array('checkbox_fields', 'fields', 'radio_fields', 'required_fields') as $array) { $_GET[$prefix.$array] = array_unique($_GET[$prefix.$array]); }
 
 if ((isset($_POST[$prefix.'submit'])) && (!isset($_ENV[$prefix.'processed']))) {
 $_ENV[$prefix.'processed'] = 'yes';
-$_ENV['form_error'] = '';
+if (!isset($_ENV['form_error'])) { $_ENV['form_error'] = ''; }
 if (is_numeric($maximum_messages_quantity_per_sender)) {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST[$prefix.'email_address']."' AND form_id = ".$id, OBJECT);
 $messages_number = (int) (isset($row->total) ? $row->total : 0);
 if ($messages_number >= $maximum_messages_quantity_per_sender) {
 $_ENV[$prefix.'maximum_messages_quantity_reached_error'] = contact_form_data('maximum_messages_quantity_reached_message'); $_ENV['form_error'] = 'yes'; } }
-if (in_array('email_address', $_GET[$prefix.'fields'])) {
-if ((!strstr($_POST[$prefix.'email_address'], '@')) || (!strstr($_POST[$prefix.'email_address'], '.'))) { $_ENV['form_error'] = 'yes'; } }
 foreach ($_GET[$prefix.'required_fields'] as $field) {
-if ((!isset($_POST[$prefix.$field])) || ($_POST[$prefix.$field] == '')) { $_ENV[$prefix.'unfilled_fields_error'] = contact_form_data('unfilled_fields_message'); $_ENV['form_error'] = 'yes'; } }
+if (((!isset($_POST[$prefix.$field])) || ($_POST[$prefix.$field] == '')) && ((!isset($_FILES[$prefix.$field])) || ($_FILES[$prefix.$field]['error'] == 4))) {
+$_ENV[$prefix.'unfilled_fields_error'] = contact_form_data('unfilled_fields_message'); $_ENV['form_error'] = 'yes'; } }
 $invalid_captcha = '';
 if (isset($_ENV[$prefix.'recaptcha_js'])) {
 $resp = recaptcha_check_answer(RECAPTCHA_PRIVATE_KEY, $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
@@ -122,7 +126,7 @@ return !error; }
 
 $tags = array_merge($tags, array('error', 'validation-content'));
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
-if (!stristr($code, '<form')) { $code = '<form id="contact-form'.$id.'" method="post" action="'.htmlspecialchars($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_contact_form'.$id.'(this);">'.$code; }
+if (!stristr($code, '<form')) { $code = '<form id="contact-form'.$id.'" method="post" enctype="multipart/form-data" action="'.htmlspecialchars($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_contact_form'.$id.'(this);">'.$code; }
 if (!stristr($code, '</form>')) { $code .= '<div style="display: none;"><input type="hidden" name="referring_url" value="'.$_POST['referring_url'].'" /><input type="hidden" name="'.$prefix.'submit" value="yes" /></div></form>'; }
 $code = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', do_shortcode($code)));
@@ -233,7 +237,9 @@ $attributes = array(
 'class' => '',
 'dir' => '',
 'disabled' => '',
+'extensions' => '',
 'maxlength' => '',
+'maxsize' => 0,
 'onblur' => '',
 'onchange' => '',
 'onclick' => '',
@@ -274,9 +280,19 @@ $id_markup = '';
 switch ($atts['type']) {
 case 'checkbox': $_GET[$prefix.'checkbox_fields'][] = $name; break;
 case 'radio': $_GET[$prefix.'radio_fields'][] = $name; break;
-case 'password': case 'text':
-if ($atts['size'] == '') { $atts['size'] = '30'; }
-$id_markup = ' id="'.$prefix.$name.'"'; break; }
+case 'password': case 'text': if ($atts['size'] == '') { $atts['size'] = '30'; }
+case 'password': case 'text': case 'file': $id_markup = ' id="'.$prefix.$name.'"'; }
+if ($atts['type'] == 'file') {
+$extensions = array_unique(preg_split('#[^a-z0-9]#', strtolower($atts['extensions']), 0, PREG_SPLIT_NO_EMPTY));
+$maxsize = round(1024*$atts['maxsize']);
+if (isset($_POST[$prefix.'submit'])) {
+$extension = strtolower(substr(strrchr($_FILES[$prefix.$name]['name'], '.'), 1));
+if ($_FILES[$prefix.$name]['error'] == 4) { if ($atts['required'] == 'yes') { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'unfilled_field_message']; } }
+elseif ((in_array($extension, array('php', 'php3', 'phtml'))) || ((count($extensions) > 0) && (!in_array($extension, $extensions)))) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'unauthorized_extension_message']; }
+elseif ((($maxsize > 0) && (filesize($_FILES[$prefix.$name]['tmp_name']) > $maxsize))
+ || ($_FILES[$prefix.$name]['error'] == 1) || ($_FILES[$prefix.$name]['error'] == 2)) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'too_large_file_message']; }
+elseif ($_FILES[$prefix.$name]['error'] != 0) { $_ENV[$prefix.$name.'_error'] = $_ENV[$prefix.'failed_upload_message']; } } }
+else {
 if ($name == 'email_address') {
 if ($atts['onmouseout'] == '') { $atts['onmouseout'] = "this.value = format_email_address(this.value);"; }
 if (isset($_POST[$prefix.'submit'])) {
@@ -298,12 +314,14 @@ elseif ((function_exists('membership_session')) && (membership_session(''))) { $
 elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $atts['value'] = contact_user_data($name); } } }
 if (((!isset($_ENV['form_focus'])) || ($_ENV['form_focus'] == '')) && ($atts['value'] == '') && ($id_markup != '')) { $_ENV['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
 if ((isset($_POST[$prefix.'submit'])) && ($atts['type'] == 'checkbox')) { $atts['checked'] = (isset($_POST[$prefix.$name]) ? 'checked' : ''); }
-$atts['value'] = quotes_entities($atts['value']);
+$atts['value'] = quotes_entities($atts['value']); }
 foreach ($attributes as $key => $value) {
 switch ($key) {
+case 'extensions': case 'maxsize': break;
 case 'required': if (($name != 'submit') && ($atts['required'] == 'yes')) { $_GET[$prefix.'required_fields'][] = $name; } break;
 default: if ((is_string($key)) && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } } }
 
+if (isset($_ENV[$prefix.$name.'_error'])) { $_ENV['form_error'] = 'yes'; }
 return '<input name="'.$prefix.$name.'"'.$id_markup.$markup.' />'; }
 
 
@@ -429,6 +447,7 @@ switch ($key) {
 case 'required': if ($atts['required'] == 'yes') { $_GET[$prefix.'required_fields'][] = $name; } break;
 default: if ((is_string($key)) && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } } }
 
+if (isset($_ENV[$prefix.$name.'_error'])) { $_ENV['form_error'] = 'yes'; }
 return '<select name="'.$prefix.$name.'" id="'.$prefix.$name.'"'.$markup.'>'.do_shortcode($content).'</select>'; }
 
 
@@ -492,6 +511,7 @@ switch ($key) {
 case 'required': if ($atts['required'] == 'yes') { $_GET[$prefix.'required_fields'][] = $name; } break;
 default: if ((is_string($key)) && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } } }
 
+if (isset($_ENV[$prefix.$name.'_error'])) { $_ENV['form_error'] = 'yes'; }
 return '<textarea name="'.$prefix.$name.'" id="'.$prefix.$name.'"'.$markup.'>'.(isset($_POST[$prefix.$name]) ? $_POST[$prefix.$name] : '').'</textarea>'; }
 
 
@@ -560,4 +580,5 @@ foreach ($attributes as $key => $value) {
 switch ($key) {
 case 'required': if ($atts['required'] == 'yes') { $_GET[$prefix.'required_fields'][] = $name; } break;
 default: if ((is_string($key)) && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } } }
+if (isset($_ENV[$prefix.'country_error'])) { $_ENV['form_error'] = 'yes'; }
 return '<select name="'.$prefix.$name.'" id="'.$prefix.'country"'.$markup.'>'.$countries_list.'</select>'; }

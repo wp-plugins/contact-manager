@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.3\n"
+"Project-Id-Version: Contact Manager 5.4\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2012-11-13 02:43+0100\n"
+"PO-Revision-Date: 2012-12-08 04:38+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -2177,7 +2177,7 @@ msgid "Invalid email address message"
 msgstr "Message d'adresse e-mail non valide"
 
 #: tables.php:18
-msgid "Invalid CAPTCHA message"
+msgid "Invalid CAPTCHA's message"
 msgstr "Message de CAPTCHA non valide"
 
 #: tables.php:19
@@ -2513,4 +2513,31 @@ msgstr "Clé"
 
 msgid "Letters, numbers and hyphens only"
 msgstr "Lettres, chiffres et tirets uniquement"
+
+msgid "The file upload failed."
+msgstr "Le téléchargement du fichier a échoué."
+
+msgid "This file is too large."
+msgstr "Ce fichier est trop volumineux."
+
+msgid "This file type is not allowed."
+msgstr "Ce type de fichier n'est pas autorisé."
+
+msgid "Failed upload's message"
+msgstr "Message d'échec de téléchargement"
+
+msgid "Too large file's message"
+msgstr "Message de fichier trop volumineux"
+
+msgid "Unauthorized extension's message"
+msgstr "Message d'extension non autorisée"
+
+msgid "Failed upload"
+msgstr "Échec de téléchargement"
+
+msgid "Too large file"
+msgstr "Fichier trop volumineux"
+
+msgid "Unauthorized extension"
+msgstr "Extension non autorisée"
 

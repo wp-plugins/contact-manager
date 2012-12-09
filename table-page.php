@@ -98,13 +98,21 @@ if ($_GET['paged'] > $max_paged) { $_GET['paged'] = $max_paged; }
 $start = ($_GET['paged'] - 1)*$limit;
 
 if ($n > 0) {
+switch ($_GET['orderby']) {
+case 'id': case 'category_id': case 'date': case 'date_utc': case 'ip_address': case 'referrer':
+case 'referring_url': case 'status': case 'user_agent': $sorting_method = 'basic'; break;
+default: $sorting_method = 'advanced'; }
+if (($table_slug == 'messages') && (substr($_GET['orderby'], 0, 13) != 'custom_field_')) { $sorting_method = 'basic'; }
+
+if ($sorting_method == 'basic') { $items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria ORDER BY ".$_GET['orderby']." ".strtoupper($_GET['order'])." LIMIT $start, $limit", OBJECT); }
+else {
 $items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria", OBJECT);
 foreach ($items as $item) { $all_datas[$item->id] = $item; $datas[$item->id] = table_data($table_slug, $_GET['orderby'], $item); }
 if ($_GET['order'] == 'asc') { asort($datas); } else { arsort($datas); }
 $array = array(); foreach ($datas as $key => $value) { $array[] = array('id' => $key, 'data' => $value); }
 $ids = array(); for ($i = $start; $i < $start + $limit; $i++) { if (isset($array[$i])) { $ids[] = $array[$i]['id']; } }
 $items = array(); foreach ($ids as $id) { $items[] = $all_datas[$id]; }
-foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } ?>
+foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?>
 
 <div class="wrap">
 <div id="poststuff">

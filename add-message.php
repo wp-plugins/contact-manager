@@ -42,6 +42,7 @@ $keys_list = ''; $values_list = '';
 foreach ($tables['messages'] as $key => $value) { if ($key != 'id') { $keys_list .= $key.","; $values_list .= $sql[$key].","; } }
 $result = $wpdb->query("INSERT INTO ".$wpdb->prefix."contact_manager_messages (".substr($keys_list, 0, -1).") VALUES(".substr($values_list, 0, -1).")");
 $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages ORDER BY id DESC LIMIT 1", OBJECT);
+$_GET['message_id'] = $result->id;
 $message['id'] = $result->id;
 if (!is_admin()) {
 $maximum_messages_quantity = contact_data('maximum_messages_quantity');
@@ -193,11 +194,24 @@ $form_id = $message['form_id'];
 if (in_array('message_confirmation_email_sent', $_GET['contact_form'.$form_id.'_fields'])) {
 $message['message_confirmation_email_sent'] = (isset($_POST['message_confirmation_email_sent']) ? 'yes' : 'no'); } }
 
+$upload_dir = wp_upload_dir();
+$folder = $upload_dir['basedir'].'/temp';
+if (!is_dir($folder)) { mkdir($folder, 0777); }
+$files = array();
+foreach ($_FILES as $key => $value) {
+if ($value['error'] == 0) {
+$extension = strtolower(substr(strrchr($value['name'], '.'), 1));
+if (!in_array($extension, array('php', 'php3', 'phtml'))) {
+$file = $folder.'/'.basename($value['name']);
+move_uploaded_file($value['tmp_name'], $file);
+$files[] = $file; } } }
+
 foreach (array('confirmation', 'notification') as $action) {
 foreach (array('sent', 'sender', 'receiver', 'subject', 'body') as $field) {
 $$field = str_replace(array("\\t", '\\', '&#91;', '&#93;'), array('	', '', '[', ']'), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', $message['message_'.$action.'_email_'.$field])); }
-if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender); } }
+if ($action == 'confirmation') { $attachments = array(); } else { $attachments = $files; }
+if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender, $attachments); } }
 
 if ((function_exists('referrer_data')) && ($message['referrer'] != '') && (!strstr($message['referrer'], '@'))) {
 if (affiliation_data('message_notification_email_disabled') != 'yes') {
@@ -214,4 +228,6 @@ if (!function_exists('subscribe_to_autoresponder')) { include_once dirname(__FIL
 subscribe_to_autoresponder($message['sender_autoresponder'], $message['sender_autoresponder_list'], $message); }
 
 if ($message['message_custom_instructions_executed'] == 'yes') {
-eval(format_instructions($message['message_custom_instructions'])); } } }
+eval(format_instructions($message['message_custom_instructions'])); }
+
+foreach ($files as $file) { chmod($file, 0777); unlink($file); } } }

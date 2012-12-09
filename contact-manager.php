@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.3
+Version: 5.4
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -69,11 +69,12 @@ $current_timestamp = time();
 $installation = (array) $cron['previous_installation'];
 if ($installation['version'] != CONTACT_MANAGER_VERSION) {
 $cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'number' => 0, 'timestamp' => $current_timestamp); }
-elseif (($installation['number'] < 8) && (($current_timestamp - $installation['timestamp']) >= 60*pow(2, $installation['number']))) {
+elseif (($installation['number'] < 12) && (($current_timestamp - $installation['timestamp']) >= pow(2, $installation['number'] + 2))) {
 $cron['previous_installation']['timestamp'] = $current_timestamp; }
 if ($cron['previous_installation'] != $installation) {
 update_option('contact_manager_cron', $cron);
-wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } } }
+wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } }
+elseif ((is_multisite()) || (get_option('contact_manager'))) { wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } }
 
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 foreach (array('admin_footer', 'wp_footer') as $hook) { add_action($hook, 'contact_cron'); } }

@@ -29,7 +29,7 @@ else { add_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 $current_timestamp = time();
 $cron = (array) get_option('contact_manager_cron');
-if ($cron['previous_installation']['version'] != CONTACT_MANAGER_VERSION) {
+if ((!isset($cron['previous_installation'])) || ($cron['previous_installation']['version'] != CONTACT_MANAGER_VERSION)) {
 $cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'number' => 1); }
 else { $cron['previous_installation']['number'] = $cron['previous_installation']['number'] + 1; }
 $cron['previous_installation']['timestamp'] = $current_timestamp;

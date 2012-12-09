@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.3\n"
+"Project-Id-Version: Contact Manager 5.4\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -1768,7 +1768,7 @@ msgid "Invalid email address message"
 msgstr ""
 
 #: tables.php:18
-msgid "Invalid CAPTCHA message"
+msgid "Invalid CAPTCHA's message"
 msgstr ""
 
 #: tables.php:19
@@ -2079,4 +2079,31 @@ msgid "Key"
 msgstr ""
 
 msgid "Letters, numbers and hyphens only"
+msgstr ""
+
+msgid "The file upload failed."
+msgstr ""
+
+msgid "This file is too large."
+msgstr ""
+
+msgid "This file type is not allowed."
+msgstr ""
+
+msgid "Failed upload's message"
+msgstr ""
+
+msgid "Too large file's message"
+msgstr ""
+
+msgid "Unauthorized extension's message"
+msgstr ""
+
+msgid "Failed upload"
+msgstr ""
+
+msgid "Too large file"
+msgstr ""
+
+msgid "Unauthorized extension"
 msgstr ""

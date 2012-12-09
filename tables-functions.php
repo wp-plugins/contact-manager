@@ -173,4 +173,29 @@ echo '<div class="tablenav-pages" style="float: right;"><span class="displaying-
 <a class="last-page'.($_GET['paged'] == $max_paged ? ' disabled' : '').'" title="'.__('Go to the last page').'" href="'.$url.'&amp;paged='.$max_paged.'">&raquo;</a></div>'; }
 
 
-foreach (array('message', 'sender') as $tag) { remove_shortcode($tag); }
+foreach (array(
+'affiliate',
+'affiliation-activation-url',
+'affiliation-user',
+'click',
+'client',
+'commerce-activation-url',
+'commerce-user',
+'commission',
+'customer',
+'member',
+'membership-activation-url',
+'membership-user',
+'message',
+'message-commission',
+'order',
+'order-invoice-url',
+'prospect',
+'prospect-commission',
+'recurring-commission',
+'recurring-payment',
+'recurring-payment-invoice-url',
+'referrer',
+'referrer-affiliate',
+'sender',
+'user') as $tag) { remove_shortcode($tag); }
