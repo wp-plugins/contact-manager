@@ -157,8 +157,8 @@ else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($di
 <input type="hidden" name="submit" value="true" />
 <?php $displayed_columns = $original_displayed_columns;
 $all_columns_checked = (count($displayed_columns) == $max_columns);
-$columns_inputs = '<input type="submit" class="button-secondary" name="reset_columns" value="'.__('Reset the columns', 'contact-manager').'" />
-<input type="submit" class="button-secondary" name="submit" value="'.__('Update').'" />
+$columns_inputs = '<input style="margin-bottom: 0.5em;" type="submit" class="button-secondary" name="reset_columns" value="'.__('Reset the columns', 'contact-manager').'" />
+<input style="margin-bottom: 0.5em; margin-right: 0.5em;" type="submit" class="button-secondary" name="submit" value="'.__('Update').'" />
 <label><input type="checkbox" name="check_all_columns1" id="check_all_columns1" value="yes" onclick="check_all_columns1_js();"'.($all_columns_checked ? ' checked="checked"' : '').' /> <span id="check_all_columns1_text">'.($all_columns_checked ? __('Uncheck all columns', 'contact-manager') : __('Check all columns', 'contact-manager')).'</span></label>';
 echo $columns_inputs.' <label><input type="checkbox" name="columns_list_displayed" id="columns_list_displayed" value="yes" 
 onclick="if (this.checked == true) { document.getElementById(\'columns-list\').style.display = \'block\'; } else { document.getElementById(\'columns-list\').style.display = \'none\'; }"
@@ -171,12 +171,12 @@ echo '<input type="hidden" name="column'.$i.'" id="column'.$i.'" value="'.$colum
 <input type="hidden" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="no" />'; }
 else {
 $j = $j + 1; if ($j < 10) { $space = '&nbsp;&nbsp;&nbsp;&nbsp;'; } elseif ($j < 100) { $space = '&nbsp;&nbsp;'; } else { $space = ''; }
-echo '<label>'.__('Column', 'contact-manager').' '.$j.$space.' <select name="column'.$i.'" id="column'.$i.'">';
+echo '<label>'.__('Column', 'contact-manager').' '.$j.$space.' <select style="float: none;" name="column'.$i.'" id="column'.$i.'">';
 foreach ($tables[$table_slug] as $key => $value) {
 if ((!in_array($key, $undisplayed_keys)) || ($columns[$i] == $key)) { echo '<option value="'.$key.'"'.($columns[$i] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } }
 echo '</select></label>
 <label><input type="checkbox" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="yes"'.(!in_array($i, $displayed_columns) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } } ?>
-<?php echo str_replace('check_all_columns1', 'check_all_columns2', $columns_inputs); ?></span>
+<?php echo str_replace(array('check_all_columns1', 'margin-bottom'), array('check_all_columns2', 'margin-top'), $columns_inputs); ?></span>
 </div></div>
 </form>
 </div>
