@@ -234,7 +234,8 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? __('Message update
 <div class="inside">
 <table class="form-table"><tbody>
 <?php if (isset($_GET['id'])) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="id">'.__('ID', 'contact-manager').'</label></strong></th>
-<td><input type="text" name="id" id="id" size="10" value="'.$_GET['id'].'" disabled="disabled" /> <span class="description">'.__('The ID can not be changed.', 'contact-manager').'</span></td></tr>'; } ?>
+<td><input type="text" name="id" id="id" size="10" value="'.$_GET['id'].'" disabled="disabled" /> <span class="description">'.__('The ID can not be changed.', 'contact-manager').'</span><br />
+<a style="text-decoration: none;" href="admin.php?page=contact-manager-message&amp;id='.$_GET['id'].'&amp;action=delete">'.__('Delete').'</a></td></tr>'; } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="form_id"><?php _e('Form ID', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="form_id" id="form_id" rows="1" cols="25"><?php echo $_POST['form_id']; ?></textarea>
 <?php if ($_POST['form_id'] > 0) { echo '<br />

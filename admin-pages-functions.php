@@ -46,7 +46,7 @@ $first = true; $links_displayed = array();
 for ($i = 0; $i < count($admin_links); $i++) {
 $link = (isset($links[$i]) ? $links[$i] : '');
 if ((in_array($i, $displayed_links)) && (isset($links_markup[$link])) && (!in_array($link, $links_displayed))) {
-echo '<li>'.($first ? '' : ' | ').$links_markup[$link].'</li>'; $first = false; $links_displayed[] = $link; } }
+echo '<li>'.($first ? '' : '&nbsp;| ').$links_markup[$link].'</li>'; $first = false; $links_displayed[] = $link; } }
 echo '</ul>'; } }
 
 
@@ -61,7 +61,7 @@ for ($i = 0; $i < count($admin_pages); $i++) {
 $item = (isset($menu_items[$i]) ? $menu_items[$i] : '');
 if ((in_array($i, $menu_displayed_items)) && (!in_array($item, $items_displayed))) {
 $slug = 'contact-manager'.($item == '' ? '' : '-'.str_replace('_', '-', $item));
-echo '<li>'.($first ? '' : ' | ').'<a href="admin.php?page='.$slug.'"'.($_GET['page'] == $slug ? ' class="current"' : '').'>'.$admin_pages[$item]['menu_title'].'</a></li>';
+echo '<li>'.($first ? '' : '&nbsp;| ').'<a href="admin.php?page='.$slug.'"'.($_GET['page'] == $slug ? ' class="current"' : '').'>'.$admin_pages[$item]['menu_title'].'</a></li>';
 $first = false; $items_displayed[] = $item; } }
 echo '</ul>'; } }
 
@@ -147,8 +147,8 @@ $modules = $modules[$page_slug];
 $undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules'];
 $list = ''; foreach ($modules as $key => $value) {
 if ((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) {
-if (!in_array($key, $undisplayed_modules)) { $list .= '<li> | <a href="#'.$key.'">'.$value['name'].'</a></li>'; } } }
-if (strlen($list) > 7) { echo '<ul class="subsubsub" style="float: none; white-space: normal;"><li>'.substr($list, 7).'</ul>'; } } }
+if (!in_array($key, $undisplayed_modules)) { $list .= '<li>&nbsp;| <a href="#'.$key.'">'.$value['name'].'</a></li>'; } } }
+if ($list != '') { echo '<ul class="subsubsub" style="float: none; white-space: normal;"><li>'.substr($list, 12).'</ul>'; } } }
 
 
 function contact_manager_pages_title($back_office_options) {

@@ -125,9 +125,9 @@ $tables_displayed[] = $tables_slugs[$value]; }
 $summary = '';
 if (count($displayed_tables) > 1) {
 for ($i = 0; $i < $max_tables; $i++) {
-if (in_array($i, $displayed_tables)) { $summary .= '<li> | <a href="#'.str_replace('_', '-', $tables_slugs[$i]).'">'.$tables_names[$tables_slugs[$i]].'</a></li>'; } }
+if (in_array($i, $displayed_tables)) { $summary .= '<li>&nbsp;| <a href="#'.str_replace('_', '-', $tables_slugs[$i]).'">'.$tables_names[$tables_slugs[$i]].'</a></li>'; } }
 $summary = '<ul class="subsubsub" style="float: none; text-align: center;">
-<li>'.substr($summary, 7).'</ul>'; }
+<li>'.substr($summary, 12).'</ul>'; }
 for ($i = 0; $i < $max_tables; $i++) {
 if (in_array($i, $displayed_tables)) {
 $table_slug = $tables_slugs[$i];

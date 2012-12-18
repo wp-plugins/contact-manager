@@ -174,7 +174,21 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? ($is_category ? __
 <?php ($is_category ? _e('Click here to configure the default options of the parent category.', 'contact-manager') : _e('Click here to configure the default options of the category.', 'contact-manager')); ?></a></span></td></tr>
 <?php } ?>
 <?php if (isset($_GET['id'])) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="id">'.__('ID', 'contact-manager').'</label></strong></th>
-<td><input type="text" name="id" id="id" size="10" value="'.$_GET['id'].'" disabled="disabled" /> <span class="description">'.__('The ID can not be changed.', 'contact-manager').'</span></td></tr>'; } ?>
+<td><input type="text" name="id" id="id" size="10" value="'.$_GET['id'].'" disabled="disabled" /> <span class="description">'.__('The ID can not be changed.', 'contact-manager').'</span><br />';
+if ($is_category) {
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms WHERE category_id = ".$_GET['id'], OBJECT);
+$forms_number = (int) (isset($row->total) ? $row->total : 0);
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE category_id = ".$_GET['id'], OBJECT);
+$categories_number = (int) (isset($row->total) ? $row->total : 0);
+echo '<a style="text-decoration: none;" href="admin.php?page=contact-manager-form-category&amp;id='.$_GET['id'].'&amp;action=delete">'.__('Delete').'</a>'
+.($forms_number == 0 ? '' : ' | <a style="text-decoration: none;" href="admin.php?page=contact-manager-forms&amp;category_id='.$_GET['id'].'">'.__('Forms', 'contact-manager').'</a>')
+.($categories_number == 0 ? '' : ' | <a style="text-decoration: none;" href="admin.php?page=contact-manager-forms-categories&amp;category_id='.$_GET['id'].'">'.__('Subcategories', 'contact-manager').'</a>'); }
+else {
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$_GET['id'], OBJECT);
+$messages_number = (int) (isset($row->total) ? $row->total : 0);
+echo '<a style="text-decoration: none;" href="admin.php?page=contact-manager-form&amp;id='.$_GET['id'].'&amp;action=delete">'.__('Delete').'</a>'
+.($messages_number == 0 ? '' : ' | <a style="text-decoration: none;" href="admin.php?page=contact-manager-messages&amp;form_id='.$_GET['id'].'">'.__('Messages', 'contact-manager').'</a>'); }
+echo '</td></tr>'; } ?>
 <?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."contact_manager_forms_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="category_id"><?php echo ($is_category ? __('Parent category', 'contact-manager') : __('Category', 'contact-manager')); ?></label></strong></th>
