@@ -89,7 +89,7 @@ function format_url($string) {
 if ($string != '') {
 $string = trim(strip_tags($string));
 $string = str_replace(' ', '-', $string);
-if ((!strstr($string, 'http://')) && (!strstr($string, 'https://'))) {
+if ((substr($string, 0, 1) != '.') && (!strstr($string, 'http://')) && (!strstr($string, 'https://'))) {
 $strings = explode('/', $string);
 if (strstr($strings[0], '.')) { $string = 'http://'.$string; }
 else { $string = 'http://'.$_SERVER['SERVER_NAME'].'/'.$string; } }
