@@ -84,7 +84,7 @@ foreach (array('message_id', 'message_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; unset($_GET[$key]); } }
 $_GET['message_data'] = $_POST;
 foreach (array('subject', 'content') as $field) {
-if (!isset($_POST[$field])) { $_POST[$field] = contact_form_data('message_notification_email_'.($field == 'content' ? 'body' : $field)); } }
+if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = contact_form_data('message_notification_email_'.($field == 'content' ? 'body' : $field)); } }
 foreach (array('message_id', 'message_data') as $key) {
 if (isset($original[$key])) { $_GET[$key] = $original[$key]; } }
 $result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".$_POST['subject']."' AND content = '".$_POST['content']."'", OBJECT);
