@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.4.2
+Version: 5.5
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -48,14 +48,19 @@ fix_url();
 
 function add_contact_form_in_posts($content) {
 global $post;
-if ((is_single()) && (contact_data('automatic_display_enabled') == 'yes')) {
+if ((contact_data('automatic_display_enabled') == 'yes')
+ && ((contact_data('automatic_display_only_on_single_post_pages') == 'no') || (is_single()))) {
+$id = contact_data('automatic_display_form_id');
+$location = contact_data('automatic_display_location');
+$quantity = contact_data('automatic_display_maximum_forms_quantity');
+if (!isset($_ENV['contact_form'.$id.'_number'])) { $_ENV['contact_form'.$id.'_number'] = 0; }
+foreach (array('top', 'bottom') as $string) {
+if ((strstr($location, $string)) && (($quantity == 'unlimited') || ($_ENV['contact_form'.$id.'_number'] < $quantity))) {
 include_once dirname(__FILE__).'/forms.php';
-$contact_form = contact_form(array('id' => contact_data('automatic_display_form_id')));
-if (contact_data('automatic_display_location') == 'top') { $content = $contact_form.$content; }
-else { $content .= $contact_form; } }
+$content = ($string == 'top' ? '' : $content).contact_form(array('id' => $id)).($string == 'bottom' ? '' : $content); } } }
 return $content; }
 
-add_filter('the_content', 'add_contact_form_in_posts');
+foreach (array('get_the_content', 'the_content') as $function) { add_filter($function, 'add_contact_form_in_posts'); }
 
 
 function add_message($message) { include dirname(__FILE__).'/add-message.php'; }
@@ -148,7 +153,7 @@ elseif (substr($field, -13) == 'email_address') { $data = format_email_address($
 elseif (substr($field, -12) == 'instructions') { $data = format_instructions($data); }
 elseif ((($field == 'url') || (strstr($field, '_url'))) && (!strstr($field, 'urls'))) { $data = format_url($data); }
 switch ($field) {
-case 'maximum_messages_quantity': if ($data != 'unlimited') { $data = (int) $data; } break;
+case 'automatic_display_maximum_forms_quantity': case 'maximum_messages_quantity': if ($data != 'unlimited') { $data = (int) $data; } break;
 case 'maximum_messages_quantity_per_sender': if ($data != 'unlimited') { $data = (int) $data; } if ($data == 0) { $data = 'unlimited'; } break;
 case 'commission_amount': case 'commission2_amount': case 'encrypted_urls_validity_duration': $data = round(100*$data)/100; }
 return $data; }

@@ -211,7 +211,7 @@ foreach (array('sent', 'sender', 'receiver', 'subject', 'body') as $field) {
 $$field = str_replace(array("\\t", '\\', '&#91;', '&#93;'), array('	', '', '[', ']'), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', $message['message_'.$action.'_email_'.$field])); }
 if ($action == 'confirmation') { $attachments = array(); } else { $attachments = $files; }
-if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender, $attachments); } }
+if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender.(((strstr($body, '</')) || (strstr($body, '/>'))) ? "\r\nContent-type: text/html" : ""), $attachments); } }
 
 if ((function_exists('referrer_data')) && ($message['referrer'] != '') && (!strstr($message['referrer'], '@'))) {
 if (affiliation_data('message_notification_email_disabled') != 'yes') {
@@ -221,7 +221,7 @@ $sent = referrer_data('message_notification_email_sent');
 if (($sent == 'yes') || (($sent == 'if commission') && ($message['commission_amount'] > 0))) {
 foreach (array('sender', 'receiver', 'subject', 'body') as $field) {
 $$field = str_replace(array('&#91;', '&#93;'), array('[', ']'), affiliation_data('message_notification_email_'.$field)); }
-wp_mail($receiver, $subject, $body, 'From: '.$sender); } } } }
+wp_mail($receiver, $subject, $body, 'From: '.$sender.(((strstr($body, '</')) || (strstr($body, '/>'))) ? "\r\nContent-type: text/html" : "")); } } } }
 
 if (($message['sender_subscribed_to_autoresponder'] == 'yes') && ($message['email_address'] != '')) {
 if (!function_exists('subscribe_to_autoresponder')) { include_once dirname(__FILE__).'/libraries/autoresponders-functions.php'; }

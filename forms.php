@@ -6,11 +6,16 @@ $focus = format_nice_name($focus);
 $id = (int) $id;
 if ($id == 0) { $id = (int) (isset($_GET['contact_form_id']) ? $_GET['contact_form_id'] : 0); }
 if ($id == 0) { $id = 1; }
-$prefix = 'contact_form'.$id.'_';
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
 $_GET['contact_form_id'] = $id;
-if ($redirection == '#') { $redirection .= 'contact-form'.$id; }
+$canonical_prefix = 'contact_form'.$id.'_';
+if (!isset($_ENV[$canonical_prefix.'number'])) { $_ENV[$canonical_prefix.'number'] = 1; }
+else { $_ENV[$canonical_prefix.'number'] = $_ENV[$canonical_prefix.'number'] + 1; }
+$deduplicator = ($_ENV[$canonical_prefix.'number'] == 1 ? '' : ($_ENV[$canonical_prefix.'number'] - 1).'_');
+$prefix = $canonical_prefix.$deduplicator;
+$_GET['contact_form_prefix'] = $prefix;
+if ($redirection == '#') { $redirection .= str_replace('_', '-', substr($prefix, 0, -1)); }
 foreach (array(
 'strip_accents_js',
 'format_email_address_js') as $function) { add_action('wp_footer', $function); }
@@ -65,7 +70,9 @@ elseif (in_array('captcha', $_GET[$prefix.'fields'])) {
 if (hash('sha256', $_POST[$prefix.'captcha']) != $_POST[$prefix.'valid_captcha']) { $invalid_captcha = 'yes'; } }
 if ($invalid_captcha == 'yes') { $_ENV[$prefix.'invalid_captcha_error'] = contact_form_data('invalid_captcha_message'); $_ENV['form_error'] = 'yes'; }
 if ($_ENV['form_error'] == '') {
-foreach ($_POST as $key => $value) { $_POST[str_replace($prefix, '', $key)] = $value; }
+foreach ($_POST as $key => $value) { if (strstr($key, $prefix)) {
+$_POST[str_replace($prefix, $canonical_prefix, $key)] = $value;
+$_POST[str_replace($prefix, '', $key)] = $value; } }
 $custom_fields = array(); foreach ($_POST as $key => $value) {
 if ((substr($key, 0, 13) == 'custom_field_') && ($value != '')) { $custom_fields[substr($key, 13)] = stripslashes(quotes_entities_decode($value)); } }
 if ($custom_fields != array()) { $_POST['custom_fields'] = serialize($custom_fields); }
@@ -95,7 +102,7 @@ $redirection = format_url($redirection);
 if (!headers_sent()) { header('Location: '.$redirection); exit; }
 else { $content .= '<script type="text/javascript">window.location = \''.htmlspecialchars($redirection).'\';</script>'; } } } }
 
-else {
+elseif ($_ENV[$canonical_prefix.'number'] == 1) {
 $displays_count = contact_form_data('displays_count') + 1;
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displays_count = ".$displays_count." WHERE id = ".$id); }
 
@@ -110,8 +117,8 @@ if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $f
 else if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) { document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = ""; }'; }
 $form_js = '
 <script type="text/javascript">
-'.($focus == 'yes' ? (isset($_ENV['form_focus']) ? $_ENV['form_focus'] : '') : '').'
-function validate_contact_form'.$id.'(form) {
+'.($focus == 'yes' ? (isset($_ENV['form_focus']) ? str_replace($canonical_prefix, $prefix, $_ENV['form_focus']).$_ENV['form_focus'] : '') : '').'
+function validate_'.substr($prefix, 0, -1).'(form) {
 var error = false;
 '.(in_array('email_address', $_GET[$prefix.'fields']) ? 'form.'.$prefix.'email_address.value = format_email_address(form.'.$prefix.'email_address.value);' : '').'
 '.$required_fields_js.'
@@ -126,7 +133,7 @@ return !error; }
 
 $tags = array_merge($tags, array('error', 'validation-content'));
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
-if (!stristr($code, '<form')) { $code = '<form id="contact-form'.$id.'" method="post" enctype="multipart/form-data" action="'.htmlspecialchars($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_contact_form'.$id.'(this);">'.$code; }
+if (!stristr($code, '<form')) { $code = '<form id="'.str_replace('_', '-', substr($prefix, 0, -1)).'" method="post" enctype="multipart/form-data" action="'.htmlspecialchars($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_'.substr($prefix, 0, -1).'(this);">'.$code; }
 if (!stristr($code, '</form>')) { $code .= '<div style="display: none;"><input type="hidden" name="referring_url" value="'.$_POST['referring_url'].'" /><input type="hidden" name="'.$prefix.'submit" value="yes" /></div></form>'; }
 $code = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', do_shortcode($code)));
@@ -140,7 +147,7 @@ return $content; }
 
 function contact_form_captcha($atts) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 'answer' => '',
 'class' => 'captcha',
@@ -199,7 +206,7 @@ return $content; }
 
 function contact_form_error($atts) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 0 => 'email_address',
 'class' => 'error',
@@ -227,7 +234,7 @@ return '<span id="'.$prefix.$name.'_error"'.$markup.'>'.(isset($_ENV[$prefix.$na
 
 function contact_form_input($atts) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 0 => 'submit',
 'accept' => '',
@@ -327,7 +334,7 @@ return '<input name="'.$prefix.$name.'"'.$id_markup.$markup.' />'; }
 
 function contact_form_label($atts, $content) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 0 => 'email_address',
 'accesskey' => '',
@@ -359,7 +366,7 @@ return '<label for="'.$prefix.$name.'"'.$markup.'>'.do_shortcode($content).'</la
 
 function contact_form_option($atts, $content) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 'class' => '',
 'dir' => '',
@@ -397,7 +404,7 @@ return '<option'.$markup.'>'.$content.'</option>'; }
 
 function contact_form_select($atts, $content) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 0 => 'country',
 'class' => '',
@@ -453,7 +460,7 @@ return '<select name="'.$prefix.$name.'" id="'.$prefix.$name.'"'.$markup.'>'.do_
 
 function contact_form_textarea($atts, $content) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 0 => 'content',
 'accesskey' => '',
@@ -517,7 +524,8 @@ return '<textarea name="'.$prefix.$name.'" id="'.$prefix.$name.'"'.$markup.'>'.(
 
 function contact_form_validation_content($atts, $content) {
 $form_id = $_GET['contact_form_id'];
-if (isset($_POST['contact_form'.$form_id.'_submit'])) {
+$prefix = $_GET['contact_form_prefix'];
+if (isset($_POST[$prefix.'submit'])) {
 $content = explode('[other]', do_shortcode($content));
 if ((isset($_ENV['form_error'])) && ($_ENV['form_error'] == 'yes')) { $n = 1; } else { $n = 0; }
 if (!isset($content[$n])) { $content[$n] = ''; }
@@ -526,7 +534,7 @@ return $content[$n]; } }
 
 function contact_form_country_selector($atts) {
 $form_id = $_GET['contact_form_id'];
-$prefix = 'contact_form'.$form_id.'_';
+$prefix = $_GET['contact_form_prefix'];
 $attributes = array(
 'class' => '',
 'dir' => '',

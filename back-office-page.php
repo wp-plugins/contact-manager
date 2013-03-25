@@ -168,3 +168,13 @@ else { echo '<label><input type="checkbox" name="'.$name.'" id="'.$name.'" value
 </form>
 </div>
 </div>
+
+<script type="text/javascript">
+var anchor = window.location.hash;
+<?php foreach ($modules['back_office'] as $key => $value) {
+echo "if (anchor == '#".$key."') { document.getElementById('".$key."-module').style.display = 'block'; }\n";
+if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
+echo "if (anchor == '#".$module_key."') {
+document.getElementById('".$key."-module').style.display = 'block';
+document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } } ?>
+</script>

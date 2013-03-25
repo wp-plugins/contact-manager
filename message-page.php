@@ -645,6 +645,17 @@ if (!isset($_POST['submit'])) { $_POST['message_custom_instructions'] = htmlspec
 </form>
 </div>
 </div>
+
+<script type="text/javascript">
+var anchor = window.location.hash;
+<?php foreach ($modules['message'] as $key => $value) {
+echo "if (anchor == '#".$key."') { document.getElementById('".$key."-module').style.display = 'block'; }\n";
+if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
+echo "if (anchor == '#".$module_key."') {
+document.getElementById('".$key."-module').style.display = 'block';
+document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } } ?>
+</script>
+
 <?php if (isset($_POST['update_fields'])) { ?>
 <script type="text/javascript">window.location = '#add-message-modules';</script>
 <?php } }

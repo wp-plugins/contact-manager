@@ -45,11 +45,12 @@ return $string; }
 
 function format_name($string) {
 $string = strtolower(trim(strip_tags($string)));
-$string = str_replace(array(' ', '_'), '-', $string);
-$strings = explode('-', $string);
+$string = str_replace('_', '-', $string);
+foreach (array(' ', '-') as $character) {
+$strings = explode($character, $string);
 $n = count($strings);
 for ($i = 0; $i < $n; $i++) { $strings[$i] = ucfirst($strings[$i]); }
-$string = implode('-', $strings);
+$string = implode($character, $strings); }
 return $string; }
 
 
@@ -57,11 +58,13 @@ function format_name_js() { ?>
 <script type="text/javascript">
 function format_name(string) {
 string = string.toLowerCase();
-string = string.replace(/[ _]/gi, '-');
-var strings = string.split('-');
+string = string.replace('_', '-');
+var characters = new Array(' ', '-');
+for (character in characters) {
+var strings = string.split(characters[character]);
 var n = strings.length;
 for (i = 0; i < n; i++) { strings[i] = (strings[i]).substr(0, 1).toUpperCase()+(strings[i]).substr(1); }
-string = strings.join('-');
+string = strings.join(characters[character]); }
 return string; }
 </script>
 <?php }

@@ -39,6 +39,7 @@ $back_office_options = update_contact_manager_back_office($back_office_options, 
 foreach (array(
 'affiliation_enabled',
 'automatic_display_enabled',
+'automatic_display_only_on_single_post_pages',
 'commission2_enabled',
 'message_confirmation_email_sent',
 'message_custom_instructions_executed',
@@ -56,7 +57,10 @@ foreach (array(
 'commission_amount',
 'commission2_amount',
 'encrypted_urls_validity_duration') as $field) { $_POST[$field] = str_replace(array('?', ',', ';'), '.', $_POST[$field]); }
-switch ($_POST['maximum_messages_quantity']) { case 0: case '': case 'i': case 'infinite': case 'u': $_POST['maximum_messages_quantity'] = 'unlimited'; }
+foreach (array(
+'automatic_display_maximum_forms_quantity',
+'maximum_messages_quantity') as $field) {
+switch ($_POST[$field]) { case 0: case '': case 'i': case 'infinite': case 'u': $_POST[$field] = 'unlimited'; } }
 if (is_numeric($_POST['maximum_messages_quantity'])) {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages", OBJECT);
 $messages_quantity = (int) (isset($row->total) ? $row->total : 0);
@@ -108,15 +112,21 @@ $currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="automatic_display_enabled" id="automatic_display_enabled" value="yes"<?php if ($options['automatic_display_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Enable automatic display', 'contact-manager'); ?></label> 
 <span class="description"><a href="http://www.kleor-editions.com/contact-manager/#automatic-display"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><label><input type="checkbox" name="automatic_display_only_on_single_post_pages" id="automatic_display_only_on_single_post_pages" value="yes"<?php if ($options['automatic_display_only_on_single_post_pages'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Only on single post pages', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="automatic_display_location"><?php _e('Location', 'contact-manager'); ?></label></strong></th>
 <td><select name="automatic_display_location" id="automatic_display_location">
 <option value="top"<?php if ($options['automatic_display_location'] == 'top') { echo ' selected="selected"'; } ?>><?php _e('On the top of posts', 'contact-manager'); ?></option>
 <option value="bottom"<?php if ($options['automatic_display_location'] == 'bottom') { echo ' selected="selected"'; } ?>><?php _e('On the bottom of posts', 'contact-manager'); ?></option>
+<option value="top, bottom"<?php if ($options['automatic_display_location'] == 'top, bottom') { echo ' selected="selected"'; } ?>><?php _e('On the top and bottom of posts', 'contact-manager'); ?></option>
 </select></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="automatic_display_form_id"><?php _e('Form ID', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_form_id" id="automatic_display_form_id" rows="1" cols="25"><?php echo $options['automatic_display_form_id']; ?></textarea><br />
 <a style="text-decoration: none;" href="admin.php?page=contact-manager-form&amp;id=<?php echo $options['automatic_display_form_id']; ?>"><?php _e('Edit'); ?></a> | 
 <a style="text-decoration: none;" href="admin.php?page=contact-manager-form&amp;id=<?php echo $options['automatic_display_form_id']; ?>&amp;action=delete"><?php _e('Delete'); ?></a></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="automatic_display_maximum_forms_quantity"><?php _e('Maximum quantity of forms displayed per page', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_maximum_forms_quantity" id="automatic_display_maximum_forms_quantity" rows="1" cols="25"><?php echo ($options['automatic_display_maximum_forms_quantity'] == 'unlimited' ? '' : $options['automatic_display_maximum_forms_quantity']); ?></textarea>
+<span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for an unlimited quantity.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
@@ -575,4 +585,14 @@ else { _e('To use affiliation, you must have installed and activated <a href="ht
 </form>
 </div>
 </div>
+
+<script type="text/javascript">
+var anchor = window.location.hash;
+<?php foreach ($modules['options'] as $key => $value) {
+echo "if (anchor == '#".$key."') { document.getElementById('".$key."-module').style.display = 'block'; }\n";
+if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
+echo "if (anchor == '#".$module_key."') {
+document.getElementById('".$key."-module').style.display = 'block';
+document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } } ?>
+</script>
 <?php }

@@ -8,6 +8,8 @@ $initial_options[''] = array(
 'automatic_display_enabled' => 'no',
 'automatic_display_form_id' => 1,
 'automatic_display_location' => 'top',
+'automatic_display_maximum_forms_quantity' => 2,
+'automatic_display_only_on_single_post_pages' => 'yes',
 'commerce_registration_confirmation_email_sent' => '',
 'commerce_registration_notification_email_sent' => '',
 'commission_amount' => 1,
@@ -225,11 +227,7 @@ $menu_displayed_items[] = $key; } }
 
 $initial_options['back_office'] = array(
 'back_office_page_summary_displayed' => 'yes',
-'back_office_page_undisplayed_modules' => array(
-	'form-page-custom-fields',
-	'form-category-page-custom-fields',
-	'icon',
-	'message-page-custom-fields'),
+'back_office_page_undisplayed_modules' => array('icon'),
 'displayed_links' => $displayed_links,
 'custom_icon_url' => CONTACT_MANAGER_URL.'images/icon.png',
 'custom_icon_used' => 'no',
@@ -296,7 +294,7 @@ $initial_options['back_office'] = array(
 	'wordpress'),
 'pages_titles' => $pages_titles,
 'statistics_page_undisplayed_columns' => array(),
-'statistics_page_undisplayed_rows' => array(),
+'statistics_page_undisplayed_rows' => array('forms_categories'),
 'title' => 'Contact Manager',
 'title_displayed' => 'yes');
 

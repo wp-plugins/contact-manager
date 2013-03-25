@@ -30,8 +30,11 @@ $_GET['user_id'] = $id; $_GET['user_data'] = $user_data; }
 $data = (isset($user_data[$field]) ? $user_data[$field] : '');
 switch ($field) {
 case 'first_name': case 'last_name': if (($data == '') && (isset($_GET['user_id']))) {
-$result = $wpdb->get_row("SELECT meta_value FROM ".$wpdb->base_prefix."usermeta WHERE meta_key = '".$field."' AND user_id = ".$_GET['user_id'], OBJECT);
-if ($result) { $data = $result->meta_value; } } }
+$n = $_GET['user_id']; $_GET['user'.$n.'_data'] = (array) (isset($_GET['user'.$n.'_data']) ? $_GET['user'.$n.'_data'] : array());
+if (isset($_GET['user'.$n.'_data'][$field])) { $data = $_GET['user'.$n.'_data'][$field]; }
+else {
+$result = $wpdb->get_row("SELECT meta_value FROM ".$wpdb->base_prefix."usermeta WHERE meta_key = '".$field."' AND user_id = ".$n, OBJECT);
+if ($result) { $data = $result->meta_value; $_GET['user'.$n.'_data'][$field] = $data; } } } }
 $data = (string) do_shortcode($data);
 if ($data == '') { $data = $default; }
 $data = contact_filter_data($filter, $data);
