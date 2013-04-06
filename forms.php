@@ -85,8 +85,30 @@ $_POST['form_id'] = $id;
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 $_POST['date'] = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET);
 $_POST['date_utc'] = date('Y-m-d H:i:s');
-if (function_exists('award_message_commission')) { award_message_commission(); }
-if (function_exists('award_message_commission2')) { award_message_commission2(); }
+if (function_exists('award_message_commission')) { award_message_commission();
+if (($_POST['commission_amount'] > 0) && (affiliation_data('overpayment_deducted') == 'yes')) {
+$affiliate = $wpdb->get_row("SELECT overpayment_amount FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
+if ($affiliate->overpayment_amount > 0) {
+if ($affiliate->overpayment_amount > $_POST['commission_amount']) {
+$overpayment_amount = $affiliate->overpayment_amount - $_POST['commission_amount'];
+$_POST['commission_amount'] = 0;
+$_POST['commission_status'] = ''; }
+else {
+$overpayment_amount = 0;
+$_POST['commission_amount'] = $_POST['commission_amount'] - $affiliate->overpayment_amount; }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET overpayment_amount = ".$overpayment_amount." WHERE login = '".$_POST['referrer']."'"); } } }
+if (function_exists('award_message_commission2')) { award_message_commission2();
+if (($_POST['commission2_amount'] > 0) && (affiliation_data('overpayment_deducted') == 'yes')) {
+$affiliate = $wpdb->get_row("SELECT overpayment_amount FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer2']."'", OBJECT);
+if ($affiliate->overpayment_amount > 0) {
+if ($affiliate->overpayment_amount > $_POST['commission2_amount']) {
+$overpayment_amount = $affiliate->overpayment_amount - $_POST['commission2_amount'];
+$_POST['commission2_amount'] = 0;
+$_POST['commission2_status'] = ''; }
+else {
+$overpayment_amount = 0;
+$_POST['commission2_amount'] = $_POST['commission2_amount'] - $affiliate->overpayment_amount; }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET overpayment_amount = ".$overpayment_amount." WHERE login = '".$_POST['referrer2']."'"); } } }
 foreach (array('message_id', 'message_data') as $key) {
 if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; unset($_GET[$key]); } }
 $_GET['message_data'] = $_POST;
