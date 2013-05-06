@@ -57,7 +57,7 @@ $start_date = trim(mysql_real_escape_string(strip_tags($start_date)));
 if (strlen($start_date) == 10) { $start_date .= ' 00:00:00'; }
 $end_date = trim(mysql_real_escape_string(strip_tags($end_date)));
 if (strlen($end_date) == 10) { $end_date .= ' 23:59:59'; }
-$_GET['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
+$GLOBALS['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
 $date_criteria = "(date BETWEEN '$start_date' AND '$end_date')";
 
 if (($options) && (contact_manager_user_can($back_office_options, 'manage'))) {
@@ -72,9 +72,9 @@ $options = array(
 'start_date' => $start_date);
 update_option('contact_manager_'.$table_slug, $options); }
 
-$_GET['criteria'] = $_GET['date_criteria'].$_GET['selection_criteria'];
+$GLOBALS['criteria'] = $GLOBALS['date_criteria'].$GLOBALS['selection_criteria'];
 
-$_GET['search_criteria'] = ''; $search_criteria = ''; $search_column = false;
+$GLOBALS['search_criteria'] = ''; $search_criteria = ''; $search_column = false;
 if ((isset($_GET['s'])) && ($_GET['s'] != '')) {
 if ($searchby == '') {
 foreach ($tables[$table_slug] as $key => $value) {
@@ -84,9 +84,9 @@ else {
 $search_column = true; for ($i = 0; $i < $max_columns; $i++) {
 if ((in_array($i, $displayed_columns)) && ($searchby == $columns[$i])) { $search_column = false; } }
 $search_criteria = $searchby." LIKE '%".$_GET['s']."%'"; }
-$_GET['search_criteria'] = str_replace(' ', '%20', '&amp;s='.$_GET['s']);
+$GLOBALS['search_criteria'] = str_replace(' ', '%20', '&amp;s='.$_GET['s']);
 $search_criteria = 'AND ('.$search_criteria.')';
-$_GET['criteria'] .= $_GET['search_criteria']; }
+$GLOBALS['criteria'] .= $GLOBALS['search_criteria']; }
 
 $query = $wpdb->get_row("SELECT count(*) as total FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria", OBJECT);
 $n = (int) $query->total;
@@ -99,8 +99,9 @@ $start = ($_GET['paged'] - 1)*$limit;
 
 if ($n > 0) {
 switch ($_GET['orderby']) {
-case 'id': case 'category_id': case 'date': case 'date_utc': case 'ip_address': case 'referrer':
-case 'referring_url': case 'status': case 'user_agent': $sorting_method = 'basic'; break;
+case 'id': case 'category_id': case 'date': case 'date_utc': case 'displays_count':
+case 'ip_address': case 'maximum_messages_quantity_per_sender': case 'messages_count':
+case 'referrer': case 'referring_url': case 'status': case 'user_agent': $sorting_method = 'basic'; break;
 default: $sorting_method = 'advanced'; }
 if (($table_slug == 'messages') && (substr($_GET['orderby'], 0, 13) != 'custom_field_')) { $sorting_method = 'basic'; }
 

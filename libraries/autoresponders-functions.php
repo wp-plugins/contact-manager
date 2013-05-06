@@ -74,7 +74,7 @@ function subscribe_to_sg_autorepondeur($list, $contact) {
 foreach (array('id', 'code') as $key) {
 $$key = contact_data('sg_autorepondeur_account_'.$key);
 if (($$key == '') && (function_exists('commerce_data'))) { $$key = commerce_data('sg_autorepondeur_account_'.$key); } }
-$data = http_build_query(array(
+$data = array(
 'membreid' => $id,
 'codeactivationclient' => $code,
 'inscription_normale' => 'non',
@@ -82,7 +82,6 @@ $data = http_build_query(array(
 'email' => $contact['email_address'],
 'nom' => $contact['last_name'],
 'prenom' => $contact['first_name'],
-'civilite' => '',
 'adresse' => $contact['address'],
 'codepostal' => $contact['postcode'],
 'ville' => $contact['town'],
@@ -90,16 +89,14 @@ $data = http_build_query(array(
 'siteweb' => $contact['website_url'],
 'telephone' => $contact['phone_number'],
 'parrain' => $contact['referrer'],
-'fax' => '',
-'msn' => '',
-'skype' => '',
 'pseudo' => $contact['login'],
-'sexe' => '',
-'journaissance' => '',
-'moisnaissance' => '',
-'anneenaissance' => '',
-'ip' => $contact['ip_address'],
-'identite' => ''));
+'ip' => $contact['ip_address']);
+if (is_serialized($contact['custom_fields'])) { $custom_fields = (array) unserialize(stripslashes($contact['custom_fields'])); }
+else { $custom_fields = (array) $contact['custom_fields']; }
+for ($i = 1; $i <= 16; $i++) {
+if (isset($custom_fields['"'.$i.'"'])) { $data['champs_'.$i] = $custom_fields['"'.$i.'"']; }
+elseif (isset($custom_fields[$i])) { $data['champs_'.$i] = $custom_fields[$i]; } }
+$data = http_build_query($data);
 $fp = fsockopen('sg-autorepondeur.com', 80);
 fwrite($fp, "POST /inscr_decrypt.php HTTP/1.1\r\n");
 fwrite($fp, "Host: sg-autorepondeur.com\r\n");

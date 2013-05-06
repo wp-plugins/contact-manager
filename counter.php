@@ -1,9 +1,9 @@
 <?php global $wpdb;
 if ($type == 'contact_form') {
-$_GET['contact_form_data'] = (array) (isset($_GET['contact_form_data']) ? $_GET['contact_form_data'] : array());
-if ((isset($_GET['contact_form_id'])) && ((!isset($_GET['contact_form_data']['id'])) || ($_GET['contact_form_data']['id'] != $_GET['contact_form_id']))) {
-$_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_GET['contact_form_id'], OBJECT); }
-$contact_form_data = $_GET['contact_form_data'];
+$GLOBALS['contact_form_data'] = (array) (isset($GLOBALS['contact_form_data']) ? $GLOBALS['contact_form_data'] : array());
+if ((isset($GLOBALS['contact_form_id'])) && ((!isset($GLOBALS['contact_form_data']['id'])) || ($GLOBALS['contact_form_data']['id'] != $GLOBALS['contact_form_id']))) {
+$GLOBALS['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$GLOBALS['contact_form_id'], OBJECT); }
+$contact_form_data = $GLOBALS['contact_form_data'];
 extract(shortcode_atts(array('data' => '', 'id' => '', 'limit' => ''), $atts));
 $field = str_replace('-', '_', format_nice_name($data));
 if (strstr($field, 'display')) { $field = 'displays_count'; } else { $field = 'messages_count'; }
@@ -16,9 +16,9 @@ else { $id = (int) $id[0]; }
 if (($id == 0) || ((isset($contact_form_data['id'])) && ($id == $contact_form_data['id']))) { $data = $contact_form_data[$field]; }
 else {
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
-if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
+if (isset($GLOBALS[$key])) { $original[$key] = $GLOBALS[$key]; } }
 $contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = $id", OBJECT);
-$_GET['contact_form_id'] = $id; $_GET['contact_form_data'] = $contact_form_data;
+$GLOBALS['contact_form_id'] = $id; $GLOBALS['contact_form_data'] = $contact_form_data;
 $data = (isset($contact_form_data[$field]) ? $contact_form_data[$field] : 0); } }
 
 else {
@@ -133,23 +133,23 @@ $content = explode('[after]', do_shortcode($content));
 $tags = array('limit', 'number', 'remaining-number', 'total-limit', 'total-number', 'total-remaining-number');
 foreach ($tags as $tag) {
 $_tag = str_replace('-', '_', format_nice_name($tag));
-if (isset($_GET['contact_'.$_tag])) { $original['contact_'.$_tag] = $_GET['contact_'.$_tag]; }
+if (isset($GLOBALS['contact_'.$_tag])) { $original['contact_'.$_tag] = $GLOBALS['contact_'.$_tag]; }
 add_shortcode($tag, create_function('$atts', '$atts["data"] = "'.$tag.'"; return contact_counter_tag($atts);')); }
 
-$_GET['contact_limit'] = $limit[$i];
-$_GET['contact_number'] = $data - $limit[$k];
-$_GET['contact_remaining_number'] = $remaining_number;
-$_GET['contact_total_limit'] = $limit[$n - 1];
-$_GET['contact_total_number'] = $data;
-$_GET['contact_total_remaining_number'] = $total_remaining_number;
+$GLOBALS['contact_limit'] = $limit[$i];
+$GLOBALS['contact_number'] = $data - $limit[$k];
+$GLOBALS['contact_remaining_number'] = $remaining_number;
+$GLOBALS['contact_total_limit'] = $limit[$n - 1];
+$GLOBALS['contact_total_number'] = $data;
+$GLOBALS['contact_total_remaining_number'] = $total_remaining_number;
 
 $content[$k] = (isset($content[$k]) ? do_shortcode($content[$k]) : '');
 
 foreach ($tags as $tag) {
 $_tag = str_replace('-', '_', format_nice_name($tag));
-if (isset($original['contact_'.$_tag])) { $_GET['contact_'.$_tag] = $original['contact_'.$_tag]; }
+if (isset($original['contact_'.$_tag])) { $GLOBALS['contact_'.$_tag] = $original['contact_'.$_tag]; }
 remove_shortcode($tag); }
 
 if ($type == 'contact_form') {
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
-if (isset($original[$key])) { $_GET[$key] = $original[$key]; } } }
+if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } } }

@@ -159,7 +159,7 @@ $statistics_rows = array(
 
 $roles = array(
 'administrator' => array('name' => __('Administrator', 'contact-manager'), 'capability' => 'manage_options'),
-'editor' => array('name' => __('Editor', 'contact-manager'), 'capability' => 'moderate_comments'),
+'editor' => array('name' => __('Editor', 'contact-manager'), 'capability' => 'edit_pages'),
 'author' => array('name' => __('Author', 'contact-manager'), 'capability' => 'publish_posts'),
 'contributor' => array('name' => __('Contributor', 'contact-manager'), 'capability' => 'edit_posts'),
 'subscriber' => array('name' => __('Subscriber', 'contact-manager'), 'capability' => 'read'));

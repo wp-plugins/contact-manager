@@ -160,7 +160,7 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? ($is_category ? __
 <?php contact_manager_pages_menu($back_office_options); ?>
 <div class="clear"></div>
 <?php if ($error != '') { echo '<p style="color: #c00000;">'.$error.'</p>'; } ?>
-<p class="description"><?php _e('Fields marked with * are required.', 'contact-manager'); ?> 
+<p class="description"><?php _e('Only fields marked with * are required.', 'contact-manager'); ?> 
 <?php if ($_POST['category_id'] > 0) { _e('You can apply the default option of the category by leaving the corresponding field blank.', 'contact-manager'); } ?></p>
 <?php contact_manager_pages_summary($back_office_options); ?>
 

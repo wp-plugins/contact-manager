@@ -46,7 +46,7 @@ $start_date = trim(mysql_real_escape_string(strip_tags($start_date)));
 if (strlen($start_date) == 10) { $start_date .= ' 00:00:00'; }
 $end_date = trim(mysql_real_escape_string(strip_tags($end_date)));
 if (strlen($end_date) == 10) { $end_date .= ' 23:59:59'; }
-$_GET['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
+$GLOBALS['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
 $date_criteria = "(date BETWEEN '$start_date' AND '$end_date')";
 
 if (($options) && (contact_manager_user_can($back_office_options, 'manage'))) {
@@ -57,9 +57,9 @@ $options = array(
 'tables' => $tables_slugs);
 update_option('contact_manager_statistics', $options); }
 
-$_GET['filter_criteria'] = ''; $filter_criteria = '';
+$GLOBALS['filter_criteria'] = ''; $filter_criteria = '';
 if ((isset($_GET['s'])) && ($_GET['s'] != '')) {
-$_GET['filter_criteria'] = str_replace(' ', '%20', '&amp;'.$filterby.'='.$_GET['s']);
+$GLOBALS['filter_criteria'] = str_replace(' ', '%20', '&amp;'.$filterby.'='.$_GET['s']);
 $filter_criteria = (is_numeric($_GET['s']) ? "AND (".$filterby." = ".$_GET['s'].")" : "AND (".$filterby." = '".$_GET['s']."')"); }
 
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE $date_criteria $selection_criteria $filter_criteria", OBJECT);
@@ -69,11 +69,11 @@ $forms_number = (int) (isset($row->total) ? $row->total : 0);
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE $date_criteria $selection_criteria $filter_criteria", OBJECT);
 $forms_categories_number = (int) (isset($row->total) ? $row->total : 0);
 
-$_GET['criteria'] = $_GET['date_criteria'].$_GET['selection_criteria'].$_GET['filter_criteria'];
+$GLOBALS['criteria'] = $GLOBALS['date_criteria'].$GLOBALS['selection_criteria'].$GLOBALS['filter_criteria'];
 
-$messages_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-manager-messages'.$_GET['criteria'].'">';
-$forms_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-manager-forms'.$_GET['criteria'].'">';
-$forms_categories_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-manager-forms-categories'.$_GET['criteria'].'">'; ?>
+$messages_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-manager-messages'.$GLOBALS['criteria'].'">';
+$forms_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-manager-forms'.$GLOBALS['criteria'].'">';
+$forms_categories_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-manager-forms-categories'.$GLOBALS['criteria'].'">'; ?>
 
 <div class="wrap">
 <div id="poststuff">

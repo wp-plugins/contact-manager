@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.5.3
+Version: 5.6
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -53,9 +53,9 @@ if ((contact_data('automatic_display_enabled') == 'yes')
 $id = contact_data('automatic_display_form_id');
 $location = contact_data('automatic_display_location');
 $quantity = contact_data('automatic_display_maximum_forms_quantity');
-if (!isset($_ENV['contact_form'.$id.'_number'])) { $_ENV['contact_form'.$id.'_number'] = 0; }
+if (!isset($GLOBALS['contact_form'.$id.'_number'])) { $GLOBALS['contact_form'.$id.'_number'] = 0; }
 foreach (array('top', 'bottom') as $string) {
-if ((strstr($location, $string)) && (($quantity == 'unlimited') || ($_ENV['contact_form'.$id.'_number'] < $quantity))) {
+if ((strstr($location, $string)) && (($quantity == 'unlimited') || ($GLOBALS['contact_form'.$id.'_number'] < $quantity))) {
 include_once dirname(__FILE__).'/forms.php';
 $content = ($string == 'top' ? '' : $content).contact_form(array('id' => $id)).($string == 'bottom' ? '' : $content); } } }
 return $content; }
@@ -82,7 +82,7 @@ wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } }
 elseif ((is_multisite()) || (get_option('contact_manager'))) { wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } }
 
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
-foreach (array('admin_footer', 'wp_footer') as $hook) { add_action($hook, 'contact_cron'); } }
+foreach (array('admin_footer', 'login_footer', 'wp_footer') as $hook) { add_action($hook, 'contact_cron'); } }
 
 
 function contact_data($atts) {

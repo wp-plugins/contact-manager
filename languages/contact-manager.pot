@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.5.3\n"
+"Project-Id-Version: Contact Manager 5.6\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -647,7 +647,7 @@ msgid "Form saved."
 msgstr ""
 
 #: form-page.php:151
-msgid "Fields marked with * are required."
+msgid "Only fields marked with * are required."
 msgstr ""
 
 #: form-page.php:152

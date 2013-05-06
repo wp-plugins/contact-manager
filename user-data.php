@@ -1,11 +1,11 @@
 <?php global $user_ID, $wpdb;
-$_GET['user_data'] = (array) (isset($_GET['user_data']) ? $_GET['user_data'] : array());
-if ((!isset($_GET['user_id'])) && (function_exists('is_user_logged_in'))) { if (is_user_logged_in()) { $_GET['user_id'] = $user_ID; } }
-if ((isset($_GET['user_id'])) && ((!isset($_GET['user_data']['ID'])) || ($_GET['user_data']['ID'] != $_GET['user_id']))) {
-$n = $_GET['user_id']; $_GET['user'.$n.'_data'] = (array) (isset($_GET['user'.$n.'_data']) ? $_GET['user'.$n.'_data'] : array());
-if ((isset($_GET['user'.$n.'_data']['ID'])) && ($_GET['user'.$n.'_data']['ID'] == $_GET['user_id'])) { $_GET['user_data'] = $_GET['user'.$n.'_data']; }
-else { $_GET['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$_GET['user_id'], OBJECT); } }
-$user_data = $_GET['user_data'];
+$GLOBALS['user_data'] = (array) (isset($GLOBALS['user_data']) ? $GLOBALS['user_data'] : array());
+if ((!isset($GLOBALS['user_id'])) && (function_exists('is_user_logged_in')) && (is_user_logged_in())) { $GLOBALS['user_id'] = $user_ID; }
+if ((isset($GLOBALS['user_id'])) && ((!isset($GLOBALS['user_data']['ID'])) || ($GLOBALS['user_data']['ID'] != $GLOBALS['user_id']))) {
+$n = $GLOBALS['user_id']; $GLOBALS['user'.$n.'_data'] = (array) (isset($GLOBALS['user'.$n.'_data']) ? $GLOBALS['user'.$n.'_data'] : array());
+if ((isset($GLOBALS['user'.$n.'_data']['ID'])) && ($GLOBALS['user'.$n.'_data']['ID'] == $GLOBALS['user_id'])) { $GLOBALS['user_data'] = $GLOBALS['user'.$n.'_data']; }
+else { $GLOBALS['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$GLOBALS['user_id'], OBJECT); } }
+$user_data = $GLOBALS['user_data'];
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; }
 else {
 $field = (isset($atts[0]) ? $atts[0] : '');
@@ -22,21 +22,21 @@ case 'login': $field = 'user_login'; break;
 case 'website_url': $field = 'user_url'; break; }
 if (($id > 0) && ((!isset($user_data['ID'])) || ($id != $user_data['ID']))) {
 foreach (array('user_id', 'user_data') as $key) {
-if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
-if ((!isset($_GET['user'.$id.'_data'])) || (!isset($_GET['user'.$id.'_data']['ID'])) || ($_GET['user'.$id.'_data']['ID'] != $id)) {
-$_GET['user'.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$id, OBJECT); }
-$user_data = $_GET['user'.$id.'_data'];
-$_GET['user_id'] = $id; $_GET['user_data'] = $user_data; }
+if (isset($GLOBALS[$key])) { $original[$key] = $GLOBALS[$key]; } }
+if ((!isset($GLOBALS['user'.$id.'_data'])) || (!isset($GLOBALS['user'.$id.'_data']['ID'])) || ($GLOBALS['user'.$id.'_data']['ID'] != $id)) {
+$GLOBALS['user'.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$id, OBJECT); }
+$user_data = $GLOBALS['user'.$id.'_data'];
+$GLOBALS['user_id'] = $id; $GLOBALS['user_data'] = $user_data; }
 $data = (isset($user_data[$field]) ? $user_data[$field] : '');
 switch ($field) {
-case 'first_name': case 'last_name': if (($data == '') && (isset($_GET['user_id']))) {
-$n = $_GET['user_id']; $_GET['user'.$n.'_data'] = (array) (isset($_GET['user'.$n.'_data']) ? $_GET['user'.$n.'_data'] : array());
-if (isset($_GET['user'.$n.'_data'][$field])) { $data = $_GET['user'.$n.'_data'][$field]; }
+case 'first_name': case 'last_name': if (($data == '') && (isset($GLOBALS['user_id']))) {
+$n = $GLOBALS['user_id']; $GLOBALS['user'.$n.'_data'] = (array) (isset($GLOBALS['user'.$n.'_data']) ? $GLOBALS['user'.$n.'_data'] : array());
+if (isset($GLOBALS['user'.$n.'_data'][$field])) { $data = $GLOBALS['user'.$n.'_data'][$field]; }
 else {
 $result = $wpdb->get_row("SELECT meta_value FROM ".$wpdb->base_prefix."usermeta WHERE meta_key = '".$field."' AND user_id = ".$n, OBJECT);
-if ($result) { $data = $result->meta_value; $_GET['user'.$n.'_data'][$field] = $data; } } } }
+if ($result) { $data = $result->meta_value; $GLOBALS['user'.$n.'_data'][$field] = $data; } } } }
 $data = (string) do_shortcode($data);
 if ($data == '') { $data = $default; }
 $data = contact_filter_data($filter, $data);
 foreach (array('user_id', 'user_data') as $key) {
-if (isset($original[$key])) { $_GET[$key] = $original[$key]; } }
+if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } }

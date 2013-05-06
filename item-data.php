@@ -4,18 +4,18 @@ switch ($type) {
 case 'contact_form': $table = 'forms'; $default_field = 'name'; break;
 case 'contact_form_category': $table = 'forms_categories'; $default_field = 'name'; break;
 case 'message': $table = 'messages'; $default_field = 'subject'; break; }
-$_GET[$type.'_data'] = (array) (isset($_GET[$type.'_data']) ? $_GET[$type.'_data'] : array());
-if ((isset($_GET[$type.'_id'])) && ((!isset($_GET[$type.'_data']['id'])) || ($_GET[$type.'_data']['id'] != $_GET[$type.'_id']))) {
-$n = $_GET[$type.'_id']; $_GET[$type.$n.'_data'] = (array) (isset($_GET[$type.$n.'_data']) ? $_GET[$type.$n.'_data'] : array());
-if ((isset($_GET[$type.$n.'_data']['id'])) && ($_GET[$type.$n.'_data']['id'] == $_GET[$type.'_id'])) { $_GET[$type.'_data'] = $_GET[$type.$n.'_data']; }
-else { $_GET[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = ".$_GET[$type.'_id'], OBJECT); } }
+$GLOBALS[$type.'_data'] = (array) (isset($GLOBALS[$type.'_data']) ? $GLOBALS[$type.'_data'] : array());
+if ((isset($GLOBALS[$type.'_id'])) && ((!isset($GLOBALS[$type.'_data']['id'])) || ($GLOBALS[$type.'_data']['id'] != $GLOBALS[$type.'_id']))) {
+$n = $GLOBALS[$type.'_id']; $GLOBALS[$type.$n.'_data'] = (array) (isset($GLOBALS[$type.$n.'_data']) ? $GLOBALS[$type.$n.'_data'] : array());
+if ((isset($GLOBALS[$type.$n.'_data']['id'])) && ($GLOBALS[$type.$n.'_data']['id'] == $GLOBALS[$type.'_id'])) { $GLOBALS[$type.'_data'] = $GLOBALS[$type.$n.'_data']; }
+else { $GLOBALS[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = ".$GLOBALS[$type.'_id'], OBJECT); } }
 if (!is_admin()) {
-if (($type == 'message') && (!isset($_GET[$type.'_data']['email_address'])) && (!isset($_ENV[$type.'_searched_by_ip_address']))) {
-$_ENV[$type.'_searched_by_ip_address'] = 'yes';
+if (($type == 'message') && (!isset($GLOBALS[$type.'_data']['email_address'])) && (!isset($GLOBALS[$type.'_searched_by_ip_address']))) {
+$GLOBALS[$type.'_searched_by_ip_address'] = 'yes';
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE ip_address = '".$_SERVER['REMOTE_ADDR']."' ORDER BY date DESC LIMIT 1", OBJECT);
-if ($result) { $_GET[$type.'_data'] = (array) $result; } }
-if (isset($_GET[$type.'_data']['id'])) { $n = $_GET[$type.'_data']['id']; $_GET[$type.$n.'_data'] = $_GET[$type.'_data']; } }
-$item_data = $_GET[$type.'_data'];
+if ($result) { $GLOBALS[$type.'_data'] = (array) $result; } }
+if (isset($GLOBALS[$type.'_data']['id'])) { $n = $GLOBALS[$type.'_data']['id']; $GLOBALS[$type.$n.'_data'] = $GLOBALS[$type.'_data']; } }
+$item_data = $GLOBALS[$type.'_data'];
 if (is_string($atts)) { $field = $atts; $decimals = ''; $default = ''; $filter = ''; $id = 0; $part = 0; }
 else {
 $field = (isset($atts[0]) ? $atts[0] : '');
@@ -28,11 +28,11 @@ $field = str_replace('-', '_', format_nice_name($field));
 if ($field == '') { $field = $default_field; }
 if (($id > 0) && ((!isset($item_data['id'])) || ($id != $item_data['id']))) {
 foreach (array($type.'_id', $type.'_data') as $key) {
-if (isset($_GET[$key])) { $original[$key] = $_GET[$key]; } }
-if ((!isset($_GET[$type.$id.'_data'])) || (!isset($_GET[$type.$id.'_data']['id'])) || ($_GET[$type.$id.'_data']['id'] != $id)) {
-$_GET[$type.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = $id", OBJECT); }
-$item_data = $_GET[$type.$id.'_data'];
-if ($attribute == 'id') { $_GET[$type.'_id'] = $id; $_GET[$type.'_data'] = $item_data; } }
+if (isset($GLOBALS[$key])) { $original[$key] = $GLOBALS[$key]; } }
+if ((!isset($GLOBALS[$type.$id.'_data'])) || (!isset($GLOBALS[$type.$id.'_data']['id'])) || ($GLOBALS[$type.$id.'_data']['id'] != $id)) {
+$GLOBALS[$type.$id.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = $id", OBJECT); }
+$item_data = $GLOBALS[$type.$id.'_data'];
+if ($attribute == 'id') { $GLOBALS[$type.'_id'] = $id; $GLOBALS[$type.'_data'] = $item_data; } }
 if ((!isset($item_data[$field])) && (isset($item_data['custom_fields'])) && (substr($field, 0, 13) == 'custom_field_')) {
 $item_custom_fields = (array) unserialize(stripslashes($item_data['custom_fields']));
 foreach ($item_custom_fields as $key => $value) { $item_data['custom_field_'.$key] = $value; } }
@@ -56,4 +56,4 @@ $data = contact_format_data($field, $data);
 $data = contact_filter_data($filter, $data);
 $data = contact_decimals_data($decimals, $data);
 foreach (array($type.'_id', $type.'_data') as $key) {
-if (isset($original[$key])) { $_GET[$key] = $original[$key]; } }
+if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } }

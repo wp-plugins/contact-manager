@@ -1,6 +1,6 @@
 <?php global $wpdb;
 
-$_GET['selection_criteria'] = ''; $selection_criteria = '';
+$GLOBALS['selection_criteria'] = ''; $selection_criteria = '';
 foreach (array(
 'category_id',
 'commission_amount',
@@ -15,7 +15,7 @@ foreach (array(
 'referrer',
 'referrer2') as $field) {
 if (isset($_GET[$field])) {
-$_GET['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
+$GLOBALS['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
 $selection_criteria .= ($field == "keywords" ? " AND (".$field." LIKE '%".$_GET[$field]."%')" :
  (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')")); } }
 
@@ -82,9 +82,9 @@ return $undisplayed_keys; }
 
 function table_data($table, $column, $item) {
 switch ($table) {
-case 'forms': $_GET['contact_form_id'] = $item->id; $_GET['contact_form_data'] = (array) $item; $data = contact_form_data($column); break;
-case 'forms_categories': $_GET['contact_form_category_id'] = $item->id; $_GET['contact_form_category_data'] = (array) $item; $data = contact_form_category_data($column); break;
-case 'messages': $_GET['message_data'] = (array) $item; $data = message_data($column); break;
+case 'forms': $GLOBALS['contact_form_id'] = $item->id; $GLOBALS['contact_form_data'] = (array) $item; $data = contact_form_data($column); break;
+case 'forms_categories': $GLOBALS['contact_form_category_id'] = $item->id; $GLOBALS['contact_form_category_data'] = (array) $item; $data = contact_form_category_data($column); break;
+case 'messages': $GLOBALS['message_id'] = $item->id; $GLOBALS['message_data'] = (array) $item; $data = message_data($column); break;
 default: $data = contact_format_data($column, $item->$column); }
 return $data; }
 
@@ -100,14 +100,14 @@ case 'sender_subscribed_as_a_client': case 'sender_subscribed_as_a_user': case '
 if ($data == 'yes') { $table_td = '<span style="color: #008000;">'.__('Yes', 'contact-manager').'</span>'; }
 elseif ($data == 'no')  { $table_td = '<span style="color: #c00000;">'.__('No', 'contact-manager').'</span>'; }
 else { $table_td = $data; } break;
-case 'category_id': case 'form_id': case 'ip_address': case 'referrer': case 'referrer2': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.$data.'</a>'); break;
+case 'category_id': case 'form_id': case 'ip_address': case 'referrer': case 'referrer2': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.$data.'</a>'); break;
 case 'code': case 'content': case 'description': case 'gift_instructions': case 'message_confirmation_email_body': case 'message_custom_instructions': case 'message_notification_email_body': if (strlen($data) <= 80) { $table_td = $data; }
 else { $table_td = substr($data, 0, 80); if (stristr($table_td, ' ')) { while (substr($table_td, -1) != ' ') { $table_td = substr($table_td, 0, -1); } } $table_td .= '[...]'; } break;
 case 'commission_amount': case 'commission2_amount':
-if ($table == 'messages') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.$data.'</a>'); break; }
+if ($table == 'messages') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.$data.'</a>'); break; }
 else { $table_td = $data; } break;
-case 'commission_status': case 'commission2_status': if ($data == 'paid') { $table_td = '<a style="color: #008000;" href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'=paid">'.__('Paid', 'contact-manager').'</a>'; }
-elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'=unpaid">'.__('Unpaid', 'contact-manager').'</a>'; }
+case 'commission_status': case 'commission2_status': if ($data == 'paid') { $table_td = '<a style="color: #008000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=paid">'.__('Paid', 'contact-manager').'</a>'; }
+elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unpaid">'.__('Unpaid', 'contact-manager').'</a>'; }
 else { $table_td = $data; } break;
 case 'custom_fields':
 $back_office_options = (array) get_option('contact_manager_back_office');
@@ -124,10 +124,10 @@ $keywords = explode(',', $data);
 $keywords_list = '';
 foreach ($keywords as $keyword) {
 $keyword = strtolower(trim($keyword));
-$keyword = '<a href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;keywords='.$keyword.'">'.$keyword.'</a>';
+$keyword = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;keywords='.$keyword.'">'.$keyword.'</a>';
 $keywords_list .= $keyword.', '; }
 $table_td = substr($keywords_list, 0, -2); break;
-case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data == 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
+case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data == 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
 case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.$data.'</a>'); break;
 case 'sender_affiliate_status': case 'sender_client_status': case 'sender_member_status':
 if ($data == 'active') { $table_td = '<span style="color: #008000;">'.__('Active', 'contact-manager').'</span>'; }
@@ -151,7 +151,7 @@ if (strstr($_GET['page'], 'statistics')) { $table_th = '<th scope="col" class="m
 else {
 $reverse_order = ($_GET['order'] == 'asc' ? 'desc' : 'asc');
 $table_th = '<th scope="col" class="manage-column '.($_GET['orderby'] == $column ? 'sorted '.$_GET['order'] : 'sortable '.$reverse_order).'" style="width: '.$tables[$table][$column]['width'].'%;">
-<a href="admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;orderby='.$column.'&amp;order='.($_GET['orderby'] == $column ? $reverse_order : $_GET['order']).'">
+<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;orderby='.$column.'&amp;order='.($_GET['orderby'] == $column ? $reverse_order : $_GET['order']).'">
 <span>'.$tables[$table][$column]['name'].'</span><span class="sorting-indicator"></span></a></th>'; }
 return $table_th; }
 
@@ -164,7 +164,7 @@ case 'messages': $singular = __('message', 'contact-manager'); $plural = __('mes
 default: $singular = __('item', 'contact-manager'); $plural = __('items', 'contact-manager'); }
 if ($_GET['paged'] == 1) { $prev_paged = 1; } else { $prev_paged = $_GET['paged'] - 1; }
 if ($_GET['paged'] == $max_paged) { $next_paged = $max_paged; } else { $next_paged = $_GET['paged'] + 1; }
-$url = 'admin.php?page='.$_GET['page'].$_GET['criteria'].'&amp;orderby='.$_GET['orderby'].'&amp;order='.$_GET['order'];
+$url = 'admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;orderby='.$_GET['orderby'].'&amp;order='.$_GET['order'];
 echo '<div class="tablenav-pages" style="float: right;"><span class="displaying-num">'.$n.' '.($n <= 1 ? $singular : $plural).'</span>
 <a class="first-page'.($_GET['paged'] == 1 ? ' disabled' : '').'" title="'.__('Go to the first page').'" href="'.$url.'&amp;paged=1">&laquo;</a>
 <a class="prev-page'.($_GET['paged'] == 1 ? ' disabled' : '').'" title="'.__('Go to the previous page').'" href="'.$url.'&amp;paged='.$prev_paged.'">&lsaquo;</a>
@@ -192,6 +192,7 @@ foreach (array(
 'order-invoice-url',
 'prospect',
 'prospect-commission',
+'purchase-url',
 'recurring-commission',
 'recurring-payment',
 'recurring-payment-invoice-url',

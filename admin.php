@@ -50,8 +50,7 @@ load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 include dirname(__FILE__).'/initial-options.php';
 foreach ($initial_options as $key => $value) {
 $_key = ($key == '' ? '' : '_'.$key);
-update_option(substr('contact_manager'.$_key, 0, 64), $value); }
-install_contact_manager(); }
+update_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 
 
 function uninstall_contact_manager() {

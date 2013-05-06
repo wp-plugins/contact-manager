@@ -1,5 +1,6 @@
 <?php load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("dashboard");'));
+foreach ($_GET as $key => $value) { $GLOBALS[$key] = $value; }
 
 
 function contact_manager_pages_links($back_office_options) {
@@ -16,13 +17,12 @@ $links_markup = array(
 ($_GET['page'] == 'contact-manager-form-category' ? '-product-category' : '').
 ($_GET['page'] == 'contact-manager-forms' ? '-products' : '').
 ($_GET['page'] == 'contact-manager-forms-categories' ? '-products-categories' : '').
+($_GET['page'] == 'contact-manager-message' ? '-order' : '').
+($_GET['page'] == 'contact-manager-messages' ? '-orders' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Commerce Manager']['name'].'</a>' : '<a href="http://www.kleor-editions.com/commerce-manager">'.$admin_links['Commerce Manager']['name'].'</a>'),
 'Affiliation Manager' => (function_exists('affiliation_manager_admin_menu') ? '<a href="admin.php?page=affiliation-manager'.
-($_GET['page'] == 'contact-manager-form' ? '-affiliate' : '').
-($_GET['page'] == 'contact-manager-form-category' ? '-affiliate-category' : '').
-($_GET['page'] == 'contact-manager-forms' ? '-affiliates' : '').
-($_GET['page'] == 'contact-manager-forms-categories' ? '-affiliates-categories' : '').
+($_GET['page'] == 'contact-manager-message' ? '-affiliate' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'messages') ? '-messages-commissions' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Affiliation Manager']['name'].'</a>' : '<a href="http://www.kleor-editions.com/affiliation-manager">'.$admin_links['Affiliation Manager']['name'].'</a>'),
@@ -31,6 +31,8 @@ $links_markup = array(
 ($_GET['page'] == 'contact-manager-form-category' ? '-member-area-category' : '').
 ($_GET['page'] == 'contact-manager-forms' ? '-members-areas' : '').
 ($_GET['page'] == 'contact-manager-forms-categories' ? '-members-areas-categories' : '').
+($_GET['page'] == 'contact-manager-message' ? '-member' : '').
+($_GET['page'] == 'contact-manager-messages' ? '-members' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Membership Manager']['name'].'</a>' : '<a href="http://www.kleor-editions.com/membership-manager">'.$admin_links['Membership Manager']['name'].'</a>'),
 'Optin Manager' => (function_exists('optin_manager_admin_menu') ? '<a href="admin.php?page=optin-manager'.
@@ -82,18 +84,12 @@ $name = $page_slug.'_page_'.str_replace('-', '_', $key).'_module_displayed';
 if (strstr($_GET['page'], 'back-office')) { $onmouseover = ""; }
 else { $onmouseover = " onmouseover=\"document.getElementById('".$key."-submodules').style.display = 'block';\""; }
 if ((isset($value['required'])) && ($value['required'] == 'yes')) { echo '<label'.$onmouseover.'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br /></label>'; }
-else {
-if ((($page_slug != 'back_office') && (strstr($_GET['page'], 'back-office'))) || ($key == $module)) { $onclick = ""; }
-else { $onclick = " onclick=\"if (this.checked == true) { document.getElementById('".$key."-module').style.display = 'block'; } else { document.getElementById('".$key."-module').style.display = 'none'; } window.location = '#".$module."-module';\""; }
-echo '<label'.$onmouseover.(((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) ? '' : ' style="display: none;"').'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $page_undisplayed_modules) ? '' : ' checked="checked"').$onclick.' /> '.$value['name'].'<br /></label>'; }
+else { echo '<label'.$onmouseover.(((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) ? '' : ' style="display: none;"').'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$value['name'].'<br /></label>'; }
 if (!strstr($_GET['page'], 'back-office')) { echo '<div style="display: none;" id="'.$key.'-submodules">'; }
 if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
 $module_name = $page_slug.'_page_'.str_replace('-', '_', $module_key).'_module_displayed';
 if ((isset($module_value['required'])) && ($module_value['required'] == 'yes')) { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes" checked="checked" disabled="disabled" /> '.$module_value['name'].'<br /></label>'; }
-else {
-if (($page_slug != 'back_office') && (strstr($_GET['page'], 'back-office'))) { $module_onclick = ""; }
-else { $module_onclick = " onclick=\"if (this.checked == true) { document.getElementById('".$module_key."-module').style.display = 'block'; } else { document.getElementById('".$module_key."-module').style.display = 'none'; } window.location = '#".$module."-module';\""; }
-echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes"'.(in_array($module_key, $page_undisplayed_modules) ? '' : ' checked="checked"').$module_onclick.' /> '.$module_value['name'].'<br /></label>'; } } }
+else { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes"'.(in_array($module_key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$module_value['name'].'<br /></label>'; } } }
 if (!strstr($_GET['page'], 'back-office')) { echo '</div>'; } } ?></td></tr>
 <?php if ((strstr($_GET['page'], 'back-office')) && (isset($modules['back_office'][$module]['modules'][$module.'-custom-fields']))) { ?>
 </tbody></table>

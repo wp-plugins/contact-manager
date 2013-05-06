@@ -2,31 +2,31 @@
 global $wpdb;
 foreach (array('admin-pages.php', 'tables.php') as $file) { include dirname(__FILE__).'/'.$file; }
 foreach ($tables['messages'] as $key => $value) { if (!isset($message[$key])) { $message[$key] = ''; } }
-$_GET['contact_form_id'] = (int) $message['form_id'];
+$GLOBALS['contact_form_id'] = (int) $message['form_id'];
 if (function_exists('add_affiliate')) {
-$_GET['affiliate_id'] = 0;
-if ((!is_admin()) && (affiliation_session())) { $_GET['affiliate_id'] = (int) affiliate_data('id'); }
-if ($_GET['affiliate_id'] == 0) {
+$GLOBALS['affiliate_id'] = 0;
+if ((!is_admin()) && (affiliation_session())) { $GLOBALS['affiliate_id'] = (int) affiliate_data('id'); }
+if ($GLOBALS['affiliate_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE email_address = '".$message['email_address']."'", OBJECT);
 if (!$result) { $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE paypal_email_address = '".$message['email_address']."'", OBJECT); }
-if ($result) { $_GET['affiliate_data'] = (array) $result; $_GET['affiliate_id'] = $result->id; } } }
+if ($result) { $GLOBALS['affiliate_data'] = (array) $result; $GLOBALS['affiliate_id'] = $result->id; } } }
 if (function_exists('add_client')) {
-$_GET['client_id'] = 0;
-if ((!is_admin()) && (commerce_session())) { $_GET['client_id'] = (int) client_data('id'); }
-if ($_GET['client_id'] == 0) {
+$GLOBALS['client_id'] = 0;
+if ((!is_admin()) && (commerce_session())) { $GLOBALS['client_id'] = (int) client_data('id'); }
+if ($GLOBALS['client_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."commerce_manager_clients WHERE email_address = '".$message['email_address']."'", OBJECT);
 if (!$result) { $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."commerce_manager_clients WHERE paypal_email_address = '".$message['email_address']."'", OBJECT); }
-if ($result) { $_GET['client_data'] = (array) $result; $_GET['client_id'] = $result->id; } } }
+if ($result) { $GLOBALS['client_data'] = (array) $result; $GLOBALS['client_id'] = $result->id; } } }
 if (function_exists('add_member')) {
-$_GET['member_id'] = 0;
-if ((!is_admin()) && (membership_session(''))) { $_GET['member_id'] = (int) member_data('id'); }
-if ($_GET['member_id'] == 0) {
+$GLOBALS['member_id'] = 0;
+if ((!is_admin()) && (membership_session(''))) { $GLOBALS['member_id'] = (int) member_data('id'); }
+if ($GLOBALS['member_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."membership_manager_members WHERE email_address = '".$message['email_address']."'", OBJECT);
-if ($result) { $_GET['member_data'] = (array) $result; $_GET['member_id'] = $result->id; } } }
-$_GET['user_id'] = (int) (isset($_GET['user_id']) ? $_GET['user_id'] : 0);
-if ($_GET['user_id'] == 0) {
+if ($result) { $GLOBALS['member_data'] = (array) $result; $GLOBALS['member_id'] = $result->id; } } }
+$GLOBALS['user_id'] = (int) (isset($GLOBALS['user_id']) ? $GLOBALS['user_id'] : 0);
+if ($GLOBALS['user_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE user_email = '".$message['email_address']."'", OBJECT);
-if ($result) { $_GET['user_data'] = (array) $result; $_GET['user_id'] = $result->ID; } }
+if ($result) { $GLOBALS['user_data'] = (array) $result; $GLOBALS['user_id'] = $result->ID; } }
 $original_custom_fields = $message['custom_fields'];
 if (is_serialized($message['custom_fields'])) {
 $custom_fields = (array) unserialize(stripslashes($message['custom_fields']));
@@ -42,7 +42,7 @@ $keys_list = ''; $values_list = '';
 foreach ($tables['messages'] as $key => $value) { if ($key != 'id') { $keys_list .= $key.","; $values_list .= $sql[$key].","; } }
 $result = $wpdb->query("INSERT INTO ".$wpdb->prefix."contact_manager_messages (".substr($keys_list, 0, -1).") VALUES(".substr($values_list, 0, -1).")");
 $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages ORDER BY id DESC LIMIT 1", OBJECT);
-$_GET['message_id'] = $result->id;
+$GLOBALS['message_id'] = $result->id;
 $message['id'] = $result->id;
 if (!is_admin()) {
 $maximum_messages_quantity = contact_data('maximum_messages_quantity');
@@ -58,11 +58,11 @@ $messages_quantity = (int) (isset($row->total) ? $row->total : 0);
 $n = $messages_quantity - $maximum_messages_quantity;
 if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id']." ORDER BY date ASC LIMIT $n"); } } } }
 $message['custom_fields'] = $original_custom_fields;
-$_GET['message_data'] = $message;
+$GLOBALS['message_data'] = $message;
 $original_message = $message;
 if ($message['referrer'] != '') {
-$_GET['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$message['referrer']."'", OBJECT);
-$_GET['referrer_data'] = $_GET['affiliate_data']; }
+$GLOBALS['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$message['referrer']."'", OBJECT);
+$GLOBALS['referrer_data'] = $GLOBALS['affiliate_data']; }
 foreach ($add_message_fields as $field) {
 if (is_admin()) { $message[$field] = (isset($message[$field]) ? stripslashes(do_shortcode($message[$field])) : ''); }
 else { $message[$field] = contact_form_data($field); } }
@@ -76,10 +76,10 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 	messages_count = ".$messages_count." WHERE id = ".$message['form_id']); }
 
 if ((function_exists('add_affiliate')) && ($message['sender_subscribed_to_affiliate_program'] == 'yes')) {
-if ($_GET['affiliate_id'] > 0) {
+if ($GLOBALS['affiliate_id'] > 0) {
 if ($message['sender_affiliate_category_id'] > 0) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET category_id = ".$message['sender_affiliate_category_id']." WHERE id = ".$_GET['affiliate_id']); }
-if (function_exists('update_affiliate_custom_fields')) { update_affiliate_custom_fields($_GET['affiliate_id'], $message['custom_fields']); } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET category_id = ".$message['sender_affiliate_category_id']." WHERE id = ".$GLOBALS['affiliate_id']); }
+if (function_exists('update_affiliate_custom_fields')) { update_affiliate_custom_fields($GLOBALS['affiliate_id'], $message['custom_fields']); } }
 elseif ($message['email_address'] != '') {
 $affiliate = $message;
 if (!isset($affiliate['login'])) { $affiliate['login'] = $affiliate['email_address']; }
@@ -104,10 +104,10 @@ $affiliate['registration_without_form'] = 'yes';
 add_affiliate($affiliate); } }
 
 if ((function_exists('add_client')) && ($message['sender_subscribed_as_a_client'] == 'yes')) {
-if ($_GET['client_id'] > 0) {
+if ($GLOBALS['client_id'] > 0) {
 if ($message['sender_client_category_id'] > 0) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."commerce_manager_clients SET category_id = ".$message['sender_client_category_id']." WHERE id = ".$_GET['client_id']); }
-if (function_exists('update_client_custom_fields')) { update_client_custom_fields($_GET['client_id'], $message['custom_fields']); } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."commerce_manager_clients SET category_id = ".$message['sender_client_category_id']." WHERE id = ".$GLOBALS['client_id']); }
+if (function_exists('update_client_custom_fields')) { update_client_custom_fields($GLOBALS['client_id'], $message['custom_fields']); } }
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $client = $affiliate; }
 else { $client = $message; }
@@ -131,21 +131,21 @@ $client['registration_without_form'] = 'yes';
 add_client($client); } }
 
 if ((function_exists('add_member')) && ($message['sender_subscribed_to_members_areas'] == 'yes')) {
-if ($_GET['member_id'] > 0) {
+if ($GLOBALS['member_id'] > 0) {
 if ($message['sender_member_category_id'] > 0) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET category_id = ".$message['sender_member_category_id']." WHERE id = ".$_GET['member_id']); }
-if (function_exists('update_member_custom_fields')) { update_member_custom_fields($_GET['member_id'], $message['custom_fields']); }
-update_member_members_areas($_GET['member_id'], $message['sender_members_areas'], 'add');
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET category_id = ".$message['sender_member_category_id']." WHERE id = ".$GLOBALS['member_id']); }
+if (function_exists('update_member_custom_fields')) { update_member_custom_fields($GLOBALS['member_id'], $message['custom_fields']); }
+update_member_members_areas($GLOBALS['member_id'], $message['sender_members_areas'], 'add');
 if (function_exists('update_member_members_areas_modifications')) {
-update_member_members_areas_modifications($_GET['member_id'], $message['sender_members_areas_modifications'], 'add'); } }
+update_member_members_areas_modifications($GLOBALS['member_id'], $message['sender_members_areas_modifications'], 'add'); } }
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $member = $affiliate; }
 elseif (isset($client)) { $member = $client; }
 else { $member = $message; }
 $member['members_areas'] = $message['sender_members_areas'];
 $members_areas = array_unique(preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY));
-if (count($members_areas) == 1) { $_GET['member_area_id'] = (int) $members_areas[0]; }
-elseif (isset($_GET['member_area_id'])) { unset($_GET['member_area_id']); }
+if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
+elseif (isset($GLOBALS['member_area_id'])) { unset($GLOBALS['member_area_id']); }
 $member['members_areas_modifications'] = $message['sender_members_areas_modifications'];
 if (!isset($member['login'])) { $member['login'] = $member['email_address']; }
 $login = $member['login']; $result = true; $i = 1; while ($result) {
@@ -163,7 +163,7 @@ $member['registration_without_form'] = 'yes';
 add_member($member); } }
 
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
-if (($_GET['user_id'] == 0) && ($message['sender_subscribed_as_a_user'] == 'yes') && ($message['email_address'] != '')) {
+if (($GLOBALS['user_id'] == 0) && ($message['sender_subscribed_as_a_user'] == 'yes') && ($message['email_address'] != '')) {
 if (isset($affiliate)) { $user = $affiliate; }
 elseif (isset($client)) { $user = $client; }
 elseif (isset($member)) { $user = $member; }
@@ -182,8 +182,8 @@ $user['user_url'] = $user['website_url'];
 $user['user_registered'] = $user['date_utc'];
 $user['display_name'] = $user['first_name'];
 $user['ID'] = wp_insert_user($user);
-$_GET['user_id'] = $user['ID'];
-$_GET['user_data'] = $user; }
+$GLOBALS['user_id'] = $user['ID'];
+$GLOBALS['user_data'] = $user; }
 
 foreach ($add_message_fields as $field) {
 if (is_admin()) { $message[$field] = (isset($original_message[$field]) ? stripslashes(do_shortcode($original_message[$field])) : ''); }
@@ -191,7 +191,7 @@ else { $message[$field] = contact_form_data($field); } }
 
 if (!is_admin()) {
 $form_id = $message['form_id'];
-if (in_array('message_confirmation_email_sent', $_GET['contact_form'.$form_id.'_fields'])) {
+if (in_array('message_confirmation_email_sent', $GLOBALS['contact_form'.$form_id.'_fields'])) {
 $message['message_confirmation_email_sent'] = (isset($_POST['message_confirmation_email_sent']) ? 'yes' : 'no'); } }
 
 $upload_dir = wp_upload_dir();
@@ -215,7 +215,7 @@ if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender.(((st
 
 if ((function_exists('referrer_data')) && ($message['referrer'] != '') && (!strstr($message['referrer'], '@'))) {
 if (affiliation_data('message_notification_email_disabled') != 'yes') {
-$_GET['referrer'] = $message['referrer'];
+$GLOBALS['referrer'] = $message['referrer'];
 if (referrer_data('status') == 'active') {
 $sent = referrer_data('message_notification_email_sent');
 if (($sent == 'yes') || (($sent == 'if commission') && ($message['commission_amount'] > 0))) {

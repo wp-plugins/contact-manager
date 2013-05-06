@@ -58,8 +58,8 @@ foreach ($keywords as $keyword) { if ($keyword != '') { if ($keyword != '') { $k
 $_POST['keywords'] = substr($keywords_list, 0, -2);
 $_POST['email_address'] = format_email_address($_POST['email_address']);
 $_POST['form_id'] = (int) $_POST['form_id'];
-$_GET['contact_form_id'] = $_POST['form_id'];
-if ($_POST['form_id'] > 0) { $_GET['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_POST['form_id'], OBJECT); }
+$GLOBALS['contact_form_id'] = $_POST['form_id'];
+if ($_POST['form_id'] > 0) { $GLOBALS['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_POST['form_id'], OBJECT); }
 $custom_fields = (array) $back_office_options['message_page_custom_fields'];
 $item_custom_fields = array();
 foreach ($custom_fields as $key => $value) {
@@ -155,11 +155,11 @@ $_POST['date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); }
 if (!isset($_GET['id'])) {
 if ($_POST['referring_url'] == '') { $_POST['referring_url'] = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''); }
 if (isset($_POST['update_fields'])) {
-foreach ($_POST as $key => $value) { $_GET['message_data'][$key] = $value; }
-$_GET['message_data']['id'] = '{message id}';
+foreach ($_POST as $key => $value) { $GLOBALS['message_data'][$key] = $value; }
+$GLOBALS['message_data']['id'] = '{message id}';
 if ($_POST['referrer'] != '') {
-$_GET['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
-$_GET['referrer_data'] = $_GET['affiliate_data']; }
+$GLOBALS['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
+$GLOBALS['referrer_data'] = $GLOBALS['affiliate_data']; }
 foreach ($add_message_fields as $field) { $_POST[$field] = str_replace('{message id}', '[message id]', contact_form_data($field)); }
 foreach (array('receiver', 'subject') as $field) { if ($_POST[$field] != '') { $_POST['message_notification_email_'.$field] = $_POST[$field]; } } }
 else {
@@ -191,8 +191,8 @@ if ($messages_count < 0) { $messages_count = 0; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = ".$messages_count." WHERE id = ".$message_data->form_id); }
 
 if ($_POST['form_id'] > 0) {
-$displays_count = $_GET['contact_form_data']['displays_count'];
-$messages_count = $_GET['contact_form_data']['messages_count'] + 1;
+$displays_count = $GLOBALS['contact_form_data']['displays_count'];
+$messages_count = $GLOBALS['contact_form_data']['messages_count'] + 1;
 if ($displays_count < $messages_count) { $displays_count = $messages_count; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 	displays_count = ".$displays_count.",
@@ -201,7 +201,7 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 if (isset($_GET['id'])) {
 $message_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id'], OBJECT);
 if ($message_data) {
-$_GET['message_data'] = (array) $message_data;
+$GLOBALS['message_data'] = (array) $message_data;
 foreach ($message_data as $key => $value) { $_POST[$key] = $value; }
 foreach (array('subject', 'content') as $field) { $_POST[$field] = str_replace(array('&#91;', '&#93;'), array('[', ']'), $_POST[$field]); } }
 elseif (!headers_sent()) { header('Location: admin.php?page=contact-manager-messages'); exit(); }
