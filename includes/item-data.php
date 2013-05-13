@@ -8,7 +8,7 @@ $GLOBALS[$type.'_data'] = (array) (isset($GLOBALS[$type.'_data']) ? $GLOBALS[$ty
 if ((isset($GLOBALS[$type.'_id'])) && ((!isset($GLOBALS[$type.'_data']['id'])) || ($GLOBALS[$type.'_data']['id'] != $GLOBALS[$type.'_id']))) {
 $n = $GLOBALS[$type.'_id']; $GLOBALS[$type.$n.'_data'] = (array) (isset($GLOBALS[$type.$n.'_data']) ? $GLOBALS[$type.$n.'_data'] : array());
 if ((isset($GLOBALS[$type.$n.'_data']['id'])) && ($GLOBALS[$type.$n.'_data']['id'] == $GLOBALS[$type.'_id'])) { $GLOBALS[$type.'_data'] = $GLOBALS[$type.$n.'_data']; }
-else { $GLOBALS[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = ".$GLOBALS[$type.'_id'], OBJECT); } }
+elseif ($GLOBALS[$type.'_id'] > 0) { $GLOBALS[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = ".$GLOBALS[$type.'_id'], OBJECT); } }
 if (!is_admin()) {
 if (($type == 'message') && (!isset($GLOBALS[$type.'_data']['email_address'])) && (!isset($GLOBALS[$type.'_searched_by_ip_address']))) {
 $GLOBALS[$type.'_searched_by_ip_address'] = 'yes';
@@ -55,5 +55,12 @@ if ($data == '') { $data = $default; }
 $data = contact_format_data($field, $data);
 $data = contact_filter_data($filter, $data);
 $data = contact_decimals_data($decimals, $data);
+
+if (($default == '') && (function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
+if ((($attribute == 'category') || ($type == 'contact_form')) && ((!isset($item_data['id'])) || ($item_data['id'] == 0))) {
+load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
+$data = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'),
+$attribute, '['.str_replace('_', '-', str_replace('_category', '', $type)).']'); } }
+
 foreach (array($type.'_id', $type.'_data') as $key) {
 if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } }

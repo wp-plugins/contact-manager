@@ -143,7 +143,7 @@ $GLOBALS['contact_total_limit'] = $limit[$n - 1];
 $GLOBALS['contact_total_number'] = $data;
 $GLOBALS['contact_total_remaining_number'] = $total_remaining_number;
 
-$content[$k] = (isset($content[$k]) ? do_shortcode($content[$k]) : '');
+$content = (isset($content[$k]) ? do_shortcode($content[$k]) : '');
 
 foreach ($tags as $tag) {
 $_tag = str_replace('-', '_', format_nice_name($tag));

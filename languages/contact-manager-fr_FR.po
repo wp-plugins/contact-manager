@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.6\n"
+"Project-Id-Version: Contact Manager 5.6.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2013-05-05 12:21+0100\n"
+"PO-Revision-Date: 2013-05-12 23:48+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -2552,4 +2552,7 @@ msgstr "Uniquement sur les pages d'article seul"
 
 msgid "Maximum quantity of forms displayed per page"
 msgstr "Quantité maximale de formulaires affichés par page"
+
+msgid "You did not complete correctly the %1$s attribute of the %2$s shortcode."
+msgstr "Vous n'avez pas complété correctement l'attribut %1$s du shortcode %2$s."
 

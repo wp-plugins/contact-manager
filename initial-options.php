@@ -65,7 +65,7 @@ $initial_options[''] = array(
 'unfilled_fields_message' => __('Please fill out the required fields.', 'contact-manager'),
 'version' => CONTACT_MANAGER_VERSION);
 
-include dirname(__FILE__).'/libraries/captchas.php';
+include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
 $initial_options['captchas_numbers'] = $captchas_numbers;
 
 
@@ -155,7 +155,7 @@ $variables = array(
 foreach ($variables as $variable) { if (isset($$variable)) { $original[$variable] = $$variable; unset($$variable); } }
 
 
-include dirname(__FILE__).'/tables.php';
+include CONTACT_MANAGER_PATH.'/tables.php';
 foreach ($tables as $table_slug => $table) {
 switch ($table_slug) {
 case 'forms': $first_columns = array(
@@ -206,7 +206,7 @@ $initial_options['statistics'] = array(
 'tables' => array('messages', 'forms', 'forms_categories'));
 
 
-include dirname(__FILE__).'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $links = array();
 foreach ($admin_links as $key => $value) { $links[] = $key; }
 $displayed_links = array();

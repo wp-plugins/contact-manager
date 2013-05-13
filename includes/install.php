@@ -3,7 +3,7 @@ include_once ABSPATH.'wp-admin/includes/upgrade.php';
 $charset_collate = '';
 if (!empty($wpdb->charset)) { $charset_collate .= 'DEFAULT CHARACTER SET '.$wpdb->charset; }
 if (!empty($wpdb->collate)) { $charset_collate .= ' COLLATE '.$wpdb->collate; }
-include dirname(__FILE__).'/tables.php';
+include CONTACT_MANAGER_PATH.'/tables.php';
 foreach ($tables as $table_slug => $table) {
 $list = ''; foreach ($table as $key => $value) { $list .= "
 ".$key." ".$value['type']." ".($key == "id" ? "auto_increment" : "NOT NULL").","; }
@@ -13,7 +13,7 @@ foreach ($table as $key => $value) { if (isset($value['default'])) {
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET ".$key." = '".$value['default']."' WHERE ".$key." = ''"); } } }
 
 load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
-include dirname(__FILE__).'/initial-options.php';
+include CONTACT_MANAGER_PATH.'/initial-options.php';
 foreach ($initial_options as $key => $value) {
 $_key = ($key == '' ? '' : '_'.$key);
 if (is_array($value)) {

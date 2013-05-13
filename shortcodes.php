@@ -25,11 +25,11 @@ return $string; }
 
 function contact_counter($atts, $content) {
 $type = '';
-include dirname(__FILE__).'/counter.php';
-return $content[$k]; }
+include CONTACT_MANAGER_PATH.'/includes/counter.php';
+return $content; }
 
 
 function contact_form_counter($atts, $content) {
 $type = 'contact_form';
-include dirname(__FILE__).'/counter.php';
-return $content[$k]; }
+include CONTACT_MANAGER_PATH.'/includes/counter.php';
+return $content; }

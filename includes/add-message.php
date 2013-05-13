@@ -1,6 +1,6 @@
 <?php if ((isset($message)) && (is_array($message))) {
 global $wpdb;
-foreach (array('admin-pages.php', 'tables.php') as $file) { include dirname(__FILE__).'/'.$file; }
+foreach (array('admin-pages.php', 'tables.php') as $file) { include CONTACT_MANAGER_PATH.'/'.$file; }
 foreach ($tables['messages'] as $key => $value) { if (!isset($message[$key])) { $message[$key] = ''; } }
 $GLOBALS['contact_form_id'] = (int) $message['form_id'];
 if (function_exists('add_affiliate')) {
@@ -59,11 +59,11 @@ $n = $messages_quantity - $maximum_messages_quantity;
 if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id']." ORDER BY date ASC LIMIT $n"); } } } }
 $message['custom_fields'] = $original_custom_fields;
 $GLOBALS['message_data'] = $message;
-$original_message = $message;
 if ($message['referrer'] != '') {
 $GLOBALS['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$message['referrer']."'", OBJECT);
 $GLOBALS['referrer_data'] = $GLOBALS['affiliate_data']; }
 foreach ($add_message_fields as $field) {
+$original[$field] = (isset($message[$field]) ? $message[$field] : '');
 if (is_admin()) { $message[$field] = (isset($message[$field]) ? stripslashes(do_shortcode($message[$field])) : ''); }
 else { $message[$field] = contact_form_data($field); } }
 
@@ -135,9 +135,8 @@ if ($GLOBALS['member_id'] > 0) {
 if ($message['sender_member_category_id'] > 0) {
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."membership_manager_members SET category_id = ".$message['sender_member_category_id']." WHERE id = ".$GLOBALS['member_id']); }
 if (function_exists('update_member_custom_fields')) { update_member_custom_fields($GLOBALS['member_id'], $message['custom_fields']); }
-update_member_members_areas($GLOBALS['member_id'], $message['sender_members_areas'], 'add');
-if (function_exists('update_member_members_areas_modifications')) {
-update_member_members_areas_modifications($GLOBALS['member_id'], $message['sender_members_areas_modifications'], 'add'); } }
+update_member_members_areas_modifications($GLOBALS['member_id'], $message['sender_members_areas_modifications'], 'add',
+update_member_members_areas($GLOBALS['member_id'], $message['sender_members_areas'], 'add')); }
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $member = $affiliate; }
 elseif (isset($client)) { $member = $client; }
@@ -186,7 +185,7 @@ $GLOBALS['user_id'] = $user['ID'];
 $GLOBALS['user_data'] = $user; }
 
 foreach ($add_message_fields as $field) {
-if (is_admin()) { $message[$field] = (isset($original_message[$field]) ? stripslashes(do_shortcode($original_message[$field])) : ''); }
+if (is_admin()) { $message[$field] = stripslashes(do_shortcode($original[$field])); }
 else { $message[$field] = contact_form_data($field); } }
 
 if (!is_admin()) {
@@ -224,7 +223,7 @@ $$field = str_replace(array('&#91;', '&#93;'), array('[', ']'), affiliation_data
 wp_mail($receiver, $subject, $body, 'From: '.$sender.(((strstr($body, '</')) || (strstr($body, '/>'))) ? "\r\nContent-type: text/html" : "")); } } } }
 
 if (($message['sender_subscribed_to_autoresponder'] == 'yes') && ($message['email_address'] != '')) {
-if (!function_exists('subscribe_to_autoresponder')) { include_once dirname(__FILE__).'/libraries/autoresponders-functions.php'; }
+if (!function_exists('subscribe_to_autoresponder')) { include_once CONTACT_MANAGER_PATH.'/libraries/autoresponders-functions.php'; }
 subscribe_to_autoresponder($message['sender_autoresponder'], $message['sender_autoresponder_list'], $message); }
 
 if ($message['message_custom_instructions_executed'] == 'yes') {

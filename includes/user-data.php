@@ -4,7 +4,7 @@ if ((!isset($GLOBALS['user_id'])) && (function_exists('is_user_logged_in')) && (
 if ((isset($GLOBALS['user_id'])) && ((!isset($GLOBALS['user_data']['ID'])) || ($GLOBALS['user_data']['ID'] != $GLOBALS['user_id']))) {
 $n = $GLOBALS['user_id']; $GLOBALS['user'.$n.'_data'] = (array) (isset($GLOBALS['user'.$n.'_data']) ? $GLOBALS['user'.$n.'_data'] : array());
 if ((isset($GLOBALS['user'.$n.'_data']['ID'])) && ($GLOBALS['user'.$n.'_data']['ID'] == $GLOBALS['user_id'])) { $GLOBALS['user_data'] = $GLOBALS['user'.$n.'_data']; }
-else { $GLOBALS['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$GLOBALS['user_id'], OBJECT); } }
+elseif ($GLOBALS['user_id'] > 0) { $GLOBALS['user_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE ID = ".$GLOBALS['user_id'], OBJECT); } }
 $user_data = $GLOBALS['user_data'];
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; }
 else {
@@ -29,7 +29,7 @@ $user_data = $GLOBALS['user'.$id.'_data'];
 $GLOBALS['user_id'] = $id; $GLOBALS['user_data'] = $user_data; }
 $data = (isset($user_data[$field]) ? $user_data[$field] : '');
 switch ($field) {
-case 'first_name': case 'last_name': if (($data == '') && (isset($GLOBALS['user_id']))) {
+case 'first_name': case 'last_name': if (($data == '') && (isset($GLOBALS['user_id'])) && ($GLOBALS['user_id'] > 0)) {
 $n = $GLOBALS['user_id']; $GLOBALS['user'.$n.'_data'] = (array) (isset($GLOBALS['user'.$n.'_data']) ? $GLOBALS['user'.$n.'_data'] : array());
 if (isset($GLOBALS['user'.$n.'_data'][$field])) { $data = $GLOBALS['user'.$n.'_data'][$field]; }
 else {
