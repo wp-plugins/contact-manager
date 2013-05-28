@@ -227,8 +227,12 @@ echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id
 $item_custom_fields = (array) unserialize(htmlspecialchars_decode($_POST['custom_fields']));
 foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
 asort($custom_fields); $content = ''; foreach ($custom_fields as $key => $value) {
+$field_value = (isset($item_custom_fields[$key]) ? $item_custom_fields[$key] : '');
+if ((strlen($field_value) > 75) || (strstr($field_value, '
+'))) { $rows = 3; } else { $rows = 1; }
 $content .= '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="custom_field_'.$key.'">'.htmlspecialchars($value).'</label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_field_'.$key.'" id="custom_field_'.$key.'" rows="1" cols="75">'.htmlspecialchars((isset($item_custom_fields[$key]) ? $item_custom_fields[$key] : '')).'</textarea></td></tr>'; }
+<td><textarea style="padding: 0 0.25em; '.($rows == 1 ? 'height: 1.75em; ' : '').'width: 75%;" name="custom_field_'.$key.'" id="custom_field_'.$key.'" rows="'.$rows.'" cols="75">'.htmlspecialchars($field_value).'</textarea>'
+.(((!strstr($field_value, ' ')) && (substr($field_value, 0, 4) == 'http')) ? ' <a style="vertical-align: 25%;" href="'.htmlspecialchars($field_value).'">'.__('Link', 'contact-manager').'</a>' : '').'</td></tr>'; }
 echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td>'.__('You have no custom field currently.', 'contact-manager').'</td></tr>'; } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr>
 </tbody></table>

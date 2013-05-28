@@ -111,7 +111,8 @@ $j = 0; while (($j == 0) || ($i < 5)) {
 $i = $i + 1; $j = $j + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
 <td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50"></textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50"></textarea><br />
+<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50"></textarea>
+<input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="add_'.$page_slug.'_page_custom_field" value="'.__('Add').'" /><br />
 <span class="description">'.__('Letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; } ?>
 </tbody></table>
 </div>

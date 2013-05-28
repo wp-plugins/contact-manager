@@ -176,5 +176,8 @@ echo "if (anchor == '#".$key."') { document.getElementById('".$key."-module').st
 if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
 echo "if (anchor == '#".$module_key."') {
 document.getElementById('".$key."-module').style.display = 'block';
-document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } } ?>
+document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } }
+foreach ($modules as $key => $value) {
+if ((isset($value['custom-fields'])) && (isset($_POST['add_'.$key.'_page_custom_field']))) {
+echo 'window.location = \'#'.str_replace('_', '-', $key).'-page-custom-fields-module\';'; } } ?>
 </script>
