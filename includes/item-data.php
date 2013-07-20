@@ -56,7 +56,7 @@ $data = contact_format_data($field, $data);
 $data = contact_filter_data($filter, $data);
 $data = contact_decimals_data($decimals, $data);
 
-if (($default == '') && (function_exists('wp_get_current_user')) && (function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
+if (($default == '') && (!is_admin()) && (function_exists('wp_get_current_user')) && (function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
 if ((($attribute == 'category') || ($type == 'contact_form')) && ((!isset($item_data['id'])) || ($item_data['id'] == 0))) {
 load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 $data = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'),
