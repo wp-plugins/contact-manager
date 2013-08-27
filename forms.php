@@ -67,9 +67,13 @@ $required_fields_js .= '
 '.(in_array($field, $GLOBALS[$prefix.'radio_fields']) ? 'var '.$prefix.$field.'_checked = false;
 for (i = 0; i < form.'.$prefix.$field.'.length; i++) { if (form.'.$prefix.$field.'[i].checked == true) { '.$prefix.$field.'_checked = true; } }
 if (!'.$prefix.$field.'_checked)' : (in_array($field, $GLOBALS[$prefix.'checkbox_fields']) ? 'if (form.'.$prefix.$field.'.checked == false)' : 'if (form.'.$prefix.$field.'.value == "")')).' {
-if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) { document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = "'.$GLOBALS[$prefix.'unfilled_field_message'].'"; }
+if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) {
+document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").style.display = "inline";
+document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = "'.$GLOBALS[$prefix.'unfilled_field_message'].'"; }
 '.(in_array($field, $GLOBALS[$prefix.'radio_fields']) ? '' : 'if (!error) { form.'.$prefix.$field.'.focus(); } ').'error = true; }
-else if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) { document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = ""; }'; }
+else if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) {
+document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").style.display = "none";
+document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = ""; }'; }
 $form_js = '
 <script type="text/javascript">
 '.($focus == 'yes' ? (isset($GLOBALS['form_focus']) ? str_replace($canonical_prefix, $prefix, $GLOBALS['form_focus']).$GLOBALS['form_focus'] : '') : '').'
@@ -80,9 +84,13 @@ var error = false;
 '.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? '
 if (form.'.$prefix.'email_address.value != "") {
 if ((form.'.$prefix.'email_address.value.indexOf("@") == -1) || (form.'.$prefix.'email_address.value.indexOf(".") == -1)) {
-if (document.getElementById("'.$prefix.'email_address_error")) { document.getElementById("'.$prefix.'email_address_error").innerHTML = "'.$GLOBALS[$prefix.'invalid_email_address_message'].'"; }
+if (document.getElementById("'.$prefix.'email_address_error")) {
+document.getElementById("'.$prefix.'email_address_error").style.display = "inline";
+document.getElementById("'.$prefix.'email_address_error").innerHTML = "'.$GLOBALS[$prefix.'invalid_email_address_message'].'"; }
 if (!error) { form.'.$prefix.'email_address.focus(); } error = true; }
-else if (document.getElementById("'.$prefix.'email_address_error")) { document.getElementById("'.$prefix.'email_address_error").innerHTML = ""; } }' : '').'
+else if (document.getElementById("'.$prefix.'email_address_error")) {
+document.getElementById("'.$prefix.'email_address_error").style.display = "none";
+document.getElementById("'.$prefix.'email_address_error").innerHTML = ""; } }' : '').'
 return !error; }
 </script>';
 
