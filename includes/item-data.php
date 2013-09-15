@@ -16,8 +16,9 @@ $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$tabl
 if ($result) { $GLOBALS[$type.'_data'] = (array) $result; } }
 if (isset($GLOBALS[$type.'_data']['id'])) { $n = $GLOBALS[$type.'_data']['id']; $GLOBALS[$type.$n.'_data'] = $GLOBALS[$type.'_data']; } }
 $item_data = $GLOBALS[$type.'_data'];
-if (is_string($atts)) { $field = $atts; $decimals = ''; $default = ''; $filter = ''; $id = 0; $part = 0; }
+if (is_string($atts)) { $is_array = false; $field = $atts; $decimals = ''; $default = ''; $filter = ''; $id = 0; $part = 0; }
 else {
+$is_array = true;
 $field = (isset($atts[0]) ? $atts[0] : '');
 foreach (array('decimals', 'default', 'filter') as $key) {
 $$key = (isset($atts[$key]) ? $atts[$key] : '');
@@ -56,7 +57,7 @@ $data = contact_format_data($field, $data);
 $data = contact_filter_data($filter, $data);
 $data = contact_decimals_data($decimals, $data);
 
-if (($default == '') && (!is_admin()) && (function_exists('wp_get_current_user')) && (function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
+if (($is_array) && ($default == '') && (!is_admin()) && (function_exists('wp_get_current_user')) && (function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
 if ((($attribute == 'category') || ($type == 'contact_form')) && ((!isset($item_data['id'])) || ($item_data['id'] == 0))) {
 load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 $data = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'),

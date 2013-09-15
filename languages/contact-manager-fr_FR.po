@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.6.3\n"
+"Project-Id-Version: Contact Manager 5.6.4\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2013-08-27 02:45+0100\n"
+"PO-Revision-Date: 2013-09-14 09:23+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -613,16 +613,16 @@ msgid "Access"
 msgstr "Accès"
 
 #: back-office-page.php:71
-msgid "Minimum role to access the back office"
-msgstr "Rôle minimal nécessaire pour accéder au back office"
+msgid "Minimum role to access the interface of Contact Manager"
+msgstr "Rôle minimal nécessaire pour accéder à l'interface de Contact Manager"
 
 #: back-office-page.php:72
 msgid "Management"
 msgstr "Gestion"
 
 #: back-office-page.php:76
-msgid "Minimum role to change options and add, edit or delete items"
-msgstr "Rôle minimal nécessaire pour modifier les options et ajouter, modifier ou supprimer des éléments"
+msgid "Minimum role to change options and add, edit or delete items of Contact Manager"
+msgstr "Rôle minimal nécessaire pour modifier les options et ajouter, modifier ou supprimer des éléments de Contact Manager"
 
 #: back-office-page.php:87
 msgid "Use a custom icon"
@@ -932,8 +932,8 @@ msgid "Download URL"
 msgstr "URL de téléchargement"
 
 #: form-page.php:206
-msgid "You can specify several URLs."
-msgstr "Vous pouvez spécifier plusieurs URLs."
+msgid "You can enter several URLs."
+msgstr "Vous pouvez entrer plusieurs URLs."
 
 #: form-page.php:206
 #: form-page.php:210
@@ -1388,8 +1388,8 @@ msgstr "Espaces membres"
 #: form-page.php:519
 #: message-page.php:525
 #: options-page.php:443
-msgid "Separate the IDs of the members areas with commas."
-msgstr "Séparez les IDs des espaces membres par des virgules."
+msgid "You can enter several members areas IDs. Separate them with commas."
+msgstr "Vous pouvez entrer plusieurs IDs d'espaces membres. Séparez-les par des virgules."
 
 #: form-page.php:564
 #: message-page.php:561
@@ -2555,4 +2555,10 @@ msgstr "Quantité maximale de formulaires affichés par page"
 
 msgid "You did not complete correctly the %1$s attribute of the %2$s shortcode."
 msgstr "Vous n'avez pas complété correctement l'attribut %1$s du shortcode %2$s."
+
+msgid "Icon displayed in the admin menu of WordPress"
+msgstr "Icône affichée dans le menu d'administration de WordPress"
+
+msgid "You can enter several email addresses. Separate them with commas."
+msgstr "Vous pouvez entrer plusieurs adresses e-mail. Séparez-les par des virgules."
 

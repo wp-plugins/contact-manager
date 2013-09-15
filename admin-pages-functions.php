@@ -105,7 +105,8 @@ asort($custom_fields); $i = 0; foreach ($custom_fields as $key => $value) {
 $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
 <td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50">'.htmlspecialchars($value).'</textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50">'.str_replace('_', '-', $key).'</textarea><br />
+<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50">'.str_replace('_', '-', $key).'</textarea>
+<input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="delete_'.$page_slug.'_page_custom_field'.$i.'" value="'.__('Delete').'" /><br />
 <span class="description">'.__('Letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; }
 $j = 0; while (($j == 0) || ($i < 5)) {
 $i = $i + 1; $j = $j + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
@@ -175,6 +176,18 @@ return $roles; }
 function update_contact_manager_back_office($back_office_options, $page) {
 include 'admin-pages.php';
 if ((!isset($_POST[$page.'_page_summary_displayed'])) || ($_POST[$page.'_page_summary_displayed'] != 'yes')) { $_POST[$page.'_page_summary_displayed'] = 'no'; }
+if ((strstr($_GET['page'], 'back-office')) && (isset($back_office_options[$page.'_page_custom_fields']))) {
+$custom_fields = (array) $back_office_options[$page.'_page_custom_fields'];
+$_POST[$page.'_page_custom_fields'] = array();
+for ($i = 1; $i <= max(5, count($custom_fields) + 1); $i++) {
+if (isset($_POST['delete_'.$page.'_page_custom_field'.$i])) { $_POST['delete_'.$page.'_page_custom_field'] = 'yes'; }
+elseif ((isset($_POST[$page.'_page_custom_field_name'.$i])) && ($_POST[$page.'_page_custom_field_name'.$i] != '')) {
+if ((!isset($_POST[$page.'_page_custom_field_key'.$i])) || ($_POST[$page.'_page_custom_field_key'.$i] == '')) {
+$_POST[$page.'_page_custom_field_key'.$i] = $_POST[$page.'_page_custom_field_name'.$i]; }
+$_POST[$page.'_page_custom_field_key'.$i] = str_replace('-', '_', format_nice_name($_POST[$page.'_page_custom_field_key'.$i]));
+if ($_POST[$page.'_page_custom_field_key'.$i] != '') {
+$_POST[$page.'_page_custom_fields'][$_POST[$page.'_page_custom_field_key'.$i]] = $_POST[$page.'_page_custom_field_name'.$i];
+if (!isset($custom_fields[$_POST[$page.'_page_custom_field_key'.$i]])) { $_POST[$page.'_page_custom_fields_module_displayed'] = 'yes'; } } } } }
 $_POST[$page.'_page_undisplayed_modules'] = array();
 foreach ($modules[$page] as $key => $value) {
 if (((!isset($_POST[$page.'_page_'.str_replace('-', '_', $key).'_module_displayed'])) || ($_POST[$page.'_page_'.str_replace('-', '_', $key).'_module_displayed'] != 'yes'))
@@ -182,16 +195,6 @@ if (((!isset($_POST[$page.'_page_'.str_replace('-', '_', $key).'_module_displaye
 if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
 if (((!isset($_POST[$page.'_page_'.str_replace('-', '_', $module_key).'_module_displayed'])) || ($_POST[$page.'_page_'.str_replace('-', '_', $module_key).'_module_displayed'] != 'yes'))
  && ((!isset($module_value['required'])) || ($module_value['required'] != 'yes'))) { $_POST[$page.'_page_undisplayed_modules'][] = $module_key; } } } }
-if ((strstr($_GET['page'], 'back-office')) && (isset($back_office_options[$page.'_page_custom_fields']))) {
-$custom_fields = (array) $back_office_options[$page.'_page_custom_fields'];
-$_POST[$page.'_page_custom_fields'] = array();
-for ($i = 1; $i <= max(5, count($custom_fields) + 1); $i++) {
-if ((isset($_POST[$page.'_page_custom_field_name'.$i])) && ($_POST[$page.'_page_custom_field_name'.$i] != '')) {
-if ((!isset($_POST[$page.'_page_custom_field_key'.$i])) || ($_POST[$page.'_page_custom_field_key'.$i] == '')) {
-$_POST[$page.'_page_custom_field_key'.$i] = $_POST[$page.'_page_custom_field_name'.$i]; }
-$_POST[$page.'_page_custom_field_key'.$i] = str_replace('-', '_', format_nice_name($_POST[$page.'_page_custom_field_key'.$i]));
-if ($_POST[$page.'_page_custom_field_key'.$i] != '') {
-$_POST[$page.'_page_custom_fields'][$_POST[$page.'_page_custom_field_key'.$i]] = $_POST[$page.'_page_custom_field_name'.$i]; } } } }
 if (!strstr($_GET['page'], 'back-office')) {
 foreach (array('custom_fields', 'summary_displayed', 'undisplayed_modules') as $option) {
 if (isset($_POST[$page.'_page_'.$option])) { $back_office_options[$page.'_page_'.$option] = $_POST[$page.'_page_'.$option]; } }
@@ -237,7 +240,7 @@ HEADER_FORMAT : 'mmmm yyyy'
 
 function contact_manager_format_members_areas_modifications($content) {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
-$array = explode(',', $content);
+$array = explode(',', strtoupper($content));
 $modifications = array();
 foreach ($array as $string) {
 $string = explode('(', trim(str_replace(')', '', $string)));
@@ -248,7 +251,13 @@ $d = preg_split('#[^0-9]#', trim($string[1]), 0, PREG_SPLIT_NO_EMPTY);
 for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : 0); }
 if ((strstr($string[1], '/')) || (strstr($string[1], '-'))) {
 $date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])); }
-else { $date = $d[0].':'.$d[1].':'.$d[2].':'.$d[3]; }
+else {
+if (strstr($string[1], 'Y')) { $date = $d[0].'Y'; }
+elseif (strstr($string[1], 'M')) { $date = $d[0].'M'; }
+elseif (strstr($string[1], 'W')) { $date = $d[0].'W'; }
+else {
+$date = $d[0].':'.$d[1].':'.$d[2].':'.$d[3];
+for ($i = 0; $i < 3; $i++) { if ($d[3 - $i] == 0) { $date = substr($date, 0, -2); } } } }
 $modifications[$id] = array('sign' => $sign, 'date' => $date); } }
 $members_areas = array();
 foreach ($modifications as $key => $value) { $members_areas[] = $key; }

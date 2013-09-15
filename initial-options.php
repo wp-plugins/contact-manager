@@ -269,7 +269,6 @@ $initial_options['back_office'] = array(
 'message_page_undisplayed_modules' => array(
 	'affiliation',
 	'autoresponders',
-	'custom-fields',
 	'custom-instructions',
 	'membership',
 	'registration-as-a-client',
@@ -284,7 +283,6 @@ $initial_options['back_office'] = array(
 	'automatic-display',
 	'autoresponders',
 	'autoresponders-integration',
-	'captcha',
 	'custom-instructions',
 	'membership',
 	'messages-registration',

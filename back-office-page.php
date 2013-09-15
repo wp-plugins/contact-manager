@@ -69,12 +69,12 @@ $undisplayed_modules = (array) $options['back_office_page_undisplayed_modules'];
 <td><select name="view_minimum_role" id="view_minimum_role">
 <?php foreach ($roles as $key => $value) {
 echo '<option value="'.$key.'"'.($options['minimum_roles']['view'] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } ?>
-</select> <span class="description"><?php _e('Minimum role to access the back office', 'contact-manager'); ?></span></td></tr>
+</select> <span class="description"><?php _e('Minimum role to access the interface of Contact Manager', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="manage_minimum_role"><?php _e('Management', 'contact-manager'); ?></label></strong></th>
 <td><select name="manage_minimum_role" id="manage_minimum_role">
 <?php foreach ($roles as $key => $value) {
 echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } ?>
-</select> <span class="description"><?php _e('Minimum role to change options and add, edit or delete items', 'contact-manager'); ?></span></td></tr>
+</select> <span class="description"><?php _e('Minimum role to change options and add, edit or delete items of Contact Manager', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
@@ -85,7 +85,8 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><label><input type="checkbox" name="custom_icon_used" id="custom_icon_used" value="yes"<?php if ($options['custom_icon_used'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Use a custom icon', 'contact-manager'); ?></label></td></tr>
+<td><label><input type="checkbox" name="custom_icon_used" id="custom_icon_used" value="yes"<?php if ($options['custom_icon_used'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Use a custom icon', 'contact-manager'); ?></label>
+ <span class="description"><?php _e('Icon displayed in the admin menu of WordPress', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="custom_icon_url"><?php _e('Icon URL', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_icon_url" id="custom_icon_url" rows="1" cols="75"><?php echo $options['custom_icon_url']; ?></textarea> 
 <a style="vertical-align: 25%;" href="<?php echo htmlspecialchars(format_url(do_shortcode($options['custom_icon_url']))); ?>"><?php _e('Link', 'contact-manager'); ?></a></td></tr>
@@ -178,6 +179,6 @@ echo "if (anchor == '#".$module_key."') {
 document.getElementById('".$key."-module').style.display = 'block';
 document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } }
 foreach ($modules as $key => $value) {
-if ((isset($value['custom-fields'])) && (isset($_POST['add_'.$key.'_page_custom_field']))) {
+if ((isset($value['custom-fields'])) && ((isset($_POST['add_'.$key.'_page_custom_field'])) || (isset($_POST['delete_'.$key.'_page_custom_field'])))) {
 echo 'window.location = \'#'.str_replace('_', '-', $key).'-page-custom-fields-module\';'; } } ?>
 </script>
