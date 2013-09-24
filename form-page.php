@@ -75,7 +75,7 @@ $_POST['date'] = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET);
 $_POST['date_utc'] = date('Y-m-d H:i:s'); }
 else {
 $d = preg_split('#[^0-9]#', $_POST['date'], 0, PREG_SPLIT_NO_EMPTY);
-for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : 0); }
+for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['date'] = date('Y-m-d H:i:s', $time);
 $_POST['date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); }
@@ -294,6 +294,8 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 <span class="description"><a href="http://www.kleor-editions.com/contact-manager/#forms"><?php _e('How to display a form?', 'contact-manager'); ?></a><br />
 <a href="http://www.kleor-editions.com/contact-manager/#forms-creation"><?php _e('How to create a form?', 'contact-manager'); ?></a></span><br />
 <span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr>
 </tbody></table>
 <div id="error-messages-module"<?php if (in_array('error-messages', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="error-messages"><strong><?php echo $modules[$admin_page]['form']['modules']['error-messages']['name']; ?></strong></h4>
@@ -322,9 +324,10 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_reached_message"><?php _e('Maximum messages quantity reached', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="maximum_messages_quantity_reached_message" id="maximum_messages_quantity_reached_message" rows="1" cols="75"><?php echo $_POST['maximum_messages_quantity_reached_message']; ?></textarea><br />
 <span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr>
 </tbody></table>
 </div>
-<table class="form-table"><tbody><tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update') : __('Save')); ?>" /></td></tr></tbody></table>
 </div></div>
 
 <div class="postbox" id="messages-registration-module"<?php if (in_array('messages-registration', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -568,7 +571,7 @@ echo '<option value="'.$category->id.'"'.($_POST['sender_affiliate_category_id']
 <span class="description"><?php _e('You can enter several members areas IDs. Separate them with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas_modifications"><?php _e('Automatic modifications', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50"><?php echo $_POST['sender_members_areas_modifications']; ?></textarea>
-<span class="description"><?php _e('You can automatically modify the members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
+<span class="description"><?php _e('You can offer a temporary access, and automatically modify the members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
  <a href="http://www.kleor-editions.com/membership-manager/documentation/#members-areas-modifications"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."membership_manager_members_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>

@@ -140,6 +140,8 @@ $currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
 <td><textarea style="float: left; margin-right: 1em; width: 75%;" name="code" id="code" rows="15" cols="75"><?php echo htmlspecialchars(get_option('contact_manager_code')); ?></textarea>
 <span class="description"><a href="http://www.kleor-editions.com/contact-manager/#forms"><?php _e('How to display a form?', 'contact-manager'); ?></a><br />
 <a href="http://www.kleor-editions.com/contact-manager/#forms-creation"><?php _e('How to create a form?', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
 <div id="captcha-module"<?php if (in_array('captcha', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="captcha"><strong><?php echo $modules['options']['form']['modules']['captcha']['name']; ?></strong></h4>
@@ -170,6 +172,8 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="recaptcha_private_key" id="recaptcha_private_key" rows="1" cols="50"><?php echo $options['recaptcha_private_key']; ?></textarea> 
 <span class="description" style="vertical-align: 25%;"><a href="http://www.kleor-editions.com/contact-manager/#recaptcha"><?php _e('More informations', 'contact-manager'); ?></a>
 <?php if (function_exists('commerce_manager_admin_menu')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
 </div>
 <div id="error-messages-module"<?php if (in_array('error-messages', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -191,11 +195,10 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="unauthorized_extension_message" id="unauthorized_extension_message" rows="1" cols="75"><?php echo $options['unauthorized_extension_message']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_reached_message"><?php _e('Maximum messages quantity reached', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="maximum_messages_quantity_reached_message" id="maximum_messages_quantity_reached_message" rows="1" cols="75"><?php echo $options['maximum_messages_quantity_reached_message']; ?></textarea></td></tr>
-</tbody></table>
-</div>
-<table class="form-table"><tbody><tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
+</div>
 </div></div>
 
 <div class="postbox" id="messages-registration-module"<?php if (in_array('messages-registration', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -463,7 +466,7 @@ echo '<option value="'.$category->id.'"'.($options['sender_affiliate_category_id
 <span class="description"><?php _e('You can enter several members areas IDs. Separate them with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas_modifications"><?php _e('Automatic modifications', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50"><?php echo $options['sender_members_areas_modifications']; ?></textarea>
-<span class="description"><?php _e('You can automatically modify the members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
+<span class="description"><?php _e('You can offer a temporary access, and automatically modify the members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
  <a href="http://www.kleor-editions.com/membership-manager/documentation/#members-areas-modifications"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."membership_manager_members_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
@@ -530,6 +533,8 @@ echo '<option value="'.$role.'"'.($options['sender_user_role'] == $role ? ' sele
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="message_custom_instructions"><?php _e('PHP code', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="float: left; margin-right: 1em; width: 75%;" name="message_custom_instructions" id="message_custom_instructions" rows="10" cols="75"><?php echo htmlspecialchars(get_option('contact_manager_message_custom_instructions')); ?></textarea>
 <span class="description"><?php _e('You can add custom instructions that will be executed just after the sending of a message.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
 </div>
 <div id="message-removal-custom-instructions-module"<?php if (in_array('message-removal-custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -540,11 +545,10 @@ echo '<option value="'.$role.'"'.($options['sender_user_role'] == $role ? ' sele
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="message_removal_custom_instructions"><?php _e('PHP code', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="float: left; margin-right: 1em; width: 75%;" name="message_removal_custom_instructions" id="message_removal_custom_instructions" rows="10" cols="75"><?php echo htmlspecialchars(get_option('contact_manager_message_removal_custom_instructions')); ?></textarea>
 <span class="description"><?php _e('You can add custom instructions that will be executed just after the removal of a message.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
-</tbody></table>
-</div>
-<table class="form-table"><tbody><tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
+</div>
 </div></div>
 
 <div class="postbox" id="affiliation-module"<?php if (in_array('affiliation', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>

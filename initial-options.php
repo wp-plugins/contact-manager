@@ -75,31 +75,33 @@ $initial_options['code'] =
 
 <p><label><strong>'.__('Your first name:', 'contact-manager').'</strong>*<br />
 [input first-name size=30 required=yes]<br />
-[error style="color: red;" first-name]</label></p>
+[error first-name style="color: red;"]</label></p>
 
 <p><label><strong>'.__('Your last name:', 'contact-manager').'</strong><br />
 [input last-name size=30]<br />
-[error style="color: red;" last-name]</label></p>
+[error last-name style="color: red;"]</label></p>
 
 <p><label><strong>'.__('Your email address:', 'contact-manager').'</strong>*<br />
 [input email-address size=40 required=yes]<br />
-[error style="color: red;" email-address]</label></p>
+[error email-address style="color: red;"]</label></p>
 
 <p><label><strong>'.__('Your website:', 'contact-manager').'</strong><br />
 [input website-url size=40]<br />
-[error style="color: red;" website-url]</label></p>
+[error website-url style="color: red;"]</label></p>
 
 <p><label><strong>'.__('Subject of your message:', 'contact-manager').'</strong>*<br />
 [input subject size=60 required=yes]<br />
-[error style="color: red;" subject]</label></p>
+[error subject style="color: red;"]</label></p>
 
 <p><label><strong>'.__('Your message:', 'contact-manager').'</strong>*<br />
 [textarea content cols=60 rows=10 required=yes][/textarea]<br />
-[error style="color: red;" content]</label></p>
+[error content style="color: red;"]</label></p>
+
+<p><strong>'.__('File:', 'contact-manager').'</strong> [input attachment type=file]<br />[error attachment]</p>
 
 <p><label>[input message-confirmation-email-sent value=yes] '.__('Receive a copy of this message', 'contact-manager').'</label></p>
 
-<div>[input submit value="'.__('Send', 'contact-manager').'"]</div>';
+<div>[input submit formnovalidate=formnovalidate value="'.__('Send', 'contact-manager').'"]</div>';
 
 
 $initial_options['cron'] = array(
@@ -283,6 +285,7 @@ $initial_options['back_office'] = array(
 	'automatic-display',
 	'autoresponders',
 	'autoresponders-integration',
+	'captcha',
 	'custom-instructions',
 	'membership',
 	'messages-registration',

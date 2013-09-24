@@ -1,30 +1,13 @@
 <?php $form_id = $GLOBALS['contact_form_id'];
 $prefix = $GLOBALS['contact_form_prefix'];
-$attributes = array(
-'answer' => '',
+$atts = contact_shortcode_atts(array(
 'class' => 'captcha',
-'dir' => '',
-'onclick' => '',
-'ondblclick' => '',
-'onkeydown' => '',
-'onkeypress' => '',
-'onkeyup' => '',
-'onmousedown' => '',
-'onmousemove' => '',
-'onmouseout' => '',
-'onmouseover' => '',
-'onmouseup' => '',
-'question' => '',
-'style' => '',
 'theme' => contact_data('default_recaptcha_theme'),
-'title' => '',
-'type' => contact_data('default_captcha_type'),
-'xmlns' => '');
+'type' => contact_data('default_captcha_type')), $atts);
 if ((isset($atts['answer'])) && (isset($atts['question']))) { $atts['type'] = 'question'; }
 $markup = '';
-foreach ($attributes as $key => $value) {
-if ((!isset($atts[$key])) || ($atts[$key] == '')) { $atts[$key] = $attributes[$key]; }
-if ((is_string($key)) && ($key != 'answer') && ($key != 'question') && ($key != 'theme') && ($key != 'type') && ($atts[$key] != '')) { $markup .= ' '.$key.'="'.$atts[$key].'"'; } }
+foreach ($atts as $key => $value) {
+if ((!in_array($key, array('answer', 'question', 'theme', 'type'))) && (is_string($key)) && ($value != '')) { $c = (strstr($value, '"') ? "'" : '"'); $markup .= ' '.$key.'='.$c.$value.$c; } }
 if ($atts['type'] == 'recaptcha') {
 $GLOBALS[$prefix.'recaptcha_js'] = '<script type="text/javascript">var RecaptchaOptions = { lang: \''.strtolower(substr(WPLANG, 0, 2)).'\', theme: \''.$atts['theme'].'\' };</script>'."\n";
 if (!function_exists('_recaptcha_qsencode')) { include_once CONTACT_MANAGER_PATH.'/libraries/recaptchalib.php'; }
@@ -43,8 +26,8 @@ $n = mt_rand(0, 15);
 $string = $captchas_numbers[$m].' + '.$captchas_numbers[$n];
 $valid_captcha = $m + $n; break;
 case 'question':
-$string = $atts['question'];
-$valid_captcha = $atts['answer']; break;
+$string = (isset($atts['question']) ? $atts['question'] : '');
+$valid_captcha = (isset($atts['answer']) ? $atts['answer'] : ''); break;
 case 'reversed-string':
 include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
 $n = mt_rand(5, 12);

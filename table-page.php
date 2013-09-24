@@ -53,10 +53,16 @@ $limit = $options['limit'];
 $searchby = $options['searchby']; }
 
 if ($limit < 1) { $limit = 1; }
-$start_date = trim(mysql_real_escape_string(strip_tags($start_date)));
-if (strlen($start_date) == 10) { $start_date .= ' 00:00:00'; }
-$end_date = trim(mysql_real_escape_string(strip_tags($end_date)));
-if (strlen($end_date) == 10) { $end_date .= ' 23:59:59'; }
+if ($start_date == '') { $start_date = $options['start_date']; }
+else {
+$d = preg_split('#[^0-9]#', $start_date, 0, PREG_SPLIT_NO_EMPTY);
+for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
+$start_date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])); }
+if ($end_date == '') { $end_date = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET); }
+else {
+$d = preg_split('#[^0-9]#', $end_date, 0, PREG_SPLIT_NO_EMPTY);
+for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? ($i < 2 ? 1 : 0) : ($i == 3 ? 23 : 59))); }
+$end_date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])); }
 $GLOBALS['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
 $date_criteria = "(date BETWEEN '$start_date' AND '$end_date')";
 

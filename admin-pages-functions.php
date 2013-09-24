@@ -61,7 +61,7 @@ echo '<ul class="subsubsub" style="margin: 0 0 1em; float: left; white-space: no
 $first = true; $items_displayed = array();
 for ($i = 0; $i < count($admin_pages); $i++) {
 $item = (isset($menu_items[$i]) ? $menu_items[$i] : '');
-if ((in_array($i, $menu_displayed_items)) && (!in_array($item, $items_displayed))) {
+if ((isset($admin_pages[$item])) && (in_array($i, $menu_displayed_items)) && (!in_array($item, $items_displayed))) {
 $slug = 'contact-manager'.($item == '' ? '' : '-'.str_replace('_', '-', $item));
 echo '<li>'.($first ? '' : '&nbsp;| ').'<a href="admin.php?page='.$slug.'"'.($_GET['page'] == $slug ? ' class="current"' : '').'>'.$admin_pages[$item]['menu_title'].'</a></li>';
 $first = false; $items_displayed[] = $item; } }
@@ -91,8 +91,10 @@ $module_name = $page_slug.'_page_'.str_replace('-', '_', $module_key).'_module_d
 if ((isset($module_value['required'])) && ($module_value['required'] == 'yes')) { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes" checked="checked" disabled="disabled" /> '.$module_value['name'].'<br /></label>'; }
 else { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes"'.(in_array($module_key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$module_value['name'].'<br /></label>'; } } }
 if (!strstr($_GET['page'], 'back-office')) { echo '</div>'; } } ?></td></tr>
-<?php if ((strstr($_GET['page'], 'back-office')) && (isset($modules['back_office'][$module]['modules'][$module.'-custom-fields']))) { ?>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
+<?php if ((strstr($_GET['page'], 'back-office')) && (isset($modules['back_office'][$module]['modules'][$module.'-custom-fields']))) { ?>
 <div id="<?php echo $module; ?>-custom-fields-module"<?php if (in_array($module.'-custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="<?php echo $module; ?>-custom-fields"><strong><?php echo $modules['back_office'][$module]['modules'][$module.'-custom-fields']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
@@ -107,20 +109,20 @@ $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
 <td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50">'.str_replace('_', '-', $key).'</textarea>
 <input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="delete_'.$page_slug.'_page_custom_field'.$i.'" value="'.__('Delete').'" /><br />
-<span class="description">'.__('Letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; }
+<span class="description">'.__('Lowercase letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; }
 $j = 0; while (($j == 0) || ($i < 5)) {
 $i = $i + 1; $j = $j + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
 <td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50"></textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
 <td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50"></textarea>
 <input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="add_'.$page_slug.'_page_custom_field" value="'.__('Add').'" /><br />
-<span class="description">'.__('Letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; } ?>
+<span class="description">'.__('Lowercase letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; } ?>
 </tbody></table>
-</div>
-<table class="form-table"><tbody><?php } ?>
+<table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
 </tbody></table>
+</div><?php } ?>
 </div></div>
 <?php }
 
@@ -248,7 +250,7 @@ if (count($string) == 2) {
 $id = (int) preg_replace('/[^0-9]/', '', $string[0]);
 $sign = (substr($string[0], 0, 1) == '-' ? '-' : '+');
 $d = preg_split('#[^0-9]#', trim($string[1]), 0, PREG_SPLIT_NO_EMPTY);
-for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : 0); }
+for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 if ((strstr($string[1], '/')) || (strstr($string[1], '-'))) {
 $date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])); }
 else {

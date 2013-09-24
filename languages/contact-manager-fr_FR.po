@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.6.4\n"
+"Project-Id-Version: Contact Manager 5.7\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2013-09-14 09:23+0100\n"
+"PO-Revision-Date: 2013-09-24 17:09+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -2490,8 +2490,8 @@ msgstr "Question"
 msgid "Automatic modifications"
 msgstr "Modifications automatiques"
 
-msgid "You can automatically modify the members areas to which the member can access when a certain date is reached."
-msgstr "Vous pouvez modifier automatiquement les espaces membres auxquels le membre peut accéder lorsqu'une certaine date est atteinte."
+msgid "You can offer a temporary access, and automatically modify the members areas to which the member can access when a certain date is reached."
+msgstr "Vous pouvez offrir un accès temporaire, et modifier automatiquement les espaces membres auxquels le membre peut accéder lorsqu'une certaine date est atteinte."
 
 msgid "Custom fields"
 msgstr "Champs personnalisés"
@@ -2511,8 +2511,8 @@ msgstr "Vous pouvez créer des champs personnalisés afin d'enregistrer des donn
 msgid "Key"
 msgstr "Clé"
 
-msgid "Letters, numbers and hyphens only"
-msgstr "Lettres, chiffres et tirets uniquement"
+msgid "Lowercase letters, numbers and hyphens only"
+msgstr "Lettres minuscules sans accents, chiffres et tirets uniquement"
 
 msgid "The file upload failed."
 msgstr "Le téléchargement du fichier a échoué."
@@ -2561,4 +2561,7 @@ msgstr "Icône affichée dans le menu d'administration de WordPress"
 
 msgid "You can enter several email addresses. Separate them with commas."
 msgstr "Vous pouvez entrer plusieurs adresses e-mail. Séparez-les par des virgules."
+
+msgid "File:"
+msgstr "Fichier :"
 

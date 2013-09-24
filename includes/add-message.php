@@ -82,15 +82,23 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates 
 if (function_exists('update_affiliate_custom_fields')) { update_affiliate_custom_fields($GLOBALS['affiliate_id'], $message['custom_fields']); } }
 elseif ($message['email_address'] != '') {
 $affiliate = $message;
-if (!isset($affiliate['login'])) { $affiliate['login'] = $affiliate['email_address']; }
+foreach (array('login', 'password') as $field) {
+if ((isset($affiliate[$field])) && ($affiliate[$field] != '')) {
+if ($field == 'login') { $affiliate[$field] = format_nice_name($affiliate[$field]);
+if (($affiliate[$field] == '') || (is_numeric($affiliate[$field]))) { $affiliate[$field] .= '-'; } }
+$length = strlen($affiliate[$field]);
+foreach (array('maximum', 'minimum') as $string) { $$string = affiliation_data($string.'_'.$field.'_length'); }
+if ($length < $minimum) { $affiliate[$field] .= substr(md5(mt_rand()), 0, $minimum - $length); }
+elseif ($length > $maximum) { $affiliate[$field] = substr($affiliate[$field], 0, $maximum); } } }
+if ((!isset($affiliate['login'])) || ($affiliate['login'] == '')) { $affiliate['login'] = $affiliate['email_address']; }
 $array = explode('@', $affiliate['login']);
 $affiliate['login'] = format_nice_name($array[0]);
-if (is_numeric($affiliate['login'])) { $affiliate['login'] .= '-'; }
+if (($affiliate['login'] == '') || (is_numeric($affiliate['login']))) { $affiliate['login'] .= '-'; }
 $login = $affiliate['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['login']."'", OBJECT);
 if ($result) { $affiliate['login'] = $login.$i; $i = $i + 1; } }
-if (!isset($affiliate['password'])) { $affiliate['password'] = substr(md5(mt_rand()), 0, affiliation_data('automatically_generated_password_length')); }
-if (!isset($affiliate['paypal_email_address'])) { $affiliate['paypal_email_address'] = $affiliate['email_address']; }
+if ((!isset($affiliate['password'])) || ($affiliate['password'] == '')) { $affiliate['password'] = substr(md5(mt_rand()), 0, affiliation_data('automatically_generated_password_length')); }
+if ((!isset($affiliate['paypal_email_address'])) || ($affiliate['paypal_email_address'] == '')) { $affiliate['paypal_email_address'] = $affiliate['email_address']; }
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['referrer']."' AND status = 'active'", OBJECT);
 if (!$result) { $affiliate['referrer'] = ''; }
 foreach (array('category_id', 'status') as $field) {
@@ -110,12 +118,21 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."commerce_manager_clients SET ca
 if (function_exists('update_client_custom_fields')) { update_client_custom_fields($GLOBALS['client_id'], $message['custom_fields']); } }
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $client = $affiliate; }
-else { $client = $message; }
-if (!isset($client['login'])) { $client['login'] = $client['email_address']; }
+else {
+$client = $message;
+foreach (array('login', 'password') as $field) {
+if ((isset($client[$field])) && ($client[$field] != '')) {
+if ($field == 'login') { $client[$field] = format_email_address($client[$field]);
+if (($client[$field] == '') || (is_numeric($client[$field]))) { $client[$field] .= '-'; } }
+$length = strlen($client[$field]);
+foreach (array('maximum', 'minimum') as $string) { $$string = commerce_data($string.'_'.$field.'_length'); }
+if ($length < $minimum) { $client[$field] .= substr(md5(mt_rand()), 0, $minimum - $length); }
+elseif ($length > $maximum) { $client[$field] = substr($client[$field], 0, $maximum); } } } }
+if ((!isset($client['login'])) || ($client['login'] == '')) { $client['login'] = $client['email_address']; }
 $login = $client['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."commerce_manager_clients WHERE login = '".$client['login']."'", OBJECT);
 if ($result) { $client['login'] = $login.$i; $i = $i + 1; } }
-if (!isset($client['password'])) { $client['password'] = substr(md5(mt_rand()), 0, commerce_data('automatically_generated_password_length')); }
+if ((!isset($client['password'])) || ($client['password'] == '')) { $client['password'] = substr(md5(mt_rand()), 0, commerce_data('automatically_generated_password_length')); }
 if (function_exists('add_affiliate')) {
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$client['referrer']."' AND status = 'active'", OBJECT);
 if (!$result) { $client['referrer'] = ''; } }
@@ -140,17 +157,26 @@ update_member_members_areas($GLOBALS['member_id'], $message['sender_members_area
 elseif ($message['email_address'] != '') {
 if (isset($affiliate)) { $member = $affiliate; }
 elseif (isset($client)) { $member = $client; }
-else { $member = $message; }
+else {
+$member = $message;
+foreach (array('login', 'password') as $field) {
+if ((isset($member[$field])) && ($member[$field] != '')) {
+if ($field == 'login') { $member[$field] = format_email_address($member[$field]);
+if (($member[$field] == '') || (is_numeric($member[$field]))) { $member[$field] .= '-'; } }
+$length = strlen($member[$field]);
+foreach (array('maximum', 'minimum') as $string) { $$string = membership_data($string.'_'.$field.'_length'); }
+if ($length < $minimum) { $member[$field] .= substr(md5(mt_rand()), 0, $minimum - $length); }
+elseif ($length > $maximum) { $member[$field] = substr($member[$field], 0, $maximum); } } } }
 $member['members_areas'] = $message['sender_members_areas'];
 $members_areas = array_unique(preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
 elseif (isset($GLOBALS['member_area_id'])) { unset($GLOBALS['member_area_id']); }
 $member['members_areas_modifications'] = $message['sender_members_areas_modifications'];
-if (!isset($member['login'])) { $member['login'] = $member['email_address']; }
+if ((!isset($member['login'])) || ($member['login'] == '')) { $member['login'] = $member['email_address']; }
 $login = $member['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."membership_manager_members WHERE login = '".$member['login']."'", OBJECT);
 if ($result) { $member['login'] = $login.$i; $i = $i + 1; } }
-if (!isset($member['password'])) { $member['password'] = substr(md5(mt_rand()), 0, membership_data('automatically_generated_password_length')); }
+if ((!isset($member['password'])) || ($member['password'] == '')) { $member['password'] = substr(md5(mt_rand()), 0, membership_data('automatically_generated_password_length')); }
 foreach (array('category_id', 'status') as $field) {
 $member[$field] = $message['sender_member_'.$field];
 if ($member[$field] == '') { $member[$field] = member_area_data('members_initial_'.$field); } }
@@ -168,11 +194,11 @@ elseif (isset($client)) { $user = $client; }
 elseif (isset($member)) { $user = $member; }
 else { $user = $message; }
 $user['role'] = $message['sender_user_role'];
-if (!isset($user['login'])) { $user['login'] = $user['email_address']; }
+if ((!isset($user['login'])) || ($user['login'] == '')) { $user['login'] = $user['email_address']; }
 $login = $user['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT user_login FROM ".$wpdb->base_prefix."users WHERE user_login = '".$user['login']."'", OBJECT);
 if ($result) { $user['login'] = $login.$i; $i = $i + 1; } }
-if (!isset($user['password'])) { $user['password'] = substr(md5(mt_rand()), 0, 8); }
+if ((!isset($user['password'])) || ($user['password'] == '')) { $user['password'] = substr(md5(mt_rand()), 0, 8); }
 if (isset($user['ID'])) { unset($user['ID']); }
 $user['user_login'] = $user['login'];
 $user['user_pass'] = $user['password'];
