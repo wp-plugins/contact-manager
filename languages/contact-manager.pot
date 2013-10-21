@@ -695,7 +695,7 @@ msgid "None "
 msgstr ""
 
 #: form-page.php:175
-msgid "The options of this category will apply by default to the category."
+msgid "The options of the parent category will apply by default to this category."
 msgstr ""
 
 #: form-page.php:175
@@ -2072,7 +2072,7 @@ msgstr ""
 msgid "You have no custom field currently."
 msgstr ""
 
-msgid "You can create custom fields to record additional datas."
+msgid "You can create an unlimited number of custom fields to record additional datas."
 msgstr ""
 
 msgid "Key"
@@ -2130,4 +2130,79 @@ msgid "You can enter several email addresses. Separate them with commas."
 msgstr ""
 
 msgid "File:"
+msgstr ""
+
+msgid "Encrypted URLs must have a limited validity duration."
+msgstr ""
+
+msgid "Enter a difficult-to-guess string of characters."
+msgstr ""
+
+msgid "Uncheck this box allows you to disable the award of commissions."
+msgstr ""
+
+msgid "Select <em>No</em> allows you to disable the award of commissions."
+msgstr ""
+
+msgid "You can configure this email through the <em>Options</em> page of Affiliation Manager."
+msgstr ""
+
+msgid "You can configure this email through the <em>Client Area</em> page of Commerce Manager."
+msgstr ""
+
+msgid "You can configure this email through the interface of Membership Manager."
+msgstr ""
+
+msgid "The options of this category will apply by default to the forms you assign to this category."
+msgstr ""
+
+msgid "How to display a CAPTCHA?"
+msgstr ""
+
+msgid "How to display an error message?"
+msgstr ""
+
+msgid "Display a form field"
+msgstr ""
+
+msgid "Display a text area"
+msgstr ""
+
+msgid "Display a dropdown list"
+msgstr ""
+
+msgid "Display an error message"
+msgstr ""
+
+msgid "Display a submit button"
+msgstr ""
+
+msgid "form category"
+msgstr ""
+
+msgid "forms categories"
+msgstr ""
+
+msgid "Leave this field blank for 1."
+msgstr ""
+
+msgid "Click here to personalize this table."
+msgstr ""
+
+msgid "The key can not be changed."
+msgstr ""
+
+msgid "Display a form"
+msgstr ""
+
+msgid "Display a content restricted to senders"
+msgstr ""
+
+msgid "Hide this box"
+msgstr ""
+
+msgid "No category"
+msgstr ""
+
+msgid "No form"
 msgstr ""

@@ -13,7 +13,7 @@ if (((!isset($_POST[$prefix.'country'])) || ($_POST[$prefix.'country'] == '')) &
 if ((!isset($_POST[$prefix.'submit'])) && ((!isset($_POST[$prefix.'country'])) || ($_POST[$prefix.'country'] == ''))) {
 if ((function_exists('affiliation_session')) && (affiliation_session())) { $_POST[$prefix.'country'] = affiliate_data('country'); }
 elseif ((function_exists('commerce_session')) && (commerce_session())) { $_POST[$prefix.'country'] = client_data('country'); }
-elseif ((function_exists('membership_session')) && (membership_session(''))) { $_POST[$prefix.'country'] = member_data('country'); }
+elseif ((function_exists('membership_session')) && (membership_session())) { $_POST[$prefix.'country'] = member_data('country'); }
 elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in()) && (function_exists('current_user_can')) && (!current_user_can('edit_pages')) && (!current_user_can('manage_options'))) { $_POST[$prefix.'country'] = contact_user_data('country'); } } }
 include CONTACT_MANAGER_PATH.'/languages/countries/countries.php';
 $countries_list = '<option value="">--</option>'."\n";

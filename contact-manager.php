@@ -26,6 +26,8 @@ GNU General Public License for more details.
 
 
 if (!defined('HOME_URL')) { define('HOME_URL', get_option('home')); }
+if (!defined('ROOT_URL')) { $url = explode('/', str_replace('//', '||', HOME_URL)); define('ROOT_URL', str_replace('||', '//', $url[0])); }
+if (!defined('HOME_PATH')) { $path = str_replace(ROOT_URL, '', HOME_URL); define('HOME_PATH', ($path == '' ? '/' : $path)); }
 if (!defined('UTC_OFFSET')) { define('UTC_OFFSET', get_option('gmt_offset')); }
 define('CONTACT_MANAGER_PATH', dirname(__FILE__));
 define('CONTACT_MANAGER_URL', plugin_dir_url(__FILE__));
@@ -67,8 +69,8 @@ elseif (($installation['number'] < 12) && (($current_timestamp - $installation['
 $cron['previous_installation']['timestamp'] = $current_timestamp; }
 if ($cron['previous_installation'] != $installation) {
 update_option('contact_manager_cron', $cron);
-wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } }
-elseif ((is_multisite()) || (get_option('contact_manager'))) { wp_remote_get(CONTACT_MANAGER_URL.'?action=install'); } }
+wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
+elseif ((is_multisite()) || (get_option('contact_manager'))) { wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
 
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 foreach (array('admin_footer', 'login_footer', 'wp_footer') as $hook) { add_action($hook, 'contact_cron'); } }
@@ -90,6 +92,12 @@ function contact_decrypt_url($url) { $action = 'decrypt'; include CONTACT_MANAGE
 
 
 function contact_encrypt_url($url) { $action = 'encrypt'; include CONTACT_MANAGER_PATH.'/includes/crypt-url.php'; return $url; }
+
+
+function contact_excerpt($data, $length = 80) {
+$data = (string) $data;
+if (strlen($data) > $length) { $data = substr($data, 0, ($length - 4)).' […]'; }
+return $data; }
 
 
 function contact_filter_data($filter, $data) {
@@ -131,6 +139,7 @@ else { return contact_item_data('contact_form', $atts); } }
 
 
 function contact_form_category_data($atts) {
+if ((is_array($atts)) && (isset($atts['category']))) { $atts['id'] = $atts['category']; }
 return contact_item_data('contact_form_category', $atts); }
 
 
@@ -152,6 +161,7 @@ function contact_sql_array($table, $array) { include CONTACT_MANAGER_PATH.'/incl
 
 function contact_string_map($function, $string) {
 if (!function_exists($function)) { $function = 'contact_'.$function; }
+if (!function_exists($function)) { $function = 'contact_manager_'.$function; }
 if (function_exists($function)) { $array = array_map($function, array($string)); $string = $array[0]; }
 return $string; }
 
@@ -161,8 +171,10 @@ foreach (array('contact-content', 'contact-counter', 'contact-form-counter') as 
 add_shortcode($tag.($i == 0 ? '' : $i), create_function('$atts, $content', 'include_once CONTACT_MANAGER_PATH."/shortcodes.php"; return '.str_replace('-', '_', $tag).'($atts, $content);')); } }
 add_shortcode('user', 'contact_user_data');
 add_shortcode('contact-manager', 'contact_data');
-add_shortcode('contact-form', 'contact_form_data');
-add_shortcode('message', 'message_data');
+foreach (array(
+'contact-form-category',
+'contact-form',
+'message') as $tag) { add_shortcode($tag, str_replace('-', '_', $tag).'_data'); }
 add_shortcode('sender', 'message_data');
 
 

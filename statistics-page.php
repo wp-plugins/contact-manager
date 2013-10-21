@@ -1,10 +1,10 @@
 <?php global $wpdb; $error = '';
-include 'tables.php';
-include_once 'tables-functions.php';
+include CONTACT_MANAGER_PATH.'/tables.php';
+include_once CONTACT_MANAGER_PATH.'/tables-functions.php';
 $back_office_options = (array) get_option('contact_manager_back_office');
 $undisplayed_rows = (array) $back_office_options['statistics_page_undisplayed_rows'];
 $undisplayed_columns = (array) $back_office_options['statistics_page_undisplayed_columns'];
-include 'admin-pages.php';
+include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $options = (array) get_option('contact_manager_statistics');
 
 $tables_names = array(
@@ -84,7 +84,7 @@ $forms_categories_a_tag = '<a style="text-decoration: none;" href="admin.php?pag
 <div class="wrap">
 <div id="poststuff">
 <?php contact_manager_pages_top($back_office_options); ?>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
+<form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <?php contact_manager_pages_menu($back_office_options); ?>
 <?php contact_manager_pages_search_field('filter', $filterby, $filterby_options); ?>
@@ -95,7 +95,7 @@ foreach ($statistics_columns as $key => $value) {
 if (!in_array($key, $undisplayed_columns)) { $global_table_ths .= '<th scope="col" class="manage-column" style="width: '.$value['width'].'%;">'.$value['name'].'</th>'; } }
 echo '
 <h3 id="global-statistics"><strong>'.__('Global statistics', 'contact-manager').'</strong></h3>
-<table class="wp-list-table widefat fixed" style="margin: 1em 0 2em 0;">
+<table class="wp-list-table widefat fixed" style="margin: 1em 0;">
 <thead><tr>'.$global_table_ths.'</tr></thead>
 <tfoot><tr>'.$global_table_ths.'</tr></tfoot>
 <tbody>';
@@ -116,13 +116,14 @@ if (!in_array('forms_categories', $undisplayed_rows)) { echo '
 '.(in_array('quantity', $undisplayed_columns) ? '' : '<td>'.$forms_categories_a_tag.$forms_categories_number.'</a></td>').'
 </tr>'; $boolean = !$boolean; }
 echo '</tbody></table>'; } ?>
+<p class="description" style="margin: 0 0.5em;"><a href="admin.php?page=contact-manager-back-office#statistics-page"><?php _e('Click here to personalize this table.', 'contact-manager'); ?></a></p>
 <div style="text-align: center;">
 <?php for ($i = 0; $i < $max_tables; $i++) {
 echo '<label>'.__('Table', 'contact-manager').' '.($i + 1).' <select name="table'.$i.'" id="table'.$i.'">';
 foreach ($tables_names as $key => $value) { echo '<option value="'.$key.'"'.($tables_slugs[$i] == $key ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; }
 echo '</select></label>
 <label><input type="checkbox" name="table'.$i.'_displayed" id="table'.$i.'_displayed" value="yes"'.(!in_array($i, $displayed_tables) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } ?><br />
-<input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" />
+<input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" />
 </div>
 <?php $tables_displayed = array();
 foreach ($displayed_tables as $key => $value) {

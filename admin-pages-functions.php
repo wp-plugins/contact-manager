@@ -1,5 +1,7 @@
 <?php load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("dashboard");'));
+$_GET = array_map('quotes_entities', $_GET);
+if (isset($_GET['id'])) { $_GET['id'] = (int) $_GET['id']; if ($_GET['id'] < 1) { unset($_GET['id']); } }
 foreach ($_GET as $key => $value) { $GLOBALS[$key] = $value; }
 
 
@@ -7,7 +9,7 @@ function contact_manager_pages_links($back_office_options) {
 $links = (array) $back_office_options['links'];
 $displayed_links = (array) $back_office_options['displayed_links'];
 if (($back_office_options['links_displayed'] == 'yes') && (count($displayed_links) > 0)) {
-include 'admin-pages.php';
+include CONTACT_MANAGER_PATH.'/admin-pages.php';
 if ($back_office_options['title_displayed'] == 'yes') { $left_margin = '6em'; } else { $left_margin = '0'; }
 echo '<ul class="subsubsub" style="margin: 2em 0 1.5em '.$left_margin.'; float: left; white-space: normal;">';
 $links_markup = array(
@@ -56,7 +58,7 @@ function contact_manager_pages_menu($back_office_options) {
 $menu_items = (array) $back_office_options['menu_items'];
 $menu_displayed_items = (array) $back_office_options['menu_displayed_items'];
 if (($back_office_options['menu_displayed'] == 'yes') && (count($menu_displayed_items) > 0)) {
-include 'admin-pages.php';
+include CONTACT_MANAGER_PATH.'/admin-pages.php';
 echo '<ul class="subsubsub" style="margin: 0 0 1em; float: left; white-space: normal;">';
 $first = true; $items_displayed = array();
 for ($i = 0; $i < count($admin_pages); $i++) {
@@ -69,7 +71,7 @@ echo '</ul>'; } }
 
 
 function contact_manager_pages_module($back_office_options, $module, $undisplayed_modules) {
-include 'admin-pages.php';
+include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $page_slug = str_replace('-', '_', str_replace('-page', '', $module));
 $page_undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules']; ?>
 <div class="postbox" id="<?php echo $module.'-module'; ?>"<?php if (in_array($module, $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -92,35 +94,35 @@ if ((isset($module_value['required'])) && ($module_value['required'] == 'yes')) 
 else { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes"'.(in_array($module_key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$module_value['name'].'<br /></label>'; } } }
 if (!strstr($_GET['page'], 'back-office')) { echo '</div>'; } } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
 <?php if ((strstr($_GET['page'], 'back-office')) && (isset($modules['back_office'][$module]['modules'][$module.'-custom-fields']))) { ?>
 <div id="<?php echo $module; ?>-custom-fields-module"<?php if (in_array($module.'-custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="<?php echo $module; ?>-custom-fields"><strong><?php echo $modules['back_office'][$module]['modules'][$module.'-custom-fields']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php _e('You can create custom fields to record additional datas.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<td><span class="description"><?php _e('You can create an unlimited number of custom fields to record additional datas.', 'contact-manager'); ?> <a href="http://www.kleor-editions.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 </tbody></table>
 <table class="form-table" style="margin-left: 8%"><tbody>
 <?php $custom_fields = (array) $back_office_options[$page_slug.'_page_custom_fields'];
 asort($custom_fields); $i = 0; foreach ($custom_fields as $key => $value) {
 $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
-<td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50">'.htmlspecialchars($value).'</textarea></td>
+<td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50">'.htmlspecialchars($value).'</textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50">'.str_replace('_', '-', $key).'</textarea>
-<input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="delete_'.$page_slug.'_page_custom_field'.$i.'" value="'.__('Delete').'" /><br />
-<span class="description">'.__('Lowercase letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; }
-$j = 0; while (($j == 0) || ($i < 5)) {
-$i = $i + 1; $j = $j + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
-<td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50"></textarea></td>
+<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50" disabled="disabled">'.str_replace('_', '-', $key).'</textarea>
+<input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="delete_'.$page_slug.'_page_custom_field'.$i.'" value="'.__('Delete', 'contact-manager').'" /><br />
+<span class="description">'.__('The key can not be changed.', 'contact-manager').'</span></td></tr>'; }
+$n = $i + 5; while ($i < $n) {
+$i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
+<td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50"></textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50"></textarea>
+<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50"></textarea>
 <input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="add_'.$page_slug.'_page_custom_field" value="'.__('Add').'" /><br />
 <span class="description">'.__('Lowercase letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; } ?>
 </tbody></table>
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" /></td></tr>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
 </div><?php } ?>
 </div></div>
@@ -142,7 +144,7 @@ function contact_manager_pages_summary($back_office_options) {
 if ($_GET['page'] == 'contact-manager') { $page_slug = 'options'; }
 else { $page_slug = str_replace('-', '_', str_replace('contact-manager-', '', $_GET['page'])); }
 if ($back_office_options[$page_slug.'_page_summary_displayed'] == 'yes') {
-include 'admin-pages.php';
+include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $modules = $modules[$page_slug];
 $undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules'];
 $list = ''; foreach ($modules as $key => $value) {
@@ -164,7 +166,7 @@ echo '<div class="clear"></div>'; }
 
 function contact_manager_user_can($back_office_options, $capability) {
 if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
-else { include 'admin-pages.php'; $role = $back_office_options['minimum_roles'][$capability]; $capability = $roles[$role]['capability']; }
+else { include CONTACT_MANAGER_PATH.'/admin-pages.php'; $role = $back_office_options['minimum_roles'][$capability]; $capability = $roles[$role]['capability']; }
 return current_user_can($capability); }
 
 
@@ -176,12 +178,12 @@ return $roles; }
 
 
 function update_contact_manager_back_office($back_office_options, $page) {
-include 'admin-pages.php';
+include CONTACT_MANAGER_PATH.'/admin-pages.php';
 if ((!isset($_POST[$page.'_page_summary_displayed'])) || ($_POST[$page.'_page_summary_displayed'] != 'yes')) { $_POST[$page.'_page_summary_displayed'] = 'no'; }
 if ((strstr($_GET['page'], 'back-office')) && (isset($back_office_options[$page.'_page_custom_fields']))) {
 $custom_fields = (array) $back_office_options[$page.'_page_custom_fields'];
 $_POST[$page.'_page_custom_fields'] = array();
-for ($i = 1; $i <= max(5, count($custom_fields) + 1); $i++) {
+$n = count($custom_fields) + 5; for ($i = 1; $i <= $n; $i++) {
 if (isset($_POST['delete_'.$page.'_page_custom_field'.$i])) { $_POST['delete_'.$page.'_page_custom_field'] = 'yes'; }
 elseif ((isset($_POST[$page.'_page_custom_field_name'.$i])) && ($_POST[$page.'_page_custom_field_name'.$i] != '')) {
 if ((!isset($_POST[$page.'_page_custom_field_key'.$i])) || ($_POST[$page.'_page_custom_field_key'.$i] == '')) {
@@ -250,16 +252,17 @@ if (count($string) == 2) {
 $id = (int) preg_replace('/[^0-9]/', '', $string[0]);
 $sign = (substr($string[0], 0, 1) == '-' ? '-' : '+');
 $d = preg_split('#[^0-9]#', trim($string[1]), 0, PREG_SPLIT_NO_EMPTY);
-for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 if ((strstr($string[1], '/')) || (strstr($string[1], '-'))) {
+for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 $date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])); }
 else {
+for ($i = 0; $i < 4; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : 0); }
 if (strstr($string[1], 'Y')) { $date = $d[0].'Y'; }
 elseif (strstr($string[1], 'M')) { $date = $d[0].'M'; }
 elseif (strstr($string[1], 'W')) { $date = $d[0].'W'; }
 else {
 $date = $d[0].':'.$d[1].':'.$d[2].':'.$d[3];
-for ($i = 0; $i < 3; $i++) { if ($d[3 - $i] == 0) { $date = substr($date, 0, -2); } } } }
+$n = 0; for ($i = 0; $i < 3; $i++) { $n = $n + $d[3 - $i]; if ($n == 0) { $date = substr($date, 0, -2); } } } }
 $modifications[$id] = array('sign' => $sign, 'date' => $date); } }
 $members_areas = array();
 foreach ($modifications as $key => $value) { $members_areas[] = $key; }

@@ -105,6 +105,9 @@ $status = str_replace('-', '_', format_nice_name($status));
 if ($status == '') { $status_criteria = ''; }
 else { $status_criteria = "AND status = '".$status."'"; }
 
+$data_key = "contact_".$date_criteria."_".$status_criteria."_".$data;
+if (isset($GLOBALS[$data_key])) { $data = $GLOBALS[$data_key]; }
+else {
 if (is_string($table)) {
 if ($field == '') {
 $row = $wpdb->get_row("SELECT count(*) as total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
@@ -112,11 +115,11 @@ $data = (int) (isset($row->total) ? $row->total : 0); }
 else {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
 $data = round(100*(isset($row->total) ? $row->total : 0))/100; } }
-
 else {
 $data = 0; foreach ($table as $table_name) {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table_name WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } } } }
+$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } }
+$GLOBALS[$data_key] = $data; } } }
 
 $limit = str_replace(array('?', ',', ';'), '.', $limit);
 if ($limit == '') { $limit = '0'; }

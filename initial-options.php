@@ -101,7 +101,7 @@ $initial_options['code'] =
 
 <p><label>[input message-confirmation-email-sent value=yes] '.__('Receive a copy of this message', 'contact-manager').'</label></p>
 
-<div>[input submit formnovalidate=formnovalidate value="'.__('Send', 'contact-manager').'"]</div>';
+<div>[input submit style="background-color: #e0c040; border: 1px solid #a08000; border-radius: 4px; box-shadow: 1px 1px 1px #808080; cursor: pointer;" formnovalidate=formnovalidate value="'.__('Send', 'contact-manager').'"]</div>';
 
 
 $initial_options['cron'] = array(
@@ -244,7 +244,6 @@ $initial_options['back_office'] = array(
 	'custom-instructions',
 	'gift',
 	'membership',
-	'messages-registration',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
@@ -253,12 +252,10 @@ $initial_options['back_office'] = array(
 'form_page_undisplayed_modules' => array(
 	'affiliation',
 	'autoresponders',
-	'counters',
 	'custom-fields',
 	'custom-instructions',
 	'gift',
 	'membership',
-	'messages-registration',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
@@ -266,6 +263,11 @@ $initial_options['back_office'] = array(
 'menu_displayed_items' => $menu_displayed_items,
 'menu_items' => $menu_items,
 'menu_title' => __('Contact', 'contact-manager'),
+'meta_box' => array(
+	'' => __('Documentation', 'contact-manager'),
+	'#forms' => __('Display a form', 'contact-manager'),
+	'#sender-contents' => __('Display a content restricted to senders', 'contact-manager'),
+	'#screen-options-wrap' => __('Hide this box', 'contact-manager')),
 'message_page_custom_fields' => array(),
 'message_page_summary_displayed' => 'yes',
 'message_page_undisplayed_modules' => array(
@@ -273,6 +275,8 @@ $initial_options['back_office'] = array(
 	'autoresponders',
 	'custom-instructions',
 	'membership',
+	'message-confirmation-email',
+	'message-notification-email',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
@@ -288,7 +292,6 @@ $initial_options['back_office'] = array(
 	'captcha',
 	'custom-instructions',
 	'membership',
-	'messages-registration',
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'urls-encryption',
