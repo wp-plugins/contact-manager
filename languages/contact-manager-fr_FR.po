@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.7\n"
+"Project-Id-Version: Contact Manager  5.7.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2013-09-24 17:09+0100\n"
+"PO-Revision-Date: 2013-10-22 00:25+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -847,8 +847,8 @@ msgid "None "
 msgstr "Aucune"
 
 #: form-page.php:175
-msgid "The options of this category will apply by default to the category."
-msgstr "Les options de cette catégorie s'appliqueront par défaut à la catégorie."
+msgid "The options of the parent category will apply by default to this category."
+msgstr "Les options de la catégorie parente s'appliqueront par défaut à cette catégorie."
 
 #: form-page.php:175
 msgid "The options of this category will apply by default to the form."
@@ -2505,14 +2505,14 @@ msgstr "Cliquez ici pour ajouter un nouveau champ personnalisé."
 msgid "You have no custom field currently."
 msgstr "Vous n'avez aucun champ personnalisé actuellement."
 
-msgid "You can create custom fields to record additional datas."
-msgstr "Vous pouvez créer des champs personnalisés afin d'enregistrer des données supplémentaires."
+msgid "You can create an unlimited number of custom fields to record additional datas."
+msgstr "Vous pouvez créer un nombre illimité de champs personnalisés afin d'enregistrer des données supplémentaires."
 
 msgid "Key"
 msgstr "Clé"
 
 msgid "Lowercase letters, numbers and hyphens only"
-msgstr "Lettres minuscules sans accents, chiffres et tirets uniquement"
+msgstr "Lettres minuscules sans accents, chiffres et traits d'union uniquement"
 
 msgid "The file upload failed."
 msgstr "Le téléchargement du fichier a échoué."
@@ -2564,4 +2564,79 @@ msgstr "Vous pouvez entrer plusieurs adresses e-mail. Séparez-les par des virgu
 
 msgid "File:"
 msgstr "Fichier :"
+
+msgid "Encrypted URLs must have a limited validity duration."
+msgstr "Les URLs cryptées doivent avoir une durée de validité limitée."
+
+msgid "Enter a difficult-to-guess string of characters."
+msgstr "Entrez une chaîne de caractères difficile à deviner."
+
+msgid "Uncheck this box allows you to disable the award of commissions."
+msgstr "Décocher cette case vous permet de désactiver l'attribution de commissions."
+
+msgid "Select <em>No</em> allows you to disable the award of commissions."
+msgstr "Sélectionner <em>Non</em> vous permet de désactiver l'attribution de commissions."
+
+msgid "You can configure this email through the <em>Options</em> page of Affiliation Manager."
+msgstr "Vous pouvez configurer cet e-mail via la page <em>Options</em> d'Affiliation Manager."
+
+msgid "You can configure this email through the <em>Client Area</em> page of Commerce Manager."
+msgstr "Vous pouvez configurer cet e-mail via la page <em>Espace client</em> de Commerce Manager."
+
+msgid "You can configure this email through the interface of Membership Manager."
+msgstr "Vous pouvez configurer cet e-mail via l'interface de Membership Manager."
+
+msgid "The options of this category will apply by default to the forms you assign to this category."
+msgstr "Les options de cette catégorie s'appliqueront par défaut aux formulaires que vous affectez à cette catégorie."
+
+msgid "How to display a CAPTCHA?"
+msgstr "Comment afficher un CAPTCHA&nbsp;?"
+
+msgid "How to display an error message?"
+msgstr "Comment afficher un message d'erreur&nbsp;?"
+
+msgid "Display a form field"
+msgstr "Afficher un champ de formulaire"
+
+msgid "Display a text area"
+msgstr "Afficher une zone de texte"
+
+msgid "Display a dropdown list"
+msgstr "Afficher une liste déroulante"
+
+msgid "Display an error message"
+msgstr "Afficher un message d'erreur"
+
+msgid "Display a submit button"
+msgstr "Afficher un bouton de soumission"
+
+msgid "form category"
+msgstr "catégorie de formulaire"
+
+msgid "forms categories"
+msgstr "catégories de formulaires"
+
+msgid "Leave this field blank for 1."
+msgstr "Laissez ce champ vide pour 1."
+
+msgid "Click here to personalize this table."
+msgstr "Cliquez ici pour personnaliser ce tableau."
+
+msgid "The key can not be changed."
+msgstr "La clé ne peut pas être modifiée."
+
+msgid "Display a form"
+msgstr "Afficher un formulaire"
+
+msgid "Display a content restricted to senders"
+msgstr "Afficher un contenu réservé aux expéditeurs"
+
+msgid "Hide this box"
+msgstr "Cacher cette boîte"
+
+msgid "No category"
+msgstr "Aucune catégorie"
+
+msgid "No form"
+msgstr "Aucun formulaire"
 

@@ -1,6 +1,7 @@
 <?php function contact_form($atts) {
 global $post, $wpdb;
 $content = '';
+$atts = array_map('contact_do_shortcode', (array) $atts);
 extract(shortcode_atts(array('focus' => '', 'id' => 0, 'redirection' => ''), $atts));
 $focus = format_nice_name($focus);
 $id = (int) $id;
@@ -26,7 +27,7 @@ foreach (array(
 'format_email_address_js') as $function) { add_action('wp_footer', $function); }
 $tags = array('captcha', 'country-selector', 'input', 'label', 'option', 'select', 'textarea');
 foreach ($tags as $tag) { remove_shortcode($tag); add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
-if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_SERVER['HTTP_REFERER']) ? htmlspecialchars($_SERVER['HTTP_REFERER']) : ''); }
+if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_GET['referring_url']) ? $_GET['referring_url'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')); }
 if (isset($_POST[$prefix.'submit'])) {
 foreach ($_POST as $key => $value) {
 if (is_string($value)) {
@@ -40,7 +41,9 @@ if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = 
 if (isset($_POST[$prefix.'first_name'])) { $_POST[$prefix.'first_name'] = format_name($_POST[$prefix.'first_name']); }
 if (isset($_POST[$prefix.'last_name'])) { $_POST[$prefix.'last_name'] = format_name($_POST[$prefix.'last_name']); }
 if (isset($_POST[$prefix.'website_url'])) { $_POST[$prefix.'website_url'] = format_url($_POST[$prefix.'website_url']); }
-$_POST['referring_url'] = html_entity_decode($_POST['referring_url']); }
+$_POST['referring_url'] = html_entity_decode($_POST['referring_url']);
+if (str_replace('-', '_', format_nice_name($redirection)) == 'referring_url') { $redirection = $_POST['referring_url'];
+if ((substr($redirection, 0, 4) == 'http') && (substr($redirection, 0, strlen(HOME_URL)) != HOME_URL)) { $redirection = ''; } } }
 $maximum_messages_quantity_per_sender = contact_form_data('maximum_messages_quantity_per_sender');
 if (is_numeric($maximum_messages_quantity_per_sender)) { $GLOBALS[$prefix.'required_fields'] = array('email_address'); }
 else { $GLOBALS[$prefix.'required_fields'] = array(); }
@@ -96,8 +99,8 @@ return !error; }
 
 $tags = array_merge($tags, array('error', 'validation-content'));
 foreach ($tags as $tag) { remove_shortcode($tag); add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
-if (!stristr($code, '<form')) { $code = '<form id="'.str_replace('_', '-', substr($prefix, 0, -1)).'" method="post" enctype="multipart/form-data" action="'.htmlspecialchars($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_'.substr($prefix, 0, -1).'(this);">'.$code; }
-if (!stristr($code, '</form>')) { $code .= '<div style="display: none;"><input type="hidden" name="referring_url" value="'.$_POST['referring_url'].'" /><input type="hidden" name="'.$prefix.'submit" value="yes" /></div></form>'; }
+if (!stristr($code, '<form')) { $code = '<form id="'.str_replace('_', '-', substr($prefix, 0, -1)).'" method="post" enctype="multipart/form-data" action="'.esc_attr($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_'.substr($prefix, 0, -1).'(this);">'.$code; }
+if (!stristr($code, '</form>')) { $code .= '<div style="display: none;"><input type="hidden" name="referring_url" value="'.htmlspecialchars($_POST['referring_url']).'" /><input type="hidden" name="'.$prefix.'submit" value="yes" /></div></form>'; }
 $code = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', do_shortcode($code)));
 $content .= (isset($GLOBALS[$prefix.'recaptcha_js']) ? $GLOBALS[$prefix.'recaptcha_js'] : '').$code.$form_js;

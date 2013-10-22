@@ -4,7 +4,8 @@ $GLOBALS['contact_form_data'] = (array) (isset($GLOBALS['contact_form_data']) ? 
 if ((isset($GLOBALS['contact_form_id'])) && ((!isset($GLOBALS['contact_form_data']['id'])) || ($GLOBALS['contact_form_data']['id'] != $GLOBALS['contact_form_id']))) {
 $GLOBALS['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$GLOBALS['contact_form_id'], OBJECT); }
 $contact_form_data = $GLOBALS['contact_form_data'];
-extract(shortcode_atts(array('data' => '', 'id' => '', 'limit' => ''), $atts));
+$atts = array_map('contact_do_shortcode', (array) $atts);
+extract(shortcode_atts(array('data' => '', 'filter' => '', 'id' => '', 'limit' => ''), $atts));
 $field = str_replace('-', '_', format_nice_name($data));
 if (strstr($field, 'display')) { $field = 'displays_count'; } else { $field = 'messages_count'; }
 $id = preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY);
@@ -29,7 +30,8 @@ $data = $data + (isset($contact_form_data[$field]) ? $contact_form_data[$field] 
 
 else {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
-extract(shortcode_atts(array('data' => '', 'limit' => '', 'range' => '', 'status' => ''), $atts));
+$atts = array_map('contact_do_shortcode', (array) $atts);
+extract(shortcode_atts(array('data' => '', 'filter' => '', 'limit' => '', 'range' => '', 'status' => ''), $atts));
 
 $datas = explode('+', $data);
 $m = count($datas);
@@ -105,6 +107,9 @@ $status = str_replace('-', '_', format_nice_name($status));
 if ($status == '') { $status_criteria = ''; }
 else { $status_criteria = "AND status = '".$status."'"; }
 
+$data_key = "contact_".$date_criteria."_".$status_criteria."_".$data;
+if (isset($GLOBALS[$data_key])) { $data = $GLOBALS[$data_key]; }
+else {
 if (is_string($table)) {
 if ($field == '') {
 $row = $wpdb->get_row("SELECT count(*) as total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
@@ -112,11 +117,11 @@ $data = (int) (isset($row->total) ? $row->total : 0); }
 else {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
 $data = round(100*(isset($row->total) ? $row->total : 0))/100; } }
-
 else {
 $data = 0; foreach ($table as $table_name) {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table_name WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } } } }
+$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } }
+$GLOBALS[$data_key] = $data; } } }
 
 $limit = str_replace(array('?', ',', ';'), '.', $limit);
 if ($limit == '') { $limit = '0'; }
@@ -144,6 +149,7 @@ $GLOBALS['contact_total_number'] = $data;
 $GLOBALS['contact_total_remaining_number'] = $total_remaining_number;
 
 $content = (isset($content[$k]) ? do_shortcode($content[$k]) : '');
+$content = contact_filter_data($filter, $content);
 
 foreach ($tags as $tag) {
 $_tag = str_replace('-', '_', format_nice_name($tag));

@@ -10,7 +10,7 @@ $string = str_replace('à', '@', $string);
 $string = str_replace(';', '.', $string);
 $string = str_replace(' ', '-', $string);
 $string = strip_accents($string);
-$string = preg_replace('/[^a-zA-Z0-9_@.-]/', '', $string);
+$string = preg_replace('/[^a-z0-9_@.-]/', '', $string);
 return $string; }
 
 
@@ -22,7 +22,7 @@ string = string.replace(/[à]/gi, '@');
 string = string.replace(/[;]/gi, '.');
 string = string.replace(/[ ]/gi, '-');
 string = strip_accents(string);
-string = string.replace(/[^a-zA-Z0-9_@.-]/gi, '');
+string = string.replace(/[^a-z0-9_@.-]/gi, '');
 return string; }
 </script>
 <?php }
@@ -73,7 +73,7 @@ return string; }
 function format_nice_name($string) {
 $string = strip_accents(strtolower(trim(strip_tags($string))));
 $string = str_replace(' ', '-', $string);
-$string = preg_replace('/[^a-zA-Z0-9_-]/', '', $string);
+$string = preg_replace('/[^a-z0-9_-]/', '', $string);
 return $string; }
 
 
@@ -82,7 +82,7 @@ function format_nice_name_js() { ?>
 function format_nice_name(string) {
 string = strip_accents(string.toLowerCase());
 string = string.replace(/[ ]/gi, '-');
-string = string.replace(/[^a-zA-Z0-9_-]/gi, '');
+string = string.replace(/[^a-z0-9_-]/gi, '');
 return string; }
 </script>
 <?php }

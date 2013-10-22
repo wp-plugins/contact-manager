@@ -20,5 +20,6 @@ case '"': case "'": $array2 = explode($character, $string);
 $atts[$key] = $array2[1]; $string = substr($string, strlen($array2[1]) + 2); break;
 default: $array2 = explode(' ', $string);
 $atts[$key] = $array2[0]; $string = substr($string, strlen($array2[0])); } } } } }
+$atts = array_map('contact_do_shortcode', (array) $atts);
 foreach ($default_values as $key => $value) {
 if ((!isset($atts[$key])) || ($atts[$key] == '')) { $atts[$key] = $default_values[$key]; } }

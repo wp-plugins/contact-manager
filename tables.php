@@ -1,6 +1,6 @@
 <?php $tables['forms'] = array(
 'id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => __('ID', 'contact-manager'), 'width' => 5),
-'category_id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => (((isset($_GET['page'])) && (strstr($_GET['page'], 'categories'))) ? __('Parent category ID', 'contact-manager') : __('Category ID', 'contact-manager')), 'width' => 12),
+'category_id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => (((isset($_GET['page'])) && (strstr($_GET['page'], 'categories'))) ? __('Parent category ID', 'contact-manager') : __('Category ID', 'contact-manager')), 'width' => 15),
 'name' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Name', 'contact-manager'), 'width' => 18, 'searchby' => __('the name', 'contact-manager')),
 'description' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Description', 'contact-manager'), 'width' => 18, 'searchby' => __('the description', 'contact-manager')),
 'keywords' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Keywords', 'contact-manager'), 'width' => 18, 'searchby' => __('the keywords', 'contact-manager')),
@@ -63,11 +63,12 @@
 'commission2_amount' => array('type' => 'text', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Commission amount', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 15, 'searchby' => __('the commission amount', 'contact-manager').' '.__('(level 2)', 'contact-manager')));
 
 $tables['forms_categories'] = $tables['forms'];
+$tables['forms_categories']['name']['constraint'] = 'UNIQUE';
 foreach (array('maximum_messages_quantity_per_sender', 'displays_count', 'messages_count') as $field) { unset($tables['forms_categories'][$field]); }
 
 $tables['messages'] = array(
 'id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => __('ID', 'contact-manager'), 'width' => 5),
-'form_id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => __('Form ID', 'contact-manager'), 'width' => 9),
+'form_id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => __('Form ID', 'contact-manager'), 'width' => 15),
 'receiver' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Receiver', 'contact-manager'), 'width' => 15, 'searchby' => __('the receiver', 'contact-manager')),
 'subject' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Subject', 'contact-manager'), 'width' => 15, 'searchby' => __('the subject', 'contact-manager')),
 'content' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Content', 'contact-manager'), 'width' => 18, 'searchby' => __('the content', 'contact-manager')),

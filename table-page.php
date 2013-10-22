@@ -1,8 +1,8 @@
 <?php global $wpdb; $error = '';
 $back_office_options = (array) get_option('contact_manager_back_office');
 $table_slug = str_replace('-', '_', str_replace('contact-manager-', '', $_GET['page']));
-include 'tables.php';
-include_once 'tables-functions.php';
+include CONTACT_MANAGER_PATH.'/tables.php';
+include_once CONTACT_MANAGER_PATH.'/tables-functions.php';
 $options = (array) get_option(str_replace('-', '_', $_GET['page']));
 $table_name = table_name($table_slug);
 $custom_fields = (array) $back_office_options[single_page_slug($table_slug).'_page_custom_fields'];
@@ -14,7 +14,7 @@ foreach ($tables[$table_slug] as $key => $value) {
 if (!isset($value['name'])) { unset($tables[$table_slug][$key]); }
 if ((isset($value['searchby'])) && (!in_array($key, $undisplayed_keys))) { $searchby_options[$key] = $value['searchby']; } }
 $max_columns = count($tables[$table_slug]);
-if ((!isset($_GET['orderby'])) || ($tables[$table_slug][$_GET['orderby']] == '')) { $_GET['orderby'] = $options['orderby']; }
+if ((!isset($_GET['orderby'])) || (!isset($tables[$table_slug][$_GET['orderby']]))) { $_GET['orderby'] = $options['orderby']; }
 if (!isset($_GET['order'])) { $_GET['order'] = ''; }
 switch ($_GET['order']) { case 'asc': case 'desc': break; default: $_GET['order'] = $options['order']; }
 
@@ -23,7 +23,7 @@ foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes($value); } }
 $_GET['s'] = $_POST['s'];
 if (isset($_POST['reset_columns'])) {
-include 'initial-options.php';
+include CONTACT_MANAGER_PATH.'/initial-options.php';
 $columns = $initial_options[$table_slug]['columns'];
 $displayed_columns = $initial_options[$table_slug]['displayed_columns']; }
 else {
@@ -124,7 +124,7 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 <div class="wrap">
 <div id="poststuff">
 <?php contact_manager_pages_top($back_office_options); ?>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
+<form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <?php contact_manager_pages_menu($back_office_options); ?>
 <?php contact_manager_pages_search_field('search', $searchby, $searchby_options); ?>
@@ -132,7 +132,7 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 <div class="tablenav top">
 <div class="alignleft actions">
 <?php _e('Display', 'contact-manager'); ?> <input style="text-align: center;" type="text" name="limit" id="limit" size="2" value="<?php echo $limit; ?>" /> 
-<?php _e('results per page', 'contact-manager'); ?> <input type="submit" class="button-secondary" name="submit" value="<?php _e('Update'); ?>" />
+<?php _e('results per page', 'contact-manager'); ?> <input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" />
 </div><?php tablenav_pages($table_slug, $n, $max_paged, 'top'); ?></div>
 <div style="overflow: auto;">
 <table class="wp-list-table widefat">
@@ -165,7 +165,7 @@ else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($di
 <?php $displayed_columns = $original_displayed_columns;
 $all_columns_checked = (count($displayed_columns) == $max_columns);
 $columns_inputs = '<input style="margin-bottom: 0.5em;" type="submit" class="button-secondary" name="reset_columns" value="'.__('Reset the columns', 'contact-manager').'" />
-<input style="margin-bottom: 0.5em; margin-right: 0.5em;" type="submit" class="button-secondary" name="submit" value="'.__('Update').'" />
+<input style="margin-bottom: 0.5em; margin-right: 0.5em;" type="submit" class="button-secondary" name="submit" value="'.__('Update', 'contact-manager').'" />
 <label><input type="checkbox" name="check_all_columns1" id="check_all_columns1" value="yes" onclick="check_all_columns1_js();"'.($all_columns_checked ? ' checked="checked"' : '').' /> <span id="check_all_columns1_text">'.($all_columns_checked ? __('Uncheck all columns', 'contact-manager') : __('Check all columns', 'contact-manager')).'</span></label>';
 echo $columns_inputs.' <label><input type="checkbox" name="columns_list_displayed" id="columns_list_displayed" value="yes" 
 onclick="if (this.checked == true) { document.getElementById(\'columns-list\').style.display = \'block\'; } else { document.getElementById(\'columns-list\').style.display = \'none\'; }"

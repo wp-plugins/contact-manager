@@ -8,10 +8,10 @@ elseif ($GLOBALS['user_id'] > 0) { $GLOBALS['user_data'] = (array) $wpdb->get_ro
 $user_data = $GLOBALS['user_data'];
 if (is_string($atts)) { $field = $atts; $default = ''; $filter = ''; $id = 0; }
 else {
+$atts = array_map('contact_do_shortcode', (array) $atts);
 $field = (isset($atts[0]) ? $atts[0] : '');
-$default = (isset($atts['default']) ? $atts['default'] : '');
-$filter = (isset($atts['filter']) ? $atts['filter'] : '');
-$id = (int) (isset($atts['id']) ? do_shortcode(str_replace(array('(', ')'), array('[', ']'), $atts['id'])) : 0); }
+foreach (array('default', 'filter', 'id') as $key) { $$key = (isset($atts[$key]) ? $atts[$key] : ''); }
+$id = (int) $id; }
 $field = str_replace('-', '_', format_nice_name($field));
 if ($field == '') { $field = 'login'; }
 switch ($field) {

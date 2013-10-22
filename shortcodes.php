@@ -1,6 +1,7 @@
 <?php function contact_content($atts, $content) {
 global $wpdb;
-extract(shortcode_atts(array('id' => ''), $atts));
+$atts = array_map('contact_do_shortcode', (array) $atts);
+extract(shortcode_atts(array('filter' => '', 'id' => ''), $atts));
 $content = explode('[other]', do_shortcode($content));
 $forms = array_unique(preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY));
 if (is_admin()) { if ((isset($GLOBALS['contact_form_id'])) && (in_array($GLOBALS['contact_form_id'], $forms))) { $n = 0; } else { $n = 1; } }
@@ -9,13 +10,14 @@ $search_criteria = '';
 if (count($forms) > 0) {
 foreach ($forms as $form) { $search_criteria .= " OR form_id = ".$form; }
 $search_criteria = 'AND ('.substr($search_criteria, 4).')'; }
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE ip_address = '".$_SERVER['REMOTE_ADDR']."' $search_criteria", OBJECT);
+$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE ip_address = '".str_replace("'", "''", $_SERVER['REMOTE_ADDR'])."' $search_criteria", OBJECT);
 if ($result) { $n = 0; } else { $n = 1; } }
 if (!isset($content[$n])) { $content[$n] = ''; }
-return $content[$n]; }
+return contact_filter_data($filter, $content[$n]); }
 
 
 function contact_counter_tag($atts) {
+$atts = array_map('contact_do_shortcode', (array) $atts);
 extract(shortcode_atts(array('data' => '', 'decimals' => '', 'filter' => ''), $atts));
 $string = $GLOBALS['contact_'.str_replace('-', '_', format_nice_name($data))];
 $string = contact_filter_data($filter, $string);

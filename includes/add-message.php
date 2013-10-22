@@ -7,19 +7,17 @@ if (function_exists('add_affiliate')) {
 $GLOBALS['affiliate_id'] = 0;
 if ((!is_admin()) && (affiliation_session())) { $GLOBALS['affiliate_id'] = (int) affiliate_data('id'); }
 if ($GLOBALS['affiliate_id'] == 0) {
-$result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE email_address = '".$message['email_address']."'", OBJECT);
-if (!$result) { $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE paypal_email_address = '".$message['email_address']."'", OBJECT); }
+$result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE (email_address = '".$message['email_address']."' OR paypal_email_address = '".$message['email_address']."')", OBJECT);
 if ($result) { $GLOBALS['affiliate_data'] = (array) $result; $GLOBALS['affiliate_id'] = $result->id; } } }
 if (function_exists('add_client')) {
 $GLOBALS['client_id'] = 0;
 if ((!is_admin()) && (commerce_session())) { $GLOBALS['client_id'] = (int) client_data('id'); }
 if ($GLOBALS['client_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."commerce_manager_clients WHERE email_address = '".$message['email_address']."'", OBJECT);
-if (!$result) { $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."commerce_manager_clients WHERE paypal_email_address = '".$message['email_address']."'", OBJECT); }
 if ($result) { $GLOBALS['client_data'] = (array) $result; $GLOBALS['client_id'] = $result->id; } } }
 if (function_exists('add_member')) {
 $GLOBALS['member_id'] = 0;
-if ((!is_admin()) && (membership_session(''))) { $GLOBALS['member_id'] = (int) member_data('id'); }
+if ((!is_admin()) && (membership_session())) { $GLOBALS['member_id'] = (int) member_data('id'); }
 if ($GLOBALS['member_id'] == 0) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."membership_manager_members WHERE email_address = '".$message['email_address']."'", OBJECT);
 if ($result) { $GLOBALS['member_data'] = (array) $result; $GLOBALS['member_id'] = $result->id; } } }
@@ -98,9 +96,7 @@ $login = $affiliate['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['login']."'", OBJECT);
 if ($result) { $affiliate['login'] = $login.$i; $i = $i + 1; } }
 if ((!isset($affiliate['password'])) || ($affiliate['password'] == '')) { $affiliate['password'] = substr(md5(mt_rand()), 0, affiliation_data('automatically_generated_password_length')); }
-if ((!isset($affiliate['paypal_email_address'])) || ($affiliate['paypal_email_address'] == '')) { $affiliate['paypal_email_address'] = $affiliate['email_address']; }
-$result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['referrer']."' AND status = 'active'", OBJECT);
-if (!$result) { $affiliate['referrer'] = ''; }
+$affiliate['paypal_email_address'] = $affiliate['email_address'];
 foreach (array('category_id', 'status') as $field) {
 $affiliate[$field] = $message['sender_affiliate_'.$field];
 if ($affiliate[$field] == '') { $affiliate[$field] = affiliation_data('affiliates_initial_'.$field); } }
@@ -133,10 +129,6 @@ $login = $client['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."commerce_manager_clients WHERE login = '".$client['login']."'", OBJECT);
 if ($result) { $client['login'] = $login.$i; $i = $i + 1; } }
 if ((!isset($client['password'])) || ($client['password'] == '')) { $client['password'] = substr(md5(mt_rand()), 0, commerce_data('automatically_generated_password_length')); }
-if (function_exists('add_affiliate')) {
-$result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$client['referrer']."' AND status = 'active'", OBJECT);
-if (!$result) { $client['referrer'] = ''; } }
-else { $client['referrer'] = ''; }
 foreach (array('category_id', 'status') as $field) {
 $client[$field] = $message['sender_client_'.$field];
 if ($client[$field] == '') { $client[$field] = commerce_data('clients_initial_'.$field); } }

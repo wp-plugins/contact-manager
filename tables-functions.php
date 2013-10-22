@@ -1,5 +1,6 @@
 <?php global $wpdb;
 
+$_POST = array_map('quotes_entities', $_POST);
 $GLOBALS['selection_criteria'] = ''; $selection_criteria = '';
 foreach (array(
 'category_id',
@@ -18,6 +19,7 @@ if (isset($_GET[$field])) {
 $GLOBALS['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
 $selection_criteria .= ($field == "keywords" ? " AND (".$field." LIKE '%".$_GET[$field]."%')" :
  (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')")); } }
+$selection_criteria = str_replace("= '!0'", "!= 0", $selection_criteria);
 
 
 function no_items($table) {
@@ -35,8 +37,8 @@ case 'forms':
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$item->id, OBJECT);
 $messages_number = (int) (isset($row->total) ? $row->total : 0);
 $row_actions =
-'<span class="edit"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'">'.__('Edit').'</a></span>
- | <span class="delete"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'&amp;action=delete">'.__('Delete').'</a></span>'
+'<span class="edit"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'">'.__('Edit', 'contact-manager').'</a></span>
+ | <span class="delete"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'&amp;action=delete">'.__('Delete', 'contact-manager').'</a></span>'
 .($messages_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.__('Messages', 'contact-manager').'</a></span>'); break;
 case 'forms_categories':
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms WHERE category_id = ".$item->id, OBJECT);
@@ -44,13 +46,13 @@ $forms_number = (int) (isset($row->total) ? $row->total : 0);
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE category_id = ".$item->id, OBJECT);
 $categories_number = (int) (isset($row->total) ? $row->total : 0);
 $row_actions = 
-'<span class="edit"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'">'.__('Edit').'</a></span>
- | <span class="delete"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'&amp;action=delete">'.__('Delete').'</a></span>'
+'<span class="edit"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'">'.__('Edit', 'contact-manager').'</a></span>
+ | <span class="delete"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'&amp;action=delete">'.__('Delete', 'contact-manager').'</a></span>'
 .($forms_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-forms&amp;category_id='.$item->id.'">'.__('Forms', 'contact-manager').'</a></span>')
 .($categories_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-forms-categories&amp;category_id='.$item->id.'">'.__('Subcategories', 'contact-manager').'</a></span>'); break;
 case 'messages': $row_actions = 
-'<span class="edit"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'">'.__('Edit').'</a></span>
- | <span class="delete"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'&amp;action=delete">'.__('Delete').'</a></span>'; break; }
+'<span class="edit"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'">'.__('Edit', 'contact-manager').'</a></span>
+ | <span class="delete"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'&amp;action=delete">'.__('Delete', 'contact-manager').'</a></span>'; break; }
 return '<div class="row-actions" style="margin-top: 2em; position: absolute;">'.$row_actions.'</div>'; }
 
 
@@ -99,16 +101,18 @@ case 'message_confirmation_email_sent': case 'message_custom_instructions_execut
 case 'sender_subscribed_as_a_client': case 'sender_subscribed_as_a_user': case 'sender_subscribed_to_affiliate_program': case 'sender_subscribed_to_autoresponder': case 'sender_subscribed_to_members_areas': 
 if ($data == 'yes') { $table_td = '<span style="color: #008000;">'.__('Yes', 'contact-manager').'</span>'; }
 elseif ($data == 'no')  { $table_td = '<span style="color: #c00000;">'.__('No', 'contact-manager').'</span>'; }
-else { $table_td = $data; } break;
-case 'category_id': case 'form_id': case 'ip_address': case 'referrer': case 'referrer2': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.$data.'</a>'); break;
-case 'code': case 'content': case 'description': case 'gift_instructions': case 'message_confirmation_email_body': case 'message_custom_instructions': case 'message_notification_email_body': if (strlen($data) <= 80) { $table_td = $data; }
-else { $table_td = substr($data, 0, 80); if (stristr($table_td, ' ')) { while (substr($table_td, -1) != ' ') { $table_td = substr($table_td, 0, -1); } } $table_td .= '[...]'; } break;
+else { $table_td = contact_excerpt($data, 50); } break;
+case 'category_id': $description = ($data == 0 ? __('No category', 'contact-manager') : htmlspecialchars(contact_excerpt(contact_form_category_data(array(0 => 'name', 'id' => $data)), 50)));
+if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>'; break;
+case 'form_id': $description = ($data == 0 ? __('No form', 'contact-manager') : htmlspecialchars(contact_excerpt(contact_form_data(array(0 => 'name', 'id' => $data)), 50)));
+if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>'; break;
+case 'ip_address': case 'referrer': case 'referrer2': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.contact_excerpt($data, 50).'</a>'); break;
 case 'commission_amount': case 'commission2_amount':
 if ($table == 'messages') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.$data.'</a>'); break; }
 else { $table_td = $data; } break;
 case 'commission_status': case 'commission2_status': if ($data == 'paid') { $table_td = '<a style="color: #008000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=paid">'.__('Paid', 'contact-manager').'</a>'; }
 elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unpaid">'.__('Unpaid', 'contact-manager').'</a>'; }
-else { $table_td = $data; } break;
+else { $table_td = contact_excerpt($data, 50); } break;
 case 'custom_fields':
 $back_office_options = (array) get_option('contact_manager_back_office');
 $custom_fields = (array) $back_office_options[single_page_slug($table).'_page_custom_fields'];
@@ -117,8 +121,8 @@ foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode
 asort($custom_fields); $table_td = '';
 foreach ($custom_fields as $key => $value) {
 if ((isset($item_custom_fields[$key])) && ($item_custom_fields[$key] != '')) { $table_td .= htmlspecialchars($value).' => '.htmlspecialchars($item_custom_fields[$key]).',<br />'; } } break;
-case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.$data.'</a>'; break;
-case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == 'http://'.$_SERVER['SERVER_NAME'] ? '/' : str_replace('http://'.$_SERVER['SERVER_NAME'], '', $data)).'</a>'); break;
+case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.contact_excerpt($data, 50).'</a>'; break;
+case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == ROOT_URL ? '/' : contact_excerpt(str_replace(ROOT_URL, '', $data), 80)).'</a>'); break;
 case 'keywords':
 $keywords = explode(',', $data);
 $keywords_list = '';
@@ -132,7 +136,13 @@ case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=co
 case 'sender_affiliate_status': case 'sender_client_status': case 'sender_member_status':
 if ($data == 'active') { $table_td = '<span style="color: #008000;">'.__('Active', 'contact-manager').'</span>'; }
 elseif ($data == 'inactive') { $table_td = '<span style="color: #e08000;">'.__('Inactive', 'contact-manager').'</span>'; }
-else { $table_td = $data; } break;
+else { $table_td = contact_excerpt($data, 50); } break;
+case 'sender_affiliate_category_id': $description = ($data == 0 ? __('No category', 'contact-manager') : (function_exists('affiliate_category_data') ? htmlspecialchars(contact_excerpt(affiliate_category_data(array(0 => 'name', 'id' => $data)), 50)) : ''));
+if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = $data.$description; break;
+case 'sender_client_category_id': $description = ($data == 0 ? __('No category', 'contact-manager') : (function_exists('client_category_data') ? htmlspecialchars(contact_excerpt(client_category_data(array(0 => 'name', 'id' => $data)), 50)) : ''));
+if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = $data.$description; break;
+case 'sender_member_category_id': $description = ($data == 0 ? __('No category', 'contact-manager') : (function_exists('member_category_data') ? htmlspecialchars(contact_excerpt(member_category_data(array(0 => 'name', 'id' => $data)), 50)) : ''));
+if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = $data.$description; break;
 case 'sender_members_areas':
 $members_areas = array_unique(preg_split('#[^0-9]#', $data, 0, PREG_SPLIT_NO_EMPTY));
 $members_areas_list = '';
@@ -140,9 +150,9 @@ foreach ($members_areas as $member_area) {
 if ((function_exists('membership_manager_admin_menu')) && ($member_area > 0)) { $member_area = '<a href="admin.php?page=membership-manager-member-area&amp;id='.$member_area.'">'.$member_area.'</a>'; }
 $members_areas_list .= $member_area.', '; }
 $table_td = substr($members_areas_list, 0, -2); break;
-case 'sender_user_role': $roles = contact_manager_users_roles(); $table_td = $roles[$data]; break;
-case 'website_name': $website_url = htmlspecialchars(contact_format_data($column, $item->website_url)); $table_td = ($website_url == '' ? $data : '<a href="'.$website_url.'">'.($data == '' ? str_replace('http://'.$_SERVER['SERVER_NAME'], '', $website_url) : $data).'</a>'); break;
-default: $table_td = $data; }
+case 'sender_user_role': $roles = contact_manager_users_roles(); $table_td = contact_excerpt($roles[$data], 50); break;
+case 'website_name': $website_url = htmlspecialchars(table_data($table, 'website_url', $item)); $table_td = ($website_url == '' ? contact_excerpt($data, 50) : '<a href="'.$website_url.'">'.contact_excerpt(($data == '' ? str_replace(ROOT_URL, '', $website_url) : $data), 50).'</a>'); break;
+default: $table_td = contact_excerpt($data); }
 return $table_td; }
 
 
@@ -159,7 +169,7 @@ return $table_th; }
 function tablenav_pages($table, $n, $max_paged, $location) {
 switch ($table) {
 case 'forms': $singular = __('form', 'contact-manager'); $plural = __('forms', 'contact-manager'); break;
-case 'forms_categories': $singular = __('category', 'contact-manager'); $plural = __('categories', 'contact-manager'); break;
+case 'forms_categories': $singular = __('form category', 'contact-manager'); $plural = __('forms categories', 'contact-manager'); break;
 case 'messages': $singular = __('message', 'contact-manager'); $plural = __('messages', 'contact-manager'); break;
 default: $singular = __('item', 'contact-manager'); $plural = __('items', 'contact-manager'); }
 if ($_GET['paged'] == 1) { $prev_paged = 1; } else { $prev_paged = $_GET['paged'] - 1; }

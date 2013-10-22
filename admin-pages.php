@@ -122,7 +122,7 @@ $add_message_fields = array(
 
 $modules['options'] = array(
 'automatic-display' => array('name' => __('Automatic display', 'contact-manager')),
-'form' => array('name' => __('Form', 'contact-manager'), 'modules' => array(
+'forms' => array('name' => __('Forms', 'contact-manager'), 'modules' => array(
 	'captcha' => array('name' => __('CAPTCHA', 'contact-manager')),
 	'error-messages' => array('name' => __('Error messages', 'contact-manager')))),
 'messages-registration' => array('name' => __('Messages registration', 'contact-manager')),

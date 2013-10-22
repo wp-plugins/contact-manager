@@ -48,22 +48,22 @@ if ($atts['type'] == 'radio') { $atts['checked'] = ($_POST[$prefix.$name] == $at
 else { $atts['value'] = $_POST[$prefix.$name]; } }
 elseif ((isset($_POST[$prefix.'submit'])) && (in_array($atts['required'], array('required', 'yes')))) { $GLOBALS[$prefix.$name.'_error'] = $GLOBALS[$prefix.'unfilled_field_message']; } }
 foreach (array($name, str_replace('_', '-', $name)) as $key) {
-if (($atts['value'] == '') && (isset($_GET[$key]))) { $atts['value'] = utf8_encode(htmlspecialchars($_GET[$key])); } }
+if (($atts['value'] == '') && (isset($_GET[$key]))) { $atts['value'] = htmlspecialchars($_GET[$key]); } }
 if ((!isset($_POST[$prefix.'submit'])) && ($atts['value'] == '')) {
 include CONTACT_MANAGER_PATH.'/libraries/personal-informations.php';
 if (in_array($name, $personal_informations)) {
 if ((function_exists('affiliation_session')) && (affiliation_session())) { $atts['value'] = affiliate_data($name); }
 elseif ((function_exists('commerce_session')) && (commerce_session())) { $atts['value'] = client_data($name); }
-elseif ((function_exists('membership_session')) && (membership_session(''))) { $atts['value'] = member_data($name); }
+elseif ((function_exists('membership_session')) && (membership_session())) { $atts['value'] = member_data($name); }
 elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in()) && (function_exists('current_user_can')) && (!current_user_can('edit_pages')) && (!current_user_can('manage_options'))) { $atts['value'] = contact_user_data($name); } } }
 if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ($atts['value'] == '') && ($id_markup != '')) { $GLOBALS['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
-if ((isset($_POST[$prefix.'submit'])) && ($atts['type'] == 'checkbox')) { $atts['checked'] = (isset($_POST[$prefix.$name]) ? 'checked' : ''); }
-$atts['value'] = quotes_entities($atts['value']); }
+if ((isset($_POST[$prefix.'submit'])) && ($atts['type'] == 'checkbox')) { $atts['checked'] = (isset($_POST[$prefix.$name]) ? 'checked' : ''); } }
 foreach ($atts as $key => $value) {
 switch ($key) {
 case 'extensions': case 'maxsize': break;
 case 'required': if (in_array($value, array('required', 'yes'))) {
 if ($name != 'submit') { $GLOBALS[$prefix.'required_fields'][] = $name; } if ($value == $key) { $markup .= ' '.$key.'="'.$key.'"'; } } break;
-default: if ((!in_array($key, array('id', 'name'))) && (is_string($key)) && ($value != '')) { $c = (strstr($value, '"') ? "'" : '"'); $markup .= ' '.$key.'='.$c.$value.$c; } } }
+default: if ($key == 'value') { $value = esc_attr($value); }
+if ((!in_array($key, array('id', 'name'))) && (is_string($key)) && ($value != '')) { $c = (strstr($value, '"') ? "'" : '"'); $markup .= ' '.$key.'='.$c.$value.$c; } } }
 if (isset($GLOBALS[$prefix.$name.'_error'])) { $GLOBALS['form_error'] = 'yes'; }
 $content = '<input name="'.$prefix.$name.'"'.$id_markup.$markup.' />';
