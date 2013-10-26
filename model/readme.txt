@@ -1,0 +1,2 @@
+The folder "model" and the file "index.php" are useful only to websites that are not powered by WordPress.
+Le dossier "model" et le fichier "index.php" sont utiles uniquement aux sites non propulsés par WordPress.
