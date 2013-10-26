@@ -178,7 +178,7 @@ echo '<input type="hidden" name="column'.$i.'" id="column'.$i.'" value="'.$colum
 <input type="hidden" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="no" />'; }
 else {
 $j = $j + 1; if ($j < 10) { $space = '&nbsp;&nbsp;&nbsp;&nbsp;'; } elseif ($j < 100) { $space = '&nbsp;&nbsp;'; } else { $space = ''; }
-echo '<label>'.__('Column', 'contact-manager').' '.$j.$space.' <select style="float: none;" name="column'.$i.'" id="column'.$i.'">';
+echo '<label>'.__('Column', 'contact-manager').' '.$j.$space.' <select style="float: none; max-width: 40em;" name="column'.$i.'" id="column'.$i.'">';
 foreach ($tables[$table_slug] as $key => $value) {
 if ((!in_array($key, $undisplayed_keys)) || ($columns[$i] == $key)) { echo '<option value="'.$key.'"'.($columns[$i] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } }
 echo '</select></label>

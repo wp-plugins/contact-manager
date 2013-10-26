@@ -1,6 +1,6 @@
 <?php load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("dashboard");'));
-$_GET = array_map('quotes_entities', $_GET);
+foreach ((array) $_GET as $key => $value) { if (is_string($value)) { $_GET[$key] = quotes_entities($_GET[$key]); } }
 if (isset($_GET['id'])) { $_GET['id'] = (int) $_GET['id']; if ($_GET['id'] < 1) { unset($_GET['id']); } }
 foreach ($_GET as $key => $value) { $GLOBALS[$key] = $value; }
 

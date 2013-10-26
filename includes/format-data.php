@@ -2,7 +2,7 @@
 if ($field != 'code') { $data = quotes_entities_decode($data); }
 if ((strstr($field, 'date')) && ($data == '0000-00-00 00:00:00')) { $data = ''; }
 elseif (substr($field, -13) == 'email_address') { $data = format_email_address($data); }
-elseif (substr($field, -12) == 'instructions') { $data = format_instructions($data); }
+elseif (substr($field, -19) == 'custom_instructions') { $data = format_instructions($data); }
 elseif ((($field == 'url') || (strstr($field, '_url'))) && (!strstr($field, 'urls'))) { $data = format_url($data); }
 switch ($field) {
 case 'id': $data = (int) $data; break;

@@ -1,6 +1,6 @@
 <?php global $wpdb;
 
-$_POST = array_map('quotes_entities', $_POST);
+foreach ((array) $_POST as $key => $value) { if (is_string($value)) { $_POST[$key] = quotes_entities($_POST[$key]); } }
 $GLOBALS['selection_criteria'] = ''; $selection_criteria = '';
 foreach (array(
 'category_id',
@@ -131,7 +131,7 @@ $keyword = strtolower(trim($keyword));
 $keyword = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;keywords='.$keyword.'">'.$keyword.'</a>';
 $keywords_list .= $keyword.', '; }
 $table_td = substr($keywords_list, 0, -2); break;
-case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data == 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
+case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data === 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
 case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.$data.'</a>'); break;
 case 'sender_affiliate_status': case 'sender_client_status': case 'sender_member_status':
 if ($data == 'active') { $table_td = '<span style="color: #008000;">'.__('Active', 'contact-manager').'</span>'; }

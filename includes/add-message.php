@@ -6,23 +6,23 @@ $GLOBALS['contact_form_id'] = (int) $message['form_id'];
 if (function_exists('add_affiliate')) {
 $GLOBALS['affiliate_id'] = 0;
 if ((!is_admin()) && (affiliation_session())) { $GLOBALS['affiliate_id'] = (int) affiliate_data('id'); }
-if ($GLOBALS['affiliate_id'] == 0) {
+if (($GLOBALS['affiliate_id'] == 0) && ($message['email_address'] != '')) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE (email_address = '".$message['email_address']."' OR paypal_email_address = '".$message['email_address']."')", OBJECT);
 if ($result) { $GLOBALS['affiliate_data'] = (array) $result; $GLOBALS['affiliate_id'] = $result->id; } } }
 if (function_exists('add_client')) {
 $GLOBALS['client_id'] = 0;
 if ((!is_admin()) && (commerce_session())) { $GLOBALS['client_id'] = (int) client_data('id'); }
-if ($GLOBALS['client_id'] == 0) {
+if (($GLOBALS['client_id'] == 0) && ($message['email_address'] != '')) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."commerce_manager_clients WHERE email_address = '".$message['email_address']."'", OBJECT);
 if ($result) { $GLOBALS['client_data'] = (array) $result; $GLOBALS['client_id'] = $result->id; } } }
 if (function_exists('add_member')) {
 $GLOBALS['member_id'] = 0;
 if ((!is_admin()) && (membership_session())) { $GLOBALS['member_id'] = (int) member_data('id'); }
-if ($GLOBALS['member_id'] == 0) {
+if (($GLOBALS['member_id'] == 0) && ($message['email_address'] != '')) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."membership_manager_members WHERE email_address = '".$message['email_address']."'", OBJECT);
 if ($result) { $GLOBALS['member_data'] = (array) $result; $GLOBALS['member_id'] = $result->id; } } }
 $GLOBALS['user_id'] = (int) (isset($GLOBALS['user_id']) ? $GLOBALS['user_id'] : 0);
-if ($GLOBALS['user_id'] == 0) {
+if (($GLOBALS['user_id'] == 0) && ($message['email_address'] != '')) {
 $result = $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE user_email = '".$message['email_address']."'", OBJECT);
 if ($result) { $GLOBALS['user_data'] = (array) $result; $GLOBALS['user_id'] = $result->ID; } }
 $original_custom_fields = $message['custom_fields'];
@@ -100,6 +100,9 @@ $affiliate['paypal_email_address'] = $affiliate['email_address'];
 foreach (array('category_id', 'status') as $field) {
 $affiliate[$field] = $message['sender_affiliate_'.$field];
 if ($affiliate[$field] == '') { $affiliate[$field] = affiliation_data('affiliates_initial_'.$field); } }
+foreach (array('date', 'date_utc') as $field) {
+if ($affiliate['status'] == 'active') { $affiliate['activation_'.$field] = $affiliate[$field]; }
+else { $affiliate['activation_'.$field] = ''; } }
 foreach (array('confirmation', 'notification') as $action) {
 $affiliate['registration_'.$action.'_email_sent'] = $message['affiliation_registration_'.$action.'_email_sent'];
 if ((!is_admin()) && ($affiliate['registration_'.$action.'_email_sent'] == '')) {
@@ -132,6 +135,9 @@ if ((!isset($client['password'])) || ($client['password'] == '')) { $client['pas
 foreach (array('category_id', 'status') as $field) {
 $client[$field] = $message['sender_client_'.$field];
 if ($client[$field] == '') { $client[$field] = commerce_data('clients_initial_'.$field); } }
+foreach (array('date', 'date_utc') as $field) {
+if ($client['status'] == 'active') { $client['activation_'.$field] = $client[$field]; }
+else { $client['activation_'.$field] = ''; } }
 foreach (array('confirmation', 'notification') as $action) {
 $client['registration_'.$action.'_email_sent'] = $message['commerce_registration_'.$action.'_email_sent'];
 if ((!is_admin()) && ($client['registration_'.$action.'_email_sent'] == '')) {
@@ -172,6 +178,9 @@ if ((!isset($member['password'])) || ($member['password'] == '')) { $member['pas
 foreach (array('category_id', 'status') as $field) {
 $member[$field] = $message['sender_member_'.$field];
 if ($member[$field] == '') { $member[$field] = member_area_data('members_initial_'.$field); } }
+foreach (array('date', 'date_utc') as $field) {
+if ($member['status'] == 'active') { $member['activation_'.$field] = $member[$field]; }
+else { $member['activation_'.$field] = ''; } }
 foreach (array('confirmation', 'notification') as $action) {
 $member['registration_'.$action.'_email_sent'] = $message['membership_registration_'.$action.'_email_sent'];
 if ((!is_admin()) && ($member['registration_'.$action.'_email_sent'] == '')) {

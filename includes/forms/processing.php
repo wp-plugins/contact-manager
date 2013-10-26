@@ -62,7 +62,7 @@ foreach (array('subject', 'content') as $field) {
 if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = contact_form_data('message_notification_email_'.($field == 'content' ? 'body' : $field)); } }
 foreach (array('message_id', 'message_data') as $key) {
 if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } }
-$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".$_POST['subject']."' AND content = '".$_POST['content']."'", OBJECT);
+$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".str_replace("'", "''", $_POST['subject'])."' AND content = '".str_replace("'", "''", $_POST['content'])."'", OBJECT);
 if (!$result) { $GLOBALS['user_id'] = get_current_user_id(); add_message($_POST); }
 
 if (($redirection != '') && (substr($redirection, 0, 1) != '#')) {

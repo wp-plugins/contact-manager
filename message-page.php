@@ -183,7 +183,7 @@ foreach ($members_areas as $member_area) { if ($member_area != '') { $members_ar
 $_POST['sender_members_areas'] = substr($members_areas_list, 0, -2);
 $_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
 if ($error == '') {
-$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".$_POST['subject']."' AND content = '".$_POST['content']."' AND date = '".$_POST['date']."'", OBJECT);
+$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".str_replace("'", "''", $_POST['subject'])."' AND content = '".str_replace("'", "''", $_POST['content'])."' AND date = '".$_POST['date']."'", OBJECT);
 if (!$result) { $updated = true; add_message($_POST); } } } }
 
 if (isset($_GET['id'])) {
@@ -365,8 +365,8 @@ if ($result) { echo '<br />
 <option value="paid"<?php if ($_POST['commission_status'] == 'paid') { echo ' selected="selected"'; } ?>><?php _e('Paid', 'contact-manager'); ?></option>
 </select><?php if (isset($_GET['id'])) { echo '<input type="hidden" name="old_commission_status" value="'.$_POST['commission_status'].'" />'; } ?></td></tr>
 <tr id="commission-payment-date" style="<?php if ($_POST['commission_status'] != 'paid') { echo 'display: none; '; } ?>vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
-<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission_payment_date" id="commission_payment_date" size="20" value="<?php echo $_POST['commission_payment_date']; ?>" /><br />
-<span class="description"><?php _e('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager'); ?></span></td></tr>
+<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission_payment_date" id="commission_payment_date" size="20" value="<?php echo $_POST['commission_payment_date']; ?>" />
+<?php if ($_POST['commission_payment_date'] == '') { echo '<br /><span class="description">'.__('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager').'</span>'; } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
 </tbody></table>
@@ -395,8 +395,8 @@ if ($result) { echo '<br />
 <option value="paid"<?php if ($_POST['commission2_status'] == 'paid') { echo ' selected="selected"'; } ?>><?php _e('Paid', 'contact-manager'); ?></option>
 </select><?php if (isset($_GET['id'])) { echo '<input type="hidden" name="old_commission2_status" value="'.$_POST['commission2_status'].'" />'; } ?></td></tr>
 <tr id="commission2-payment-date" style="<?php if ($_POST['commission2_status'] != 'paid') { echo 'display: none; '; } ?>vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
-<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission2_payment_date" id="commission2_payment_date" size="20" value="<?php echo $_POST['commission2_payment_date']; ?>" /><br />
-<span class="description"><?php _e('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager'); ?></span></td></tr>
+<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission2_payment_date" id="commission2_payment_date" size="20" value="<?php echo $_POST['commission2_payment_date']; ?>" />
+<?php if ($_POST['commission2_payment_date'] == '') { echo '<br /><span class="description">'.__('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager').'</span>'; } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
 </tbody></table>
