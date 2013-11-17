@@ -8,13 +8,18 @@ foreach (array(
 'commission_status',
 'commission2_amount',
 'commission2_status',
+'country',
 'form_id',
 'ip_address',
 'keywords',
 'maximum_messages_quantity',
 'maximum_messages_quantity_per_sender',
+'postcode',
 'referrer',
-'referrer2') as $field) {
+'referrer2',
+'referring_url',
+'town',
+'user_agent') as $field) {
 if (isset($_GET[$field])) {
 $GLOBALS['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
 $selection_criteria .= ($field == "keywords" ? " AND (".$field." LIKE '%".$_GET[$field]."%')" :

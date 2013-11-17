@@ -216,8 +216,8 @@ if (is_admin()) { $message[$field] = stripslashes(do_shortcode($original[$field]
 else { $message[$field] = contact_form_data($field); } }
 
 if (!is_admin()) {
-$form_id = $message['form_id'];
-if (in_array('message_confirmation_email_sent', $GLOBALS['contact_form'.$form_id.'_fields'])) {
+$prefix = $GLOBALS['contact_form_prefix'];
+if (in_array('message_confirmation_email_sent', $GLOBALS[$prefix.'fields'])) {
 $message['message_confirmation_email_sent'] = (isset($_POST['message_confirmation_email_sent']) ? 'yes' : 'no'); } }
 
 $upload_dir = wp_upload_dir();

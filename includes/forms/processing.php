@@ -19,8 +19,11 @@ if ($GLOBALS['form_error'] == '') {
 foreach ($_POST as $key => $value) { if (strstr($key, $prefix)) {
 $_POST[str_replace($prefix, $canonical_prefix, $key)] = $value;
 $_POST[str_replace($prefix, '', $key)] = $value; } }
+include CONTACT_MANAGER_PATH.'/tables.php';
+foreach ($tables['messages'] as $key => $value) {
+if ((isset($_POST[$key])) && ($key != 'referring_url') && (!in_array($key, $GLOBALS[$prefix.'fields']))) { unset($_POST[$key]); } }
 $custom_fields = array(); foreach ($_POST as $key => $value) {
-if ((substr($key, 0, 13) == 'custom_field_') && ($value != '')) { $custom_fields[substr($key, 13)] = stripslashes(quotes_entities_decode($value)); } }
+if ((substr($key, 0, 13) == 'custom_field_') && (in_array($key, $GLOBALS[$prefix.'fields'])) && ($value != '')) { $custom_fields[substr($key, 13)] = stripslashes(quotes_entities_decode($value)); } }
 $_POST['custom_fields'] = ($custom_fields == array() ? '' : serialize($custom_fields));
 foreach (array('email_address', 'content', 'subject') as $field) {
 if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
@@ -29,8 +32,9 @@ $_POST['ip_address'] = $_SERVER['REMOTE_ADDR'];
 $_POST['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 $_POST['form_id'] = $id;
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
-$_POST['date'] = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET);
-$_POST['date_utc'] = date('Y-m-d H:i:s');
+$current_time = time();
+$_POST['date'] = date('Y-m-d H:i:s', $current_time + 3600*UTC_OFFSET);
+$_POST['date_utc'] = date('Y-m-d H:i:s', $current_time);
 if (function_exists('award_message_commission')) { award_message_commission();
 if (($_POST['commission_amount'] > 0) && (affiliation_data('overpayment_deducted') == 'yes')) {
 $affiliate = $wpdb->get_row("SELECT overpayment_amount FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);

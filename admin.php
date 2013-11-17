@@ -3,17 +3,20 @@ if ((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) { incl
 
 
 function contact_manager_admin_menu() {
+$lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
 include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $options = (array) get_option('contact_manager_back_office');
-if (((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) || ($options['menu_title'] == '')) { $options['menu_title'] = __('Contact', 'contact-manager'); }
+if (!isset($options['menu_title_'.$lang])) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
+$menu_title = $options['menu_title_'.$lang]; $pages_titles = (array) $options['pages_titles_'.$lang];
+if (((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) || ($menu_title == '')) { $menu_title = __('Contact', 'contact-manager'); }
 if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
 else { $role = $options['minimum_roles']['view']; $capability = $roles[$role]['capability']; }
 if ($options['custom_icon_used'] == 'yes') { $icon_url = format_url($options['custom_icon_url']); } else { $icon_url = ''; }
-add_menu_page('Contact Manager', $options['menu_title'], $capability, 'contact-manager', create_function('', 'include_once CONTACT_MANAGER_PATH."/options-page.php";'), $icon_url);
+add_menu_page('Contact Manager', $menu_title, $capability, 'contact-manager', create_function('', 'include_once CONTACT_MANAGER_PATH."/options-page.php";'), $icon_url);
 $admin_menu_pages = contact_manager_admin_menu_pages();
 foreach ($admin_pages as $key => $value) { if (in_array($key, $admin_menu_pages)) {
 $slug = 'contact-manager'.($key == '' ? '' : '-'.str_replace('_', '-', $key));
-if ((!isset($_GET['page'])) || (!strstr($_GET['page'], 'contact-manager'))) { $value['menu_title'] = $options['pages_titles'][$key]; }
+if ((!isset($_GET['page'])) || (!strstr($_GET['page'], 'contact-manager'))) { $value['menu_title'] = $pages_titles[$key]; }
 add_submenu_page('contact-manager', $value['page_title'], $value['menu_title'], $capability, $slug, create_function('', 'include_once CONTACT_MANAGER_PATH."/'.$value['file'].'";')); } } }
 
 add_action('admin_menu', 'contact_manager_admin_menu');
@@ -34,8 +37,10 @@ return $admin_menu_pages; }
 
 
 function contact_manager_meta_box($post) {
+$lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
 $options = (array) get_option('contact_manager_back_office');
-$links = (array) $options['meta_box'];
+if (!isset($options['meta_box_'.$lang])) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
+$links = (array) $options['meta_box_'.$lang];
 if ((isset($links[''])) && (isset($links['#screen-options-wrap']))) { ?>
 <p><a target="_blank" href="http://www.kleor-editions.com/contact-manager/"><?php echo $links['']; ?></a>
  | <a style="color: #808080;" href="#screen-options-wrap" onclick="document.getElementById('show-settings-link').click(); document.getElementById('contact-manager-hide').click();"><?php echo $links['#screen-options-wrap']; ?></a></p>

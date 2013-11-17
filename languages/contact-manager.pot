@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager  5.7.6\n"
+"Project-Id-Version: Contact Manager  5.7.10\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -1715,40 +1715,12 @@ msgstr ""
 msgid "the keywords"
 msgstr ""
 
-#: tables.php:7
-msgid "the creation date"
-msgstr ""
-
 #: tables.php:8
 msgid "Creation date (UTC)"
 msgstr ""
 
-#: tables.php:8
-msgid "the creation date (UTC)"
-msgstr ""
-
 #: tables.php:9
 msgid "Gift download URL"
-msgstr ""
-
-#: tables.php:9
-msgid "the gift download URL"
-msgstr ""
-
-#: tables.php:10
-msgid "the instructions to the sender"
-msgstr ""
-
-#: tables.php:11
-msgid "the maximum messages quantity per sender"
-msgstr ""
-
-#: tables.php:12
-msgid "the displays count"
-msgstr ""
-
-#: tables.php:13
-msgid "the messages count"
 msgstr ""
 
 #: tables.php:14
@@ -1777,10 +1749,6 @@ msgstr ""
 
 #: tables.php:20
 msgid "Messages registration enabled"
-msgstr ""
-
-#: tables.php:21
-msgid "the maximum messages quantity"
 msgstr ""
 
 #: tables.php:22
@@ -1831,16 +1799,8 @@ msgstr ""
 msgid "Senders autoresponder"
 msgstr ""
 
-#: tables.php:33
-msgid "the senders autoresponder"
-msgstr ""
-
 #: tables.php:34
 msgid "Senders autoresponder list"
-msgstr ""
-
-#: tables.php:34
-msgid "the senders autoresponder list"
 msgstr ""
 
 #: tables.php:35
@@ -1891,10 +1851,6 @@ msgstr ""
 msgid "Senders members areas"
 msgstr ""
 
-#: tables.php:46
-msgid "the senders members areas"
-msgstr ""
-
 #: tables.php:47
 msgid "Senders member category ID"
 msgstr ""
@@ -1931,10 +1887,6 @@ msgstr ""
 msgid "Commission amount"
 msgstr ""
 
-#: tables.php:56 tables.php:58 tables.php:86 tables.php:91
-msgid "the commission amount"
-msgstr ""
-
 #: tables.php:57
 msgid "Commission enabled"
 msgstr ""
@@ -1956,16 +1908,8 @@ msgstr ""
 msgid "the content"
 msgstr ""
 
-#: tables.php:70
-msgid "the date"
-msgstr ""
-
 #: tables.php:71
 msgid "Date (UTC)"
-msgstr ""
-
-#: tables.php:71
-msgid "the date (UTC)"
 msgstr ""
 
 #: tables.php:72
@@ -2016,14 +1960,6 @@ msgstr ""
 msgid "the IP address"
 msgstr ""
 
-#: tables.php:83
-msgid "the user agent"
-msgstr ""
-
-#: tables.php:84
-msgid "the referring URL"
-msgstr ""
-
 #: tables.php:85 tables.php:90
 msgid "the referrer"
 msgstr ""
@@ -2036,16 +1972,8 @@ msgstr ""
 msgid "Commission's payment date"
 msgstr ""
 
-#: tables.php:88 tables.php:93
-msgid "the commission's payment date"
-msgstr ""
-
 #: tables.php:89 tables.php:94
 msgid "Commission's payment date (UTC)"
-msgstr ""
-
-#: tables.php:89 tables.php:94
-msgid "the commission's payment date (UTC)"
 msgstr ""
 
 msgid "Save"
@@ -2205,4 +2133,31 @@ msgid "No category"
 msgstr ""
 
 msgid "No form"
+msgstr ""
+
+msgid "Upload an image"
+msgstr ""
+
+msgid "Upload a file"
+msgstr ""
+
+msgid "Click here to open this page."
+msgstr ""
+
+msgid "Open in a new tab the targets of the links"
+msgstr ""
+
+msgid "pointing to the documentation"
+msgstr ""
+
+msgid "allowing to configure the default options"
+msgstr ""
+
+msgid "below the fields allowing to enter an ID"
+msgstr ""
+
+msgid "next to the fields allowing to enter a URL"
+msgstr ""
+
+msgid "at the top of the modules of this page"
 msgstr ""

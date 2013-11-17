@@ -1,4 +1,5 @@
-<?php foreach (array('admin_email', 'blogname', 'siteurl') as $key) { $$key = get_option($key); }
+<?php $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
+foreach (array('admin_email', 'blogname', 'siteurl') as $key) { $$key = get_option($key); }
 
 
 $initial_options[''] = array(
@@ -64,9 +65,6 @@ $initial_options[''] = array(
 'unfilled_field_message' => __('This field is required.', 'contact-manager'),
 'unfilled_fields_message' => __('Please fill out the required fields.', 'contact-manager'),
 'version' => CONTACT_MANAGER_VERSION);
-
-include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
-$initial_options['captchas_numbers'] = $captchas_numbers;
 
 
 $initial_options['code'] =
@@ -230,11 +228,11 @@ $menu_displayed_items[] = $key; } }
 $initial_options['back_office'] = array(
 'back_office_page_summary_displayed' => 'yes',
 'back_office_page_undisplayed_modules' => array('icon'),
-'displayed_links' => $displayed_links,
 'custom_icon_url' => CONTACT_MANAGER_URL.'images/icon.png',
 'custom_icon_used' => 'no',
-'links' => $links,
-'links_displayed' => 'yes',
+'default_options_links_target' => '_blank',
+'displayed_links' => $displayed_links,
+'documentations_links_target' => '_blank',
 'form_category_page_custom_fields' => array(),
 'form_category_page_summary_displayed' => 'yes',
 'form_category_page_undisplayed_modules' => array(
@@ -259,11 +257,14 @@ $initial_options['back_office'] = array(
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
+'ids_fields_links_target' => '_blank',
+'links' => $links,
+'links_displayed' => 'yes',
 'menu_displayed' => 'yes',
 'menu_displayed_items' => $menu_displayed_items,
 'menu_items' => $menu_items,
-'menu_title' => __('Contact', 'contact-manager'),
-'meta_box' => array(
+'menu_title_'.$lang => __('Contact', 'contact-manager'),
+'meta_box_'.$lang => array(
 	'' => __('Documentation', 'contact-manager'),
 	'#forms' => __('Display a form', 'contact-manager'),
 	'#sender-contents' => __('Display a content restricted to senders', 'contact-manager'),
@@ -296,11 +297,13 @@ $initial_options['back_office'] = array(
 	'registration-to-affiliate-program',
 	'urls-encryption',
 	'wordpress'),
-'pages_titles' => $pages_titles,
+'pages_modules_links_target' => '_blank',
+'pages_titles_'.$lang => $pages_titles,
 'statistics_page_undisplayed_columns' => array(),
 'statistics_page_undisplayed_rows' => array('forms_categories'),
 'title' => 'Contact Manager',
-'title_displayed' => 'yes');
+'title_displayed' => 'yes',
+'urls_fields_links_target' => '_blank');
 
 
 foreach ($variables as $variable) { if (isset($original[$variable])) { $$variable = $original[$variable]; } }

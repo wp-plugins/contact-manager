@@ -21,6 +21,7 @@ $modules['back_office'] = array(
 'icon' => array('name' => __('Icon', 'contact-manager')),
 'top' => array('name' => __('Top', 'contact-manager')),
 'menu' => array('name' => __('Menu', 'contact-manager')),
+'links' => array('name' => __('Links', 'contact-manager')),
 'options-page' => array('name' => __('<em>Options</em> page', 'contact-manager')),
 'form-page' => array('name' => (isset($_GET['id']) ? __('<em>Edit Form</em> page', 'contact-manager') : __('<em>Add Form</em> page', 'contact-manager')), 'modules' => array(
 	'form-page-custom-fields' => array('name' => __('Custom fields', 'contact-manager')))),

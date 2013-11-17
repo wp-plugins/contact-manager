@@ -52,8 +52,9 @@ elseif ($data == '') {
 if (is_array($atts)) { foreach (array('id', 'category') as $key) { if (isset($atts[$key])) { unset($atts[$key]); } } }
 $data = contact_data($atts); } break; }
 $data = (string) do_shortcode($data);
-if ($data == '') { $data = $default; }
+if ($data === '') { $data = $default; }
 $data = contact_format_data($field, $data);
+if ($data === '') { $data = $default; }
 $data = contact_filter_data($filter, $data);
 $data = contact_decimals_data($decimals, $data);
 

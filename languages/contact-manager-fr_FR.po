@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager  5.7.6\n"
+"Project-Id-Version: Contact Manager  5.7.10\n"
 "Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2013-10-26 05:06+0100\n"
+"PO-Revision-Date: 2013-11-16 12:16+0100\n"
 "Last-Translator: Kleor <contact@kleor-editions.com>\n"
 "Language-Team: Kleor <contact@kleor-editions.com>\n"
 "MIME-Version: 1.0\n"
@@ -2124,41 +2124,13 @@ msgstr "la description"
 msgid "the keywords"
 msgstr "les mots clés"
 
-#: tables.php:7
-msgid "the creation date"
-msgstr "la date de création"
-
 #: tables.php:8
 msgid "Creation date (UTC)"
 msgstr "Date de création (UTC)"
 
-#: tables.php:8
-msgid "the creation date (UTC)"
-msgstr "la date de création (UTC)"
-
 #: tables.php:9
 msgid "Gift download URL"
 msgstr "URL de téléchargement du cadeau"
-
-#: tables.php:9
-msgid "the gift download URL"
-msgstr "l'URL de téléchargement du cadeau"
-
-#: tables.php:10
-msgid "the instructions to the sender"
-msgstr "les instructions pour l'expéditeur"
-
-#: tables.php:11
-msgid "the maximum messages quantity per sender"
-msgstr "la quantité maximale de messages par expéditeur"
-
-#: tables.php:12
-msgid "the displays count"
-msgstr "le nombre d'affichages"
-
-#: tables.php:13
-msgid "the messages count"
-msgstr "le nombre de messages"
 
 #: tables.php:14
 msgid "the code"
@@ -2187,10 +2159,6 @@ msgstr "Message de quantité maximale de messages atteinte"
 #: tables.php:20
 msgid "Messages registration enabled"
 msgstr "Enregistrement des messages activé"
-
-#: tables.php:21
-msgid "the maximum messages quantity"
-msgstr "la quantité maximale de messages"
 
 #: tables.php:22
 msgid "Message confirmation email sent"
@@ -2240,17 +2208,9 @@ msgstr "Expéditeurs inscrits dans une liste d'autorépondeur"
 msgid "Senders autoresponder"
 msgstr "Autorépondeur des expéditeurs"
 
-#: tables.php:33
-msgid "the senders autoresponder"
-msgstr "l'autorépondeur des expéditeurs"
-
 #: tables.php:34
 msgid "Senders autoresponder list"
 msgstr "Liste d'autorépondeur des expéditeurs"
-
-#: tables.php:34
-msgid "the senders autoresponder list"
-msgstr "la liste d'autorépondeur des expéditeurs"
 
 #: tables.php:35
 msgid "Senders subscribed as clients"
@@ -2306,10 +2266,6 @@ msgstr "Expéditeurs inscrits dans un espace membre"
 msgid "Senders members areas"
 msgstr "Espaces membres des expéditeurs"
 
-#: tables.php:46
-msgid "the senders members areas"
-msgstr "les espaces membres des expéditeurs"
-
 #: tables.php:47
 msgid "Senders member category ID"
 msgstr "ID de la catégorie de membre des expéditeurs"
@@ -2350,13 +2306,6 @@ msgstr "Affiliation activée"
 msgid "Commission amount"
 msgstr "Montant de la commission"
 
-#: tables.php:56
-#: tables.php:58
-#: tables.php:86
-#: tables.php:91
-msgid "the commission amount"
-msgstr "le montant de la commission"
-
 #: tables.php:57
 msgid "Commission enabled"
 msgstr "Commission activée"
@@ -2383,17 +2332,9 @@ msgstr "le sujet"
 msgid "the content"
 msgstr "le contenu"
 
-#: tables.php:70
-msgid "the date"
-msgstr "la date"
-
 #: tables.php:71
 msgid "Date (UTC)"
 msgstr "Date (UTC)"
-
-#: tables.php:71
-msgid "the date (UTC)"
-msgstr "la date (UTC)"
 
 #: tables.php:72
 msgid "the first name"
@@ -2443,14 +2384,6 @@ msgstr "le numéro de téléphone"
 msgid "the IP address"
 msgstr "l'adresse IP"
 
-#: tables.php:83
-msgid "the user agent"
-msgstr "le navigateur"
-
-#: tables.php:84
-msgid "the referring URL"
-msgstr "l'URL référente"
-
 #: tables.php:85
 #: tables.php:90
 msgid "the referrer"
@@ -2466,20 +2399,10 @@ msgstr "Statut de la commission"
 msgid "Commission's payment date"
 msgstr "Date de paiement de la commission"
 
-#: tables.php:88
-#: tables.php:93
-msgid "the commission's payment date"
-msgstr "la date de paiement de la commission"
-
 #: tables.php:89
 #: tables.php:94
 msgid "Commission's payment date (UTC)"
 msgstr "Date de paiement de la commission (UTC)"
-
-#: tables.php:89
-#: tables.php:94
-msgid "the commission's payment date (UTC)"
-msgstr "la date de paiement de la commission (UTC)"
 
 msgid "Save"
 msgstr "Enregistrer"
@@ -2639,4 +2562,31 @@ msgstr "Aucune catégorie"
 
 msgid "No form"
 msgstr "Aucun formulaire"
+
+msgid "Upload an image"
+msgstr "Envoyer une image"
+
+msgid "Upload a file"
+msgstr "Envoyer un fichier"
+
+msgid "Click here to open this page."
+msgstr "Cliquez ici pour ouvrir cette page."
+
+msgid "Open in a new tab the targets of the links"
+msgstr "Ouvrir dans un nouvel onglet les cibles des liens"
+
+msgid "pointing to the documentation"
+msgstr "pointant vers la documentation"
+
+msgid "allowing to configure the default options"
+msgstr "permettant de configurer les options par défaut"
+
+msgid "below the fields allowing to enter an ID"
+msgstr "en-dessous des champs permettant d'entrer un ID"
+
+msgid "next to the fields allowing to enter a URL"
+msgstr "à côté des champs permettant d'entrer une URL"
+
+msgid "at the top of the modules of this page"
+msgstr "en haut des modules de cette page"
 

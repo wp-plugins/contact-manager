@@ -116,11 +116,11 @@ $row = $wpdb->get_row("SELECT count(*) as total FROM $table WHERE id > 0 $date_c
 $data = (int) (isset($row->total) ? $row->total : 0); }
 else {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = round(100*(isset($row->total) ? $row->total : 0))/100; } }
+$data = (isset($row->total) ? round($row->total, 2) : 0); } }
 else {
 $data = 0; foreach ($table as $table_name) {
 $row = $wpdb->get_row("SELECT SUM($field) AS total FROM $table_name WHERE id > 0 $date_criteria $status_criteria", OBJECT);
-$data = $data + round(100*(isset($row->total) ? $row->total : 0))/100; } }
+$data = $data + (isset($row->total) ? round($row->total, 2) : 0); } }
 $GLOBALS[$data_key] = $data; } } }
 
 $limit = str_replace(array('?', ',', ';'), '.', $limit);

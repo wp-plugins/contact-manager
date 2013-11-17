@@ -1,5 +1,6 @@
 <?php global $wpdb; $error = '';
 $options = (array) get_option('contact_manager_back_office');
+extract(contact_manager_pages_links_markups($options));
 include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $max_links = count($admin_links);
 $max_menu_items = count($admin_pages);
@@ -37,6 +38,8 @@ $_POST['menu_displayed_items'] = array();
 for ($i = 0; $i < $max_menu_items; $i++) {
 $_POST['menu_items'][$i] = $_POST['menu_item'.$i];
 if (isset($_POST['menu_item'.$i.'_displayed'])) { $_POST['menu_displayed_items'][] = $i; } } }
+foreach (array('default_options', 'documentations', 'ids_fields', 'pages_modules', 'urls_fields') as $string) {
+$_POST[$string.'_links_target'] = (isset($_POST[$string.'_links_targets_opened_in_new_tab']) ? '_blank' : '_self'); }
 $_POST['statistics_page_undisplayed_columns'] = array();
 foreach ($statistics_columns as $key => $value) {
 if ((!isset($_POST['statistics_page_'.$key.'_column_displayed'])) && ((!isset($value['required'])) || ($value['required'] != 'yes'))) { $_POST['statistics_page_undisplayed_columns'][] = $key; } }
@@ -89,7 +92,8 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
  <span class="description" style="vertical-align: -5%;"><?php _e('Icon displayed in the admin menu of WordPress', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="custom_icon_url"><?php _e('Icon URL', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_icon_url" id="custom_icon_url" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75"><?php echo $options['custom_icon_url']; ?></textarea> 
-<a style="vertical-align: 25%;" href="<?php echo htmlspecialchars(format_url(do_shortcode($options['custom_icon_url']))); ?>"><?php _e('Link', 'contact-manager'); ?></a></td></tr>
+<span style="vertical-align: 25%;"><a target="<?php echo $options['urls_fields_links_target']; ?>" href="<?php echo htmlspecialchars(format_url(do_shortcode($options['custom_icon_url']))); ?>"><?php _e('Link', 'contact-manager'); ?></a>
+<?php if (current_user_can('upload_files')) { echo ' | <a target="'.$options['urls_fields_links_target'].'" href="media-new.php">'.__('Upload an image', 'contact-manager').'</a>'; } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -137,6 +141,24 @@ echo '</select></label>
 </tbody></table>
 </div></div>
 
+<div class="postbox" id="links-module"<?php if (in_array('links', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h3 id="links"><strong><?php echo $modules['back_office']['links']['name']; ?></strong></h3>
+<div class="inside">
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Open in a new tab the targets of the links', 'contact-manager'); ?></strong></th>
+<td><?php foreach (array(
+'documentations' => __('pointing to the documentation', 'contact-manager'),
+'default_options' => __('allowing to configure the default options', 'contact-manager'),
+'ids_fields' => __('below the fields allowing to enter an ID', 'contact-manager'),
+'urls_fields' => __('next to the fields allowing to enter a URL', 'contact-manager'),
+'pages_modules' => __('at the top of the modules of this page', 'contact-manager')) as $key => $value) {
+$name = $key.'_links_targets_opened_in_new_tab';
+echo '<label><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.($options[$key.'_links_target'] != '_blank' ? '' : ' checked="checked"').' /> '.$value.'</label><br />'; } ?></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
+</tbody></table>
+</div></div>
+
 <?php foreach (array(
 'options-page',
 'form-page',
@@ -147,6 +169,8 @@ echo '</select></label>
 <h3 id="statistics-page"><strong><?php echo $modules['back_office']['statistics-page']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><span class="description"><a target="<?php echo $options['pages_modules_links_target']; ?>" href="admin.php?page=contact-manager-statistics"><?php _e('Click here to open this page.', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Columns displayed', 'contact-manager'); ?></strong></th>
 <td><?php foreach ($statistics_columns as $key => $value) {
 $name = 'statistics_page_'.$key.'_column_displayed';

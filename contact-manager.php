@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor-editions.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.7.6
+Version: 5.7.10
 Author: Kleor
 Author URI: http://www.kleor-editions.com
 Text Domain: contact-manager
@@ -61,12 +61,12 @@ function contact_cron() {
 $cron = get_option('contact_manager_cron');
 if ($cron) {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
-$current_timestamp = time();
+$current_time = time();
 $installation = (array) $cron['previous_installation'];
 if ($installation['version'] != CONTACT_MANAGER_VERSION) {
-$cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'number' => 0, 'timestamp' => $current_timestamp); }
-elseif (($installation['number'] < 12) && (($current_timestamp - $installation['timestamp']) >= pow(2, $installation['number'] + 2))) {
-$cron['previous_installation']['timestamp'] = $current_timestamp; }
+$cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'number' => 0, 'timestamp' => $current_time); }
+elseif (($installation['number'] < 12) && (($current_time - $installation['timestamp']) >= pow(2, $installation['number'] + 2))) {
+$cron['previous_installation']['timestamp'] = $current_time; }
 if ($cron['previous_installation'] != $installation) {
 update_option('contact_manager_cron', $cron);
 wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
@@ -110,7 +110,10 @@ return $data; }
 
 function contact_filter_data($filter, $data) {
 if (is_string($filter)) { $filter = preg_split('#[^a-zA-Z0-9_]#', str_replace('-', '_', contact_do_shortcode($filter)), 0, PREG_SPLIT_NO_EMPTY); }
-if (is_array($filter)) { foreach ($filter as $function) { $data = contact_string_map($function, $data); } }
+if (is_array($filter)) { foreach ($filter as $function) {
+if (!function_exists($function)) { $function = 'contact_'.$function; }
+if (!function_exists($function)) { $function = 'contact_manager_'.$function; }
+if (function_exists($function)) { $data = $function($data); } } }
 return $data; }
 
 
@@ -165,13 +168,6 @@ function contact_shortcode_atts($default_values, $atts) { include CONTACT_MANAGE
 
 
 function contact_sql_array($table, $array) { include CONTACT_MANAGER_PATH.'/includes/sql-array.php'; return $sql; }
-
-
-function contact_string_map($function, $string) {
-if (!function_exists($function)) { $function = 'contact_'.$function; }
-if (!function_exists($function)) { $function = 'contact_manager_'.$function; }
-if (function_exists($function)) { $array = array_map($function, array($string)); $string = $array[0]; }
-return $string; }
 
 
 for ($i = 0; $i < 4; $i++) {

@@ -20,7 +20,8 @@ $content = str_replace(' frameborder="0"', '', recaptcha_get_html(RECAPTCHA_PUBL
 else {
 switch ($atts['type']) {
 case 'arithmetic':
-$captchas_numbers = (array) get_option('contact_manager_captchas_numbers');
+load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
+include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
 $m = mt_rand(0, 15);
 $n = mt_rand(0, 15);
 $string = $captchas_numbers[$m].' + '.$captchas_numbers[$n];

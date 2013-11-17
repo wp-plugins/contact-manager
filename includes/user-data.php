@@ -36,7 +36,7 @@ else {
 $result = $wpdb->get_row("SELECT meta_value FROM ".$wpdb->base_prefix."usermeta WHERE meta_key = '".$field."' AND user_id = ".$n, OBJECT);
 if ($result) { $data = $result->meta_value; $GLOBALS['user'.$n.'_data'][$field] = $data; } } } }
 $data = (string) do_shortcode($data);
-if ($data == '') { $data = $default; }
+if ($data === '') { $data = $default; }
 $data = contact_filter_data($filter, $data);
 foreach (array('user_id', 'user_data') as $key) {
 if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } }
