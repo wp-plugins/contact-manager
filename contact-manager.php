@@ -1,17 +1,17 @@
 <?php
 /*
 Plugin Name: Contact Manager
-Plugin URI: http://www.kleor-editions.com/contact-manager
+Plugin URI: http://www.kleor.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
 Version: 5.7.10
 Author: Kleor
-Author URI: http://www.kleor-editions.com
+Author URI: http://www.kleor.com
 Text Domain: contact-manager
 License: GPL2
 */
 
 /* 
-Copyright 2012 Kleor Editions (http://www.kleor-editions.com)
+Copyright 2012 Kleor (http://www.kleor.com)
 
 This program is a free software. You can redistribute it and/or 
 modify it under the terms of the GNU General Public License as 

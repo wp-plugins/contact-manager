@@ -56,7 +56,7 @@ $undisplayed_modules = (array) $options['back_office_page_undisplayed_modules'];
 <div class="wrap">
 <div id="poststuff">
 <?php contact_manager_pages_top($options); ?>
-<?php if (isset($_POST['submit'])) { echo '<div class="updated"><p><strong>'.__('Settings saved.').'</strong></p></div>'; } ?>
+<?php if (isset($_POST['submit'])) { echo '<div class="updated"><p><strong>'.__('Settings saved.', 'contact-manager').'</strong></p></div>'; } ?>
 <form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <?php contact_manager_pages_menu($options); ?>

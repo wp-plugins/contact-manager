@@ -196,13 +196,13 @@ $initial_options[$table_slug] = array(
 'order' => 'desc',
 'orderby' => 'id',
 'searchby' => '',
-'start_date' => '2011-01-01 00:00:00'); }
+'start_date' => '2000-01-01 00:00:00'); }
 
 
 $initial_options['statistics'] = array(
 'displayed_tables' => array(),
 'filterby' => 'form_id',
-'start_date' => '2011-01-01 00:00:00',
+'start_date' => '2000-01-01 00:00:00',
 'tables' => array('messages', 'forms', 'forms_categories'));
 
 

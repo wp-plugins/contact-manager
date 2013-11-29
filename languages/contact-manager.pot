@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Contact Manager  5.7.10\n"
-"Report-Msgid-Bugs-To: http://www.kleor-editions.com/contact-manager\n"
+"Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
-"Last-Translator: Kleor <contact@kleor-editions.com>\n"
-"Language-Team: Kleor <contact@kleor-editions.com>\n"
+"Last-Translator: Kleor <contact@kleor.com>\n"
+"Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -951,7 +951,7 @@ msgstr ""
 #: form-page.php:400 message-page.php:440 options-page.php:342
 msgid ""
 "To subscribe the senders as clients, you must have installed and activated "
-"<a href=\"http://www.kleor-editions.com/commerce-manager\">Commerce Manager</"
+"<a href=\"http://www.kleor.com/commerce-manager\">Commerce Manager</"
 "a>."
 msgstr ""
 
@@ -994,7 +994,7 @@ msgstr ""
 #: message-page.php:478 options-page.php:388 options-page.php:532
 msgid ""
 "To use affiliation, you must have installed and activated <a href=\"http://"
-"www.kleor-editions.com/affiliation-manager\">Affiliation Manager</a>."
+"www.kleor.com/affiliation-manager\">Affiliation Manager</a>."
 msgstr ""
 
 #: form-page.php:454 message-page.php:481 options-page.php:391
@@ -1004,7 +1004,7 @@ msgstr ""
 #: form-page.php:506 message-page.php:516 options-page.php:434
 msgid ""
 "To use membership, you must have installed and activated <a href=\"http://"
-"www.kleor-editions.com/membership-manager\">Membership Manager</a>."
+"www.kleor.com/membership-manager\">Membership Manager</a>."
 msgstr ""
 
 #: form-page.php:507 message-page.php:519 options-page.php:437
@@ -2160,4 +2160,22 @@ msgid "next to the fields allowing to enter a URL"
 msgstr ""
 
 msgid "at the top of the modules of this page"
+msgstr ""
+
+msgid "Affiliates"
+msgstr ""
+
+msgid "Clients"
+msgstr ""
+
+msgid "Members"
+msgstr ""
+
+msgid "Clicks"
+msgstr ""
+
+msgid "Orders"
+msgstr ""
+
+msgid "Recurring payments"
 msgstr ""
