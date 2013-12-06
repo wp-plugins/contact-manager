@@ -2,29 +2,20 @@
 
 foreach ((array) $_POST as $key => $value) { if (is_string($value)) { $_POST[$key] = quotes_entities($_POST[$key]); } }
 $GLOBALS['selection_criteria'] = ''; $selection_criteria = '';
-foreach (array(
-'category_id',
-'commission_amount',
-'commission_status',
-'commission2_amount',
-'commission2_status',
-'country',
-'form_id',
-'ip_address',
-'keywords',
-'maximum_messages_quantity',
-'maximum_messages_quantity_per_sender',
-'postcode',
-'referrer',
-'referrer2',
-'referring_url',
-'town',
-'user_agent') as $field) {
+foreach (all_tables_keys($tables) as $field) {
 if (isset($_GET[$field])) {
 $GLOBALS['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
 $selection_criteria .= ($field == "keywords" ? " AND (".$field." LIKE '%".$_GET[$field]."%')" :
  (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')")); } }
 $selection_criteria = str_replace("= '!0'", "!= 0", $selection_criteria);
+
+
+function all_tables_keys($tables) {
+$keys = array();
+foreach ($tables as $table_slug => $table) {
+foreach ($table as $key => $value) {
+if (!in_array($key, $keys)) { $keys[] = $key; } } }
+return $keys; }
 
 
 function no_items($table) {
@@ -43,8 +34,9 @@ $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_ma
 $messages_number = (int) (isset($row->total) ? $row->total : 0);
 $row_actions =
 '<span class="edit"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'">'.__('Edit', 'contact-manager').'</a></span>
- | <span class="delete"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'&amp;action=delete">'.__('Delete', 'contact-manager').'</a></span>'
-.($messages_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.__('Messages', 'contact-manager').'</a></span>'); break;
+ | <span class="delete"><a href="admin.php?page=contact-manager-form&amp;id='.$item->id.'&amp;action=delete">'.__('Delete', 'contact-manager').'</a></span>
+ | <span class="view"><a href="admin.php?page=contact-manager-statistics&amp;form_id='.$item->id.'">'.__('Statistics', 'contact-manager').'</a></span>'
+.($messages_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'&amp;start_date=0">'.__('Messages', 'contact-manager').' <span style="color: #808080;">('.$messages_number.')</span></a></span>'); break;
 case 'forms_categories':
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_forms WHERE category_id = ".$item->id, OBJECT);
 $forms_number = (int) (isset($row->total) ? $row->total : 0);
@@ -53,8 +45,8 @@ $categories_number = (int) (isset($row->total) ? $row->total : 0);
 $row_actions = 
 '<span class="edit"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'">'.__('Edit', 'contact-manager').'</a></span>
  | <span class="delete"><a href="admin.php?page=contact-manager-form-category&amp;id='.$item->id.'&amp;action=delete">'.__('Delete', 'contact-manager').'</a></span>'
-.($forms_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-forms&amp;category_id='.$item->id.'">'.__('Forms', 'contact-manager').'</a></span>')
-.($categories_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-forms-categories&amp;category_id='.$item->id.'">'.__('Subcategories', 'contact-manager').'</a></span>'); break;
+.($forms_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-forms&amp;category_id='.$item->id.'&amp;start_date=0">'.__('Forms', 'contact-manager').' <span style="color: #808080;">('.$forms_number.')</span></a></span>')
+.($categories_number == 0 ? '' : ' | <span class="view"><a href="admin.php?page=contact-manager-forms-categories&amp;category_id='.$item->id.'&amp;start_date=0">'.__('Subcategories', 'contact-manager').' <span style="color: #808080;">('.$categories_number.')</span></a></span>'); break;
 case 'messages': $row_actions = 
 '<span class="edit"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'">'.__('Edit', 'contact-manager').'</a></span>
  | <span class="delete"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'&amp;action=delete">'.__('Delete', 'contact-manager').'</a></span>'; break; }
@@ -137,7 +129,7 @@ $keyword = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;k
 $keywords_list .= $keyword.', '; }
 $table_td = substr($keywords_list, 0, -2); break;
 case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data === 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
-case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'">'.$data.'</a>'); break;
+case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'&amp;start_date=0">'.$data.'</a>'); break;
 case 'sender_affiliate_status': case 'sender_client_status': case 'sender_member_status':
 if ($data == 'active') { $table_td = '<span style="color: #008000;">'.__('Active', 'contact-manager').'</span>'; }
 elseif ($data == 'inactive') { $table_td = '<span style="color: #e08000;">'.__('Inactive', 'contact-manager').'</span>'; }

@@ -5,6 +5,15 @@ if (isset($_GET['id'])) { $_GET['id'] = (int) $_GET['id']; if ($_GET['id'] < 1) 
 foreach ($_GET as $key => $value) { $GLOBALS[$key] = $value; }
 
 
+function contact_manager_pages_css() { ?>
+<style type="text/css">
+.delete:hover { color: #ff0000; }
+</style> 
+<?php }
+
+add_action('admin_head', 'contact_manager_pages_css');
+
+
 function contact_manager_pages_links($back_office_options) {
 $links = (array) $back_office_options['links'];
 $displayed_links = (array) $back_office_options['displayed_links'];
@@ -13,7 +22,7 @@ include CONTACT_MANAGER_PATH.'/admin-pages.php';
 if ($back_office_options['title_displayed'] == 'yes') { $left_margin = '6em'; } else { $left_margin = '0'; }
 echo '<ul class="subsubsub" style="margin: 2em 0 1.5em '.$left_margin.'; float: left; white-space: normal;">';
 $links_markup = array(
-'Documentation' => '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor-editions.com/contact-manager">'.$admin_links['Documentation']['name'].'</a>',
+'Documentation' => '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/contact-manager">'.$admin_links['Documentation']['name'].'</a>',
 'Commerce Manager' => (function_exists('commerce_manager_admin_menu') ? '<a href="admin.php?page=commerce-manager'.
 ($_GET['page'] == 'contact-manager-form' ? '-product' : '').
 ($_GET['page'] == 'contact-manager-form-category' ? '-product-category' : '').
@@ -22,12 +31,12 @@ $links_markup = array(
 ($_GET['page'] == 'contact-manager-message' ? '-order' : '').
 ($_GET['page'] == 'contact-manager-messages' ? '-orders' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
-(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Commerce Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor-editions.com/commerce-manager">'.$admin_links['Commerce Manager']['name'].'</a>'),
+(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Commerce Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/commerce-manager">'.$admin_links['Commerce Manager']['name'].'</a>'),
 'Affiliation Manager' => (function_exists('affiliation_manager_admin_menu') ? '<a href="admin.php?page=affiliation-manager'.
 ($_GET['page'] == 'contact-manager-message' ? '-affiliate' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'messages') ? '-messages-commissions' : '').
-(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Affiliation Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor-editions.com/affiliation-manager">'.$admin_links['Affiliation Manager']['name'].'</a>'),
+(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Affiliation Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/affiliation-manager">'.$admin_links['Affiliation Manager']['name'].'</a>'),
 'Membership Manager' => (function_exists('membership_manager_admin_menu') ? '<a href="admin.php?page=membership-manager'.
 ($_GET['page'] == 'contact-manager-form' ? '-member-area' : '').
 ($_GET['page'] == 'contact-manager-form-category' ? '-member-area-category' : '').
@@ -36,7 +45,7 @@ $links_markup = array(
 ($_GET['page'] == 'contact-manager-message' ? '-member' : '').
 ($_GET['page'] == 'contact-manager-messages' ? '-members' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
-(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Membership Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor-editions.com/membership-manager">'.$admin_links['Membership Manager']['name'].'</a>'),
+(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Membership Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/membership-manager">'.$admin_links['Membership Manager']['name'].'</a>'),
 'Optin Manager' => (function_exists('optin_manager_admin_menu') ? '<a href="admin.php?page=optin-manager'.
 ($_GET['page'] == 'contact-manager-form' ? '-form' : '').
 ($_GET['page'] == 'contact-manager-form-category' ? '-form-category' : '').
@@ -45,7 +54,7 @@ $links_markup = array(
 ($_GET['page'] == 'contact-manager-message' ? '-prospect' : '').
 ($_GET['page'] == 'contact-manager-messages' ? '-prospects' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
-(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Optin Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor-editions.com/optin-manager">'.$admin_links['Optin Manager']['name'].'</a>'));
+(strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Optin Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/optin-manager">'.$admin_links['Optin Manager']['name'].'</a>'));
 $first = true; $links_displayed = array();
 for ($i = 0; $i < count($admin_links); $i++) {
 $link = (isset($links[$i]) ? $links[$i] : '');
@@ -109,7 +118,7 @@ if (!strstr($_GET['page'], 'back-office')) { echo '</div>'; } } ?></td></tr>
 <h4 id="<?php echo $module; ?>-custom-fields"><strong><?php echo $modules['back_office'][$module]['modules'][$module.'-custom-fields']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php _e('You can create an unlimited number of custom fields to record additional datas.', 'contact-manager'); ?> <a target="<?php echo $back_office_options['documentations_links_target']; ?>" href="http://www.kleor-editions.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<td><span class="description"><?php _e('You can create an unlimited number of custom fields to record additional datas.', 'contact-manager'); ?> <a target="<?php echo $back_office_options['documentations_links_target']; ?>" href="http://www.kleor.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 </tbody></table>
 <table class="form-table" style="margin-left: 8%"><tbody>
 <?php $custom_fields = (array) $back_office_options[$page_slug.'_page_custom_fields'];
@@ -170,12 +179,6 @@ function contact_manager_pages_top($back_office_options) {
 contact_manager_pages_title($back_office_options);
 contact_manager_pages_links($back_office_options);
 echo '<div class="clear"></div>'; }
-
-
-function contact_manager_user_can($back_office_options, $capability) {
-if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
-else { include CONTACT_MANAGER_PATH.'/admin-pages.php'; $role = $back_office_options['minimum_roles'][$capability]; $capability = $roles[$role]['capability']; }
-return current_user_can($capability); }
 
 
 function contact_manager_users_roles() {
@@ -245,7 +248,7 @@ TEXT_CHOOSE_DATE : '<?php _e('Choose a date', 'contact-manager'); ?>',
 DATE_PICKER_ALT : '<?php _e('Date', 'contact-manager'); ?>',
 DATE_PICKER_URL : '<?php echo CONTACT_MANAGER_URL; ?>images/date-picker.png',
 HEADER_FORMAT : 'mmmm yyyy'
-}; $(function(){ $('.date-pick').datePicker({startDate:'2011-01-01'}); });
+}; $(function(){ $('.date-pick').datePicker({startDate:'2000-01-01'}); });
 </script>
 <?php }
 

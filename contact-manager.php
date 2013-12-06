@@ -1,17 +1,17 @@
 <?php
 /*
 Plugin Name: Contact Manager
-Plugin URI: http://www.kleor-editions.com/contact-manager
+Plugin URI: http://www.kleor.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.7.10
+Version: 5.8
 Author: Kleor
-Author URI: http://www.kleor-editions.com
+Author URI: http://www.kleor.com
 Text Domain: contact-manager
 License: GPL2
 */
 
 /* 
-Copyright 2012 Kleor Editions (http://www.kleor-editions.com)
+Copyright 2012 Kleor (http://www.kleor.com)
 
 This program is a free software. You can redistribute it and/or 
 modify it under the terms of the GNU General Public License as 
@@ -42,9 +42,8 @@ function install_contact_manager() { include CONTACT_MANAGER_PATH.'/includes/ins
 register_activation_hook(__FILE__, 'install_contact_manager');
 
 global $wpdb;
-$contact_manager_options = get_option('contact_manager');
-if (((is_multisite()) || ($contact_manager_options)) && ((!isset($contact_manager_options['version']))
- || ($contact_manager_options['version'] != CONTACT_MANAGER_VERSION))) { install_contact_manager(); }
+$contact_manager_options = (array) get_option('contact_manager');
+if ((!isset($contact_manager_options['version'])) || ($contact_manager_options['version'] != CONTACT_MANAGER_VERSION)) { install_contact_manager(); }
 
 fix_url();
 
@@ -70,7 +69,7 @@ $cron['previous_installation']['timestamp'] = $current_time; }
 if ($cron['previous_installation'] != $installation) {
 update_option('contact_manager_cron', $cron);
 wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
-elseif ((is_multisite()) || (get_option('contact_manager'))) { wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
+else { wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
 
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 foreach (array('admin_footer', 'login_footer', 'wp_footer') as $hook) { add_action($hook, 'contact_cron'); } }

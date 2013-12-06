@@ -42,26 +42,30 @@ $options = (array) get_option('contact_manager_back_office');
 if (!isset($options['meta_box_'.$lang])) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
 $links = (array) $options['meta_box_'.$lang];
 if ((isset($links[''])) && (isset($links['#screen-options-wrap']))) { ?>
-<p><a target="_blank" href="http://www.kleor-editions.com/contact-manager/"><?php echo $links['']; ?></a>
+<p><a target="_blank" href="http://www.kleor.com/contact-manager/"><?php echo $links['']; ?></a>
  | <a style="color: #808080;" href="#screen-options-wrap" onclick="document.getElementById('show-settings-link').click(); document.getElementById('contact-manager-hide').click();"><?php echo $links['#screen-options-wrap']; ?></a></p>
 <ul>
 <?php foreach (array('', '#screen-options-wrap') as $url) { unset($links[$url]); }
 foreach ($links as $url => $text) {
-echo '<li><a target="_blank" href="http://www.kleor-editions.com/contact-manager/'.$url.'">'.$text.'</a></li>'; } ?>
+echo '<li><a target="_blank" href="http://www.kleor.com/contact-manager/'.$url.'">'.$text.'</a></li>'; } ?>
 </ul>
 <?php } }
 
-add_action('add_meta_boxes', create_function('', 'foreach (array("page", "post") as $type) {
-add_meta_box("contact-manager", "Contact Manager", "contact_manager_meta_box", $type, "side"); }'));
+add_action('add_meta_boxes', create_function('', 'if (contact_manager_user_can(get_option("contact_manager_back_office"), "view")) {
+foreach (array("page", "post") as $type) { add_meta_box("contact-manager", "Contact Manager", "contact_manager_meta_box", $type, "side"); } }'));
+
+
+function contact_manager_user_can($back_office_options, $capability) {
+if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
+else { include CONTACT_MANAGER_PATH.'/admin-pages.php'; $role = $back_office_options['minimum_roles'][$capability]; $capability = $roles[$role]['capability']; }
+return current_user_can($capability); }
 
 
 function contact_manager_action_links($links, $file) {
 if ($file == 'contact-manager/contact-manager.php') {
-if (!is_multisite()) {
 $links = array_merge($links, array(
-'<a href="admin.php?page=contact-manager&amp;action=uninstall">'.__('Uninstall', 'contact-manager').'</a>')); }
-$links = array_merge($links, array(
-'<a href="admin.php?page=contact-manager&amp;action=reset">'.__('Reset', 'contact-manager').'</a>',
+'<span class="delete"><a href="admin.php?page=contact-manager&amp;action=uninstall" title="'.__('Delete the options and tables of Contact Manager', 'contact-manager').'">'.__('Uninstall', 'contact-manager').'</a></span>',
+'<span class="delete"><a href="admin.php?page=contact-manager&amp;action=reset" title="'.__('Reset the options of Contact Manager', 'contact-manager').'">'.__('Reset', 'contact-manager').'</a></span>',
 '<a href="admin.php?page=contact-manager">'.__('Options', 'contact-manager').'</a>')); }
 return $links; }
 
@@ -71,7 +75,7 @@ add_filter('plugin_action_links', 'contact_manager_action_links', 10, 2);
 function contact_manager_row_meta($links, $file) {
 if ($file == 'contact-manager/contact-manager.php') {
 $links = array_merge($links, array(
-'<a href="http://www.kleor-editions.com/contact-manager">'.__('Documentation', 'contact-manager').'</a>')); }
+'<a href="http://www.kleor.com/contact-manager">'.__('Documentation', 'contact-manager').'</a>')); }
 return $links; }
 
 add_filter('plugin_row_meta', 'contact_manager_row_meta', 10, 2);
