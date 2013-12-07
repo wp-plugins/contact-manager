@@ -3,16 +3,16 @@ $back_office_options = (array) get_option('contact_manager_back_office');
 extract(contact_manager_pages_links_markups($back_office_options));
 
 if ((isset($_GET['action'])) && (($_GET['action'] == 'reset') || ($_GET['action'] == 'uninstall'))) {
+$for = (((isset($_GET['for'])) && (is_multisite()) && (current_user_can('manage_network'))) ? $_GET['for'] : 'single');
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
-else { if ($_GET['action'] == 'reset') { reset_contact_manager(); }
-else { deactivate_plugins('contact-manager/contact-manager.php'); uninstall_contact_manager(); } } } ?>
+else { if ($_GET['action'] == 'reset') { reset_contact_manager(); } else { uninstall_contact_manager($for); } } } ?>
 <div class="wrap">
 <div id="poststuff">
 <?php contact_manager_pages_top($back_office_options); ?>
 <?php if (isset($_POST['submit'])) {
 echo '<div class="updated"><p><strong>'.($_GET['action'] == 'reset' ? __('Options reset.', 'contact-manager') : __('Options and tables deleted.', 'contact-manager')).'</strong></p></div>
-<script type="text/javascript">setTimeout(\'window.location = "'.($_GET['action'] == 'reset' ? 'admin.php?page=contact-manager' : 'plugins.php').'"\', 2000);</script>'; } ?>
+<script type="text/javascript">setTimeout(\'window.location = "'.($_GET['action'] == 'reset' ? 'admin.php?page=contact-manager' : ($for == 'network' ? 'network/' : '').'plugins.php').'"\', 2000);</script>'; } ?>
 <?php contact_manager_pages_menu($back_office_options); ?>
 <div class="clear"></div>
 <?php if ($error != '') { echo '<p style="color: #c00000;">'.$error.'</p>'; } ?>
@@ -21,6 +21,7 @@ echo '<div class="updated"><p><strong>'.($_GET['action'] == 'reset' ? __('Option
 <?php wp_nonce_field($_GET['page']); ?>
 <div class="alignleft actions">
 <?php if ($_GET['action'] == 'reset') { _e('Do you really want to reset the options of Contact Manager?', 'contact-manager'); }
+elseif ($for == 'network') { _e('Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?', 'contact-manager'); }
 else { _e('Do you really want to permanently delete the options and tables of Contact Manager?', 'contact-manager'); } ?> 
 <input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" />
 </div>
@@ -96,8 +97,8 @@ foreach ($options as $key => $value) {
 if (is_string($value)) { $options[$key] = htmlspecialchars($value); } }
 $undisplayed_modules = (array) $back_office_options['options_page_undisplayed_modules'];
 if (function_exists('commerce_data')) { $currency_code = commerce_data('currency_code'); }
-else { $commerce_manager_options = (array) get_option('commerce_manager');
-$currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
+else { $commerce_manager_options = array_merge((array) get_option('commerce_manager'), (array) get_option('commerce_manager_client_area'));
+$currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortcode($commerce_manager_options['currency_code']) : ''); } ?>
 
 <div class="wrap">
 <div id="poststuff">

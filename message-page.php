@@ -231,8 +231,8 @@ $_POST[$key] = str_replace(array('&amp;amp;', '&amp;apos;', '&amp;quot;'), array
 if (($value == '0000-00-00 00:00:00') && ((substr($key, -4) == 'date') || (substr($key, -8) == 'date_utc'))) { $_POST[$key] = ''; } } }
 $undisplayed_modules = (array) $back_office_options['message_page_undisplayed_modules'];
 if (function_exists('commerce_data')) { $currency_code = commerce_data('currency_code'); }
-else { $commerce_manager_options = (array) get_option('commerce_manager');
-$currency_code = do_shortcode($commerce_manager_options['currency_code']); } ?>
+else { $commerce_manager_options = array_merge((array) get_option('commerce_manager'), (array) get_option('commerce_manager_client_area'));
+$currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortcode($commerce_manager_options['currency_code']) : ''); } ?>
 
 <div class="wrap">
 <div id="poststuff">

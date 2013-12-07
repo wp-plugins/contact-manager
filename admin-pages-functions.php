@@ -118,7 +118,7 @@ if (!strstr($_GET['page'], 'back-office')) { echo '</div>'; } } ?></td></tr>
 <h4 id="<?php echo $module; ?>-custom-fields"><strong><?php echo $modules['back_office'][$module]['modules'][$module.'-custom-fields']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php _e('You can create an unlimited number of custom fields to record additional datas.', 'contact-manager'); ?> <a target="<?php echo $back_office_options['documentations_links_target']; ?>" href="http://www.kleor.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<td><span class="description"><?php _e('You can create an unlimited number of custom fields to record additional data.', 'contact-manager'); ?> <a target="<?php echo $back_office_options['documentations_links_target']; ?>" href="http://www.kleor.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 </tbody></table>
 <table class="form-table" style="margin-left: 8%"><tbody>
 <?php $custom_fields = (array) $back_office_options[$page_slug.'_page_custom_fields'];

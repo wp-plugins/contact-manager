@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Contact Manager 5.8\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2013-12-05 23:26+0100\n"
+"PO-Revision-Date: 2013-12-06 21:14+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -2428,7 +2428,7 @@ msgstr "Cliquez ici pour ajouter un nouveau champ personnalisé."
 msgid "You have no custom field currently."
 msgstr "Vous n'avez aucun champ personnalisé actuellement."
 
-msgid "You can create an unlimited number of custom fields to record additional datas."
+msgid "You can create an unlimited number of custom fields to record additional data."
 msgstr "Vous pouvez créer un nombre illimité de champs personnalisés afin d'enregistrer des données supplémentaires."
 
 msgid "Key"
@@ -2613,4 +2613,10 @@ msgstr "Supprimer les options et tables de Contact Manager"
 
 msgid "Reset the options of Contact Manager"
 msgstr "Réinitialiser les options de Contact Manager"
+
+msgid "Delete the options and tables of Contact Manager for all sites in this network"
+msgstr "Supprimer les options et tables de Contact Manager pour tous les sites de ce réseau"
+
+msgid "Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?"
+msgstr "Souhaitez-vous vraiment supprimer définitivement les options et tables de Contact Manager pour tous les sites de ce réseau&nbsp;?"
 

@@ -61,15 +61,18 @@ else { include CONTACT_MANAGER_PATH.'/admin-pages.php'; $role = $back_office_opt
 return current_user_can($capability); }
 
 
-function contact_manager_action_links($links, $file) {
-if ($file == 'contact-manager/contact-manager.php') {
+function contact_manager_action_links($links) {
+if (!is_network_admin()) {
 $links = array_merge($links, array(
 '<span class="delete"><a href="admin.php?page=contact-manager&amp;action=uninstall" title="'.__('Delete the options and tables of Contact Manager', 'contact-manager').'">'.__('Uninstall', 'contact-manager').'</a></span>',
 '<span class="delete"><a href="admin.php?page=contact-manager&amp;action=reset" title="'.__('Reset the options of Contact Manager', 'contact-manager').'">'.__('Reset', 'contact-manager').'</a></span>',
 '<a href="admin.php?page=contact-manager">'.__('Options', 'contact-manager').'</a>')); }
+else {
+$links = array_merge($links, array(
+'<span class="delete"><a href="../admin.php?page=contact-manager&amp;action=uninstall&amp;for=network" title="'.__('Delete the options and tables of Contact Manager for all sites in this network', 'contact-manager').'">'.__('Uninstall', 'contact-manager').'</a></span>')); }
 return $links; }
 
-add_filter('plugin_action_links', 'contact_manager_action_links', 10, 2);
+foreach (array('', 'network_admin_') as $prefix) { add_filter($prefix.'plugin_action_links_contact-manager/contact-manager.php', 'contact_manager_action_links', 10, 2); }
 
 
 function contact_manager_row_meta($links, $file) {
@@ -89,12 +92,4 @@ $_key = ($key == '' ? '' : '_'.$key);
 update_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 
 
-function uninstall_contact_manager() {
-global $wpdb;
-include CONTACT_MANAGER_PATH.'/tables.php';
-foreach ($tables as $table_slug => $table) {
-$results = $wpdb->query("DROP TABLE ".$wpdb->prefix.'contact_manager_'.$table_slug); }
-include CONTACT_MANAGER_PATH.'/initial-options.php';
-foreach ($initial_options as $key => $value) {
-$_key = ($key == '' ? '' : '_'.$key);
-delete_option(substr('contact_manager'.$_key, 0, 64)); } }
+function uninstall_contact_manager($for = 'single') { include CONTACT_MANAGER_PATH.'/includes/uninstall.php'; }
