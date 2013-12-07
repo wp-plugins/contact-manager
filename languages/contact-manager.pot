@@ -2000,7 +2000,7 @@ msgstr ""
 msgid "You have no custom field currently."
 msgstr ""
 
-msgid "You can create an unlimited number of custom fields to record additional datas."
+msgid "You can create an unlimited number of custom fields to record additional data."
 msgstr ""
 
 msgid "Key"
@@ -2184,4 +2184,10 @@ msgid "Delete the options and tables of Contact Manager"
 msgstr ""
 
 msgid "Reset the options of Contact Manager"
+msgstr ""
+
+msgid "Delete the options and tables of Contact Manager for all sites in this network"
+msgstr ""
+
+msgid "Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?"
 msgstr ""
