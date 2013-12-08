@@ -8,7 +8,7 @@ if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else { if ($_GET['action'] == 'reset') { reset_contact_manager(); } else { uninstall_contact_manager($for); } } } ?>
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
 <?php if (isset($_POST['submit'])) {
 echo '<div class="updated"><p><strong>'.($_GET['action'] == 'reset' ? __('Options reset.', 'contact-manager') : __('Options and tables deleted.', 'contact-manager')).'</strong></p></div>
@@ -101,7 +101,7 @@ else { $commerce_manager_options = array_merge((array) get_option('commerce_mana
 $currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortcode($commerce_manager_options['currency_code']) : ''); } ?>
 
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
 <?php if (isset($_POST['submit'])) { echo '<div class="updated"><p><strong>'.__('Settings saved.', 'contact-manager').'</strong></p></div>'; } ?>
 <form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
@@ -113,7 +113,7 @@ $currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortco
 <?php contact_manager_pages_summary($back_office_options); ?>
 
 <div class="postbox" id="automatic-display-module"<?php if (in_array('automatic-display', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="automatic-display"><strong><?php echo $modules['options']['automatic-display']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="automatic-display"><strong><?php echo $modules['options']['automatic-display']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -146,7 +146,7 @@ if ($messages_number > 0) { echo ' | <a style="text-decoration: none;" '.$ids_fi
 </div></div>
 
 <div class="postbox" id="forms-module"<?php if (in_array('forms', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="forms"><strong><?php echo $modules['options']['forms']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="forms"><strong><?php echo $modules['options']['forms']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="code"><?php _e('Code', 'contact-manager'); ?></label></strong></th>
@@ -225,7 +225,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 </div></div>
 
 <div class="postbox" id="messages-registration-module"<?php if (in_array('messages-registration', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="messages-registration"><strong><?php echo $modules['options']['messages-registration']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="messages-registration"><strong><?php echo $modules['options']['messages-registration']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -240,7 +240,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 </div></div>
 
 <div class="postbox" id="urls-encryption-module"<?php if (in_array('urls-encryption', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="urls-encryption"><strong><?php echo $modules['options']['urls-encryption']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="urls-encryption"><strong><?php echo $modules['options']['urls-encryption']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -257,7 +257,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 </div></div>
 
 <div class="postbox" id="message-confirmation-email-module"<?php if (in_array('message-confirmation-email', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="message-confirmation-email"><strong><?php echo $modules['options']['message-confirmation-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="message-confirmation-email"><strong><?php echo $modules['options']['message-confirmation-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -278,7 +278,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 </div></div>
 
 <div class="postbox" id="message-notification-email-module"<?php if (in_array('message-notification-email', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="message-notification-email"><strong><?php echo $modules['options']['message-notification-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="message-notification-email"><strong><?php echo $modules['options']['message-notification-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -299,7 +299,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 </div></div>
 
 <div class="postbox" id="autoresponders-module"<?php if (in_array('autoresponders', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="autoresponders"><strong><?php echo $modules['options']['autoresponders']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="autoresponders"><strong><?php echo $modules['options']['autoresponders']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -322,7 +322,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 </div></div>
 
 <div class="postbox" id="autoresponders-integration-module"<?php if (in_array('autoresponders-integration', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="autoresponders-integration"><strong><?php echo $modules['options']['autoresponders-integration']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="autoresponders-integration"><strong><?php echo $modules['options']['autoresponders-integration']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <?php if (function_exists('commerce_manager_admin_menu')) { ?>
@@ -386,7 +386,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 </div></div>
 
 <div class="postbox" id="registration-as-a-client-module"<?php if (in_array('registration-as-a-client', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="registration-as-a-client"><strong><?php echo $modules['options']['registration-as-a-client']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="registration-as-a-client"><strong><?php echo $modules['options']['registration-as-a-client']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -440,7 +440,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 </div></div>
 
 <div class="postbox" id="registration-to-affiliate-program-module"<?php if (in_array('registration-to-affiliate-program', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="registration-to-affiliate-program"><strong><?php echo $modules['options']['registration-to-affiliate-program']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="registration-to-affiliate-program"><strong><?php echo $modules['options']['registration-to-affiliate-program']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -494,7 +494,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 </div></div>
 
 <div class="postbox" id="membership-module"<?php if (in_array('membership', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="membership"><strong><?php echo $modules['options']['membership']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="membership"><strong><?php echo $modules['options']['membership']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -558,7 +558,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 </div></div>
 
 <div class="postbox" id="wordpress-module"<?php if (in_array('wordpress', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="wordpress"><strong><?php echo $modules['options']['wordpress']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="wordpress"><strong><?php echo $modules['options']['wordpress']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -575,7 +575,7 @@ echo '<option value="'.$role.'"'.($options['sender_user_role'] == $role ? ' sele
 </div></div>
 
 <div class="postbox" id="custom-instructions-module"<?php if (in_array('custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="custom-instructions"><strong><?php echo $modules['options']['custom-instructions']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="custom-instructions"><strong><?php echo $modules['options']['custom-instructions']['name']; ?></strong></h3>
 <div class="inside">
 <div id="message-custom-instructions-module"<?php if (in_array('message-custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="message-custom-instructions"><strong><?php echo $modules['options']['custom-instructions']['modules']['message-custom-instructions']['name']; ?></strong></h4>
@@ -604,7 +604,7 @@ echo '<option value="'.$role.'"'.($options['sender_user_role'] == $role ? ' sele
 </div></div>
 
 <div class="postbox" id="affiliation-module"<?php if (in_array('affiliation', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="affiliation"><strong><?php echo $modules['options']['affiliation']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="affiliation"><strong><?php echo $modules['options']['affiliation']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -640,7 +640,7 @@ else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use aff
 </div>
 </div></div>
 
-<p class="submit" style="margin: 0 20%;"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php _e('Save Changes', 'contact-manager'); ?>" /></p>
+<p class="submit"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php _e('Save Changes', 'contact-manager'); ?>" /></p>
 <?php contact_manager_pages_module($back_office_options, 'options-page', $undisplayed_modules); ?>
 </form>
 </div>

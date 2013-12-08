@@ -227,9 +227,9 @@ $menu_displayed_items[] = $key; } }
 
 $initial_options['back_office'] = array(
 'back_office_page_summary_displayed' => 'yes',
-'back_office_page_undisplayed_modules' => array('icon'),
+'back_office_page_undisplayed_modules' => array(),
 'custom_icon_url' => CONTACT_MANAGER_URL.'images/icon.png',
-'custom_icon_used' => 'no',
+'custom_icon_used' => 'yes',
 'default_options_links_target' => '_blank',
 'displayed_links' => $displayed_links,
 'documentations_links_target' => '_blank',

@@ -26,7 +26,7 @@ if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 if (contact_data('message_removal_custom_instructions_executed') == 'yes') {
 eval(format_instructions(contact_data('message_removal_custom_instructions'))); } } } } ?>
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
 <?php if (isset($_POST['submit'])) {
 echo '<div class="updated"><p><strong>'.__('Message deleted.', 'contact-manager').'</strong></p></div>
@@ -235,7 +235,7 @@ else { $commerce_manager_options = array_merge((array) get_option('commerce_mana
 $currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortcode($commerce_manager_options['currency_code']) : ''); } ?>
 
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
 <?php if ((isset($updated)) && ($updated)) {
 echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? __('Message updated.', 'contact-manager') : __('Message saved.', 'contact-manager')).'</strong></p></div>
@@ -248,7 +248,7 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? __('Message update
 <?php contact_manager_pages_summary($back_office_options); ?>
 
 <div class="postbox" id="general-informations-module"<?php if (in_array('general-informations', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="general-informations"><strong><?php echo $modules['message']['general-informations']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="general-informations"><strong><?php echo $modules['message']['general-informations']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <?php if (isset($_GET['id'])) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="id">'.__('ID', 'contact-manager').'</label></strong></th>
@@ -276,13 +276,13 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="keywords" id="keywords" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75"><?php echo $_POST['keywords']; ?></textarea><br />
 <span class="description"><?php _e('Separate the keywords with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="date"><?php _e('Date', 'contact-manager'); ?></label></strong></th>
-<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="date" id="date" size="20" value="<?php echo ($_POST['date'] != '' ? $_POST['date'] : date('Y-m-d H:i:s', $current_time + 3600*UTC_OFFSET)); ?>" /></td></tr>
+<td><input class="date-pick" type="text" name="date" id="date" size="20" value="<?php echo ($_POST['date'] != '' ? $_POST['date'] : date('Y-m-d H:i:s', $current_time + 3600*UTC_OFFSET)); ?>" /></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
 </tbody></table>
 </div></div>
 
 <div class="postbox" id="sender-module"<?php if (in_array('sender', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="sender"><strong><?php echo $modules['message']['sender']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="sender"><strong><?php echo $modules['message']['sender']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="first_name"><?php _e('First name', 'contact-manager'); ?></label></strong></th>
@@ -319,7 +319,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 </div></div>
 
 <div class="postbox" id="custom-fields-module"<?php if (in_array('custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="custom-fields"><strong><?php echo $modules['message']['custom-fields']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="custom-fields"><strong><?php echo $modules['message']['custom-fields']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -341,7 +341,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 </div></div>
 
 <div class="postbox" id="affiliation-module"<?php if (in_array('affiliation', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="affiliation"><strong><?php echo $modules['message']['affiliation']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="affiliation"><strong><?php echo $modules['message']['affiliation']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -384,7 +384,7 @@ echo '<br />'.($result ? '<a style="text-decoration: none;" '.$ids_fields_links_
 <option value="paid"<?php if ($_POST['commission_status'] == 'paid') { echo ' selected="selected"'; } ?>><?php _e('Paid', 'contact-manager'); ?></option>
 </select><?php if (isset($_GET['id'])) { echo '<input type="hidden" name="old_commission_status" value="'.$_POST['commission_status'].'" />'; } ?></td></tr>
 <tr id="commission-payment-date" style="<?php if ($_POST['commission_status'] != 'paid') { echo 'display: none; '; } ?>vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
-<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission_payment_date" id="commission_payment_date" size="20" value="<?php echo $_POST['commission_payment_date']; ?>" />
+<td><input class="date-pick" type="text" name="commission_payment_date" id="commission_payment_date" size="20" value="<?php echo $_POST['commission_payment_date']; ?>" />
 <?php if ($_POST['commission_payment_date'] == '') { echo '<br /><span class="description">'.__('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager').'</span>'; } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
@@ -425,7 +425,7 @@ echo '<br />'.($result ? '<a style="text-decoration: none;" '.$ids_fields_links_
 <option value="paid"<?php if ($_POST['commission2_status'] == 'paid') { echo ' selected="selected"'; } ?>><?php _e('Paid', 'contact-manager'); ?></option>
 </select><?php if (isset($_GET['id'])) { echo '<input type="hidden" name="old_commission2_status" value="'.$_POST['commission2_status'].'" />'; } ?></td></tr>
 <tr id="commission2-payment-date" style="<?php if ($_POST['commission2_status'] != 'paid') { echo 'display: none; '; } ?>vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_payment_date"><?php _e('Payment date', 'contact-manager'); ?></label></strong></th>
-<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="commission2_payment_date" id="commission2_payment_date" size="20" value="<?php echo $_POST['commission2_payment_date']; ?>" />
+<td><input class="date-pick" type="text" name="commission2_payment_date" id="commission2_payment_date" size="20" value="<?php echo $_POST['commission2_payment_date']; ?>" />
 <?php if ($_POST['commission2_payment_date'] == '') { echo '<br /><span class="description">'.__('Leave this field blank if the commission is not paid, or for the current date if the commission is paid.', 'contact-manager').'</span>'; } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
@@ -442,14 +442,14 @@ foreach ($add_message_fields as $field) { $_POST[$field] = (isset($contact_manag
 $_POST['message_notification_email_subject'] = '[message subject]'; }
 foreach ($add_message_fields as $field) { if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
 $value = false; foreach ($add_message_modules as $module) { if (!$value) { $value = (!in_array($module, $undisplayed_modules)); } }
-if ($value) { ?><p class="submit" style="margin: 0 20%;"><input type="hidden" name="submit" value="true" />
+if ($value) { ?><p class="submit"><input type="hidden" name="submit" value="true" />
 <input type="submit" class="button-secondary" name="update_fields" value="<?php _e('Complete the fields below with the informations about the sender, the message and the form', 'contact-manager'); ?>" /></p><?php } ?>
 
 <div id="add-message-modules">
 <?php if (!in_array('message-confirmation-email', $undisplayed_modules)) {
 if (!isset($_POST['submit'])) { $_POST['message_confirmation_email_body'] = htmlspecialchars(get_option('contact_manager_message_confirmation_email_body')); } ?>
 <div class="postbox" id="message-confirmation-email-module">
-<h3 id="message-confirmation-email"><strong><?php echo $modules['message']['message-confirmation-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="message-confirmation-email"><strong><?php echo $modules['message']['message-confirmation-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -475,7 +475,7 @@ if (!isset($_POST['submit'])) { $_POST['message_confirmation_email_body'] = html
 <?php if (!in_array('message-notification-email', $undisplayed_modules)) {
 if (!isset($_POST['submit'])) { $_POST['message_notification_email_body'] = htmlspecialchars(get_option('contact_manager_message_notification_email_body')); } ?>
 <div class="postbox" id="message-notification-email-module">
-<h3 id="message-notification-email"><strong><?php echo $modules['message']['message-notification-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="message-notification-email"><strong><?php echo $modules['message']['message-notification-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -500,7 +500,7 @@ if (!isset($_POST['submit'])) { $_POST['message_notification_email_body'] = html
 
 <?php if ((!in_array('autoresponders', $undisplayed_modules)) && (isset($modules['message']['autoresponders']))) { ?>
 <div class="postbox" id="autoresponders-module">
-<h3 id="autoresponders"><strong><?php echo $modules['message']['autoresponders']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="autoresponders"><strong><?php echo $modules['message']['autoresponders']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -527,7 +527,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 
 <?php if (!in_array('registration-as-a-client', $undisplayed_modules)) { ?>
 <div class="postbox" id="registration-as-a-client-module">
-<h3 id="registration-as-a-client"><strong><?php echo $modules['message']['registration-as-a-client']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="registration-as-a-client"><strong><?php echo $modules['message']['registration-as-a-client']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -575,7 +575,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 
 <?php if (!in_array('registration-to-affiliate-program', $undisplayed_modules)) { ?>
 <div class="postbox" id="registration-to-affiliate-program-module">
-<h3 id="registration-to-affiliate-program"><strong><?php echo $modules['message']['registration-to-affiliate-program']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="registration-to-affiliate-program"><strong><?php echo $modules['message']['registration-to-affiliate-program']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -623,7 +623,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 
 <?php if (!in_array('membership', $undisplayed_modules)) { ?>
 <div class="postbox" id="membership-module">
-<h3 id="membership"><strong><?php echo $modules['message']['membership']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="membership"><strong><?php echo $modules['message']['membership']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -681,7 +681,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 
 <?php if (!in_array('wordpress', $undisplayed_modules)) { ?>
 <div class="postbox" id="wordpress-module">
-<h3 id="wordpress"><strong><?php echo $modules['message']['wordpress']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="wordpress"><strong><?php echo $modules['message']['wordpress']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -703,7 +703,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 <?php if (!in_array('custom-instructions', $undisplayed_modules)) {
 if (!isset($_POST['submit'])) { $_POST['message_custom_instructions'] = htmlspecialchars(get_option('contact_manager_message_custom_instructions')); } ?>
 <div class="postbox" id="custom-instructions-module">
-<h3 id="custom-instructions"><strong><?php echo $modules['message']['custom-instructions']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="custom-instructions"><strong><?php echo $modules['message']['custom-instructions']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -721,7 +721,7 @@ if (!isset($_POST['submit'])) { $_POST['message_custom_instructions'] = htmlspec
 </div>
 
 <?php } ?>
-<p class="submit" style="margin: 0 20%;"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php (isset($_GET['id']) ? _e('Save Changes', 'contact-manager') : _e('Save Message', 'contact-manager')); ?>" /></p>
+<p class="submit"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php (isset($_GET['id']) ? _e('Save Changes', 'contact-manager') : _e('Save Message', 'contact-manager')); ?>" /></p>
 <?php contact_manager_pages_module($back_office_options, 'message-page', $undisplayed_modules); ?>
 </form>
 </div>

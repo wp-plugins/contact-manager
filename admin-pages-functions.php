@@ -7,7 +7,18 @@ foreach ($_GET as $key => $value) { $GLOBALS[$key] = $value; }
 
 function contact_manager_pages_css() { ?>
 <style type="text/css">
-.delete:hover { color: #ff0000; }
+.wrap { margin-top: 0; }
+.wrap .delete:hover { color: #ff0000; }
+.wrap .dp-choose-date { vertical-align: 6%; }
+.wrap .postbox { background-color: #f8f8f8; }
+.wrap .postbox .description { font-size: 13px; }
+.wrap .postbox h3 { background-color: #f2f2f2; color: #000000; }
+.wrap .postbox h4 { color: #000000; font-family: Tahoma, Geneva, sans-serif; font-size: 1.125em; }
+.wrap .postbox input.button-secondary { background-color: #ffffff; }
+.wrap h2 { float: left; }
+.wrap input.button-secondary, .wrap select { vertical-align: 0; }
+.wrap input.date-pick { margin-right: 0.5em; width: 10.5em; }
+.wrap p.submit { margin: 0 20%; }
 </style> 
 <?php }
 
@@ -20,7 +31,7 @@ $displayed_links = (array) $back_office_options['displayed_links'];
 if (($back_office_options['links_displayed'] == 'yes') && (count($displayed_links) > 0)) {
 include CONTACT_MANAGER_PATH.'/admin-pages.php';
 if ($back_office_options['title_displayed'] == 'yes') { $left_margin = '6em'; } else { $left_margin = '0'; }
-echo '<ul class="subsubsub" style="margin: 2em 0 1.5em '.$left_margin.'; float: left; white-space: normal;">';
+echo '<ul class="subsubsub" style="margin: 1.75em 0 1.5em '.$left_margin.'; float: left; white-space: normal;">';
 $links_markup = array(
 'Documentation' => '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/contact-manager">'.$admin_links['Documentation']['name'].'</a>',
 'Commerce Manager' => (function_exists('commerce_manager_admin_menu') ? '<a href="admin.php?page=commerce-manager'.
@@ -90,7 +101,7 @@ include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $page_slug = str_replace('-', '_', str_replace('-page', '', $module));
 $page_undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules']; ?>
 <div class="postbox" id="<?php echo $module.'-module'; ?>"<?php if (in_array($module, $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="<?php echo $module; ?>"><strong><?php echo $modules['back_office'][$module]['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="<?php echo $module; ?>"><strong><?php echo $modules['back_office'][$module]['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <?php if ((strstr($_GET['page'], 'back-office')) && ($page_slug != 'back_office')) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -167,12 +178,12 @@ $undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplaye
 $list = ''; foreach ($modules as $key => $value) {
 if ((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) {
 if (!in_array($key, $undisplayed_modules)) { $list .= '<li>&nbsp;| <a href="#'.$key.'">'.$value['name'].'</a></li>'; } } }
-if ($list != '') { echo '<ul class="subsubsub" style="float: none; white-space: normal;"><li>'.substr($list, 12).'</ul>'; } } }
+if ($list != '') { echo '<ul class="subsubsub" style="float: none; margin-bottom: 1em; white-space: normal;"><li>'.substr($list, 12).'</ul>'; } } }
 
 
 function contact_manager_pages_title($back_office_options) {
 if ($back_office_options['title_displayed'] == 'yes') {
-echo '<h2 style="float: left;">'.$back_office_options['title'].'</h2>'; } }
+echo '<h2 style="font-size: 1.75em;">'.$back_office_options['title'].'</h2>'; } }
 
 
 function contact_manager_pages_top($back_office_options) {
@@ -222,7 +233,7 @@ echo '<p style="margin: 0 0 1em 0; float: left;"><label><strong>'.__('Start', 'c
 <input class="date-pick" style="margin: 0.5em;" type="text" name="start_date" id="start_date" size="20" value="'.$start_date.'" /></label>
 <label style="margin-left: 3em;"><strong>'.__('End', 'contact-manager').'</strong>
 <input class="date-pick" style="margin: 0.5em;" type="text" name="end_date" id="end_date" size="20" value="'.$end_date.'" /></label>
-<input style="margin-left: 3em;" type="submit" class="button-secondary" name="submit" value="'.__('Display', 'contact-manager').'" /></p>
+<input style="margin-left: 3em; vertical-align: middle;" type="submit" class="button-secondary" name="submit" value="'.__('Display', 'contact-manager').'" /></p>
 <div class="clear"></div>'; }
 
 
