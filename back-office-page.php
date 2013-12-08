@@ -54,7 +54,7 @@ update_option('contact_manager_back_office', $options); } }
 $undisplayed_modules = (array) $options['back_office_page_undisplayed_modules']; ?>
 
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($options); ?>
 <?php if (isset($_POST['submit'])) { echo '<div class="updated"><p><strong>'.__('Settings saved.', 'contact-manager').'</strong></p></div>'; } ?>
 <form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
@@ -65,7 +65,7 @@ $undisplayed_modules = (array) $options['back_office_page_undisplayed_modules'];
 <?php contact_manager_pages_summary($options); ?>
 
 <div class="postbox" id="capabilities-module"<?php if (in_array('capabilities', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="capabilities"><strong><?php echo $modules['back_office']['capabilities']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="capabilities"><strong><?php echo $modules['back_office']['capabilities']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="view_minimum_role"><?php _e('Access', 'contact-manager'); ?></label></strong></th>
@@ -84,7 +84,7 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
 </div></div>
 
 <div class="postbox" id="icon-module"<?php if (in_array('icon', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="icon"><strong><?php echo $modules['back_office']['icon']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="icon"><strong><?php echo $modules['back_office']['icon']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -100,7 +100,7 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
 </div></div>
 
 <div class="postbox" id="top-module"<?php if (in_array('top', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="top"><strong><?php echo $modules['back_office']['top']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="top"><strong><?php echo $modules['back_office']['top']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -123,7 +123,7 @@ echo '</select></label>
 </div></div>
 
 <div class="postbox" id="menu-module"<?php if (in_array('menu', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="menu"><strong><?php echo $modules['back_office']['menu']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="menu"><strong><?php echo $modules['back_office']['menu']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -142,7 +142,7 @@ echo '</select></label>
 </div></div>
 
 <div class="postbox" id="links-module"<?php if (in_array('links', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="links"><strong><?php echo $modules['back_office']['links']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="links"><strong><?php echo $modules['back_office']['links']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Open in a new tab the targets of the links', 'contact-manager'); ?></strong></th>
@@ -166,7 +166,7 @@ echo '<label><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'
 'message-page') as $module) { contact_manager_pages_module($options, $module, $undisplayed_modules); } ?>
 
 <div class="postbox" id="statistics-page-module"<?php if (in_array('statistics-page', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="statistics-page"><strong><?php echo $modules['back_office']['statistics-page']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="statistics-page"><strong><?php echo $modules['back_office']['statistics-page']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -189,7 +189,7 @@ else { echo '<label><input type="checkbox" name="'.$name.'" id="'.$name.'" value
 </div></div>
 
 <?php contact_manager_pages_module($options, 'back-office-page', $undisplayed_modules); ?>
-<p class="submit" style="margin: 0 20%;"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php _e('Save Changes', 'contact-manager'); ?>" /></p>
+<p class="submit"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php _e('Save Changes', 'contact-manager'); ?>" /></p>
 </form>
 </div>
 </div>

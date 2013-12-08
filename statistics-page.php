@@ -82,7 +82,7 @@ $forms_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-m
 $forms_categories_a_tag = '<a style="text-decoration: none;" href="admin.php?page=contact-manager-forms-categories'.$GLOBALS['criteria'].'">'; ?>
 
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
 <form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
@@ -94,7 +94,7 @@ $global_table_ths = '';
 foreach ($statistics_columns as $key => $value) {
 if (!in_array($key, $undisplayed_columns)) { $global_table_ths .= '<th scope="col" class="manage-column" style="width: '.$value['width'].'%;">'.$value['name'].'</th>'; } }
 echo '
-<h3 id="global-statistics"><strong>'.__('Global statistics', 'contact-manager').'</strong></h3>
+<h3 style="font-size: 1.25em;" id="global-statistics"><strong>'.__('Global statistics', 'contact-manager').'</strong></h3>
 <table class="wp-list-table widefat fixed" style="margin: 1em 0;">
 <thead><tr>'.$global_table_ths.'</tr></thead>
 <tfoot><tr>'.$global_table_ths.'</tr></tfoot>
@@ -152,7 +152,7 @@ $displayed_columns = (array) $options['displayed_columns'];
 $table_ths = '';
 for ($j = 0; $j < $max_columns; $j++) { if (in_array($j, $displayed_columns)) { $table_ths .= table_th($tables, $table_slug, $columns[$j]); } }
 echo $summary.'
-<h3 id="'.str_replace('_', '-', $tables_slugs[$i]).'"><strong>'.$tables_names[$tables_slugs[$i]].'</strong></h3>
+<h3 style="font-size: 1.25em;" id="'.str_replace('_', '-', $tables_slugs[$i]).'"><strong>'.$tables_names[$tables_slugs[$i]].'</strong></h3>
 <div style="overflow: auto;">
 <table class="wp-list-table widefat" style="margin: 1em 0 2em 0;">
 <thead><tr>'.$table_ths.'</tr></thead>

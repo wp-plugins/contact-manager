@@ -21,7 +21,7 @@ if (!$result) { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_ma
 elseif ($result->id < $_GET['id']) {
 $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_".$table_slug." AUTO_INCREMENT = ".($result->id + 1)); } } } ?>
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
 <?php if (isset($_POST['submit'])) {
 echo '<div class="updated"><p><strong>'.($is_category ? __('Category deleted.', 'contact-manager') : __('Form deleted.', 'contact-manager')).'</strong></p></div>
@@ -155,7 +155,7 @@ else { $commerce_manager_options = array_merge((array) get_option('commerce_mana
 $currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortcode($commerce_manager_options['currency_code']) : ''); } ?>
 
 <div class="wrap">
-<div id="poststuff">
+<div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
 <?php if ((isset($updated)) && ($updated)) {
 echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? ($is_category ? __('Category updated.', 'contact-manager') : __('Form updated.', 'contact-manager')) : ($is_category ? __('Category saved.', 'contact-manager') : __('Form saved.', 'contact-manager'))).'</strong></p></div>
@@ -170,7 +170,7 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? ($is_category ? __
 <?php contact_manager_pages_summary($back_office_options); ?>
 
 <div class="postbox" id="general-informations-module"<?php if (in_array('general-informations', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="general-informations"><strong><?php echo $modules[$admin_page]['general-informations']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="general-informations"><strong><?php echo $modules[$admin_page]['general-informations']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <?php if ($is_category) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -225,13 +225,13 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="keywords" id="keywords" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75"><?php echo $_POST['keywords']; ?></textarea><br />
 <span class="description"><?php _e('Separate the keywords with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="date"><?php _e('Creation date', 'contact-manager'); ?></label></strong></th>
-<td><input class="date-pick" style="margin-right: 0.5em;" type="text" name="date" id="date" size="20" value="<?php echo ($_POST['date'] != '' ? $_POST['date'] : date('Y-m-d H:i:s', $current_time + 3600*UTC_OFFSET)); ?>" /></td></tr>
+<td><input class="date-pick" type="text" name="date" id="date" size="20" value="<?php echo ($_POST['date'] != '' ? $_POST['date'] : date('Y-m-d H:i:s', $current_time + 3600*UTC_OFFSET)); ?>" /></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
 </tbody></table>
 </div></div>
 
 <div class="postbox" id="custom-fields-module"<?php if (in_array('custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="custom-fields"><strong><?php echo $modules[$admin_page]['custom-fields']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="custom-fields"><strong><?php echo $modules[$admin_page]['custom-fields']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -253,7 +253,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 </div></div>
 
 <div class="postbox" id="gift-module"<?php if (in_array('gift', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="gift"><strong><?php echo $modules[$admin_page]['gift']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="gift"><strong><?php echo $modules[$admin_page]['gift']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <?php if ($_POST['category_id'] > 0) { ?>
@@ -276,7 +276,7 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 
 <?php if (!$is_category) { ?>
 <div class="postbox" id="counters-module"<?php if (in_array('counters', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="counters"><strong><?php echo $modules[$admin_page]['counters']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="counters"><strong><?php echo $modules[$admin_page]['counters']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_per_sender"><?php _e('Maximum messages quantity per sender', 'contact-manager'); ?></label></strong></th>
@@ -298,7 +298,7 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 <?php } ?>
 
 <div class="postbox" id="form-module"<?php if (in_array('form', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="form"><strong><?php echo $modules[$admin_page]['form']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="form"><strong><?php echo $modules[$admin_page]['form']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -357,7 +357,7 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 </div></div>
 
 <div class="postbox" id="messages-registration-module"<?php if (in_array('messages-registration', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="messages-registration"><strong><?php echo $modules[$admin_page]['messages-registration']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="messages-registration"><strong><?php echo $modules[$admin_page]['messages-registration']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -379,7 +379,7 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 </div></div>
 
 <div class="postbox" id="message-confirmation-email-module"<?php if (in_array('message-confirmation-email', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="message-confirmation-email"><strong><?php echo $modules[$admin_page]['message-confirmation-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="message-confirmation-email"><strong><?php echo $modules[$admin_page]['message-confirmation-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -410,7 +410,7 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 </div></div>
 
 <div class="postbox" id="message-notification-email-module"<?php if (in_array('message-notification-email', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="message-notification-email"><strong><?php echo $modules[$admin_page]['message-notification-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="message-notification-email"><strong><?php echo $modules[$admin_page]['message-notification-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -441,7 +441,7 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 </div></div>
 
 <div class="postbox" id="autoresponders-module"<?php if (in_array('autoresponders', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="autoresponders"><strong><?php echo $modules[$admin_page]['autoresponders']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="autoresponders"><strong><?php echo $modules[$admin_page]['autoresponders']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -472,7 +472,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 </div></div>
 
 <div class="postbox" id="registration-as-a-client-module"<?php if (in_array('registration-as-a-client', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="registration-as-a-client"><strong><?php echo $modules[$admin_page]['registration-as-a-client']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="registration-as-a-client"><strong><?php echo $modules[$admin_page]['registration-as-a-client']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -532,7 +532,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 </div></div>
 
 <div class="postbox" id="registration-to-affiliate-program-module"<?php if (in_array('registration-to-affiliate-program', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="registration-to-affiliate-program"><strong><?php echo $modules[$admin_page]['registration-to-affiliate-program']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="registration-to-affiliate-program"><strong><?php echo $modules[$admin_page]['registration-to-affiliate-program']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -592,7 +592,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 </div></div>
 
 <div class="postbox" id="membership-module"<?php if (in_array('membership', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="membership"><strong><?php echo $modules[$admin_page]['membership']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="membership"><strong><?php echo $modules[$admin_page]['membership']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -664,7 +664,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 </div></div>
 
 <div class="postbox" id="wordpress-module"<?php if (in_array('wordpress', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="wordpress"><strong><?php echo $modules[$admin_page]['wordpress']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="wordpress"><strong><?php echo $modules[$admin_page]['wordpress']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -688,7 +688,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 </div></div>
 
 <div class="postbox" id="custom-instructions-module"<?php if (in_array('custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="custom-instructions"><strong><?php echo $modules[$admin_page]['custom-instructions']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="custom-instructions"><strong><?php echo $modules[$admin_page]['custom-instructions']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -710,7 +710,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 </div></div>
 
 <div class="postbox" id="affiliation-module"<?php if (in_array('affiliation', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 id="affiliation"><strong><?php echo $modules[$admin_page]['affiliation']['name']; ?></strong></h3>
+<h3 style="font-size: 1.25em;" id="affiliation"><strong><?php echo $modules[$admin_page]['affiliation']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -758,7 +758,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 </div>
 </div></div>
 
-<p class="submit" style="margin: 0 20%;"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php (isset($_GET['id']) ?  _e('Save Changes', 'contact-manager') : ($is_category ? _e('Save Category', 'contact-manager') : _e('Save Form', 'contact-manager'))); ?>" /></p>
+<p class="submit"><input type="submit" class="button-primary" name="submit" id="submit" value="<?php (isset($_GET['id']) ?  _e('Save Changes', 'contact-manager') : ($is_category ? _e('Save Category', 'contact-manager') : _e('Save Form', 'contact-manager'))); ?>" /></p>
 <?php if ($is_category) { $module = 'form-category-page'; } else { $module = 'form-page'; }
 contact_manager_pages_module($back_office_options, $module, $undisplayed_modules); ?>
 </form>

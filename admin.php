@@ -6,7 +6,8 @@ function contact_manager_admin_menu() {
 $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
 include CONTACT_MANAGER_PATH.'/admin-pages.php';
 $options = (array) get_option('contact_manager_back_office');
-if (!isset($options['menu_title_'.$lang])) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
+if ((!isset($options['menu_title_'.$lang])) || ($options['menu_title_'.$lang] == '') || (!isset($options['pages_titles_'.$lang]))
+ || ($options['pages_titles_'.$lang] == '')) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
 $menu_title = $options['menu_title_'.$lang]; $pages_titles = (array) $options['pages_titles_'.$lang];
 if (((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) || ($menu_title == '')) { $menu_title = __('Contact', 'contact-manager'); }
 if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
@@ -39,7 +40,7 @@ return $admin_menu_pages; }
 function contact_manager_meta_box($post) {
 $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
 $options = (array) get_option('contact_manager_back_office');
-if (!isset($options['meta_box_'.$lang])) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
+if ((!isset($options['meta_box_'.$lang])) || ($options['meta_box_'.$lang] == '')) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
 $links = (array) $options['meta_box_'.$lang];
 if ((isset($links[''])) && (isset($links['#screen-options-wrap']))) { ?>
 <p><a target="_blank" href="http://www.kleor.com/contact-manager/"><?php echo $links['']; ?></a>
