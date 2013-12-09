@@ -1,4 +1,5 @@
 <?php global $contact_manager_options;
+if (empty($contact_manager_options)) { $contact_manager_options = (array) get_option('contact_manager'); }
 if (is_string($atts)) { $field = $atts; $decimals = ''; $default = ''; $filter = ''; $part = 0; }
 else {
 $atts = array_map('contact_do_shortcode', (array) $atts);

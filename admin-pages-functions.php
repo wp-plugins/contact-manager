@@ -19,7 +19,7 @@ function contact_manager_pages_css() { ?>
 .wrap input.button-secondary, .wrap select { vertical-align: 0; }
 .wrap input.date-pick { margin-right: 0.5em; width: 10.5em; }
 .wrap p.submit { margin: 0 20%; }
-</style> 
+</style>
 <?php }
 
 add_action('admin_head', 'contact_manager_pages_css');
