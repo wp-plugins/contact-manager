@@ -17,6 +17,8 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug."
 
 load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 include CONTACT_MANAGER_PATH.'/initial-options.php';
+$overwrited_options = array('menu_title_'.$lang, 'meta_box_'.$lang, 'pages_titles_'.$lang, 'version');
+if (floatval(contact_data('version')) < 5.8) { $overwrited_options[] = 'custom_icon_used'; }
 foreach ($initial_options as $key => $value) {
 $_key = ($key == '' ? '' : '_'.$key);
 if (is_array($value)) {
@@ -24,8 +26,7 @@ $options = (array) get_option('contact_manager'.$_key);
 $current_options = $options;
 if ((isset($options[0])) && ($options[0] === false)) { unset($options[0]); }
 foreach ($value as $option => $initial_value) {
-if (($option == 'menu_title_'.$lang) || ($option == 'meta_box_'.$lang) || ($option == 'pages_titles_'.$lang) || ($option == 'version')
- || (!isset($options[$option])) || ($options[$option] == '')) { $options[$option] = $initial_value; } }
+if ((!isset($options[$option])) || ($options[$option] == '') || (in_array($option, $overwrited_options))) { $options[$option] = $initial_value; } }
 if ($options != $current_options) { update_option('contact_manager'.$_key, $options); } }
 else { add_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 
