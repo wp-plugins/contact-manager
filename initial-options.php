@@ -67,6 +67,9 @@ $initial_options[''] = array(
 'version' => CONTACT_MANAGER_VERSION);
 
 
+$initial_options['admin_notices'] = array();
+
+
 $initial_options['code'] =
 '[validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
 [other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields] [error invalid-captcha]</p>[/validation-content]
@@ -103,6 +106,8 @@ $initial_options['code'] =
 
 
 $initial_options['cron'] = array(
+'first_installation' => array('version' => '', 'timestamp' => 0),
+'previous_cron_timestamp' => 0,
 'previous_installation' => array('version' => '', 'number' => 0, 'timestamp' => 0));
 
 

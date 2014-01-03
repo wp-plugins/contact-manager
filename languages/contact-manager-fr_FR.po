@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.8\n"
+"Project-Id-Version: Contact Manager 5.8.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2013-12-06 21:14+0100\n"
+"PO-Revision-Date: 2014-01-02 08:54+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -771,6 +771,9 @@ msgstr "Seuls les champs suivis d'un * sont obligatoires."
 #: form-page.php:152
 msgid "You can apply the default option of the category by leaving the corresponding field blank."
 msgstr "Vous pouvez appliquer l'option par défaut de la catégorie en laissant vide le champ correspondant."
+
+msgid "You can apply the default option of the parent category by leaving the corresponding field blank."
+msgstr "Vous pouvez appliquer l'option par défaut de la catégorie parente en laissant vide le champ correspondant."
 
 #: form-page.php:162
 #: form-page.php:201

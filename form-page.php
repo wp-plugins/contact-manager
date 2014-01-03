@@ -166,7 +166,7 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? ($is_category ? __
 <div class="clear"></div>
 <?php if ($error != '') { echo '<p style="color: #c00000;">'.$error.'</p>'; } ?>
 <p class="description"><?php _e('Only fields marked with * are required.', 'contact-manager'); ?> 
-<?php if ($_POST['category_id'] > 0) { _e('You can apply the default option of the category by leaving the corresponding field blank.', 'contact-manager'); } ?></p>
+<?php if ($_POST['category_id'] > 0) { echo ($is_category ? __('You can apply the default option of the parent category by leaving the corresponding field blank.', 'contact-manager') : __('You can apply the default option of the category by leaving the corresponding field blank.', 'contact-manager')); } ?></p>
 <?php contact_manager_pages_summary($back_office_options); ?>
 
 <div class="postbox" id="general-informations-module"<?php if (in_array('general-informations', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>

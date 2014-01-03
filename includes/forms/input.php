@@ -49,13 +49,14 @@ else { $atts['value'] = $_POST[$prefix.$name]; } }
 elseif ((isset($_POST[$prefix.'submit'])) && (in_array($atts['required'], array('required', 'yes')))) { $GLOBALS[$prefix.$name.'_error'] = $GLOBALS[$prefix.'unfilled_field_message']; } }
 foreach (array($name, str_replace('_', '-', $name)) as $key) {
 if (($atts['value'] == '') && (isset($_GET[$key]))) { $atts['value'] = htmlspecialchars($_GET[$key]); } }
-if ((!isset($_POST[$prefix.'submit'])) && ($atts['value'] == '')) {
+if ((!isset($_POST[$prefix.'submit'])) && ($atts['value'] == '')
+ && (function_exists('current_user_can')) && (!current_user_can('edit_pages')) && (!current_user_can('manage_options'))) {
 include CONTACT_MANAGER_PATH.'/libraries/personal-informations.php';
 if (in_array($name, $personal_informations)) {
-if ((function_exists('affiliation_session')) && (affiliation_session())) { $atts['value'] = affiliate_data($name); }
-elseif ((function_exists('commerce_session')) && (commerce_session())) { $atts['value'] = client_data($name); }
-elseif ((function_exists('membership_session')) && (membership_session())) { $atts['value'] = member_data($name); }
-elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in()) && (function_exists('current_user_can')) && (!current_user_can('edit_pages')) && (!current_user_can('manage_options'))) { $atts['value'] = contact_user_data($name); } } }
+if ((function_exists('affiliation_session')) && (affiliation_session()) && (affiliate_data($name) != '')) { $atts['value'] = affiliate_data($name); }
+elseif ((function_exists('commerce_session')) && (commerce_session()) && (client_data($name) != '')) { $atts['value'] = client_data($name); }
+elseif ((function_exists('membership_session')) && (membership_session()) && (member_data($name) != '')) { $atts['value'] = member_data($name); }
+elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $atts['value'] = contact_user_data($name); } } }
 if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ($atts['value'] == '') && ($id_markup != '')) { $GLOBALS['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
 if ((isset($_POST[$prefix.'submit'])) && ($atts['type'] == 'checkbox')) { $atts['checked'] = (isset($_POST[$prefix.$name]) ? 'checked' : ''); } }
 foreach ($atts as $key => $value) {

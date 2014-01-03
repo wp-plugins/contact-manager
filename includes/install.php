@@ -18,7 +18,7 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug."
 load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
 include CONTACT_MANAGER_PATH.'/initial-options.php';
 $overwrited_options = array('menu_title_'.$lang, 'meta_box_'.$lang, 'pages_titles_'.$lang, 'version');
-if (floatval(contact_data('version')) < 5.8) { $overwrited_options[] = 'custom_icon_used'; }
+if (version_compare(contact_data('version'), '5.8', '<')) { $overwrited_options[] = 'custom_icon_used'; }
 foreach ($initial_options as $key => $value) {
 $_key = ($key == '' ? '' : '_'.$key);
 if (is_array($value)) {
@@ -31,9 +31,15 @@ if ($options != $current_options) { update_option('contact_manager'.$_key, $opti
 else { add_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+$current_time = time();
 $cron = (array) get_option('contact_manager_cron');
+if ((!isset($cron['first_installation'])) || ($cron['first_installation']['version'] == '')) {
+$cron['first_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'timestamp' => $current_time); }
 if ((!isset($cron['previous_installation'])) || ($cron['previous_installation']['version'] != CONTACT_MANAGER_VERSION)) {
 $cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'number' => 1); }
 else { $cron['previous_installation']['number'] = $cron['previous_installation']['number'] + 1; }
-$cron['previous_installation']['timestamp'] = time();
+$cron['previous_installation']['timestamp'] = $current_time;
 update_option('contact_manager_cron', $cron);
+if (in_array($cron['previous_installation']['number'], array(1, 12))) {
+wp_remote_get('http://www.kleor.com/wp-content/plugins/installations-manager/?url='.urlencode(HOME_URL)
+.'&name='.urlencode(get_option('blogname')).'&lang='.$lang.'&plugin=Contact%20Manager&version='.CONTACT_MANAGER_VERSION); }

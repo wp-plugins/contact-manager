@@ -37,6 +37,34 @@ if (($key == '') || ($key == 'back_office') || ((isset($_GET['page'])) && ($_GET
 return $admin_menu_pages; }
 
 
+function contact_manager_admin_notices() {
+if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+$current_time = time();
+$url = explode('?dismiss-notice=', $_SERVER['REQUEST_URI']); $url = explode('&dismiss-notice=', $url[0]);
+$user_id = (int) (function_exists('get_current_user_id') ? get_current_user_id() : 0);
+$GLOBALS['kleor_admin_notices'] = (array) (isset($GLOBALS['kleor_admin_notices']) ? $GLOBALS['kleor_admin_notices'] : array());
+$admin_notices = (array) get_option('contact_manager_admin_notices');
+$new_admin_notices = $admin_notices;
+$content = ''; foreach ($admin_notices as $key => $notice) {
+if ((($key == 'contact-manager-latest-version') && (!version_compare(CONTACT_MANAGER_VERSION, $notice['version'], '<')))
+ || ((isset($notice['end_timestamp'])) && ($notice['end_timestamp'] < $current_time))) { unset($new_admin_notices[$key]); }
+elseif ((isset($_GET['dismiss-notice'])) && ($_GET['dismiss-notice'] == $key)) {
+$new_admin_notices[$key]['dismiss_timestamps'] = (array) (isset($notice['dismiss_timestamps']) ? $notice['dismiss_timestamps'] : array());
+$new_admin_notices[$key]['dismiss_timestamps'][$user_id] = $current_time; }
+elseif (!in_array($key, $GLOBALS['kleor_admin_notices'])) {
+$condition = (((!isset($notice['start_timestamp'])) || ($notice['start_timestamp'] <= $current_time))
+ && (((!isset($notice['dismiss_timestamps'])) || (!isset($notice['dismiss_timestamps'][$user_id])))
+ || ((isset($notice['dismiss_delay'])) && ($notice['dismiss_timestamps'][$user_id] + $notice['dismiss_delay'] < $current_time))));
+if ($condition) { eval($notice['condition']); if ($condition) {
+$GLOBALS['kleor_admin_notices'][] = $key;
+$dismiss_notice_url = $url[0].(strstr($url[0], '?') ? '&' : '?').'dismiss-notice='.$key;
+$content .= do_shortcode(str_replace('[dismiss-notice-url]', esc_attr($dismiss_notice_url), $notice['message'])); } } } }
+if ($new_admin_notices != $admin_notices) { update_option('contact_manager_admin_notices', $new_admin_notices); }
+echo $content; }
+
+add_action('admin_notices', 'contact_manager_admin_notices');
+
+
 function contact_manager_meta_box($post) {
 $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
 $options = (array) get_option('contact_manager_back_office');

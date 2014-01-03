@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.8
+Version: 5.8.1
 Author: Kleor
 Author URI: http://www.kleor.com
 Text Domain: contact-manager
@@ -56,20 +56,7 @@ foreach (array('get_the_content', 'the_content') as $function) { add_filter($fun
 function add_message($message) { include CONTACT_MANAGER_PATH.'/includes/add-message.php'; }
 
 
-function contact_cron() {
-$cron = get_option('contact_manager_cron');
-if ($cron) {
-if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
-$current_time = time();
-$installation = (array) $cron['previous_installation'];
-if ($installation['version'] != CONTACT_MANAGER_VERSION) {
-$cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'number' => 0, 'timestamp' => $current_time); }
-elseif (($installation['number'] < 12) && (($current_time - $installation['timestamp']) >= pow(2, $installation['number'] + 2))) {
-$cron['previous_installation']['timestamp'] = $current_time; }
-if ($cron['previous_installation'] != $installation) {
-update_option('contact_manager_cron', $cron);
-wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
-else { wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); } }
+function contact_cron() { include CONTACT_MANAGER_PATH.'/includes/cron.php'; }
 
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 foreach (array('admin_footer', 'login_footer', 'wp_footer') as $hook) { add_action($hook, 'contact_cron'); } }
