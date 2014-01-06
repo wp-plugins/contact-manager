@@ -1,14 +1,14 @@
 <?php global $wpdb; $error = '';
 $options = (array) get_option('contact_manager_back_office');
 extract(contact_manager_pages_links_markups($options));
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 $max_links = count($admin_links);
 $max_menu_items = count($admin_pages);
 
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
-include CONTACT_MANAGER_PATH.'/initial-options.php';
+include CONTACT_MANAGER_PATH.'initial-options.php';
 foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
 foreach (array(

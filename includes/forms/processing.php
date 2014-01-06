@@ -1,6 +1,6 @@
 <?php $GLOBALS[$prefix.'processed'] = 'yes';
 if (!isset($GLOBALS['form_error'])) { $GLOBALS['form_error'] = ''; }
-if (is_numeric($maximum_messages_quantity_per_sender)) {
+if ((is_numeric($maximum_messages_quantity_per_sender)) && (isset($_POST[$prefix.'email_address'])) && ($_POST[$prefix.'email_address'] != '')) {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST[$prefix.'email_address']."' AND form_id = ".$id, OBJECT);
 $messages_number = (int) (isset($row->total) ? $row->total : 0);
 if ($messages_number >= $maximum_messages_quantity_per_sender) {
@@ -19,7 +19,7 @@ if ($GLOBALS['form_error'] == '') {
 foreach ($_POST as $key => $value) { if (strstr($key, $prefix)) {
 $_POST[str_replace($prefix, $canonical_prefix, $key)] = $value;
 $_POST[str_replace($prefix, '', $key)] = $value; } }
-include CONTACT_MANAGER_PATH.'/tables.php';
+include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables['messages'] as $key => $value) {
 if ((isset($_POST[$key])) && ($key != 'referring_url') && (!in_array($key, $GLOBALS[$prefix.'fields']))) { unset($_POST[$key]); } }
 $custom_fields = array(); foreach ($_POST as $key => $value) {

@@ -40,7 +40,7 @@ else {
 if ($name == 'email_address') {
 if ($atts['onmouseout'] == '') { $atts['onmouseout'] = "this.value = format_email_address(this.value);"; }
 if (isset($_POST[$prefix.'submit'])) {
-if ((!strstr($_POST[$prefix.$name], '@')) || (!strstr($_POST[$prefix.$name], '.'))) {
+if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] != '') && ((!strstr($_POST[$prefix.$name], '@')) || (!strstr($_POST[$prefix.$name], '.')))) {
 $GLOBALS[$prefix.$name.'_error'] = $GLOBALS[$prefix.'invalid_email_address_message']; } } }
 if ($name != 'submit') {
 if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] != '')) {
@@ -51,7 +51,7 @@ foreach (array($name, str_replace('_', '-', $name)) as $key) {
 if (($atts['value'] == '') && (isset($_GET[$key]))) { $atts['value'] = htmlspecialchars($_GET[$key]); } }
 if ((!isset($_POST[$prefix.'submit'])) && ($atts['value'] == '')
  && (function_exists('current_user_can')) && (!current_user_can('edit_pages')) && (!current_user_can('manage_options'))) {
-include CONTACT_MANAGER_PATH.'/libraries/personal-informations.php';
+include CONTACT_MANAGER_PATH.'libraries/personal-informations.php';
 if (in_array($name, $personal_informations)) {
 if ((function_exists('affiliation_session')) && (affiliation_session()) && (affiliate_data($name) != '')) { $atts['value'] = affiliate_data($name); }
 elseif ((function_exists('commerce_session')) && (commerce_session()) && (client_data($name) != '')) { $atts['value'] = client_data($name); }

@@ -1,6 +1,6 @@
 <?php if ((isset($message)) && (is_array($message))) {
 global $wpdb;
-foreach (array('admin-pages.php', 'tables.php') as $file) { include CONTACT_MANAGER_PATH.'/'.$file; }
+foreach (array('admin-pages.php', 'tables.php') as $file) { include CONTACT_MANAGER_PATH.''.$file; }
 foreach ($tables['messages'] as $key => $value) { if (!isset($message[$key])) { $message[$key] = ''; } }
 $GLOBALS['contact_form_id'] = (int) $message['form_id'];
 if (function_exists('add_affiliate')) {
@@ -250,7 +250,7 @@ $$field = str_replace(array('&#91;', '&#93;'), array('[', ']'), affiliation_data
 wp_mail($receiver, $subject, $body, 'From: '.$sender.(((strstr($body, '</')) || (strstr($body, '/>'))) ? "\r\nContent-type: text/html" : "")); } } } }
 
 if (($message['sender_subscribed_to_autoresponder'] == 'yes') && ($message['email_address'] != '')) {
-if (!function_exists('subscribe_to_autoresponder')) { include_once CONTACT_MANAGER_PATH.'/libraries/autoresponders-functions.php'; }
+if (!function_exists('subscribe_to_autoresponder')) { include_once CONTACT_MANAGER_PATH.'libraries/autoresponders-functions.php'; }
 subscribe_to_autoresponder($message['sender_autoresponder'], $message['sender_autoresponder_list'], $message); }
 
 if ($message['message_custom_instructions_executed'] == 'yes') {

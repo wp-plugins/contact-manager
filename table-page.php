@@ -1,8 +1,8 @@
 <?php global $wpdb; $error = '';
 $back_office_options = (array) get_option('contact_manager_back_office');
 $table_slug = str_replace('-', '_', str_replace('contact-manager-', '', $_GET['page']));
-include CONTACT_MANAGER_PATH.'/tables.php';
-include_once CONTACT_MANAGER_PATH.'/tables-functions.php';
+include CONTACT_MANAGER_PATH.'tables.php';
+include_once CONTACT_MANAGER_PATH.'tables-functions.php';
 $options = (array) get_option(str_replace('-', '_', $_GET['page']));
 $table_name = table_name($table_slug);
 $custom_fields = (array) $back_office_options[single_page_slug($table_slug).'_page_custom_fields'];
@@ -23,7 +23,7 @@ foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes($value); } }
 $_GET['s'] = $_POST['s'];
 if (isset($_POST['reset_columns'])) {
-include CONTACT_MANAGER_PATH.'/initial-options.php';
+include CONTACT_MANAGER_PATH.'initial-options.php';
 $columns = $initial_options[$table_slug]['columns'];
 $displayed_columns = $initial_options[$table_slug]['displayed_columns']; }
 else {

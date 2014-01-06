@@ -1,10 +1,10 @@
-<?php if (strstr($_SERVER['REQUEST_URI'], '/plugins.php')) { load_plugin_textdomain('contact-manager', false, 'contact-manager/languages'); }
-if ((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) { include_once CONTACT_MANAGER_PATH.'/admin-pages-functions.php'; }
+<?php if (strstr($_SERVER['REQUEST_URI'], '/plugins.php')) { load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages'); }
+if ((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) { include_once CONTACT_MANAGER_PATH.'admin-pages-functions.php'; }
 
 
 function contact_manager_admin_menu() {
 $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 $options = (array) get_option('contact_manager_back_office');
 if ((!isset($options['menu_title_'.$lang])) || ($options['menu_title_'.$lang] == '') || (!isset($options['pages_titles_'.$lang]))
  || ($options['pages_titles_'.$lang] == '')) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
@@ -13,18 +13,18 @@ if (((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) || ($
 if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
 else { $role = $options['minimum_roles']['view']; $capability = $roles[$role]['capability']; }
 if ($options['custom_icon_used'] == 'yes') { $icon_url = format_url($options['custom_icon_url']); } else { $icon_url = ''; }
-add_menu_page('Contact Manager', $menu_title, $capability, 'contact-manager', create_function('', 'include_once CONTACT_MANAGER_PATH."/options-page.php";'), $icon_url);
+add_menu_page('Contact Manager', $menu_title, $capability, 'contact-manager', create_function('', 'include_once CONTACT_MANAGER_PATH."options-page.php";'), $icon_url);
 $admin_menu_pages = contact_manager_admin_menu_pages();
 foreach ($admin_pages as $key => $value) { if (in_array($key, $admin_menu_pages)) {
 $slug = 'contact-manager'.($key == '' ? '' : '-'.str_replace('_', '-', $key));
 if ((!isset($_GET['page'])) || (!strstr($_GET['page'], 'contact-manager'))) { $value['menu_title'] = $pages_titles[$key]; }
-add_submenu_page('contact-manager', $value['page_title'], $value['menu_title'], $capability, $slug, create_function('', 'include_once CONTACT_MANAGER_PATH."/'.$value['file'].'";')); } } }
+add_submenu_page('contact-manager', $value['page_title'], $value['menu_title'], $capability, $slug, create_function('', 'include_once CONTACT_MANAGER_PATH."'.$value['file'].'";')); } } }
 
 add_action('admin_menu', 'contact_manager_admin_menu');
 
 
 function contact_manager_admin_menu_pages() {
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 $options = (array) get_option('contact_manager_back_office');
 $menu_items = (array) $options['menu_items'];
 $numbers = (array) $options['menu_displayed_items'];
@@ -86,7 +86,7 @@ foreach (array("page", "post") as $type) { add_meta_box("contact-manager", "Cont
 
 function contact_manager_user_can($back_office_options, $capability) {
 if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
-else { include CONTACT_MANAGER_PATH.'/admin-pages.php'; $role = $back_office_options['minimum_roles'][$capability]; $capability = $roles[$role]['capability']; }
+else { include CONTACT_MANAGER_PATH.'admin-pages.php'; $role = $back_office_options['minimum_roles'][$capability]; $capability = $roles[$role]['capability']; }
 return current_user_can($capability); }
 
 
@@ -101,11 +101,11 @@ $links = array_merge($links, array(
 '<span class="delete"><a href="../admin.php?page=contact-manager&amp;action=uninstall&amp;for=network" title="'.__('Delete the options and tables of Contact Manager for all sites in this network', 'contact-manager').'">'.__('Uninstall', 'contact-manager').'</a></span>')); }
 return $links; }
 
-foreach (array('', 'network_admin_') as $prefix) { add_filter($prefix.'plugin_action_links_contact-manager/contact-manager.php', 'contact_manager_action_links', 10, 2); }
+foreach (array('', 'network_admin_') as $prefix) { add_filter($prefix.'plugin_action_links_'.CONTACT_MANAGER_FOLDER.'/contact-manager.php', 'contact_manager_action_links', 10, 2); }
 
 
 function contact_manager_row_meta($links, $file) {
-if ($file == 'contact-manager/contact-manager.php') {
+if ($file == CONTACT_MANAGER_FOLDER.'/contact-manager.php') {
 $links = array_merge($links, array(
 '<a href="http://www.kleor.com/contact-manager">'.__('Documentation', 'contact-manager').'</a>')); }
 return $links; }
@@ -114,11 +114,11 @@ add_filter('plugin_row_meta', 'contact_manager_row_meta', 10, 2);
 
 
 function reset_contact_manager() {
-load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
-include CONTACT_MANAGER_PATH.'/initial-options.php';
+load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
+include CONTACT_MANAGER_PATH.'initial-options.php';
 foreach ($initial_options as $key => $value) {
 $_key = ($key == '' ? '' : '_'.$key);
 update_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 
 
-function uninstall_contact_manager($for = 'single') { include CONTACT_MANAGER_PATH.'/includes/uninstall.php'; }
+function uninstall_contact_manager($for = 'single') { include CONTACT_MANAGER_PATH.'includes/uninstall.php'; }

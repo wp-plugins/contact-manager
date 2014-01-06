@@ -1,4 +1,4 @@
-<?php load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
+<?php load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
 add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("dashboard");'));
 foreach ((array) $_GET as $key => $value) { if (is_string($value)) { $_GET[$key] = quotes_entities($_GET[$key]); } }
 if (isset($_GET['id'])) { $_GET['id'] = (int) $_GET['id']; if ($_GET['id'] < 1) { unset($_GET['id']); } }
@@ -29,7 +29,7 @@ function contact_manager_pages_links($back_office_options) {
 $links = (array) $back_office_options['links'];
 $displayed_links = (array) $back_office_options['displayed_links'];
 if (($back_office_options['links_displayed'] == 'yes') && (count($displayed_links) > 0)) {
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 if ($back_office_options['title_displayed'] == 'yes') { $left_margin = '6em'; } else { $left_margin = '0'; }
 echo '<ul class="subsubsub" style="margin: 1.75em 0 1.5em '.$left_margin.'; float: left; white-space: normal;">';
 $links_markup = array(
@@ -84,7 +84,7 @@ function contact_manager_pages_menu($back_office_options) {
 $menu_items = (array) $back_office_options['menu_items'];
 $menu_displayed_items = (array) $back_office_options['menu_displayed_items'];
 if (($back_office_options['menu_displayed'] == 'yes') && (count($menu_displayed_items) > 0)) {
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 echo '<ul class="subsubsub" style="margin: 0 0 1em; float: left; white-space: normal;">';
 $first = true; $items_displayed = array();
 for ($i = 0; $i < count($admin_pages); $i++) {
@@ -97,7 +97,7 @@ echo '</ul>'; } }
 
 
 function contact_manager_pages_module($back_office_options, $module, $undisplayed_modules) {
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 $page_slug = str_replace('-', '_', str_replace('-page', '', $module));
 $page_undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules']; ?>
 <div class="postbox" id="<?php echo $module.'-module'; ?>"<?php if (in_array($module, $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -172,7 +172,7 @@ function contact_manager_pages_summary($back_office_options) {
 if ($_GET['page'] == 'contact-manager') { $page_slug = 'options'; }
 else { $page_slug = str_replace('-', '_', str_replace('contact-manager-', '', $_GET['page'])); }
 if ($back_office_options[$page_slug.'_page_summary_displayed'] == 'yes') {
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 $modules = $modules[$page_slug];
 $undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules'];
 $list = ''; foreach ($modules as $key => $value) {
@@ -200,7 +200,7 @@ return $roles; }
 
 
 function update_contact_manager_back_office($back_office_options, $page) {
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 if ((!isset($_POST[$page.'_page_summary_displayed'])) || ($_POST[$page.'_page_summary_displayed'] != 'yes')) { $_POST[$page.'_page_summary_displayed'] = 'no'; }
 if ((strstr($_GET['page'], 'back-office')) && (isset($back_office_options[$page.'_page_custom_fields']))) {
 $custom_fields = (array) $back_office_options[$page.'_page_custom_fields'];

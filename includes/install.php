@@ -3,7 +3,7 @@ include_once ABSPATH.'wp-admin/includes/upgrade.php';
 $charset_collate = '';
 if (!empty($wpdb->charset)) { $charset_collate .= 'DEFAULT CHARACTER SET '.$wpdb->charset; }
 if (!empty($wpdb->collate)) { $charset_collate .= ' COLLATE '.$wpdb->collate; }
-include CONTACT_MANAGER_PATH.'/tables.php';
+include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables as $table_slug => $table) {
 $list = ''; foreach ($table as $key => $value) { $list .= "
 ".$key." ".$value['type']." ".($key == "id" ? "auto_increment" : "NOT NULL").","; }
@@ -15,8 +15,8 @@ $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_".$table_s
 if (isset($value['default'])) {
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET ".$key." = '".$value['default']."' WHERE ".$key." = ''"); } } }
 
-load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
-include CONTACT_MANAGER_PATH.'/initial-options.php';
+load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
+include CONTACT_MANAGER_PATH.'initial-options.php';
 $overwrited_options = array('menu_title_'.$lang, 'meta_box_'.$lang, 'pages_titles_'.$lang, 'version');
 if (version_compare(contact_data('version'), '5.8', '<')) { $overwrited_options[] = 'custom_icon_used'; }
 foreach ($initial_options as $key => $value) {

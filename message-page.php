@@ -47,7 +47,7 @@ echo '<div class="updated"><p><strong>'.__('Message deleted.', 'contact-manager'
 </div><?php }
 
 else {
-include CONTACT_MANAGER_PATH.'/admin-pages.php'; include CONTACT_MANAGER_PATH.'/tables.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php'; include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables['messages'] as $key => $value) { if (!isset($_POST[$key])) { $_POST[$key] = ''; } }
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
@@ -511,7 +511,7 @@ if (!isset($_POST['submit'])) { $_POST['message_notification_email_body'] = html
 <td><label><input type="checkbox" name="sender_subscribed_to_autoresponder" id="sender_subscribed_to_autoresponder" value="yes"<?php if ($_POST['sender_subscribed_to_autoresponder'] == 'yes') { echo ' checked="checked"'; } ?> /> <strong><?php _e('Subscribe the sender to an autoresponder list', 'contact-manager'); ?></strong></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_autoresponder"><?php _e('Autoresponder', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_autoresponder" id="sender_autoresponder">
-<?php include CONTACT_MANAGER_PATH.'/libraries/autoresponders.php';
+<?php include CONTACT_MANAGER_PATH.'libraries/autoresponders.php';
 $autoresponder = do_shortcode($_POST['sender_autoresponder']);
 foreach ($autoresponders as $value) {
 echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; } ?>

@@ -42,7 +42,7 @@ echo '<div class="updated"><p><strong>'.($is_category ? __('Category deleted.', 
 </div><?php }
 
 else {
-include CONTACT_MANAGER_PATH.'/admin-pages.php'; include CONTACT_MANAGER_PATH.'/tables.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php'; include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables[$table_slug] as $key => $value) { if (!isset($_POST[$key])) { $_POST[$key] = ''; } }
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
@@ -457,7 +457,7 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 </select></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_autoresponder"><?php _e('Autoresponder', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_autoresponder" id="sender_autoresponder">
-<?php include CONTACT_MANAGER_PATH.'/libraries/autoresponders.php';
+<?php include CONTACT_MANAGER_PATH.'libraries/autoresponders.php';
 $autoresponder = do_shortcode($_POST['sender_autoresponder']);
 echo '<option value=""'.($autoresponder == '' ? ' selected="selected"' : '').'>'.__('Default option', 'contact-manager').'</option>'."\n";
 foreach ($autoresponders as $value) {

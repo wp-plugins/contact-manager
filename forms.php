@@ -9,7 +9,7 @@ if ($id == 0) { $id = (int) (isset($GLOBALS['contact_form_id']) ? $GLOBALS['cont
 if (($id == 0) && ((!function_exists('current_user_can')) || (!current_user_can('edit_pages')))) { $id = 1; }
 if (($id == 0) || ($id != contact_form_data(array(0 => 'id', 'id' => $id)))) {
 if ((function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
-load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
+load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
 $content = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'), 'id', '[contact-form]'); } }
 else {
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
@@ -34,7 +34,7 @@ if (is_string($value)) {
 $value = str_replace(array('[', ']'), array('&#91;', '&#93;'), quotes_entities($value));
 $_POST[$key] = str_replace('\\&', '&', trim(mysql_real_escape_string($value))); } }
 if (isset($_POST[$prefix.'country_code'])) {
-include CONTACT_MANAGER_PATH.'/languages/countries/countries.php';
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
 $key = $_POST[$prefix.'country_code'];
 if (isset($countries[$key])) { $_POST[$prefix.'country'] = $countries[$key]; } }
 if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = format_email_address($_POST[$prefix.'email_address']); }
@@ -59,7 +59,7 @@ foreach (array(
 $code = contact_form_data('code');
 foreach (array('checkbox_fields', 'fields', 'radio_fields', 'required_fields') as $array) { $GLOBALS[$prefix.$array] = array_unique($GLOBALS[$prefix.$array]); }
 
-if ((isset($_POST[$prefix.'submit'])) && (!isset($GLOBALS[$prefix.'processed']))) { include CONTACT_MANAGER_PATH.'/includes/forms/processing.php'; }
+if ((isset($_POST[$prefix.'submit'])) && (!isset($GLOBALS[$prefix.'processed']))) { include CONTACT_MANAGER_PATH.'includes/forms/processing.php'; }
 elseif ($GLOBALS[$canonical_prefix.'number'] == 1) {
 $displays_count = contact_form_data('displays_count') + 1;
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displays_count = ".$displays_count." WHERE id = ".$id); }
@@ -111,28 +111,28 @@ foreach ($tags as $tag) { remove_shortcode($tag); } }
 return $content; }
 
 
-function contact_form_captcha($atts) { include CONTACT_MANAGER_PATH.'/includes/forms/captcha.php'; return $content; }
+function contact_form_captcha($atts) { include CONTACT_MANAGER_PATH.'includes/forms/captcha.php'; return $content; }
 
 
-function contact_form_error($atts) { include CONTACT_MANAGER_PATH.'/includes/forms/error.php'; return $content; }
+function contact_form_error($atts) { include CONTACT_MANAGER_PATH.'includes/forms/error.php'; return $content; }
 
 
-function contact_form_input($atts) { include CONTACT_MANAGER_PATH.'/includes/forms/input.php'; return $content; }
+function contact_form_input($atts) { include CONTACT_MANAGER_PATH.'includes/forms/input.php'; return $content; }
 
 
-function contact_form_label($atts, $content) { include CONTACT_MANAGER_PATH.'/includes/forms/label.php'; return $content; }
+function contact_form_label($atts, $content) { include CONTACT_MANAGER_PATH.'includes/forms/label.php'; return $content; }
 
 
-function contact_form_option($atts, $content) { include CONTACT_MANAGER_PATH.'/includes/forms/option.php'; return $content; }
+function contact_form_option($atts, $content) { include CONTACT_MANAGER_PATH.'includes/forms/option.php'; return $content; }
 
 
-function contact_form_select($atts, $content) { include CONTACT_MANAGER_PATH.'/includes/forms/select.php'; return $content; }
+function contact_form_select($atts, $content) { include CONTACT_MANAGER_PATH.'includes/forms/select.php'; return $content; }
 
 
-function contact_form_textarea($atts, $content) { include CONTACT_MANAGER_PATH.'/includes/forms/textarea.php'; return $content; }
+function contact_form_textarea($atts, $content) { include CONTACT_MANAGER_PATH.'includes/forms/textarea.php'; return $content; }
 
 
-function contact_form_validation_content($atts, $content) { include CONTACT_MANAGER_PATH.'/includes/forms/validation-content.php'; return $content; }
+function contact_form_validation_content($atts, $content) { include CONTACT_MANAGER_PATH.'includes/forms/validation-content.php'; return $content; }
 
 
-function contact_form_country_selector($atts) { include CONTACT_MANAGER_PATH.'/includes/forms/country-selector.php'; return $content; }
+function contact_form_country_selector($atts) { include CONTACT_MANAGER_PATH.'includes/forms/country-selector.php'; return $content; }

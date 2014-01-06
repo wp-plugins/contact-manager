@@ -1,6 +1,6 @@
 <?php function subscribe_to_autoresponder($autoresponder, $list, $contact) {
 if ($list != '') {
-include CONTACT_MANAGER_PATH.'/libraries/personal-informations.php';
+include CONTACT_MANAGER_PATH.'libraries/personal-informations.php';
 foreach (array_merge($personal_informations, array('ip_address', 'referrer')) as $field) {
 if (!isset($contact[$field])) { $contact[$field] = ''; } }
 $contact['email_address'] = format_email_address($contact['email_address']);
@@ -42,7 +42,7 @@ wp_remote_get('http://www.cybermailing.com/mailing/subscribe.php?'.
 
 function subscribe_to_getresponse($list, $contact) {
 ini_set('display_errors', 0);
-include_once CONTACT_MANAGER_PATH.'/libraries/jsonRPCClient.php';
+include_once CONTACT_MANAGER_PATH.'libraries/jsonRPCClient.php';
 $api_key = contact_data('getresponse_api_key');
 if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('getresponse_api_key'); }
 $client = new jsonRPCClient('http://api2.getresponse.com');
@@ -61,7 +61,7 @@ catch (Exception $e) { die($e->getMessage()); } }
 
 
 function subscribe_to_mailchimp($list, $contact) {
-include_once CONTACT_MANAGER_PATH.'/libraries/MCAPI.class.php';
+include_once CONTACT_MANAGER_PATH.'libraries/MCAPI.class.php';
 $apiUrl = 'http://api.mailchimp.com/1.3/';
 $api_key = contact_data('mailchimp_api_key');
 if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('mailchimp_api_key'); }

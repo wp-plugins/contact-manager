@@ -27,11 +27,11 @@ return $string; }
 
 function contact_counter($atts, $content) {
 $type = '';
-include CONTACT_MANAGER_PATH.'/includes/counter.php';
+include CONTACT_MANAGER_PATH.'includes/counter.php';
 return $content; }
 
 
 function contact_form_counter($atts, $content) {
 $type = 'contact_form';
-include CONTACT_MANAGER_PATH.'/includes/counter.php';
+include CONTACT_MANAGER_PATH.'includes/counter.php';
 return $content; }

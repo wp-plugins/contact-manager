@@ -1,10 +1,10 @@
 <?php global $wpdb; $error = '';
-include CONTACT_MANAGER_PATH.'/tables.php';
-include_once CONTACT_MANAGER_PATH.'/tables-functions.php';
+include CONTACT_MANAGER_PATH.'tables.php';
+include_once CONTACT_MANAGER_PATH.'tables-functions.php';
 $back_office_options = (array) get_option('contact_manager_back_office');
 $undisplayed_rows = (array) $back_office_options['statistics_page_undisplayed_rows'];
 $undisplayed_columns = (array) $back_office_options['statistics_page_undisplayed_columns'];
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 $options = (array) get_option('contact_manager_statistics');
 
 $tables_names = array(

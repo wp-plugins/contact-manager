@@ -160,7 +160,7 @@ $variables = array(
 foreach ($variables as $variable) { if (isset($$variable)) { $original[$variable] = $$variable; unset($$variable); } }
 
 
-include CONTACT_MANAGER_PATH.'/tables.php';
+include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables as $table_slug => $table) {
 switch ($table_slug) {
 case 'forms': $first_columns = array(
@@ -211,7 +211,7 @@ $initial_options['statistics'] = array(
 'tables' => array('messages', 'forms', 'forms_categories'));
 
 
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 $links = array();
 foreach ($admin_links as $key => $value) { $links[] = $key; }
 $displayed_links = array();

@@ -16,7 +16,7 @@ if ((function_exists('affiliation_session')) && (affiliation_session()) && (affi
 elseif ((function_exists('commerce_session')) && (commerce_session()) && (client_data('country') != '')) { $_POST[$prefix.'country'] = client_data('country'); }
 elseif ((function_exists('membership_session')) && (membership_session()) && (member_data('country') != '')) { $_POST[$prefix.'country'] = member_data('country'); }
 elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $_POST[$prefix.'country'] = contact_user_data('country'); } } }
-include CONTACT_MANAGER_PATH.'/languages/countries/countries.php';
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
 $countries_list = '<option value="">--</option>'."\n";
 foreach ($countries as $country_code => $country) {
 if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] == $country_code)) { $_POST[$prefix.'country'] = $country; }

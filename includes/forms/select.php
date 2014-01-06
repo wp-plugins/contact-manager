@@ -10,7 +10,7 @@ foreach (array($name, str_replace('_', '-', $name)) as $key) {
 if (((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == '')) && (isset($_GET[$key]))) { $_POST[$prefix.$name] = htmlspecialchars($_GET[$key]); } }
 if ((!isset($_POST[$prefix.'submit'])) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))
  && (function_exists('current_user_can')) && (!current_user_can('edit_pages')) && (!current_user_can('manage_options'))) {
-include CONTACT_MANAGER_PATH.'/libraries/personal-informations.php';
+include CONTACT_MANAGER_PATH.'libraries/personal-informations.php';
 if (in_array($name, $personal_informations)) {
 if ((function_exists('affiliation_session')) && (affiliation_session()) && (affiliate_data($name) != '')) { $_POST[$prefix.$name] = affiliate_data($name); }
 elseif ((function_exists('commerce_session')) && (commerce_session()) && (client_data($name) != '')) { $_POST[$prefix.$name] = client_data($name); }

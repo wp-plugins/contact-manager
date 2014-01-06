@@ -60,7 +60,7 @@ $data = contact_decimals_data($decimals, $data);
 
 if (($is_array) && ($default == '') && (!is_admin()) && (function_exists('wp_get_current_user')) && (function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
 if (((strstr($type, 'category')) || ($type == 'contact_form')) && ((!isset($item_data['id'])) || ($item_data['id'] == 0))) {
-load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
+load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
 $data = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'), 'id', '['.str_replace('_', '-', $type).']'); } }
 
 foreach (array($type.'_id', $type.'_data') as $key) {

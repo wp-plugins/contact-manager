@@ -10,7 +10,7 @@ foreach ($atts as $key => $value) {
 if ((!in_array($key, array('answer', 'question', 'theme', 'type'))) && (is_string($key)) && ($value != '')) { $c = (strstr($value, '"') ? "'" : '"'); $markup .= ' '.$key.'='.$c.$value.$c; } }
 if ($atts['type'] == 'recaptcha') {
 $GLOBALS[$prefix.'recaptcha_js'] = '<script type="text/javascript">var RecaptchaOptions = { lang: \''.strtolower(substr(WPLANG, 0, 2)).'\', theme: \''.$atts['theme'].'\' };</script>'."\n";
-if (!function_exists('_recaptcha_qsencode')) { include_once CONTACT_MANAGER_PATH.'/libraries/recaptchalib.php'; }
+if (!function_exists('_recaptcha_qsencode')) { include_once CONTACT_MANAGER_PATH.'libraries/recaptchalib.php'; }
 foreach (array('public', 'private') as $string) {
 if (!defined('RECAPTCHA_'.strtoupper($string).'_KEY')) {
 $key = contact_data('recaptcha_'.$string.'_key');
@@ -20,8 +20,8 @@ $content = str_replace(' frameborder="0"', '', recaptcha_get_html(RECAPTCHA_PUBL
 else {
 switch ($atts['type']) {
 case 'arithmetic':
-load_plugin_textdomain('contact-manager', false, 'contact-manager/languages');
-include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
+load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
+include CONTACT_MANAGER_PATH.'libraries/captchas.php';
 $m = mt_rand(0, 15);
 $n = mt_rand(0, 15);
 $string = $captchas_numbers[$m].' + '.$captchas_numbers[$n];
@@ -30,7 +30,7 @@ case 'question':
 $string = (isset($atts['question']) ? $atts['question'] : '');
 $valid_captcha = (isset($atts['answer']) ? $atts['answer'] : ''); break;
 case 'reversed-string':
-include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
+include CONTACT_MANAGER_PATH.'libraries/captchas.php';
 $n = mt_rand(5, 12);
 $string = '';
 for ($i = 0; $i < $n; $i++) { $string .= $captchas_letters[mt_rand(0, 25)]; }

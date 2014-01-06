@@ -30,11 +30,11 @@ else { _e('Do you really want to permanently delete the options and tables of Co
 </div><?php }
 
 else {
-include CONTACT_MANAGER_PATH.'/admin-pages.php';
+include CONTACT_MANAGER_PATH.'admin-pages.php';
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
-include CONTACT_MANAGER_PATH.'/initial-options.php';
+include CONTACT_MANAGER_PATH.'initial-options.php';
 foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, 'options');
@@ -169,7 +169,7 @@ if ($messages_number > 0) { echo ' | <a style="text-decoration: none;" '.$ids_fi
 <td><span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#captcha"><?php _e('How to display a CAPTCHA?', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="default_captcha_type"><?php _e('Default type', 'contact-manager'); ?></label></strong></th>
 <td><select name="default_captcha_type" id="default_captcha_type">
-<?php include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
+<?php include CONTACT_MANAGER_PATH.'libraries/captchas.php';
 $captcha_type = do_shortcode($options['default_captcha_type']);
 asort($captchas_types);
 foreach ($captchas_types as $key => $value) {
@@ -178,7 +178,7 @@ echo '<option value="'.$key.'"'.($captcha_type == $key ? ' selected="selected"' 
 <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#captcha"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="default_recaptcha_theme"><?php _e('Default reCAPTCHA theme', 'contact-manager'); ?></label></strong></th>
 <td><select name="default_recaptcha_theme" id="default_recaptcha_theme">
-<?php include CONTACT_MANAGER_PATH.'/libraries/captchas.php';
+<?php include CONTACT_MANAGER_PATH.'libraries/captchas.php';
 $recaptcha_theme = do_shortcode($options['default_recaptcha_theme']);
 asort($recaptcha_themes);
 foreach ($recaptcha_themes as $key => $value) {
@@ -308,7 +308,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <td><label><input type="checkbox" name="sender_subscribed_to_autoresponder" id="sender_subscribed_to_autoresponder" value="yes"<?php if ($options['sender_subscribed_to_autoresponder'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Subscribe the sender to an autoresponder list', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_autoresponder"><?php _e('Autoresponder', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_autoresponder" id="sender_autoresponder">
-<?php include CONTACT_MANAGER_PATH.'/libraries/autoresponders.php';
+<?php include CONTACT_MANAGER_PATH.'libraries/autoresponders.php';
 $autoresponder = do_shortcode($options['sender_autoresponder']);
 foreach ($autoresponders as $value) {
 echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; } ?>
