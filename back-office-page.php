@@ -10,7 +10,7 @@ if (!contact_manager_user_can($options, 'manage')) { $_POST = array(); $error = 
 else {
 include CONTACT_MANAGER_PATH.'initial-options.php';
 foreach ($_POST as $key => $value) {
-if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
+if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace(array('&nbsp;', '&#91;', '&#93;'), array(' ', '&amp;#91;', '&amp;#93;'), $value))); } }
 foreach (array(
 'custom_icon_used',
 'links_displayed',

@@ -15,6 +15,8 @@
 'code' => array('type' => 'text', 'modules' => array('form'), 'name' => __('Code', 'contact-manager'), 'width' => 18, 'searchby' => __('the code', 'contact-manager')),
 'unfilled_fields_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Unfilled fields message', 'contact-manager'), 'width' => 18),
 'unfilled_field_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Unfilled field\'s message', 'contact-manager'), 'width' => 18),
+'invalid_fields_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Invalid fields message', 'contact-manager'), 'width' => 18),
+'invalid_field_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Invalid field\'s message', 'contact-manager'), 'width' => 18),
 'invalid_email_address_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Invalid email address message', 'contact-manager'), 'width' => 18),
 'invalid_captcha_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Invalid CAPTCHA\'s message', 'contact-manager'), 'width' => 18),
 'failed_upload_message' => array('type' => 'text', 'modules' => array('form', 'error-messages'), 'name' => __('Failed upload\'s message', 'contact-manager'), 'width' => 18),

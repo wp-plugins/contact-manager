@@ -106,7 +106,7 @@ return str_replace(array("'", '"'), array("&apos;", '&quot;'), $string); }
 
 
 function quotes_entities_decode($string) {
-return str_replace(array("&apos;", '&quot;'), array("'", '"'), $string); }
+return str_replace(array("&apos;", "&#39;", "&#039;", '&quot;', '&#34;', '&#034;'), array("'", "'", "'", '"', '"', '"'), $string); }
 
 
 function strip_accents($string) {

@@ -48,16 +48,18 @@ $maximum_messages_quantity_per_sender = contact_form_data('maximum_messages_quan
 if (is_numeric($maximum_messages_quantity_per_sender)) { $GLOBALS[$prefix.'required_fields'] = array('email_address'); }
 else { $GLOBALS[$prefix.'required_fields'] = array(); }
 $GLOBALS[$prefix.'fields'] = $GLOBALS[$prefix.'required_fields'];
+$GLOBALS[$prefix.'confirmed_fields'] = array();
 $GLOBALS[$prefix.'checkbox_fields'] = array();
 $GLOBALS[$prefix.'radio_fields'] = array();
 foreach (array(
 'failed_upload_message',
 'invalid_email_address_message',
+'invalid_field_message',
 'too_large_file_message',
 'unauthorized_extension_message',
 'unfilled_field_message') as $key) { $GLOBALS[$prefix.$key] = contact_form_data($key); }
 $code = contact_form_data('code');
-foreach (array('checkbox_fields', 'fields', 'radio_fields', 'required_fields') as $array) { $GLOBALS[$prefix.$array] = array_unique($GLOBALS[$prefix.$array]); }
+foreach (array('checkbox_fields', 'confirmed_fields', 'fields', 'radio_fields', 'required_fields') as $array) { $GLOBALS[$prefix.$array] = array_unique($GLOBALS[$prefix.$array]); }
 
 if ((isset($_POST[$prefix.'submit'])) && (!isset($GLOBALS[$prefix.'processed']))) { include CONTACT_MANAGER_PATH.'includes/forms/processing.php'; }
 elseif ($GLOBALS[$canonical_prefix.'number'] == 1) {
@@ -71,25 +73,43 @@ $required_fields_js .= '
 for (i = 0; i < form.'.$prefix.$field.'.length; i++) { if (form.'.$prefix.$field.'[i].checked == true) { '.$prefix.$field.'_checked = true; } }
 if (!'.$prefix.$field.'_checked)' : (in_array($field, $GLOBALS[$prefix.'checkbox_fields']) ? 'if (form.'.$prefix.$field.'.checked == false)' : 'if (form.'.$prefix.$field.'.value == "")')).' {
 if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) {
+message = document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").getAttribute("data-unfilled-field-message");
+if (!message) { message = "'.$GLOBALS[$prefix.'unfilled_field_message'].'"; }
 document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").style.display = "inline";
-document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = "'.$GLOBALS[$prefix.'unfilled_field_message'].'"; }
+document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = message; }
 '.(in_array($field, $GLOBALS[$prefix.'radio_fields']) ? '' : 'if (!error) { form.'.$prefix.$field.'.focus(); } ').'error = true; }
 else if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) {
 document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").style.display = "none";
 document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = ""; }'; }
+$confirmed_fields_js = '';
+foreach ($GLOBALS[$prefix.'confirmed_fields'] as $field) {
+$confirmed_fields_js .= '
+if (form.'.$prefix.'confirm_'.$field.'.value != form.'.$prefix.$field.'.value) {
+if (document.getElementById("'.$prefix.'confirm_'.$field.'_error")) {
+message = document.getElementById("'.$prefix.'confirm_'.$field.'_error").getAttribute("data-invalid-field-message");
+if (!message) { message = "'.$GLOBALS[$prefix.'invalid_field_message'].'"; }
+document.getElementById("'.$prefix.'confirm_'.$field.'_error").style.display = "inline";
+document.getElementById("'.$prefix.'confirm_'.$field.'_error").innerHTML = message; }
+if (!error) { form.'.$prefix.'confirm_'.$field.'.focus(); } error = true; }
+else if (document.getElementById("'.$prefix.'confirm_'.$field.'_error")) {
+document.getElementById("'.$prefix.'confirm_'.$field.'_error").style.display = "none";
+document.getElementById("'.$prefix.'confirm_'.$field.'_error").innerHTML = ""; }'; }
 $form_js = '
 <script type="text/javascript">
 '.($focus == 'yes' ? (isset($GLOBALS['form_focus']) ? str_replace($canonical_prefix, $prefix, $GLOBALS['form_focus']).$GLOBALS['form_focus'] : '') : '').'
 function validate_'.substr($prefix, 0, -1).'(form) {
-var error = false;
+var error = false; var message = "";
 '.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? 'form.'.$prefix.'email_address.value = format_email_address(form.'.$prefix.'email_address.value);' : '').'
 '.$required_fields_js.'
+'.$confirmed_fields_js.'
 '.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? '
 if (form.'.$prefix.'email_address.value != "") {
 if ((form.'.$prefix.'email_address.value.indexOf("@") == -1) || (form.'.$prefix.'email_address.value.indexOf(".") == -1)) {
 if (document.getElementById("'.$prefix.'email_address_error")) {
+message = document.getElementById("'.$prefix.'email_address_error").getAttribute("data-invalid-email-address-message");
+if (!message) { message = "'.$GLOBALS[$prefix.'invalid_email_address_message'].'"; }
 document.getElementById("'.$prefix.'email_address_error").style.display = "inline";
-document.getElementById("'.$prefix.'email_address_error").innerHTML = "'.$GLOBALS[$prefix.'invalid_email_address_message'].'"; }
+document.getElementById("'.$prefix.'email_address_error").innerHTML = message; }
 if (!error) { form.'.$prefix.'email_address.focus(); } error = true; }
 else if (document.getElementById("'.$prefix.'email_address_error")) {
 document.getElementById("'.$prefix.'email_address_error").style.display = "none";

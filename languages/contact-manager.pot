@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.8.2\n"
+"Project-Id-Version: Contact Manager 5.8.5\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -2193,4 +2193,22 @@ msgid "Delete the options and tables of Contact Manager for all sites in this ne
 msgstr ""
 
 msgid "Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?"
+msgstr ""
+
+msgid "Invalid fields"
+msgstr ""
+
+msgid "Invalid field"
+msgstr ""
+
+msgid "Invalid fields message"
+msgstr ""
+
+msgid "Invalid field's message"
+msgstr ""
+
+msgid "This field is not correctly filled."
+msgstr ""
+
+msgid "One or more fields are not correctly filled."
 msgstr ""

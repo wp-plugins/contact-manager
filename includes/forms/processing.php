@@ -6,8 +6,13 @@ $messages_number = (int) (isset($row->total) ? $row->total : 0);
 if ($messages_number >= $maximum_messages_quantity_per_sender) {
 $GLOBALS[$prefix.'maximum_messages_quantity_reached_error'] = contact_form_data('maximum_messages_quantity_reached_message'); $GLOBALS['form_error'] = 'yes'; } }
 foreach ($GLOBALS[$prefix.'required_fields'] as $field) {
-if (((!isset($_POST[$prefix.$field])) || ($_POST[$prefix.$field] == '')) && ((!isset($_FILES[$prefix.$field])) || ($_FILES[$prefix.$field]['error'] == 4))) {
-$GLOBALS[$prefix.'unfilled_fields_error'] = contact_form_data('unfilled_fields_message'); $GLOBALS['form_error'] = 'yes'; } }
+if ((!isset($GLOBALS[$prefix.'unfilled_fields_error'])) || ($GLOBALS[$prefix.'unfilled_fields_error'] == '')) {
+if ((isset($GLOBALS[$prefix.$field.'_error'])) && (strstr($GLOBALS[$prefix.$field.'_error'], 'unfilled'))) {
+$GLOBALS[$prefix.'unfilled_fields_error'] = contact_form_data('unfilled_fields_message'); $GLOBALS['form_error'] = 'yes'; } } }
+foreach ($GLOBALS[$prefix.'fields'] as $field) {
+if ((!isset($GLOBALS[$prefix.'invalid_fields_error'])) || ($GLOBALS[$prefix.'invalid_fields_error'] == '')) {
+if ((isset($GLOBALS[$prefix.$field.'_error'])) && (strstr($GLOBALS[$prefix.$field.'_error'], 'invalid'))) {
+$GLOBALS[$prefix.'invalid_fields_error'] = contact_form_data('invalid_fields_message'); $GLOBALS['form_error'] = 'yes'; } } }
 $invalid_captcha = '';
 if (isset($GLOBALS[$prefix.'recaptcha_js'])) {
 $resp = recaptcha_check_answer(RECAPTCHA_PRIVATE_KEY, $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);

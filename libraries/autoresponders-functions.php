@@ -42,32 +42,32 @@ wp_remote_get('http://www.cybermailing.com/mailing/subscribe.php?'.
 
 function subscribe_to_getresponse($list, $contact) {
 ini_set('display_errors', 0);
-include_once CONTACT_MANAGER_PATH.'libraries/jsonRPCClient.php';
+include_once CONTACT_MANAGER_PATH.'libraries/getresponse.php';
 $api_key = contact_data('getresponse_api_key');
 if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('getresponse_api_key'); }
 $client = new jsonRPCClient('http://api2.getresponse.com');
-$result = NULL;
-try { $result = $client->get_campaigns($api_key, array('name' => array('EQUALS' => $list))); }
-catch (Exception $e) { die($e->getMessage()); }
-$campaign_id = array_pop(array_keys($result));
+$campaigns = $client->get_campaigns($api_key, array('name' => array('EQUALS' => $list)));
+$campaign_id = array_pop(array_keys($campaigns));
 $data = array(
 'campaign' => $campaign_id,
 'name' => $contact['first_name'],
-'email' => $contact['email_address'],
-'cycle_day' => '0');
+'email' => $contact['email_address']);
 if ($contact['referrer'] != '') { $data['customs'] = array(array('name' => 'referrer', 'content' => $contact['referrer'])); }
-try { $result = $client->add_contact($api_key, $data); }
-catch (Exception $e) { die($e->getMessage()); } }
+$result = $client->add_contact($api_key, $data); }
 
 
 function subscribe_to_mailchimp($list, $contact) {
-include_once CONTACT_MANAGER_PATH.'libraries/MCAPI.class.php';
-$apiUrl = 'http://api.mailchimp.com/1.3/';
+include_once CONTACT_MANAGER_PATH.'libraries/mailchimp.php';
 $api_key = contact_data('mailchimp_api_key');
 if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('mailchimp_api_key'); }
-$api = new MCAPI($api_key);
-$data = array('FNAME' => $contact['first_name'], 'LNAME' => $contact['last_name']);
-$result = $api->listSubscribe($list, $contact['email_address'], $data); }
+$MailChimp = new MailChimp($api_key);
+$result = $MailChimp->call('lists/subscribe', array(
+'id' => $list,
+'email' => array('email' => $contact['email_address']),
+'merge_vars' => array('FNAME' => $contact['first_name'], 'LNAME' => $contact['last_name']),
+'double_optin' => true,
+'update_existing' => true,
+'replace_interests' => false)); }
 
 
 function subscribe_to_sg_autorepondeur($list, $contact) {

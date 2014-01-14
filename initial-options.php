@@ -24,6 +24,8 @@ $initial_options[''] = array(
 'getresponse_api_key' => '',
 'invalid_captcha_message' => __('The code you entered for the CAPTCHA is incorrect.', 'contact-manager'),
 'invalid_email_address_message' => __('This email address appears to be invalid.', 'contact-manager'),
+'invalid_field_message' => __('This field is not correctly filled.', 'contact-manager'),
+'invalid_fields_message' => __('One or more fields are not correctly filled.', 'contact-manager'),
 'mailchimp_api_key' => '',
 'maximum_messages_quantity' => 'unlimited',
 'maximum_messages_quantity_reached_message' => __('You have already sent [contact-form maximum-messages-quantity-per-sender] messages through this form.', 'contact-manager'),
@@ -72,7 +74,7 @@ $initial_options['admin_notices'] = array();
 
 $initial_options['code'] =
 '[validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
-[other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields] [error invalid-captcha]</p>[/validation-content]
+[other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields] [error invalid-fields] [error invalid-captcha]</p>[/validation-content]
 
 <p><label><strong>'.__('Your first name:', 'contact-manager').'</strong>*<br />
 [input first-name size=30 required=yes]<br />

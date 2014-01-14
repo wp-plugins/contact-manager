@@ -48,7 +48,7 @@ if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 foreach ($_POST as $key => $value) {
-if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace('&nbsp;', ' ', $value))); } }
+if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace(array('&nbsp;', '&#91;', '&#93;'), array(' ', '&amp;#91;', '&amp;#93;'), $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, $admin_page);
 
 foreach (array(
@@ -331,6 +331,12 @@ if (current_user_can('upload_files')) { echo ($url == '' ? '' : ' | ').'<a '.$ur
 <span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="unfilled_field_message"><?php _e('Unfilled required field', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="unfilled_field_message" id="unfilled_field_message" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75"><?php echo $_POST['unfilled_field_message']; ?></textarea><br />
+<span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="invalid_fields_message"><?php _e('Invalid fields', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="invalid_fields_message" id="invalid_fields_message" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75"><?php echo $_POST['invalid_fields_message']; ?></textarea><br />
+<span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="invalid_field_message"><?php _e('Invalid field', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="invalid_field_message" id="invalid_field_message" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75"><?php echo $_POST['invalid_field_message']; ?></textarea><br />
 <span class="description"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="invalid_email_address_message"><?php _e('Invalid email address', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="invalid_email_address_message" id="invalid_email_address_message" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75"><?php echo $_POST['invalid_email_address_message']; ?></textarea><br />

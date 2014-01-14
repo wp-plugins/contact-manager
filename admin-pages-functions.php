@@ -10,9 +10,9 @@ function contact_manager_pages_css() { ?>
 .wrap { margin-top: 0; }
 .wrap .delete:hover { color: #ff0000; }
 .wrap .dp-choose-date { vertical-align: 6%; }
-.wrap .postbox { background-color: #f8f8f8; }
+.wrap .postbox { background-color: #f9f9f9; }
 .wrap .postbox .description { font-size: 13px; }
-.wrap .postbox h3 { background-color: #f2f2f2; color: #000000; }
+.wrap .postbox h3 { background-color: #f1f1f1; color: #000000; }
 .wrap .postbox h4 { color: #000000; font-family: Tahoma, Geneva, sans-serif; font-size: 1.125em; }
 .wrap .postbox input.button-secondary { background-color: #ffffff; }
 .wrap h2 { float: left; }

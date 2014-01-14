@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.8.2\n"
+"Project-Id-Version: Contact Manager 5.8.5\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2014-01-06 11:05+0100\n"
+"PO-Revision-Date: 2014-01-14 02:20+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -2622,4 +2622,22 @@ msgstr "Supprimer les options et tables de Contact Manager pour tous les sites d
 
 msgid "Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?"
 msgstr "Souhaitez-vous vraiment supprimer définitivement les options et tables de Contact Manager pour tous les sites de ce réseau&nbsp;?"
+
+msgid "Invalid fields"
+msgstr "Champs non valides"
+
+msgid "Invalid field"
+msgstr "Champ non valide"
+
+msgid "Invalid fields message"
+msgstr "Message de champs non valides"
+
+msgid "Invalid field's message"
+msgstr "Message de champ non valide"
+
+msgid "This field is not correctly filled."
+msgstr "Ce champ n'est pas correctement rempli."
+
+msgid "One or more fields are not correctly filled."
+msgstr "Un ou plusieurs champs ne sont pas correctement remplis."
 
