@@ -10,7 +10,7 @@ if (($id == 0) && ((!function_exists('current_user_can')) || (!current_user_can(
 if (($id == 0) || ($id != contact_form_data(array(0 => 'id', 'id' => $id)))) {
 if ((function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
 load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
-$content = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'), 'id', '[contact-form]'); } }
+$content = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'), 'id', '&#91;contact-form]'); } }
 else {
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
 if (isset($GLOBALS[$key])) { $original[$key] = $GLOBALS[$key]; } }
