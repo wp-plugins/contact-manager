@@ -74,7 +74,7 @@ for (i = 0; i < form.'.$prefix.$field.'.length; i++) { if (form.'.$prefix.$field
 if (!'.$prefix.$field.'_checked)' : (in_array($field, $GLOBALS[$prefix.'checkbox_fields']) ? 'if (form.'.$prefix.$field.'.checked == false)' : 'if (form.'.$prefix.$field.'.value == "")')).' {
 if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) {
 message = document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").getAttribute("data-unfilled-field-message");
-if (!message) { message = "'.$GLOBALS[$prefix.'unfilled_field_message'].'"; }
+if (!message) { message = "'.str_replace('"', '\"', $GLOBALS[$prefix.'unfilled_field_message']).'"; }
 document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").style.display = "inline";
 document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = message; }
 '.(in_array($field, $GLOBALS[$prefix.'radio_fields']) ? '' : 'if (!error) { form.'.$prefix.$field.'.focus(); } ').'error = true; }
@@ -87,7 +87,7 @@ $confirmed_fields_js .= '
 if (form.'.$prefix.'confirm_'.$field.'.value != form.'.$prefix.$field.'.value) {
 if (document.getElementById("'.$prefix.'confirm_'.$field.'_error")) {
 message = document.getElementById("'.$prefix.'confirm_'.$field.'_error").getAttribute("data-invalid-field-message");
-if (!message) { message = "'.$GLOBALS[$prefix.'invalid_field_message'].'"; }
+if (!message) { message = "'.str_replace('"', '\"', $GLOBALS[$prefix.'invalid_field_message']).'"; }
 document.getElementById("'.$prefix.'confirm_'.$field.'_error").style.display = "inline";
 document.getElementById("'.$prefix.'confirm_'.$field.'_error").innerHTML = message; }
 if (!error) { form.'.$prefix.'confirm_'.$field.'.focus(); } error = true; }
@@ -107,7 +107,7 @@ if (form.'.$prefix.'email_address.value != "") {
 if ((form.'.$prefix.'email_address.value.indexOf("@") == -1) || (form.'.$prefix.'email_address.value.indexOf(".") == -1)) {
 if (document.getElementById("'.$prefix.'email_address_error")) {
 message = document.getElementById("'.$prefix.'email_address_error").getAttribute("data-invalid-email-address-message");
-if (!message) { message = "'.$GLOBALS[$prefix.'invalid_email_address_message'].'"; }
+if (!message) { message = "'.str_replace('"', '\"', $GLOBALS[$prefix.'invalid_email_address_message']).'"; }
 document.getElementById("'.$prefix.'email_address_error").style.display = "inline";
 document.getElementById("'.$prefix.'email_address_error").innerHTML = message; }
 if (!error) { form.'.$prefix.'email_address.focus(); } error = true; }

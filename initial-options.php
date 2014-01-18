@@ -109,7 +109,7 @@ $initial_options['code'] =
 
 $initial_options['cron'] = array(
 'first_installation' => array('version' => '', 'timestamp' => 0),
-'previous_cron_timestamp' => 0,
+'previous_admin_notices_cron_timestamp' => 0,
 'previous_installation' => array('version' => '', 'number' => 0, 'timestamp' => 0));
 
 

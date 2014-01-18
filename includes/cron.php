@@ -10,8 +10,8 @@ $cron['previous_installation']['timestamp'] = $current_time; }
 if ($cron['previous_installation'] != $installation) {
 update_option('contact_manager_cron', $cron);
 wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); }
-if (($current_time - $cron['previous_cron_timestamp']) > 21600) {
-$cron['previous_cron_timestamp'] = $current_time;
+if (($current_time - $cron['previous_admin_notices_cron_timestamp']) > 43200) {
+$cron['previous_admin_notices_cron_timestamp'] = $current_time;
 update_option('contact_manager_cron', $cron);
 $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
 $body = wp_remote_retrieve_body(wp_remote_get('http://www.kleor.com/wp-content/plugins/installations-manager/admin-notices.php?url='
