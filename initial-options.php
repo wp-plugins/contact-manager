@@ -1,5 +1,10 @@
 <?php $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
 foreach (array('admin_email', 'blogname', 'siteurl') as $key) { $$key = get_option($key); }
+$domain = $_SERVER['SERVER_NAME']; if (substr($domain, 0, 4) == 'www.') { $domain = substr($domain, 4); }
+if ($blogname == '') { $blogname = ucfirst($domain); }
+$blog_email = $admin_email;
+if ((!strstr($blog_email, $domain)) && (isset($_SERVER['SERVER_ADMIN']))) { $blog_email = $_SERVER['SERVER_ADMIN']; }
+if (!strstr($blog_email, $domain)) { $blog_email = 'contact@'.$domain; }
 
 
 $initial_options[''] = array(
@@ -32,7 +37,7 @@ $initial_options[''] = array(
 'membership_registration_confirmation_email_sent' => '',
 'membership_registration_notification_email_sent' => '',
 'message_confirmation_email_receiver' => '[sender email-address]',
-'message_confirmation_email_sender' => $blogname.' <'.$admin_email.'>',
+'message_confirmation_email_sender' => $blogname.' <'.$blog_email.'>',
 'message_confirmation_email_sent' => 'no',
 'message_confirmation_email_subject' => __('We Have Received Your Message', 'contact-manager'),
 'message_custom_instructions_executed' => 'no',
@@ -234,7 +239,9 @@ $menu_displayed_items[] = $key; } }
 
 $initial_options['back_office'] = array(
 'back_office_page_summary_displayed' => 'yes',
-'back_office_page_undisplayed_modules' => array(),
+'back_office_page_undisplayed_modules' => array(
+	'form-category-page-custom-fields',
+	'form-page-custom-fields'),
 'custom_icon_url' => CONTACT_MANAGER_URL.'images/icon.png',
 'custom_icon_used' => 'yes',
 'default_options_links_target' => '_blank',

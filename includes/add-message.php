@@ -1,6 +1,6 @@
 <?php if ((isset($message)) && (is_array($message))) {
 global $wpdb;
-foreach (array('admin-pages.php', 'tables.php') as $file) { include CONTACT_MANAGER_PATH.''.$file; }
+foreach (array('admin-pages.php', 'tables.php') as $file) { include CONTACT_MANAGER_PATH.$file; }
 foreach ($tables['messages'] as $key => $value) { if (!isset($message[$key])) { $message[$key] = ''; } }
 $GLOBALS['contact_form_id'] = (int) $message['form_id'];
 if (function_exists('add_affiliate')) {
@@ -57,7 +57,7 @@ $n = $messages_quantity - $maximum_messages_quantity;
 if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id']." ORDER BY date ASC LIMIT $n"); } } } }
 $message['custom_fields'] = $original_custom_fields;
 $GLOBALS['message_data'] = $message;
-if ($message['referrer'] != '') {
+if (($message['referrer'] != '') && (function_exists('affiliate_data'))) {
 $GLOBALS['affiliate_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$message['referrer']."'", OBJECT);
 $GLOBALS['referrer_data'] = $GLOBALS['affiliate_data']; }
 foreach ($add_message_fields as $field) {
@@ -168,7 +168,7 @@ elseif ($length > $maximum) { $member[$field] = substr($member[$field], 0, $maxi
 $member['members_areas'] = $message['sender_members_areas'];
 $members_areas = array_unique(preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY));
 if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
-elseif (isset($GLOBALS['member_area_id'])) { unset($GLOBALS['member_area_id']); }
+else { $GLOBALS['member_area_id'] = 0; $GLOBALS['member_area_data'] = array(); }
 $member['members_areas_modifications'] = $message['sender_members_areas_modifications'];
 if ((!isset($member['login'])) || ($member['login'] == '')) { $member['login'] = $member['email_address']; }
 $login = $member['login']; $result = true; $i = 1; while ($result) {
@@ -203,6 +203,7 @@ if ((!isset($user['password'])) || ($user['password'] == '')) { $user['password'
 if (isset($user['ID'])) { unset($user['ID']); }
 $user['user_login'] = $user['login'];
 $user['user_pass'] = $user['password'];
+$_POST['pass1'] = $user['password'];
 $user['user_email'] = $user['email_address'];
 $user['user_url'] = $user['website_url'];
 $user['user_registered'] = $user['date_utc'];
@@ -218,7 +219,12 @@ else { $message[$field] = contact_form_data($field); } }
 if (!is_admin()) {
 $prefix = $GLOBALS['contact_form_prefix'];
 if (in_array('message_confirmation_email_sent', $GLOBALS[$prefix.'fields'])) {
-$message['message_confirmation_email_sent'] = (isset($_POST['message_confirmation_email_sent']) ? 'yes' : 'no'); } }
+$message['message_confirmation_email_sent'] = (((isset($_POST['message_confirmation_email_sent'])) && ($_POST['message_confirmation_email_sent'] != 'no')) ? 'yes' : 'no'); }
+if (in_array('subscribed_to_autoresponder', $GLOBALS[$prefix.'fields'])) {
+$message['sender_subscribed_to_autoresponder'] = (((isset($_POST['subscribed_to_autoresponder'])) && ($_POST['subscribed_to_autoresponder'] != 'no')) ? 'yes' : 'no'); }
+if ((in_array('autoresponder_list', $GLOBALS[$prefix.'fields']))
+ && (isset($_POST['autoresponder_list'])) && ($_POST['autoresponder_list'] != '')) {
+$message['sender_autoresponder_list'] = $_POST['autoresponder_list']; } }
 
 $upload_dir = wp_upload_dir();
 $folder = $upload_dir['basedir'].'/temp';

@@ -4,7 +4,7 @@ foreach ((array) $_POST as $key => $value) { if (is_string($value)) { $_POST[$ke
 $GLOBALS['selection_criteria'] = ''; $selection_criteria = '';
 foreach (all_tables_keys($tables) as $field) {
 if (isset($_GET[$field])) {
-$GLOBALS['selection_criteria'] .= '&amp;'.$field.'='.str_replace(' ', '%20', $_GET[$field]);
+$GLOBALS['selection_criteria'] .= '&amp;'.$field.'='.str_replace('+', '%20', urlencode($_GET[$field]));
 $selection_criteria .= ($field == "keywords" ? " AND (".$field." LIKE '%".$_GET[$field]."%')" :
  (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')")); } }
 $selection_criteria = str_replace("= '!0'", "!= 0", $selection_criteria);
@@ -101,11 +101,8 @@ elseif ($data == 'no')  { $table_td = '<span style="color: #c00000;">'.__('No', 
 else { $table_td = contact_excerpt($data, 50); } break;
 case 'category_id': $description = ($data == 0 ? __('No category', 'contact-manager') : htmlspecialchars(contact_excerpt(contact_form_category_data(array(0 => 'name', 'id' => $data)), 50)));
 if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>'; break;
-case 'form_id': $description = ($data == 0 ? __('No form', 'contact-manager') : htmlspecialchars(contact_excerpt(contact_form_data(array(0 => 'name', 'id' => $data)), 50)));
-if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>'; break;
-case 'ip_address': case 'referrer': case 'referrer2': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.contact_excerpt($data, 50).'</a>'); break;
 case 'commission_amount': case 'commission2_amount':
-if ($table == 'messages') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace(' ', '%20', $data).'">'.$data.'</a>'); break; }
+if ($table == 'messages') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); break; }
 else { $table_td = $data; } break;
 case 'commission_status': case 'commission2_status': if ($data == 'paid') { $table_td = '<a style="color: #008000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=paid">'.__('Paid', 'contact-manager').'</a>'; }
 elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unpaid">'.__('Unpaid', 'contact-manager').'</a>'; }
@@ -119,13 +116,17 @@ asort($custom_fields); $table_td = '';
 foreach ($custom_fields as $key => $value) {
 if ((isset($item_custom_fields[$key])) && ($item_custom_fields[$key] != '')) { $table_td .= htmlspecialchars($value).' => '.htmlspecialchars($item_custom_fields[$key]).',<br />'; } } break;
 case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.contact_excerpt($data, 50).'</a>'; break;
+case 'form_id': $description = ($data == 0 ? __('No form', 'contact-manager') : htmlspecialchars(contact_excerpt(contact_form_data(array(0 => 'name', 'id' => $data)), 50)));
+if (($data > 0) && ((!isset($GLOBALS['contact_form'.$data.'_data'])) || (!isset($GLOBALS['contact_form'.$data.'_data']['id'])))) { $description = __('Inexistent or deleted form', 'contact-manager'); }
+if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>'; break;
 case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == ROOT_URL ? '/' : contact_excerpt(str_replace(ROOT_URL, '', $data), 80)).'</a>'); break;
+case 'ip_address': case 'referrer': case 'referrer2': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.contact_excerpt($data, 50).'</a>'); break;
 case 'keywords':
 $keywords = explode(',', $data);
 $keywords_list = '';
 foreach ($keywords as $keyword) {
 $keyword = strtolower(trim($keyword));
-$keyword = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;keywords='.str_replace(' ', '%20', $keyword).'">'.$keyword.'</a>';
+$keyword = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;keywords='.str_replace('+', '%20', urlencode(html_entity_decode($keyword))).'">'.$keyword.'</a>';
 $keywords_list .= $keyword.', '; }
 $table_td = substr($keywords_list, 0, -2); break;
 case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data === 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
@@ -142,11 +143,17 @@ case 'sender_member_category_id': $description = ($data == 0 ? __('No category',
 if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = $data.$description; break;
 case 'sender_members_areas':
 $members_areas = array_unique(preg_split('#[^0-9]#', $data, 0, PREG_SPLIT_NO_EMPTY));
+if (count($members_areas) == 1) {
+$description = ($data == 0 ? __('All members areas', 'contact-manager') : (function_exists('member_area_data') ? htmlspecialchars(contact_excerpt(member_area_data(array(0 => 'name', 'id' => $data)), 50)) : ''));
+if ((function_exists('member_area_data')) && ($data > 0) && ((!isset($GLOBALS['member_area'.$data.'_data'])) || (!isset($GLOBALS['member_area'.$data.'_data']['id'])))) { $description = __('Inexistent or deleted member area', 'contact-manager'); }
+if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = $data.$description;
+if ((function_exists('member_area_data')) && ($data > 0) && (isset($GLOBALS['member_area'.$data.'_data'])) && (isset($GLOBALS['member_area'.$data.'_data']['id']))) { $table_td = '<a href="admin.php?page=membership-manager-member-area&amp;id='.$data.'">'.$table_td.'</a>'; } }
+else {
 $members_areas_list = '';
 foreach ($members_areas as $member_area) {
 if ((function_exists('membership_manager_admin_menu')) && ($member_area > 0)) { $member_area = '<a href="admin.php?page=membership-manager-member-area&amp;id='.$member_area.'">'.$member_area.'</a>'; }
 $members_areas_list .= $member_area.', '; }
-$table_td = substr($members_areas_list, 0, -2); break;
+$table_td = substr($members_areas_list, 0, -2); } break;
 case 'sender_user_role': $roles = contact_manager_users_roles(); $table_td = contact_excerpt($roles[$data], 50); break;
 case 'website_name': $website_url = htmlspecialchars(table_data($table, 'website_url', $item)); $table_td = ($website_url == '' ? contact_excerpt($data, 50) : '<a href="'.$website_url.'">'.contact_excerpt(($data == '' ? str_replace(ROOT_URL, '', $website_url) : $data), 50).'</a>'); break;
 default: $table_td = contact_excerpt($data); }
@@ -175,7 +182,7 @@ $url = 'admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;orderby='.$_GE
 echo '<div class="tablenav-pages" style="float: right;"><span class="displaying-num">'.$n.' '.($n <= 1 ? $singular : $plural).'</span>
 <a class="first-page'.($_GET['paged'] == 1 ? ' disabled' : '').'" title="'.__('Go to the first page', 'contact-manager').'" href="'.$url.'&amp;paged=1">&laquo;</a>
 <a class="prev-page'.($_GET['paged'] == 1 ? ' disabled' : '').'" title="'.__('Go to the previous page', 'contact-manager').'" href="'.$url.'&amp;paged='.$prev_paged.'">&lsaquo;</a>
-<span class="paging-input">'.($location == 'top' ? '<input class="current-page" title="'.__('Current page', 'contact-manager').'" type="text" name="paged" id="paged" value="'.$_GET['paged'].'" size="2" />' : $_GET['paged']).' '.__('of', 'contact-manager').' <span class="total-pages">'.$max_paged.'</span></span>
+<span class="paging-input">'.($location == 'top' ? '<input type="hidden" name="old_paged" value="'.$_GET['paged'].'" /><input class="current-page" title="'.__('Current page', 'contact-manager').'" type="text" name="paged" id="paged" value="'.$_GET['paged'].'" placeholder="'.$_GET['paged'].'" size="2" onfocus="this.placeholder = \'\';" onchange="this.value = this.value.replace(/[^0-9]/gi, \'\'); if ((this.value == \'\') || (this.value == 0)) { this.value = this.form.old_paged.value; } if (this.value != this.form.old_paged.value) { window.location = \''.$url.'&amp;paged=\'+this.value; }" />' : $_GET['paged']).' '.__('of', 'contact-manager').' <span class="total-pages">'.$max_paged.'</span></span>
 <a class="next-page'.($_GET['paged'] == $max_paged ? ' disabled' : '').'" title="'.__('Go to the next page', 'contact-manager').'" href="'.$url.'&amp;paged='.$next_paged.'">&rsaquo;</a>
 <a class="last-page'.($_GET['paged'] == $max_paged ? ' disabled' : '').'" title="'.__('Go to the last page', 'contact-manager').'" href="'.$url.'&amp;paged='.$max_paged.'">&raquo;</a></div>'; }
 

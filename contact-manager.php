@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.8.6
+Version: 5.9.1
 Author: Kleor
 Author URI: http://www.kleor.com
 Text Domain: contact-manager
@@ -66,13 +66,7 @@ foreach (array('admin_footer', 'login_footer', 'wp_footer') as $hook) { add_acti
 function contact_data($atts) { include CONTACT_MANAGER_PATH.'includes/data.php'; return $data; }
 
 
-function contact_decimals_data($decimals, $data) {
-if (($decimals != '') && (is_numeric($data))) {
-$decimals = explode('/', $decimals);
-for ($i = 0; $i < count($decimals); $i++) { $decimals[$i] = (int) $decimals[$i]; }
-if ($data == round($data)) { $data = number_format($data, min($decimals), '.', ''); }
-else { $data = number_format($data, max($decimals), '.', ''); } }
-return $data; }
+function contact_decimals_data($decimals, $data) { include CONTACT_MANAGER_PATH.'includes/decimals-data.php'; return $data; }
 
 
 function contact_decrypt_url($url) { $action = 'decrypt'; include CONTACT_MANAGER_PATH.'includes/crypt-url.php'; return $url; }
@@ -81,12 +75,7 @@ function contact_decrypt_url($url) { $action = 'decrypt'; include CONTACT_MANAGE
 function contact_encrypt_url($url) { $action = 'encrypt'; include CONTACT_MANAGER_PATH.'includes/crypt-url.php'; return $url; }
 
 
-function contact_do_shortcode($string) {
-$string = (string) $string;
-$string = do_shortcode(str_replace(array('(', ')'), array('[', ']'), $string));
-$string = str_replace(array('[', ']'), array('(', ')'), $string);
-$string = str_replace(array('&#40;', '&#41;', '&#91;', '&#93;'), array('(', ')', '[', ']'), $string);
-return $string; }
+function contact_do_shortcode($string) { include CONTACT_MANAGER_PATH.'includes/do-shortcode.php'; return $string; }
 
 
 function contact_excerpt($data, $length = 80) {
@@ -95,28 +84,13 @@ if (strlen($data) > $length) { $data = substr($data, 0, ($length - 4)).' […]';
 return $data; }
 
 
-function contact_filter_data($filter, $data) {
-if (is_string($filter)) { $filter = preg_split('#[^a-zA-Z0-9_]#', str_replace('-', '_', contact_do_shortcode($filter)), 0, PREG_SPLIT_NO_EMPTY); }
-if (is_array($filter)) { foreach ($filter as $function) {
-if (!function_exists($function)) { $function = 'contact_'.$function; }
-if (!function_exists($function)) { $function = 'contact_manager_'.$function; }
-if (function_exists($function)) { $data = $function($data); } } }
-return $data; }
+function contact_filter_data($filter, $data) { include CONTACT_MANAGER_PATH.'includes/filter-data.php'; return $data; }
 
 
 function contact_format_data($field, $data) { include CONTACT_MANAGER_PATH.'includes/format-data.php'; return $data; }
 
 
-function contact_forms_categories_list($id) {
-global $wpdb;
-$id = (int) $id;
-$list = array($id);
-while ($id > 0) {
-$category = $wpdb->get_row("SELECT category_id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE id = $id", OBJECT);
-if ($category) { $id = $category->category_id; }
-if ((!$category) || (in_array($id, $list))) { $id = 0; }
-$list[] = $id; }
-return $list; }
+function contact_forms_categories_list($id) { include CONTACT_MANAGER_PATH.'includes/categories-list.php'; return $list; }
 
 
 function contact_i18n($string) {
@@ -143,12 +117,6 @@ return contact_item_data('contact_form_category', $atts); }
 
 function message_data($atts) {
 return contact_item_data('message', $atts); }
-
-
-function contact_jquery_js() {
-if (!defined('KLEOR_JQUERY_LOADED')) { define('KLEOR_JQUERY_LOADED', true); ?>
-<script type="text/javascript" src="<?php echo CONTACT_MANAGER_URL; ?>libraries/jquery.js"></script>
-<?php } }
 
 
 function contact_shortcode_atts($default_values, $atts) { include CONTACT_MANAGER_PATH.'includes/shortcode-atts.php'; return $atts; }

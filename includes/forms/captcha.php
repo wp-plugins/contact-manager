@@ -14,7 +14,6 @@ if (!function_exists('_recaptcha_qsencode')) { include_once CONTACT_MANAGER_PATH
 foreach (array('public', 'private') as $string) {
 if (!defined('RECAPTCHA_'.strtoupper($string).'_KEY')) {
 $key = contact_data('recaptcha_'.$string.'_key');
-if (($key == '') && (function_exists('commerce_data'))) { $key = commerce_data('recaptcha_'.$string.'_key'); }
 define('RECAPTCHA_'.strtoupper($string).'_KEY', $key); } }
 $content = str_replace(' frameborder="0"', '', recaptcha_get_html(RECAPTCHA_PUBLIC_KEY)); }
 else {

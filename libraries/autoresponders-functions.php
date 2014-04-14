@@ -37,14 +37,13 @@ wp_remote_get('http://www.cybermailing.com/mailing/subscribe.php?'.
 'Identifiant='.$contact['login'].'&'.
 'Name='.$contact['first_name'].'&'.
 'Email='.$contact['email_address'].'&'.
-'WebSite='.$contact['website_url']); }
+'WebSite='.$contact['website_url'], array('timeout' => 10)); }
 
 
 function subscribe_to_getresponse($list, $contact) {
 ini_set('display_errors', 0);
 include_once CONTACT_MANAGER_PATH.'libraries/getresponse.php';
 $api_key = contact_data('getresponse_api_key');
-if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('getresponse_api_key'); }
 $client = new jsonRPCClient('http://api2.getresponse.com');
 $campaigns = $client->get_campaigns($api_key, array('name' => array('EQUALS' => $list)));
 $campaign_id = array_pop(array_keys($campaigns));
@@ -59,7 +58,6 @@ $result = $client->add_contact($api_key, $data); }
 function subscribe_to_mailchimp($list, $contact) {
 include_once CONTACT_MANAGER_PATH.'libraries/mailchimp.php';
 $api_key = contact_data('mailchimp_api_key');
-if (($api_key == '') && (function_exists('commerce_data'))) { $api_key = commerce_data('mailchimp_api_key'); }
 $MailChimp = new MailChimp($api_key);
 $result = $MailChimp->call('lists/subscribe', array(
 'id' => $list,
@@ -71,12 +69,9 @@ $result = $MailChimp->call('lists/subscribe', array(
 
 
 function subscribe_to_sg_autorepondeur($list, $contact) {
-foreach (array('id', 'code') as $key) {
-$$key = contact_data('sg_autorepondeur_account_'.$key);
-if (($$key == '') && (function_exists('commerce_data'))) { $$key = commerce_data('sg_autorepondeur_account_'.$key); } }
 $data = array(
-'membreid' => $id,
-'codeactivationclient' => $code,
+'membreid' => contact_data('sg_autorepondeur_account_id'),
+'codeactivationclient' => contact_data('sg_autorepondeur_activation_code'),
 'inscription_normale' => 'non',
 'listeid' => $list,
 'email' => $contact['email_address'],

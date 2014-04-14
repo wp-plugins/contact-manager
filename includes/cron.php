@@ -9,7 +9,7 @@ elseif (($installation['number'] < 12) && (($current_time - $installation['times
 $cron['previous_installation']['timestamp'] = $current_time; }
 if ($cron['previous_installation'] != $installation) {
 update_option('contact_manager_cron', $cron);
-wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); }
+wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY), array('timeout' => 10)); }
 if (($current_time - $cron['previous_admin_notices_cron_timestamp']) > 43200) {
 $cron['previous_admin_notices_cron_timestamp'] = $current_time;
 update_option('contact_manager_cron', $cron);
@@ -28,4 +28,4 @@ $notice[$string.'_timestamp'] = $cron['first_installation']['timestamp'] + intva
 $notice[$string.'_timestamp'] = (int) $notice[$string.'_timestamp']; } }
 if ((!isset($notice['end_timestamp'])) || ($current_time < $notice['end_timestamp'])) { $admin_notices[$key] = $notice; } } }
 update_option('contact_manager_admin_notices', $admin_notices); } } }
-else { wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY)); }
+else { wp_remote_get(CONTACT_MANAGER_URL.'?action=install&key='.md5(AUTH_KEY), array('timeout' => 10)); }

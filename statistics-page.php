@@ -28,8 +28,8 @@ foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes($value); } }
 $_GET['s'] = $_POST['s'];
 $filterby = $_POST['filterby'];
-$start_date = $_POST['start_date'];
-$end_date = $_POST['end_date'];
+$start_date = ($_POST['start_date'] != '' ? $_POST['start_date'] : $_POST['old_start_date']);
+$end_date = ($_POST['end_date'] != '' ? $_POST['end_date'] : $_POST['old_end_date']);
 $displayed_tables = array();
 for ($i = 0; $i < $max_tables; $i++) {
 $tables_slugs[$i] = $_POST['table'.$i];
@@ -65,7 +65,7 @@ update_option('contact_manager_statistics', $options); }
 
 $GLOBALS['filter_criteria'] = ''; $filter_criteria = '';
 if ((isset($_GET['s'])) && ($_GET['s'] != '')) {
-$GLOBALS['filter_criteria'] = str_replace(' ', '%20', '&amp;'.$filterby.'='.$_GET['s']);
+$GLOBALS['filter_criteria'] = '&amp;'.$filterby.'='.str_replace('+', '%20', urlencode($_GET['s']));
 $filter_criteria = (is_numeric($_GET['s']) ? "AND (".$filterby." = ".$_GET['s'].")" : "AND (".$filterby." = '".$_GET['s']."')"); }
 
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE $date_criteria $selection_criteria $filter_criteria", OBJECT);

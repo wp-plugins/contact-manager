@@ -30,14 +30,15 @@ else {
 $displayed_columns = array();
 for ($i = 0; $i < $max_columns; $i++) {
 $columns[$i] = $_POST['column'.$i];
-if ((isset($_POST['column'.$i.'_displayed'])) && ($_POST['column'.$i.'_displayed'] == 'yes')) { $displayed_columns[] = $i; } } }
+if ((isset($_POST['column'.$i.'_displayed'])) && ($_POST['column'.$i.'_displayed'] == 'yes')) { $displayed_columns[] = $i; } }
+if (count($displayed_columns) == 0) { $displayed_columns = (array) $options['displayed_columns']; } }
 $columns_list_displayed = (isset($_POST['columns_list_displayed']) ? 'yes' : 'no');
-$limit = (int) $_POST['limit'];
+$limit = (int) ($_POST['limit'] != '' ? $_POST['limit'] : $_POST['old_limit']);
 if ($limit > 1000) { $limit = 1000; }
 elseif ($limit < 1) { $limit = $options['limit']; }
 $searchby = $_POST['searchby'];
-$start_date = $_POST['start_date'];
-$end_date = $_POST['end_date']; }
+$start_date = ($_POST['start_date'] != '' ? $_POST['start_date'] : $_POST['old_start_date']);
+$end_date = ($_POST['end_date'] != '' ? $_POST['end_date'] : $_POST['old_end_date']); }
 else {
 if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
 if (isset($_GET['start_date'])) { $start_date = $_GET['start_date']; }
@@ -90,13 +91,13 @@ else {
 $search_column = true; for ($i = 0; $i < $max_columns; $i++) {
 if ((in_array($i, $displayed_columns)) && ($searchby == $columns[$i])) { $search_column = false; } }
 $search_criteria = $searchby." LIKE '%".$_GET['s']."%'"; }
-$GLOBALS['search_criteria'] = str_replace(' ', '%20', '&amp;s='.$_GET['s']);
+$GLOBALS['search_criteria'] = '&amp;s='.str_replace('+', '%20', urlencode($_GET['s']));
 $search_criteria = 'AND ('.$search_criteria.')';
 $GLOBALS['criteria'] .= $GLOBALS['search_criteria']; }
 
 $query = $wpdb->get_row("SELECT count(*) as total FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria", OBJECT);
 $n = (int) $query->total;
-$_GET['paged'] = (int) (isset($_REQUEST['paged']) ? $_REQUEST['paged'] : 1);
+$_GET['paged'] = (int) (((isset($_REQUEST['paged'])) && ($_REQUEST['paged'] != '')) ? $_REQUEST['paged'] : (isset($_REQUEST['old_paged']) ? $_REQUEST['old_paged'] : 1));
 if ($_GET['paged'] < 1) { $_GET['paged'] = 1; }
 $max_paged = ceil($n/$limit);
 if ($max_paged < 1) { $max_paged = 1; }
@@ -131,7 +132,7 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 <?php contact_manager_pages_date_picker($start_date, $end_date); ?>
 <div class="tablenav top">
 <div class="alignleft actions">
-<?php _e('Display', 'contact-manager'); ?> <input style="text-align: center;" type="text" name="limit" id="limit" size="2" value="<?php echo $limit; ?>" /> 
+<?php _e('Display', 'contact-manager'); ?> <input type="hidden" name="old_limit" value="<?php echo $limit; ?>" /><input style="text-align: center;" type="text" name="limit" id="limit" size="2" value="<?php echo $limit; ?>" placeholder="<?php echo $limit; ?>" onfocus="this.placeholder = '';" onchange="this.value = this.value.replace(/[^0-9]/gi, ''); if ((this.value == '') || (this.value == 0)) { this.value = this.form.old_limit.value; }" /> 
 <?php _e('results per page', 'contact-manager'); ?> <input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" />
 </div><?php tablenav_pages($table_slug, $n, $max_paged, 'top'); ?></div>
 <div style="overflow: auto;">
@@ -164,11 +165,13 @@ else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($di
 <input type="hidden" name="submit" value="true" />
 <?php $displayed_columns = $original_displayed_columns;
 $all_columns_checked = (count($displayed_columns) == $max_columns);
+$check_all_columns1_input = '<label id="check-all-columns1" style="margin-left: 0.5em;'.($columns_list_displayed == 'no' ? ' display: none;' : '').'"><input type="checkbox" name="check_all_columns1" id="check_all_columns1" value="yes" onchange="check_all_columns1_js();"'.($all_columns_checked ? ' checked="checked"' : '').' /> <span id="check_all_columns1_text">'.($all_columns_checked ? __('Uncheck all columns', 'contact-manager') : __('Check all columns', 'contact-manager')).'</span></label>';
+$check_all_columns2_input = str_replace(array('check_all_columns1', 'check-all-columns1', ' display: none;'), array('check_all_columns2', 'check-all-columns2', ''), $check_all_columns1_input);
 $columns_inputs = '<input style="margin-bottom: 0.5em;" type="submit" class="button-secondary" name="reset_columns" value="'.__('Reset the columns', 'contact-manager').'" />
 <input style="margin-bottom: 0.5em; margin-right: 0.5em;" type="submit" class="button-secondary" name="submit" value="'.__('Update', 'contact-manager').'" />
-<label style="margin-left: 0.5em;"><input type="checkbox" name="check_all_columns1" id="check_all_columns1" value="yes" onclick="check_all_columns1_js();"'.($all_columns_checked ? ' checked="checked"' : '').' /> <span id="check_all_columns1_text">'.($all_columns_checked ? __('Uncheck all columns', 'contact-manager') : __('Check all columns', 'contact-manager')).'</span></label>';
+<span id="check-all-columns1-input"></span>';
 echo $columns_inputs.' <label style="margin-left: 1.5em;"><input type="checkbox" name="columns_list_displayed" id="columns_list_displayed" value="yes" 
-onclick="if (this.checked == true) { document.getElementById(\'columns-list\').style.display = \'block\'; } else { document.getElementById(\'columns-list\').style.display = \'none\'; }"
+onchange="if (this.checked == true) { var value = \'yes\'; document.getElementById(\'columns-list\').style.display = \'\'; document.getElementById(\'check-all-columns1\').style.display = \'\'; } else { var value = \'no\'; document.getElementById(\'columns-list\').style.display = \'none\'; document.getElementById(\'check-all-columns1\').style.display = \'none\'; }'.(contact_manager_user_can($back_office_options, 'manage') ? ' jQuery.get(\''.CONTACT_MANAGER_URL.'?action=update-admin-page-options&amp;page='.$_GET['page'].'&amp;key='.md5(AUTH_KEY).'&amp;columns_list_displayed=\'+value)' : '').';"
 '.($columns_list_displayed == 'yes' ? ' checked="checked"' : '').' /> '.__('Display the columns list', 'contact-manager').'</label>'; ?><br />
 <span id="columns-list"<?php if ($columns_list_displayed == 'no') { echo ' style="display: none;"'; } ?>>
 <?php $j = 0; for ($i = 0; $i < $max_columns; $i++) {
@@ -183,13 +186,16 @@ foreach ($tables[$table_slug] as $key => $value) {
 if ((!in_array($key, $undisplayed_keys)) || ($columns[$i] == $key)) { echo '<option value="'.$key.'"'.($columns[$i] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } }
 echo '</select></label>
 <label><input type="checkbox" name="column'.$i.'_displayed" id="column'.$i.'_displayed" value="yes"'.(!in_array($i, $displayed_columns) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } } ?>
-<?php echo str_replace(array('check_all_columns1', 'margin-bottom'), array('check_all_columns2', 'margin-top'), $columns_inputs); ?></span>
+<?php echo str_replace(array('check-all-columns1', 'margin-bottom'), array('check-all-columns2', 'margin-top'), $columns_inputs); ?></span>
 </div></div>
 </form>
 </div>
 </div>
 
 <script type="text/javascript">
+document.getElementById('check-all-columns1-input').innerHTML = '<?php echo $check_all_columns1_input; ?>';
+document.getElementById('check-all-columns2-input').innerHTML = '<?php echo $check_all_columns2_input; ?>';
+
 function check_all_columns_js() {
 if (document.getElementById('check_all_columns1').checked == true) {
 for (i = 1; i <= 2; i++) { document.getElementById('check_all_columns'+i+'_text').innerHTML = '<?php _e('Uncheck all columns', 'contact-manager'); ?>'; }

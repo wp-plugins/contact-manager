@@ -1,6 +1,7 @@
 <?php global $wpdb; $error = '';
 $back_office_options = (array) get_option('contact_manager_back_office');
 extract(contact_manager_pages_links_markups($back_office_options));
+$admin_page = 'options';
 
 if ((isset($_GET['action'])) && (($_GET['action'] == 'reset') || ($_GET['action'] == 'uninstall'))) {
 $for = (((isset($_GET['for'])) && (is_multisite()) && (current_user_can('manage_network'))) ? $_GET['for'] : 'single');
@@ -20,10 +21,10 @@ echo '<div class="updated"><p><strong>'.($_GET['action'] == 'reset' ? __('Option
 <form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <div class="alignleft actions">
-<?php if ($_GET['action'] == 'reset') { _e('Do you really want to reset the options of Contact Manager?', 'contact-manager'); }
+<p><strong style="color: #c00000;"><?php if ($_GET['action'] == 'reset') { _e('Do you really want to reset the options of Contact Manager?', 'contact-manager'); }
 elseif ($for == 'network') { _e('Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?', 'contact-manager'); }
-else { _e('Do you really want to permanently delete the options and tables of Contact Manager?', 'contact-manager'); } ?> 
-<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" />
+else { _e('Do you really want to permanently delete the options and tables of Contact Manager?', 'contact-manager'); } ?></strong> 
+<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" /></p>
 </div>
 </form><?php } ?>
 </div>
@@ -34,63 +35,12 @@ include CONTACT_MANAGER_PATH.'admin-pages.php';
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
 if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
-include CONTACT_MANAGER_PATH.'initial-options.php';
 foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace(array('&nbsp;', '&#91;', '&#93;'), array(' ', '&amp;#91;', '&amp;#93;'), $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, 'options');
+include CONTACT_MANAGER_PATH.'includes/fill-admin-page-fields.php';
 
-foreach (array(
-'affiliation_enabled',
-'automatic_display_enabled',
-'automatic_display_only_on_single_post_pages',
-'commission2_enabled',
-'message_confirmation_email_sent',
-'message_custom_instructions_executed',
-'message_notification_email_sent',
-'message_removal_custom_instructions_executed',
-'messages_registration_enabled',
-'sender_subscribed_as_a_client',
-'sender_subscribed_as_a_user',
-'sender_subscribed_to_affiliate_program',
-'sender_subscribed_to_autoresponder',
-'sender_subscribed_to_members_areas') as $field) { if (!isset($_POST[$field])) { $_POST[$field] = 'no'; } }
-foreach (array(
-'automatic_display_form_id') as $field) { $_POST[$field] = (int) $_POST[$field]; if ($_POST[$field] < 1) { $_POST[$field] = $initial_options[''][$field]; } }
-foreach (array(
-'commission_amount',
-'commission2_amount',
-'encrypted_urls_validity_duration') as $field) { $_POST[$field] = str_replace(array('?', ',', ';'), '.', $_POST[$field]); }
-foreach (array(
-'automatic_display_maximum_forms_quantity',
-'maximum_messages_quantity') as $field) {
-switch (strtolower($_POST[$field])) { case '0': case '': case 'i': case 'infinite': case 'u': case 'unlimited': $_POST[$field] = 'unlimited'; } }
-if (is_numeric($_POST['maximum_messages_quantity'])) {
-$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages", OBJECT);
-$messages_quantity = (int) (isset($row->total) ? $row->total : 0);
-$n = $messages_quantity - $_POST['maximum_messages_quantity'];
-if ($n > 0) {
-$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n");
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages ORDER BY id DESC LIMIT 1", OBJECT);
-if (!$result) { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = 1"); }
-else { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = ".($result->id + 1)); } } }
-$members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
-sort($members_areas, SORT_NUMERIC);
-$members_areas_list = '';
-foreach ($members_areas as $member_area) { if ($member_area != '') { $members_areas_list .= $member_area.', '; } }
-$_POST['sender_members_areas'] = substr($members_areas_list, 0, -2);
-$_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
-foreach ($initial_options[''] as $key => $value) {
-if ((isset($_POST[$key])) && ($_POST[$key] != '')) { $options[$key] = $_POST[$key]; }
-else { $options[$key] = $value; } }
-update_option('contact_manager', $options);
-foreach (array(
-'code',
-'message_confirmation_email_body',
-'message_custom_instructions',
-'message_notification_email_body',
-'message_removal_custom_instructions') as $field) {
-if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = $initial_options[$field]; }
-update_option(substr('contact_manager_'.$field, 0, 64), $_POST[$field]); } } }
+ } }
 if (!isset($options)) { $options = (array) get_option('contact_manager'); }
 
 foreach ($options as $key => $value) {
@@ -128,17 +78,19 @@ $currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortco
 <option value="top, bottom"<?php if ($options['automatic_display_location'] == 'top, bottom') { echo ' selected="selected"'; } ?>><?php _e('On the top and bottom of posts', 'contact-manager'); ?></option>
 </select></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="automatic_display_form_id"><?php _e('Form ID', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_form_id" id="automatic_display_form_id" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25"><?php echo $options['automatic_display_form_id']; ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_form_id" id="automatic_display_form_id" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25" onchange="fill_form(this.form);"><?php echo $options['automatic_display_form_id']; ?></textarea>
 <?php $description = htmlspecialchars(contact_excerpt(contact_form_data(array(0 => 'name', 'id' => $options['automatic_display_form_id'])), 50));
+$result = ((isset($GLOBALS['contact_form'.$options['automatic_display_form_id'].'_data'])) && (isset($GLOBALS['contact_form'.$options['automatic_display_form_id'].'_data']['id'])));
+if (!$result) { $description = __('Inexistent or deleted form', 'contact-manager'); }
 if ($description != '') { echo '<span class="description" style="vertical-align: 25%;">('.$description.')</span>'; } ?><br />
-<a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-form&amp;id=<?php echo $options['automatic_display_form_id']; ?>"><?php _e('Edit', 'contact-manager'); ?></a>
- | <a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-form&amp;id=<?php echo $options['automatic_display_form_id']; ?>&amp;action=delete" class="delete"><?php _e('Delete', 'contact-manager'); ?></a>
- | <a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-statistics&amp;form_id=<?php echo $options['automatic_display_form_id']; ?>"><?php _e('Statistics', 'contact-manager'); ?></a>
+<?php if ($result) { echo '<a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=contact-manager-form&amp;id='.$options['automatic_display_form_id'].'">'.__('Edit', 'contact-manager').'</a>
+ | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=contact-manager-form&amp;id='.$options['automatic_display_form_id'].'&amp;action=delete" class="delete">'.__('Delete', 'contact-manager').'</a> | '; } ?>
+<a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-statistics&amp;form_id=<?php echo $options['automatic_display_form_id']; ?>"><?php _e('Statistics', 'contact-manager'); ?></a>
 <?php $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$options['automatic_display_form_id'], OBJECT);
 $messages_number = (int) (isset($row->total) ? $row->total : 0);
 if ($messages_number > 0) { echo ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=contact-manager-messages&amp;form_id='.$options['automatic_display_form_id'].'&amp;start_date=0">'.__('Messages', 'contact-manager').' <span style="color: #808080;">('.$messages_number.')</span></a>'; } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="automatic_display_maximum_forms_quantity"><?php _e('Maximum quantity of forms displayed per page', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_maximum_forms_quantity" id="automatic_display_maximum_forms_quantity" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25"><?php echo ($options['automatic_display_maximum_forms_quantity'] === 'unlimited' ? '' : $options['automatic_display_maximum_forms_quantity']); ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_maximum_forms_quantity" id="automatic_display_maximum_forms_quantity" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25" onchange="fill_form(this.form);"><?php echo ($options['automatic_display_maximum_forms_quantity'] === 'unlimited' ? '' : $options['automatic_display_maximum_forms_quantity']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for an unlimited quantity.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
@@ -235,7 +187,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="messages_registration_enabled" id="messages_registration_enabled" value="yes"<?php if ($options['messages_registration_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Save messages in the database', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity"><?php _e('Maximum messages quantity', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25"><?php echo ($options['maximum_messages_quantity'] === 'unlimited' ? '' : $options['maximum_messages_quantity']); ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25" onchange="fill_form(this.form);"><?php echo ($options['maximum_messages_quantity'] === 'unlimited' ? '' : $options['maximum_messages_quantity']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('You can save only the latest messages to ease your database.', 'contact-manager'); ?><br />
 <?php _e('Leave this field blank for an unlimited quantity.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -250,7 +202,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php _e('You can encrypt the download URLs.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#urls-encryption"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="encrypted_urls_validity_duration"><?php _e('Validity duration', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="encrypted_urls_validity_duration" id="encrypted_urls_validity_duration" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25"><?php echo $options['encrypted_urls_validity_duration']; ?></textarea> <span style="vertical-align: 25%;"><?php _e('hours', 'contact-manager'); ?></span>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="encrypted_urls_validity_duration" id="encrypted_urls_validity_duration" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25" onchange="fill_form(this.form);"><?php echo $options['encrypted_urls_validity_duration']; ?></textarea> <span style="vertical-align: 25%;"><?php _e('hours', 'contact-manager'); ?></span>
  <span class="description" style="vertical-align: 25%;"><?php _e('Encrypted URLs must have a limited validity duration.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="encrypted_urls_key"><?php _e('Encryption key', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="encrypted_urls_key" id="encrypted_urls_key" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+'em';" onblur="this.style.height = '1.75em';" cols="50"><?php echo $options['encrypted_urls_key']; ?></textarea><br />
@@ -398,7 +350,8 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client" value="yes"<?php if ($options['sender_subscribed_as_a_client'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender as a client', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
-<?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."commerce_manager_clients_categories ORDER BY name ASC", OBJECT);
+<?php if (get_option('commerce_manager')) {
+$categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."commerce_manager_clients_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_client_category_id" id="sender_client_category_id">
@@ -416,7 +369,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
  | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=commerce-manager-client-category&amp;id='.$options['sender_client_category_id'].'&amp;action=delete" class="delete">'.__('Delete', 'contact-manager').'</a>'
 .($clients_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=commerce-manager-clients&amp;category_id='.$options['sender_client_category_id'].'&amp;start_date=0">'.__('Clients', 'contact-manager').' <span style="color: #808080;">('.$clients_number.')</span></a>')
 .($categories_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=commerce-manager-clients-categories&amp;category_id='.$options['sender_client_category_id'].'&amp;start_date=0">'.__('Subcategories', 'contact-manager').' <span style="color: #808080;">('.$categories_number.')</span></a>'); } ?></td></tr>
-<?php } ?>
+<?php } } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_client_status" id="sender_client_status">
 <option value=""<?php if ($options['sender_client_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('Commerce Manager\'s option', 'contact-manager'); ?></option>
@@ -430,14 +383,14 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 <option value="yes"<?php if ($options['commerce_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['commerce_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager'); ?></span></td></tr>
+<span class="description"><?php (function_exists('commerce_manager_admin_menu') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-confirmation-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commerce_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
 <td><select name="commerce_registration_notification_email_sent" id="commerce_registration_notification_email_sent">
 <option value=""<?php if ($options['commerce_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?>><?php _e('Commerce Manager\'s option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($options['commerce_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['commerce_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager'); ?></span></td></tr>
+<span class="description"><?php (function_exists('commerce_manager_admin_menu') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-notification-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -452,7 +405,8 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_to_affiliate_program" id="sender_subscribed_to_affiliate_program" value="yes"<?php if ($options['sender_subscribed_to_affiliate_program'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender to affiliate program', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-to-affiliate-program"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
-<?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."affiliation_manager_affiliates_categories ORDER BY name ASC", OBJECT);
+<?php if (get_option('affiliation_manager')) {
+$categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."affiliation_manager_affiliates_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_affiliate_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_affiliate_category_id" id="sender_affiliate_category_id">
@@ -470,7 +424,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
  | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=affiliation-manager-affiliate-category&amp;id='.$options['sender_affiliate_category_id'].'&amp;action=delete" class="delete">'.__('Delete', 'contact-manager').'</a>'
 .($affiliates_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=affiliation-manager-affiliates&amp;category_id='.$options['sender_affiliate_category_id'].'&amp;start_date=0">'.__('Affiliates', 'contact-manager').' <span style="color: #808080;">('.$affiliates_number.')</span></a>')
 .($categories_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=affiliation-manager-affiliates-categories&amp;category_id='.$options['sender_affiliate_category_id'].'&amp;start_date=0">'.__('Subcategories', 'contact-manager').' <span style="color: #808080;">('.$categories_number.')</span></a>'); } ?></td></tr>
-<?php } ?>
+<?php } } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_affiliate_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_affiliate_status" id="sender_affiliate_status">
 <option value=""<?php if ($options['sender_affiliate_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('Affiliation Manager\'s option', 'contact-manager'); ?></option>
@@ -484,14 +438,14 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 <option value="yes"<?php if ($options['affiliation_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['affiliation_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager'); ?></span></td></tr>
+<span class="description"><?php (function_exists('affiliation_manager_admin_menu') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-confirmation-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="affiliation_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
 <td><select name="affiliation_registration_notification_email_sent" id="affiliation_registration_notification_email_sent">
 <option value=""<?php if ($options['affiliation_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?>><?php _e('Affiliation Manager\'s option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($options['affiliation_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['affiliation_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager'); ?></span></td></tr>
+<span class="description"><?php (function_exists('affiliation_manager_admin_menu') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-notification-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -507,16 +461,24 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 <td><label><input type="checkbox" name="sender_subscribed_to_members_areas" id="sender_subscribed_to_members_areas" value="yes"<?php if ($options['sender_subscribed_to_members_areas'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender to a member area', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#membership"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas"><?php _e('Members areas', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="sender_members_areas" id="sender_members_areas" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+'em';" onblur="this.style.height = '1.75em';" cols="50"><?php echo $options['sender_members_areas']; ?></textarea>
-<?php if ((function_exists('membership_manager_admin_menu')) && (is_numeric($options['sender_members_areas'])) && ($options['sender_members_areas'] > 0)) { echo '<br />
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="sender_members_areas" id="sender_members_areas" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+'em';" onblur="this.style.height = '1.75em';" cols="50" onchange="fill_form(this.form);"><?php echo $options['sender_members_areas']; ?></textarea>
+<?php if (function_exists('membership_manager_admin_menu')) {
+$url = 'admin.php?page=membership-manager';
+if (is_numeric($options['sender_members_areas'])) {
+$description = ($options['sender_members_areas'] == 0 ? __('All members areas', 'contact-manager') : htmlspecialchars(contact_excerpt(member_area_data(array(0 => 'name', 'id' => $options['sender_members_areas'])), 50)));
+$result = ((isset($GLOBALS['member_area'.$options['sender_members_areas'].'_data'])) && (isset($GLOBALS['member_area'.$options['sender_members_areas'].'_data']['id'])));
+if ((!$result) && ($options['sender_members_areas'] > 0)) { $description = __('Inexistent or deleted member area', 'contact-manager'); }
+if ($description != '') { echo '<span class="description" style="vertical-align: 25%;">('.$description.')</span>'; }
+if ($result) { $url = 'admin.php?page=membership-manager-member-area&amp;id='.$options['sender_members_areas']; echo '<br />
 <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-member-area&amp;id='.$options['sender_members_areas'].'">'.__('Edit', 'contact-manager').'</a> | 
-<a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-member-area&amp;id='.$options['sender_members_areas'].'&amp;action=delete" class="delete">'.__('Delete', 'contact-manager').'</a>'; } ?><br />
+<a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-member-area&amp;id='.$options['sender_members_areas'].'&amp;action=delete" class="delete">'.__('Delete', 'contact-manager').'</a>'; } } } ?><br />
 <span class="description"><?php _e('You can enter several members areas IDs. Separate them with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas_modifications"><?php _e('Automatic modifications', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50"><?php echo $options['sender_members_areas_modifications']; ?></textarea>
+<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50" onchange="fill_form(this.form);"><?php echo $options['sender_members_areas_modifications']; ?></textarea>
 <span class="description"><?php _e('You can offer a temporary access, and automatically modify the members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
  <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/membership-manager/documentation/#members-areas-modifications"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
-<?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."membership_manager_members_categories ORDER BY name ASC", OBJECT);
+<?php if (get_option('membership_manager')) {
+$categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."membership_manager_members_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_member_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_member_category_id" id="sender_member_category_id">
@@ -534,7 +496,7 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
  | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-member-category&amp;id='.$options['sender_member_category_id'].'&amp;action=delete" class="delete">'.__('Delete', 'contact-manager').'</a>'
 .($members_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-members&amp;category_id='.$options['sender_member_category_id'].'&amp;start_date=0">'.__('Members', 'contact-manager').' <span style="color: #808080;">('.$members_number.')</span></a>')
 .($categories_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-members-categories&amp;category_id='.$options['sender_member_category_id'].'&amp;start_date=0">'.__('Subcategories', 'contact-manager').' <span style="color: #808080;">('.$categories_number.')</span></a>'); } ?></td></tr>
-<?php } ?>
+<?php } } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_member_status"><?php _e('Status', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_member_status" id="sender_member_status">
 <option value=""<?php if ($options['sender_member_status'] == '') { echo ' selected="selected"'; } ?>><?php _e('Member area\'s option', 'contact-manager'); ?></option>
@@ -548,14 +510,14 @@ echo '<br /><a style="text-decoration: none;" '.$ids_fields_links_markup.' href=
 <option value="yes"<?php if ($options['membership_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['membership_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php _e('You can configure this email through the interface of Membership Manager.', 'contact-manager'); ?></span></td></tr>
+<span class="description"><?php (function_exists('membership_manager_admin_menu') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-confirmation-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="membership_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
 <td><select name="membership_registration_notification_email_sent" id="membership_registration_notification_email_sent">
 <option value=""<?php if ($options['membership_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?>><?php _e('Member area\'s option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($options['membership_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['membership_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php _e('You can configure this email through the interface of Membership Manager.', 'contact-manager'); ?></span></td></tr>
+<span class="description"><?php (function_exists('membership_manager_admin_menu') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-notification-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -624,7 +586,7 @@ else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use aff
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php _e('The level 1 commission is awarded to the affiliate who referred the message.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/affiliation-manager/documentation/#commissions-levels"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_amount"><?php _e('Amount', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission_amount" id="commission_amount" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25"><?php echo $options['commission_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission_amount" id="commission_amount" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25" onchange="fill_form(this.form);"><?php echo $options['commission_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -637,7 +599,7 @@ else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use aff
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="commission2_enabled" id="commission2_enabled" value="yes"<?php if ($options['commission2_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Award a level 2 commission', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_amount"><?php _e('Amount', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission2_amount" id="commission2_amount" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25"><?php echo $options['commission2_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission2_amount" id="commission2_amount" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25" onchange="fill_form(this.form);"><?php echo $options['commission2_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -658,5 +620,29 @@ if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $mo
 echo "if (anchor == '#".$module_key."') {
 document.getElementById('".$key."-module').style.display = 'block';
 document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } } ?>
+
+<?php $fields = array();
+include CONTACT_MANAGER_PATH.'initial-options.php';
+foreach ($initial_options[''] as $key => $value) { $fields[] = $key; }
+$fields = array_merge($fields, array(
+'code',
+'message_confirmation_email_body',
+'message_custom_instructions',
+'message_notification_email_body',
+'message_removal_custom_instructions'));
+$string = ''; foreach ($fields as $field) { $string .= '"'.$field.'", '; }
+echo 'function fill_form(form) {
+var data = new Object();
+var fields = new Array('.substr($string, 0, -2).');
+for (i = 0; i < fields.length; i++) {
+if (form[fields[i]]) {
+if (form[fields[i]].type != "checkbox") { data[fields[i]] = form[fields[i]].value; }
+else { if (form[fields[i]].checked == true) { data[fields[i]] = "yes"; } } } }
+jQuery.post("'.CONTACT_MANAGER_URL.'?action=fill-admin-page-fields&page='.$_GET['page'].'&key='.md5(AUTH_KEY).'", data, function(data) {
+for (i = 0; i < fields.length; i++) {
+if ((form[fields[i]]) && (typeof data[fields[i]] != "undefined")) {
+if (form[fields[i]].type != "checkbox") { form[fields[i]].value = data[fields[i]]; }
+else { if (data[fields[i]] == "yes") { form[fields[i]].checked = true; } else { form[fields[i]].checked = false; } } } }
+jQuery(".noscript").css("display", "none"); }, "json"); }'."\n"; ?>
 </script>
 <?php }

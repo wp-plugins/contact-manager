@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.8.6\n"
+"Project-Id-Version: Contact Manager 5.9.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -794,11 +794,6 @@ msgstr ""
 
 #: form-page.php:224 tables.php:12
 msgid "Displays count"
-msgstr ""
-
-#: form-page.php:226 form-page.php:229 message-page.php:307
-#: message-page.php:335
-msgid "Leave this field blank for 0."
 msgstr ""
 
 #: form-page.php:227 tables.php:13
@@ -2114,9 +2109,6 @@ msgstr ""
 msgid "forms categories"
 msgstr ""
 
-msgid "Leave this field blank for 1."
-msgstr ""
-
 msgid "Click here to personalize this table."
 msgstr ""
 
@@ -2211,4 +2203,55 @@ msgid "This field is not correctly filled."
 msgstr ""
 
 msgid "One or more fields are not correctly filled."
+msgstr ""
+
+msgid "You can't disable the display of this module."
+msgstr ""
+
+msgid "You can't disable the display of this column."
+msgstr ""
+
+msgid "You can't disable the display of this row."
+msgstr ""
+
+msgid "Useful only if you use Affiliation Manager"
+msgstr ""
+
+msgid "Useful only if you use Membership Manager"
+msgstr ""
+
+msgid "Useful only if you use Commerce Manager"
+msgstr ""
+
+msgid "Allows you to register the sender as a WordPress user"
+msgstr ""
+
+msgid "Allows you to execute additional PHP instructions"
+msgstr ""
+
+msgid "(<a href=\"%1$s\">More informations</a>)"
+msgstr ""
+
+msgid "You can configure this email <a href=\"%1$s\">here</a>."
+msgstr ""
+
+msgid "Leave this field blank to automatically calculate the amount."
+msgstr ""
+
+msgid "Inexistent or deleted form"
+msgstr ""
+
+msgid "Inexistent or deleted member area"
+msgstr ""
+
+msgid "All members areas"
+msgstr ""
+
+msgid "After the upload, you will just need to copy and paste the URL of the file in this field."
+msgstr ""
+
+msgid "After the upload, you will just need to copy and paste the URL of the image in this field."
+msgstr ""
+
+msgid "Add"
 msgstr ""

@@ -2,15 +2,16 @@
 global $post, $wpdb;
 $content = '';
 $atts = array_map('contact_do_shortcode', (array) $atts);
-extract(shortcode_atts(array('focus' => '', 'id' => 0, 'redirection' => ''), $atts));
+extract(shortcode_atts(array('focus' => '', 'id' => '', 'redirection' => ''), $atts));
 $focus = format_nice_name($focus);
-$id = (int) $id;
+$id = (int) preg_replace('/[^0-9]/', '', $id);
 if ($id == 0) { $id = (int) (isset($GLOBALS['contact_form_id']) ? $GLOBALS['contact_form_id'] : 0); }
 if (($id == 0) && ((!function_exists('current_user_can')) || (!current_user_can('edit_pages')))) { $id = 1; }
 if (($id == 0) || ($id != contact_form_data(array(0 => 'id', 'id' => $id)))) {
 if ((function_exists('current_user_can')) && (current_user_can('edit_pages'))) {
 load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
-$content = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'), 'id', '&#91;contact-form]'); } }
+$content = sprintf(__('You did not complete correctly the %1$s attribute of the %2$s shortcode.', 'contact-manager'), 'id', '&#91;contact-form]')
+.' '.sprintf(__('(<a href="%1$s">More informations</a>)', 'contact-manager'), 'http://www.kleor.com/contact-manager/#forms'); } }
 else {
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
 if (isset($GLOBALS[$key])) { $original[$key] = $GLOBALS[$key]; } }

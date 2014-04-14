@@ -19,7 +19,7 @@ if ($main_name != $name) { $GLOBALS[$prefix.'confirmed_fields'][] = $main_name; 
 if ((in_array($name, $GLOBALS[$prefix.'required_fields'])) && ($atts['required'] != 'required')) { $atts['required'] = 'yes'; }
 switch ($main_name) {
 case 'email_address': if ($atts['type'] == '') { $atts['type'] = 'email'; } break;
-case 'message_confirmation_email_sent': if ($atts['type'] == '') { $atts['type'] = 'checkbox'; } break;
+case 'message_confirmation_email_sent': case 'subscribed_to_autoresponder': if ($atts['type'] == '') { $atts['type'] = 'checkbox'; } break;
 case 'password': if ($atts['type'] == '') { $atts['type'] = 'password'; } break;
 case 'phone_number': if ($atts['type'] == '') { $atts['type'] = 'tel'; } break;
 case 'submit': if ($atts['type'] == '') { $atts['type'] = 'submit'; } break;

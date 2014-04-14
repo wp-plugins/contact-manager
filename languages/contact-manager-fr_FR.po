@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.8.6\n"
+"Project-Id-Version: Contact Manager 5.9.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2014-01-18 01:38+0100\n"
+"PO-Revision-Date: 2014-04-14 04:43+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -1017,13 +1017,6 @@ msgstr "Laissez ce champ vide pour une quantité illimitée."
 #: tables.php:12
 msgid "Displays count"
 msgstr "Nombre d'affichages"
-
-#: form-page.php:226
-#: form-page.php:229
-#: message-page.php:307
-#: message-page.php:335
-msgid "Leave this field blank for 0."
-msgstr "Laissez ce champ vide pour 0."
 
 #: form-page.php:227
 #: tables.php:13
@@ -2542,9 +2535,6 @@ msgstr "catégorie de formulaire"
 msgid "forms categories"
 msgstr "catégories de formulaires"
 
-msgid "Leave this field blank for 1."
-msgstr "Laissez ce champ vide pour 1."
-
 msgid "Click here to personalize this table."
 msgstr "Cliquez ici pour personnaliser ce tableau."
 
@@ -2640,4 +2630,55 @@ msgstr "Ce champ n'est pas correctement rempli."
 
 msgid "One or more fields are not correctly filled."
 msgstr "Un ou plusieurs champs ne sont pas correctement remplis."
+
+msgid "You can't disable the display of this module."
+msgstr "Vous ne pouvez pas désactiver l'affichage de ce module."
+
+msgid "You can't disable the display of this column."
+msgstr "Vous ne pouvez pas désactiver l'affichage de cette colonne."
+
+msgid "You can't disable the display of this row."
+msgstr "Vous ne pouvez pas désactiver l'affichage de cette ligne."
+
+msgid "Useful only if you use Affiliation Manager"
+msgstr "Utile seulement si vous utilisez Affiliation Manager"
+
+msgid "Useful only if you use Membership Manager"
+msgstr "Utile seulement si vous utilisez Membership Manager"
+
+msgid "Useful only if you use Commerce Manager"
+msgstr "Utile seulement si vous utilisez Commerce Manager"
+
+msgid "Allows you to register the sender as a WordPress user"
+msgstr "Vous permet d'enregistrer l'expéditeur en tant qu'utilisateur WordPress"
+
+msgid "Allows you to execute additional PHP instructions"
+msgstr "Vous permet d'exécuter des instructions PHP supplémentaires"
+
+msgid "(<a href=\"%1$s\">More informations</a>)"
+msgstr "(<a href=\"%1$s\">Plus d'informations</a>)"
+
+msgid "You can configure this email <a href=\"%1$s\">here</a>."
+msgstr "Vous pouvez configurer cet e-mail <a href=\"%1$s\">ici</a>."
+
+msgid "Leave this field blank to automatically calculate the amount."
+msgstr "Laissez ce champ vide pour calculer automatiquement le montant."
+
+msgid "Inexistent or deleted form"
+msgstr "Formulaire inexistant ou supprimé"
+
+msgid "Inexistent or deleted member area"
+msgstr "Espace membre inexistant ou supprimé"
+
+msgid "All members areas"
+msgstr "Tous les espaces membres"
+
+msgid "After the upload, you will just need to copy and paste the URL of the file in this field."
+msgstr "Après l'envoi, vous devrez seulement copier-coller l'URL du fichier dans ce champ."
+
+msgid "After the upload, you will just need to copy and paste the URL of the image in this field."
+msgstr "Après l'envoi, vous devrez seulement copier-coller l'URL de l'image dans ce champ."
+
+msgid "Add"
+msgstr "Ajouter"
 

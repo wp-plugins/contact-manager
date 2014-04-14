@@ -1,8 +1,8 @@
 <?php load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
-add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("dashboard");'));
+if (is_admin()) {
 foreach ((array) $_GET as $key => $value) { if (is_string($value)) { $_GET[$key] = quotes_entities($_GET[$key]); } }
 if (isset($_GET['id'])) { $_GET['id'] = (int) $_GET['id']; if ($_GET['id'] < 1) { unset($_GET['id']); } }
-foreach ($_GET as $key => $value) { $GLOBALS[$key] = $value; }
+foreach ($_GET as $key => $value) { if (!isset($GLOBALS[$key])) { $GLOBALS[$key] = $value; } } }
 
 
 function contact_manager_pages_css() { ?>
@@ -19,6 +19,8 @@ function contact_manager_pages_css() { ?>
 .wrap input.button-secondary, .wrap select { vertical-align: 0; }
 .wrap input.date-pick { margin-right: 0.5em; width: 10.5em; }
 .wrap p.submit { margin: 0 20%; }
+.wrap span.row-actions { font-style: italic; }
+*:-ms-input-placeholder { color: #a0a0a0; }
 </style>
 <?php }
 
@@ -113,39 +115,56 @@ $page_undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undis
 $name = $page_slug.'_page_'.str_replace('-', '_', $key).'_module_displayed';
 if (strstr($_GET['page'], 'back-office')) { $onmouseover = ""; }
 else { $onmouseover = " onmouseover=\"document.getElementById('".$key."-submodules').style.display = 'block';\""; }
-if ((isset($value['required'])) && ($value['required'] == 'yes')) { echo '<label'.$onmouseover.'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br /></label>'; }
-else { echo '<label'.$onmouseover.(((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) ? '' : ' style="display: none;"').'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$value['name'].'<br /></label>'; }
-if (!strstr($_GET['page'], 'back-office')) { echo '<div style="display: none;" id="'.$key.'-submodules">'; }
+if ((!isset($value['title'])) || ($value['title'] == '')) {
+if ((isset($value['required'])) && ($value['required'] == 'yes')) { $title = ' title="'.__('You can\'t disable the display of this module.', 'contact-manager').'"'; }
+elseif (in_array($key, array('affiliation', 'registration-to-affiliate-program'))) { $title = ' title="'.__('Useful only if you use Affiliation Manager', 'contact-manager').'"'; }
+elseif ($key == 'registration-as-a-client') { $title = ' title="'.__('Useful only if you use Commerce Manager', 'contact-manager').'"'; }
+elseif ($key == 'membership') { $title = ' title="'.__('Useful only if you use Membership Manager', 'contact-manager').'"'; }
+elseif ($key == 'wordpress') { $title = ' title="'.__('Allows you to register the sender as a WordPress user', 'contact-manager').'"'; }
+elseif ($key == 'custom-instructions') { $title = ' title="'.__('Allows you to execute additional PHP instructions', 'contact-manager').'"'; }
+else { $title = ''; } }
+else { $title = ' title="'.$value['title'].'"'; }
+if ((isset($value['required'])) && ($value['required'] == 'yes')) { echo '<label'.$onmouseover.$title.'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes" checked="checked" disabled="disabled" /> '.$value['name'].'<br /></label>'; }
+else { echo '<label'.$onmouseover.$title.(((!isset($_GET['id'])) || ($page_slug != 'message') || (!in_array($key, $add_message_modules))) ? '' : ' style="display: none;"').'><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'.(in_array($key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$value['name'].'<br /></label>'; }
+if (!strstr($_GET['page'], 'back-office')) { echo '<div id="'.$key.'-submodules">'; }
 if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
 $module_name = $page_slug.'_page_'.str_replace('-', '_', $module_key).'_module_displayed';
-if ((isset($module_value['required'])) && ($module_value['required'] == 'yes')) { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes" checked="checked" disabled="disabled" /> '.$module_value['name'].'<br /></label>'; }
-else { echo '<label><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes"'.(in_array($module_key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$module_value['name'].'<br /></label>'; } } }
+if ((!isset($module_value['title'])) || ($module_value['title'] == '')) {
+if ((isset($module_value['required'])) && ($module_value['required'] == 'yes')) { $module_title = ' title="'.__('You can\'t disable the display of this module.', 'contact-manager').'"'; }
+elseif ($key == 'affiliation') { $module_title = ' title="'.__('Useful only if you use Affiliation Manager', 'contact-manager').'"'; }
+elseif ($key == 'custom-instructions') { $module_title = ' title="'.__('Allows you to execute additional PHP instructions', 'contact-manager').'"'; }
+else { $module_title = ''; } }
+else { $module_title = ' title="'.$module_value['title'].'"'; }
+if ((isset($module_value['required'])) && ($module_value['required'] == 'yes')) { echo '<label'.$module_title.'><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes" checked="checked" disabled="disabled" /> '.$module_value['name'].'<br /></label>'; }
+else { echo '<label'.$module_title.'><input style="margin-left: 2em;" type="checkbox" name="'.$module_name.'" id="'.$module_name.'" value="yes"'.(in_array($module_key, $page_undisplayed_modules) ? '' : ' checked="checked"').' /> '.$module_value['name'].'<br /></label>'; } } }
 if (!strstr($_GET['page'], 'back-office')) { echo '</div>'; } } ?></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
+<td><input type="hidden" name="submit" value="true" />
+<input type="submit" class="button-secondary" name="update_back_office_options" value="<?php _e('Update', 'contact-manager'); ?>" onclick="this.title = '<?php _e('Update', 'contact-manager'); ?>';" /></td></tr>
 </tbody></table>
-<?php if ((strstr($_GET['page'], 'back-office')) && (isset($modules['back_office'][$module]['modules'][$module.'-custom-fields']))) { ?>
+<?php if ((strstr($_GET['page'], 'back-office')) && (isset($modules['back_office'][$module]['modules'][$module.'-custom-fields']))) {
+foreach (array('strip_accents_js', 'format_nice_name_js') as $function) { add_action('admin_footer', $function); } ?>
 <div id="<?php echo $module; ?>-custom-fields-module"<?php if (in_array($module.'-custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="<?php echo $module; ?>-custom-fields"><strong><?php echo $modules['back_office'][$module]['modules'][$module.'-custom-fields']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php _e('You can create an unlimited number of custom fields to record additional data.', 'contact-manager'); ?> <a target="<?php echo $back_office_options['documentations_links_target']; ?>" href="http://www.kleor.com/contact-manager/#custom-fields"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 </tbody></table>
-<table class="form-table" style="margin-left: 8%"><tbody>
+<table class="form-table" style="margin-left: 7%; width: 90%;"><tbody>
 <?php $custom_fields = (array) $back_office_options[$page_slug.'_page_custom_fields'];
 asort($custom_fields); $i = 0; foreach ($custom_fields as $key => $value) {
 $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
-<td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50">'.htmlspecialchars($value).'</textarea></td>
+<td style="width: 40%;"><textarea style="vertical-align: 100%; padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50">'.htmlspecialchars($value).'</textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50" disabled="disabled">'.str_replace('_', '-', $key).'</textarea>
-<input type="hidden" name="'.$page_slug.'_page_custom_field_key'.$i.'" value="'.str_replace('_', '-', $key).'" /><input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="delete_'.$page_slug.'_page_custom_field'.$i.'" value="'.__('Delete', 'contact-manager').'" /><br />
+<td style="width: 40%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 67.5%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50" disabled="disabled">'.str_replace('_', '-', $key).'</textarea>
+<input type="hidden" name="'.$page_slug.'_page_custom_field_key'.$i.'" value="'.str_replace('_', '-', $key).'" /><input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="delete_'.$page_slug.'_page_custom_field'.$i.'" value="'.__('Delete', 'contact-manager').'" formaction="'.esc_attr($_SERVER['REQUEST_URI']).'#'.$module.'-custom-fields-module" /><br />
 <span class="description">'.__('The key can not be changed.', 'contact-manager').'</span></td></tr>'; }
 $n = $i + 5; while ($i < $n) {
 $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
-<td style="width: 30%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50"></textarea></td>
+<td style="width: 40%;"><textarea style="vertical-align: 100%; padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50" onchange="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/gi, \'-\'));"></textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 45%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 60%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50"></textarea>
-<input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="add_'.$page_slug.'_page_custom_field" value="'.__('Add').'" /><br />
+<td style="width: 40%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/60)))+\'em\';" onblur="this.style.height = \'1.75em\';" cols="50"></textarea>
+<input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="add_'.$page_slug.'_page_custom_field" value="'.__('Add', 'contact-manager').'" formaction="'.esc_attr($_SERVER['REQUEST_URI']).'#'.$module.'-custom-fields-module" /><br />
 <span class="description">'.__('Lowercase letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; } ?>
 </tbody></table>
 <table class="form-table"><tbody>
@@ -154,7 +173,11 @@ $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width
 </tbody></table>
 </div><?php } ?>
 </div></div>
-<?php }
+<?php if (!strstr($_GET['page'], 'back-office')) { ?>
+<script type="text/javascript">
+<?php foreach ($modules[$page_slug] as $key => $value) { echo "document.getElementById('".$key."-submodules').style.display = 'none';\n"; } ?>
+</script>
+<?php } }
 
 
 function contact_manager_pages_search_field($type, $searchby, $searchby_options) { ?>
@@ -229,10 +252,11 @@ return $back_office_options; } }
 
 
 function contact_manager_pages_date_picker($start_date, $end_date) {
-echo '<p style="margin: 0 0 1em 0; float: left;"><label><strong>'.__('Start', 'contact-manager').'</strong>
-<input class="date-pick" style="margin: 0.5em;" type="text" name="start_date" id="start_date" size="20" value="'.$start_date.'" /></label>
-<label style="margin-left: 3em;"><strong>'.__('End', 'contact-manager').'</strong>
-<input class="date-pick" style="margin: 0.5em;" type="text" name="end_date" id="end_date" size="20" value="'.$end_date.'" /></label>
+echo '<p style="margin: 0 0 1em 0; float: left;">
+<input type="hidden" name="old_start_date" value="'.$start_date.'" /><label><strong>'.__('Start', 'contact-manager').'</strong>
+<input class="date-pick" style="margin: 0.5em;" type="text" name="start_date" id="start_date" size="20" value="'.$start_date.'" placeholder="'.$start_date.'" /></label>
+<input type="hidden" name="old_end_date" value="'.$end_date.'" /><label style="margin-left: 3em;"><strong>'.__('End', 'contact-manager').'</strong>
+<input class="date-pick" style="margin: 0.5em;" type="text" name="end_date" id="end_date" size="20" value="'.$end_date.'" placeholder="'.$end_date.'" /></label>
 <input style="margin-left: 3em; vertical-align: middle;" type="submit" class="button-secondary" name="submit" value="'.__('Display', 'contact-manager').'" /></p>
 <div class="clear"></div>'; }
 
@@ -249,7 +273,7 @@ Date.dayNames = ['<?php _e('Sunday', 'contact-manager'); ?>', '<?php _e('Monday'
 Date.abbrDayNames = ['<?php _e('Sun', 'contact-manager'); ?>', '<?php _e('Mon', 'contact-manager'); ?>', '<?php _e('Tue', 'contact-manager'); ?>', '<?php _e('Wed', 'contact-manager'); ?>', '<?php _e('Thu', 'contact-manager'); ?>', '<?php _e('Fri', 'contact-manager'); ?>', '<?php _e('Sat', 'contact-manager'); ?>'];
 Date.monthNames = ['<?php _e('January', 'contact-manager'); ?>', '<?php _e('February', 'contact-manager'); ?>', '<?php _e('March', 'contact-manager'); ?>', '<?php _e('April', 'contact-manager'); ?>', '<?php _e('May', 'contact-manager'); ?>', '<?php _e('June', 'contact-manager'); ?>', '<?php _e('July', 'contact-manager'); ?>', '<?php _e('August', 'contact-manager'); ?>', '<?php _e('September', 'contact-manager'); ?>', '<?php _e('October', 'contact-manager'); ?>', '<?php _e('November', 'contact-manager'); ?>', '<?php _e('December', 'contact-manager'); ?>'];
 Date.abbrMonthNames = ['<?php _e('Jan', 'contact-manager'); ?>', '<?php _e('Feb', 'contact-manager'); ?>', '<?php _e('Mar', 'contact-manager'); ?>', '<?php _e('Apr', 'contact-manager'); ?>', '<?php _e('May', 'contact-manager'); ?>', '<?php _e('Jun', 'contact-manager'); ?>', '<?php _e('Jul', 'contact-manager'); ?>', '<?php _e('Aug', 'contact-manager'); ?>', '<?php _e('Sep', 'contact-manager'); ?>', '<?php _e('Oct', 'contact-manager'); ?>', '<?php _e('Nov', 'contact-manager'); ?>', '<?php _e('Dec', 'contact-manager'); ?>'];
-$.dpText = {
+jQuery.dpText = {
 TEXT_PREV_YEAR : '<?php _e('Previous year', 'contact-manager'); ?>',
 TEXT_PREV_MONTH : '<?php _e('Previous month', 'contact-manager'); ?>',
 TEXT_NEXT_YEAR : '<?php _e('Next year', 'contact-manager'); ?>',
@@ -259,7 +283,7 @@ TEXT_CHOOSE_DATE : '<?php _e('Choose a date', 'contact-manager'); ?>',
 DATE_PICKER_ALT : '<?php _e('Date', 'contact-manager'); ?>',
 DATE_PICKER_URL : '<?php echo CONTACT_MANAGER_URL; ?>images/date-picker.png',
 HEADER_FORMAT : 'mmmm yyyy'
-}; $(function(){ $('.date-pick').datePicker({startDate:'2000-01-01'}); });
+}; jQuery(function(){ jQuery('.date-pick').datePicker({startDate:'2000-01-01'}); });
 </script>
 <?php }
 
@@ -294,9 +318,9 @@ foreach ($members_areas as $key) { $content .= $modifications[$key]['sign'].$key
 return $content; }
 
 
-if (((!isset($_GET['action'])) || ($_GET['action'] != 'delete'))
- && ($_GET['page'] != 'contact-manager')
- && ($_GET['page'] != 'contact-manager-back-office')) {
+if (($_GET['page'] != 'contact-manager-back-office')
+ && ((!isset($_GET['action'])) || (!in_array($_GET['action'], array('delete', 'uninstall', 'reset'))))) {
+add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("jquery");'));
+if ($_GET['page'] != 'contact-manager') {
 add_action('admin_head', 'contact_manager_date_picker_css');
-add_action('admin_footer', 'contact_jquery_js');
-add_action('admin_footer', 'contact_manager_date_picker_js'); }
+add_action('admin_footer', 'contact_manager_date_picker_js', 100); } }
