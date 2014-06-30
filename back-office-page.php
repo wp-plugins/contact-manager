@@ -1,6 +1,7 @@
 <?php global $wpdb; $error = '';
 $options = (array) get_option('contact_manager_back_office');
 extract(contact_manager_pages_links_markups($options));
+$admin_page = 'back_office';
 foreach (array('admin-pages.php', 'initial-options.php') as $file) { include CONTACT_MANAGER_PATH.$file; }
 $max_links = count($admin_links);
 $max_menu_items = count($admin_pages);
@@ -58,7 +59,6 @@ $undisplayed_modules = (array) $options['back_office_page_undisplayed_modules'];
 <form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <?php contact_manager_pages_menu($options); ?>
-<div class="clear"></div>
 <?php if ($error != '') { echo '<p style="color: #c00000;">'.$error.'</p>'; } ?>
 <?php contact_manager_pages_summary($options); ?>
 
@@ -87,10 +87,10 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="custom_icon_used" id="custom_icon_used" value="yes"<?php if ($options['custom_icon_used'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Use a custom icon', 'contact-manager'); ?></label>
- <span class="description" style="vertical-align: -5%;"><?php _e('Icon displayed in the admin menu of WordPress', 'contact-manager'); ?></span></td></tr>
+<span class="description" style="vertical-align: -5%;"><?php _e('Icon displayed in the admin menu of WordPress', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="custom_icon_url"><?php _e('Icon URL', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_icon_url" id="custom_icon_url" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/90)))+'em';" onblur="this.style.height = '1.75em';" cols="75" placeholder="<?php echo $initial_options['back_office']['custom_icon_url']; ?>"><?php echo $options['custom_icon_url']; ?></textarea> 
-<span style="vertical-align: 25%;"><a target="<?php echo $options['urls_fields_links_target']; ?>" href="<?php echo htmlspecialchars(format_url(do_shortcode($options['custom_icon_url']))); ?>"><?php _e('Link', 'contact-manager'); ?></a>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="custom_icon_url" id="custom_icon_url" rows="1" cols="75" onchange="document.getElementById('custom-icon-url-link').href = format_url(this.value);"><?php echo $options['custom_icon_url']; ?></textarea> 
+<span style="vertical-align: 25%;"><a id="custom-icon-url-link" target="<?php echo $options['urls_fields_links_target']; ?>" href="<?php echo htmlspecialchars(format_url(do_shortcode($options['custom_icon_url']))); ?>"><?php _e('Link', 'contact-manager'); ?></a>
 <?php if (current_user_can('upload_files')) { echo ' | <a target="'.$options['urls_fields_links_target'].'" href="media-new.php" title="'.__('After the upload, you will just need to copy and paste the URL of the image in this field.', 'contact-manager').'">'.__('Upload an image', 'contact-manager').'</a>'; } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
@@ -104,14 +104,14 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="title_displayed" id="title_displayed" value="yes"<?php if ($options['title_displayed'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Display the title', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="title"><?php _e('Title', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="title" id="title" rows="1" onfocus="this.style.height = (1.75*Math.min(5, 1 + Math.floor(this.value.length/30)))+'em';" onblur="this.style.height = '1.75em';" cols="25" placeholder="<?php echo $initial_options['back_office']['title']; ?>"><?php echo $options['title']; ?></textarea></td></tr>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="title" id="title" rows="1" cols="25"><?php echo $options['title']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="links_displayed" id="links_displayed" value="yes"<?php if ($options['links_displayed'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Display the links', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Links', 'contact-manager'); ?></strong></th>
 <td><input type="hidden" name="submit" value="true" /><input style="margin-bottom: 0.5em;" type="submit" class="button-secondary" name="reset_links" formaction="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>#top" value="<?php _e('Reset the links', 'contact-manager'); ?>" /><br />
 <?php $displayed_links = (array) $options['displayed_links'];
 for ($i = 0; $i < $max_links; $i++) {
-echo '<label>'.__('Link', 'contact-manager').' '.($i + 1).($i < 9 ? '&nbsp;&nbsp;': '').' <select name="link'.$i.'" id="link'.$i.'">';
+echo '<label><span style="margin-right: 0.3em;">'.__('Link', 'contact-manager').' '.($i + 1).'</span> <select style="margin-right: 0.3em;" name="link'.$i.'" id="link'.$i.'">';
 foreach ($admin_links as $key => $value) { echo '<option value="'.$key.'"'.($options['links'][$i] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; }
 echo '</select></label>
 <label><input type="checkbox" name="link'.$i.'_displayed" id="link'.$i.'_displayed" value="yes"'.(!in_array($i, $displayed_links) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } ?></td></tr>
@@ -130,7 +130,7 @@ echo '</select></label>
 <td><input type="hidden" name="submit" value="true" /><input style="margin-bottom: 0.5em;" type="submit" class="button-secondary" name="reset_menu_items" formaction="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>#menu" value="<?php _e('Reset the pages', 'contact-manager'); ?>" /><br />
 <?php $menu_displayed_items = (array) $options['menu_displayed_items'];
 for ($i = 0; $i < $max_menu_items; $i++) {
-echo '<label>'.__('Page', 'contact-manager').' '.($i + 1).($i < 9 ? '&nbsp;&nbsp;': '').' <select name="menu_item'.$i.'" id="menu_item'.$i.'">';
+echo '<label><span style="margin-right: 0.3em;">'.__('Page', 'contact-manager').' '.($i + 1).'</span> <select style="margin-right: 0.3em;" name="menu_item'.$i.'" id="menu_item'.$i.'">';
 foreach ($admin_pages as $key => $value) { echo '<option value="'.$key.'"'.($options['menu_items'][$i] == $key ? ' selected="selected"' : '').'>'.$value['menu_title'].'</option>'."\n"; }
 echo '</select></label>
 <label><input type="checkbox" name="menu_item'.$i.'_displayed" id="menu_item'.$i.'_displayed" value="yes"'.(!in_array($i, $menu_displayed_items) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } ?></td></tr>
@@ -201,14 +201,29 @@ else { echo '<label'.$title.'><input type="checkbox" name="'.$name.'" id="'.$nam
 </div>
 
 <script type="text/javascript">
-var anchor = window.location.hash;
-<?php foreach ($modules['back_office'] as $key => $value) {
-echo "if (anchor == '#".$key."') { document.getElementById('".$key."-module').style.display = 'block'; }\n";
-if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
-echo "if (anchor == '#".$module_key."') {
-document.getElementById('".$key."-module').style.display = 'block';
-document.getElementById('".$module_key."-module').style.display = 'block'; }\n"; } } }
-foreach (array('reset_links' => 'top', 'reset_menu_items' => 'menu') as $field => $location) { if (isset($_POST[$field])) { echo 'window.location = \'#'.$location.'\';'; } }
+<?php $modules_list = array(); $submodules = array();
+foreach ($modules[$admin_page] as $key => $value) { $modules_list[] = $key; $submodules[$key] = array();
+if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) { $submodules[$key][] = $module_key; } } }
+echo 'anchor = window.location.hash;
+modules = '.json_encode($modules_list).';
+submodules = '.json_encode($submodules).';
+for (i = 0, n = modules.length; i < n; i++) {
+element = document.getElementById(modules[i]+"-module");
+if ((element) && (anchor == "#"+modules[i])) { element.style.display = "block"; }
+for (j = 0, m = submodules[modules[i]].length; j < m; j++) {
+subelement = document.getElementById(submodules[modules[i]][j]+"-module");
+if ((subelement) && (anchor == "#"+submodules[modules[i]][j])) {
+element.style.display = "block"; subelement.style.display = "block"; } } }'."\n"; ?>
+
+<?php $fields = array('custom_icon_url', 'title'); echo 'fields = '.json_encode($fields).'; default_values = [];'."\n";
+foreach ($fields as $field) { echo 'default_values["'.$field.'"] = "'.str_replace(array('\\', '"', "\r", "\n", 'script'), array('\\\\', '\"', "\\r", "\\n", 'scr"+"ipt'), $initial_options['back_office'][$field]).'";'."\n"; }
+echo 'for (i = 0, n = fields.length; i < n; i++) {
+element = document.getElementById(fields[i]);
+element.setAttribute("data-default", default_values[fields[i]]);
+if (element.hasAttribute("onchange")) { string = " "+element.getAttribute("onchange"); } else { string = ""; }
+element.setAttribute("onchange", "if (this.value === \'\') { this.value = this.getAttribute(\'data-default\'); }"+string); }'."\n"; ?>
+
+<?php foreach (array('reset_links' => 'top', 'reset_menu_items' => 'menu') as $field => $location) { if (isset($_POST[$field])) { echo 'window.location = \'#'.$location.'\';'; } }
 foreach ($modules as $key => $value) {
 if ((isset($value['custom-fields'])) && ((isset($_POST['add_'.$key.'_page_custom_field'])) || (isset($_POST['delete_'.$key.'_page_custom_field'])))) {
 echo 'window.location = \'#'.str_replace('_', '-', $key).'-page-custom-fields-module\';'; } } ?>

@@ -3,7 +3,7 @@ if ((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) { incl
 
 
 function contact_manager_admin_menu() {
-$lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
+$lang = strtolower(substr(get_locale(), 0, 2)); if ($lang == '') { $lang = 'en'; }
 include CONTACT_MANAGER_PATH.'admin-pages.php';
 $options = (array) get_option('contact_manager_back_office');
 if ((!isset($options['menu_title_'.$lang])) || ($options['menu_title_'.$lang] == '') || (!isset($options['pages_titles_'.$lang]))
@@ -38,7 +38,7 @@ return $admin_menu_pages; }
 
 
 function contact_manager_admin_notices() {
-if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+date_default_timezone_set('UTC');
 $current_time = time();
 $url = explode('?dismiss-notice=', $_SERVER['REQUEST_URI']); $url = explode('&dismiss-notice=', $url[0]);
 $user_id = (int) (function_exists('get_current_user_id') ? get_current_user_id() : 0);
@@ -66,13 +66,13 @@ add_action('admin_notices', 'contact_manager_admin_notices');
 
 
 function contact_manager_meta_box($post) {
-$lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
+$lang = strtolower(substr(get_locale(), 0, 2)); if ($lang == '') { $lang = 'en'; }
 $options = (array) get_option('contact_manager_back_office');
 if ((!isset($options['meta_box_'.$lang])) || ($options['meta_box_'.$lang] == '')) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
 $links = (array) $options['meta_box_'.$lang];
 if ((isset($links[''])) && (isset($links['#screen-options-wrap']))) { ?>
-<p><a target="_blank" href="http://www.kleor.com/contact-manager/"><?php echo $links['']; ?></a>
- | <a style="color: #808080;" href="#screen-options-wrap" onclick="document.getElementById('show-settings-link').click(); document.getElementById('contact-manager-hide').click();"><?php echo $links['#screen-options-wrap']; ?></a></p>
+<p><a target="_blank" href="http://www.kleor.com/contact-manager/"><?php echo $links['']; ?></a><span id="contact-manager-screen-options-link"></span></p>
+<script type="text/javascript">document.getElementById("contact-manager-screen-options-link").innerHTML = ' | <a style="color: #808080;" href="#screen-options-wrap" onclick="document.getElementById(\'show-settings-link\').click(); document.getElementById(\'contact-manager-hide\').click();"><?php echo $links['#screen-options-wrap']; ?></a>';</script>
 <ul>
 <?php foreach (array('', '#screen-options-wrap') as $url) { unset($links[$url]); }
 foreach ($links as $url => $text) {

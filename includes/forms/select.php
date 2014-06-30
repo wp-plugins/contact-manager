@@ -21,7 +21,7 @@ elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $_POS
 if (isset($_POST[$prefix.'submit'])) {
 if (($name != $main_name) && (isset($_POST[$prefix.$name])) && (isset($_POST[$prefix.$main_name])) && ($_POST[$prefix.$name] != $_POST[$prefix.$main_name])) { $GLOBALS[$prefix.$name.'_error'] = 'invalid_field'; }
 elseif ((in_array($atts['required'], array('required', 'yes'))) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $GLOBALS[$prefix.$name.'_error'] = 'unfilled_field'; } }
-if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $GLOBALS['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
+if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $GLOBALS['form_focus'] = $prefix.$name; }
 foreach ($atts as $key => $value) {
 switch ($key) {
 case 'required': if (in_array($value, array('required', 'yes'))) {

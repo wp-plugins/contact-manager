@@ -28,7 +28,7 @@ include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables['messages'] as $key => $value) {
 if ((isset($_POST[$key])) && ($key != 'referring_url') && (!in_array($key, $GLOBALS[$prefix.'fields']))) { unset($_POST[$key]); } }
 $custom_fields = array(); foreach ($_POST as $key => $value) {
-if ((substr($key, 0, 13) == 'custom_field_') && (in_array($key, $GLOBALS[$prefix.'fields'])) && ($value != '')) { $custom_fields[substr($key, 13)] = stripslashes(quotes_entities_decode($value)); } }
+if ((substr($key, 0, 13) == 'custom_field_') && (in_array($key, $GLOBALS[$prefix.'fields'])) && ($value != '')) { $custom_fields[substr($key, 13)] = str_replace('\\', '', quotes_entities_decode($value)); } }
 $_POST['custom_fields'] = ($custom_fields == array() ? '' : serialize($custom_fields));
 foreach (array('email_address', 'content', 'subject') as $field) {
 if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
@@ -36,7 +36,7 @@ $_POST['receiver'] = contact_form_data('message_notification_email_receiver');
 $_POST['ip_address'] = $_SERVER['REMOTE_ADDR'];
 $_POST['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 $_POST['form_id'] = $id;
-if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+date_default_timezone_set('UTC');
 $current_time = time();
 $_POST['date'] = date('Y-m-d H:i:s', $current_time + 3600*UTC_OFFSET);
 $_POST['date_utc'] = date('Y-m-d H:i:s', $current_time);

@@ -16,6 +16,8 @@ $admin_pages = array(
 'statistics' => array('page_title' => 'Contact Manager ('.__('Statistics', 'contact-manager').')', 'menu_title' => __('Statistics', 'contact-manager'), 'file' => 'statistics-page.php'),
 'back_office' => array('page_title' => 'Contact Manager ('.__('Back Office', 'contact-manager').')', 'menu_title' => __('Back Office', 'contact-manager'), 'file' => 'back-office-page.php'));
 
+$modules = array();
+
 $modules['back_office'] = array(
 'capabilities' => array('name' => __('Capabilities', 'contact-manager')),
 'icon' => array('name' => __('Icon', 'contact-manager')),

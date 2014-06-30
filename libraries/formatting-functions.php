@@ -18,11 +18,11 @@ function format_email_address_js() { ?>
 <script type="text/javascript">
 function format_email_address(string) {
 string = string.toLowerCase();
-string = string.replace(/[à]/gi, '@');
-string = string.replace(/[;]/gi, '.');
-string = string.replace(/[ ]/gi, '-');
+string = string.replace(/[à]/g, '@');
+string = string.replace(/[;]/g, '.');
+string = string.replace(/[ ]/g, '-');
 string = strip_accents(string);
-string = string.replace(/[^a-z0-9_@.-]/gi, '');
+string = string.replace(/[^a-z0-9_@.-]/g, '');
 return string; }
 </script>
 <?php }
@@ -59,7 +59,7 @@ function format_name_js() { ?>
 function format_name(string) {
 string = string.toLowerCase();
 string = string.replace('_', '-');
-var characters = new Array(' ', '-');
+var characters = [' ', '-'];
 for (character in characters) {
 var strings = string.split(characters[character]);
 var n = strings.length;
@@ -81,8 +81,8 @@ function format_nice_name_js() { ?>
 <script type="text/javascript">
 function format_nice_name(string) {
 string = strip_accents(string.toLowerCase());
-string = string.replace(/[ ]/gi, '-');
-string = string.replace(/[^a-z0-9_-]/gi, '');
+string = string.replace(/[ ]/g, '-');
+string = string.replace(/[^a-z0-9_-]/g, '');
 return string; }
 </script>
 <?php }
@@ -119,22 +119,22 @@ $string); }
 function strip_accents_js() { ?>
 <script type="text/javascript">
 function strip_accents(string) {
-string = string.replace(/[áàâäãå]/gi, 'a');
-string = string.replace(/[ç]/gi, 'c');
-string = string.replace(/[éèêë]/gi, 'e');
-string = string.replace(/[íìîï]/gi, 'i');
-string = string.replace(/[ñ]/gi, 'n');
-string = string.replace(/[óòôöõø]/gi, 'o');
-string = string.replace(/[úùûü]/gi, 'u');
-string = string.replace(/[ýÿ]/gi, 'y');
-string = string.replace(/[ÁÀÂÄÃÅ]/gi, 'A');
-string = string.replace(/[Ç]/gi, 'C');
-string = string.replace(/[ÉÈÊË]/gi, 'E');
-string = string.replace(/[ÍÌÎÏ]/gi, 'I');
-string = string.replace(/[Ñ]/gi, 'N');
-string = string.replace(/[ÓÒÔÖÕØ]/gi, 'O');
-string = string.replace(/[ÚÙÛÜ]/gi, 'U');
-string = string.replace(/[ÝŸ]/gi, 'Y');
+string = string.replace(/[áàâäãå]/g, 'a');
+string = string.replace(/[ç]/g, 'c');
+string = string.replace(/[éèêë]/g, 'e');
+string = string.replace(/[íìîï]/g, 'i');
+string = string.replace(/[ñ]/g, 'n');
+string = string.replace(/[óòôöõø]/g, 'o');
+string = string.replace(/[úùûü]/g, 'u');
+string = string.replace(/[ýÿ]/g, 'y');
+string = string.replace(/[ÁÀÂÄÃÅ]/g, 'A');
+string = string.replace(/[Ç]/g, 'C');
+string = string.replace(/[ÉÈÊË]/g, 'E');
+string = string.replace(/[ÍÌÎÏ]/g, 'I');
+string = string.replace(/[Ñ]/g, 'N');
+string = string.replace(/[ÓÒÔÖÕØ]/g, 'O');
+string = string.replace(/[ÚÙÛÜ]/g, 'U');
+string = string.replace(/[ÝŸ]/g, 'Y');
 return string; }
 </script>
 <?php }

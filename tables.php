@@ -1,4 +1,6 @@
-<?php $tables['forms'] = array(
+<?php $tables = array();
+
+$tables['forms'] = array(
 'id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => __('ID', 'contact-manager'), 'width' => 5),
 'category_id' => array('type' => 'int', 'modules' => array('general-informations'), 'name' => (((isset($_GET['page'])) && (strstr($_GET['page'], 'categories'))) ? __('Parent category ID', 'contact-manager') : __('Category ID', 'contact-manager')), 'width' => 15),
 'name' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Name', 'contact-manager'), 'width' => 18, 'searchby' => __('the name', 'contact-manager')),
@@ -9,7 +11,7 @@
 'custom_fields' => array('type' => 'text', 'modules' => array('custom-fields'), 'name' => __('Custom fields', 'contact-manager'), 'width' => 18, 'searchby' => __('the custom fields', 'contact-manager')),
 'gift_download_url' => array('type' => 'text', 'modules' => array('gift'), 'name' => __('Gift download URL', 'contact-manager'), 'width' => 18),
 'gift_instructions' => array('type' => 'text', 'modules' => array('gift'), 'name' => __('Instructions to the sender', 'contact-manager'), 'width' => 18),
-'maximum_messages_quantity_per_sender' => array('type' => 'text', 'default' => 'unlimited', 'modules' => array('general-informations'), 'name' => __('Maximum messages quantity per sender', 'contact-manager'), 'width' => 12),
+'maximum_messages_quantity_per_sender' => array('type' => 'text', 'modules' => array('general-informations'), 'name' => __('Maximum messages quantity per sender', 'contact-manager'), 'width' => 12),
 'displays_count' => array('type' => 'int', 'modules' => array('counters'), 'name' => __('Displays count', 'contact-manager'), 'width' => 12),
 'messages_count' => array('type' => 'int', 'modules' => array('counters'), 'name' => __('Messages count', 'contact-manager'), 'width' => 12),
 'code' => array('type' => 'text', 'modules' => array('form'), 'name' => __('Code', 'contact-manager'), 'width' => 18, 'searchby' => __('the code', 'contact-manager')),
@@ -50,7 +52,7 @@
 'affiliation_registration_notification_email_sent' => array('type' => 'text', 'modules' => array('registration-to-affiliate-program'), 'name' => __('Registration notification email sent', 'contact-manager').' '.__('(Affiliation)', 'contact-manager'), 'width' => 15),
 'sender_subscribed_to_members_areas' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders subscribed to a member area', 'contact-manager'), 'width' => 18),
 'sender_members_areas' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders members areas', 'contact-manager'), 'width' => 12),
-'sender_members_areas_modifications' => array('type' => 'text', 'modules' => array('membership')),
+'sender_members_areas_modifications' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Automatic modifications of the members areas', 'contact-manager'), 'width' => 18),
 'sender_member_category_id' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders member category ID', 'contact-manager'), 'width' => 15),
 'sender_member_status' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Senders member status', 'contact-manager'), 'width' => 15),
 'membership_registration_confirmation_email_sent' => array('type' => 'text', 'modules' => array('membership'), 'name' => __('Registration confirmation email sent', 'contact-manager').' '.__('(Membership)', 'contact-manager'), 'width' => 15),
@@ -59,13 +61,12 @@
 'sender_user_role' => array('type' => 'text', 'modules' => array('wordpress'), 'name' => __('Senders user role', 'contact-manager'), 'width' => 15),
 'message_custom_instructions_executed' => array('type' => 'text', 'modules' => array('custom-instructions'), 'name' => __('Custom instructions executed', 'contact-manager'), 'width' => 15),
 'message_custom_instructions' => array('type' => 'text', 'modules' => array('custom-instructions'), 'name' => __('PHP code of the custom instructions', 'contact-manager'), 'width' => 18),
-'affiliation_enabled' => array('type' => 'text', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Affiliation enabled', 'contact-manager'), 'width' => 12),
+'affiliation_enabled' => array('type' => 'text', 'modules' => array('affiliation'), 'name' => __('Affiliation enabled', 'contact-manager'), 'width' => 12),
 'commission_amount' => array('type' => 'text', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Commission amount', 'contact-manager'), 'width' => 12),
 'commission2_enabled' => array('type' => 'text', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Commission enabled', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 12),
 'commission2_amount' => array('type' => 'text', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Commission amount', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 15));
 
 $tables['forms_categories'] = $tables['forms'];
-$tables['forms_categories']['name']['constraint'] = 'UNIQUE';
 foreach (array('maximum_messages_quantity_per_sender', 'displays_count', 'messages_count') as $field) { unset($tables['forms_categories'][$field]); }
 
 $tables['messages'] = array(
@@ -91,12 +92,12 @@ $tables['messages'] = array(
 'user_agent' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('User agent', 'contact-manager'), 'width' => 24),
 'referring_url' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('Referring URL', 'contact-manager'), 'width' => 18),
 'custom_fields' => array('type' => 'text', 'modules' => array('custom-fields'), 'name' => __('Custom fields', 'contact-manager'), 'width' => 18, 'searchby' => __('the custom fields', 'contact-manager')),
-'referrer' => array('type' => 'text', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Referrer', 'contact-manager'), 'width' => 12, 'searchby' => __('the referrer', 'contact-manager')),
+'referrer' => array('type' => 'text', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Referrer', 'contact-manager'), 'width' => 18, 'searchby' => __('the referrer', 'contact-manager')),
 'commission_amount' => array('type' => 'dec(12,2)', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Commission amount', 'contact-manager'), 'width' => 12),
 'commission_status' => array('type' => 'text', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Commission status', 'contact-manager'), 'width' => 12),
 'commission_payment_date' => array('type' => 'datetime', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Commission\'s payment date', 'contact-manager'), 'width' => 18),
 'commission_payment_date_utc' => array('type' => 'datetime', 'modules' => array('affiliation', 'level-1-commission'), 'name' => __('Commission\'s payment date (UTC)', 'contact-manager'), 'width' => 18),
-'referrer2' => array('type' => 'text', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Referrer', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 15, 'searchby' => __('the referrer', 'contact-manager').' '.__('(level 2)', 'contact-manager')),
+'referrer2' => array('type' => 'text', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Referrer', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 18, 'searchby' => __('the referrer', 'contact-manager').' '.__('(level 2)', 'contact-manager')),
 'commission2_amount' => array('type' => 'dec(12,2)', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Commission amount', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 15),
 'commission2_status' => array('type' => 'text', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Commission status', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 15),
 'commission2_payment_date' => array('type' => 'datetime', 'modules' => array('affiliation', 'level-2-commission'), 'name' => __('Commission\'s payment date', 'contact-manager').' '.__('(level 2)', 'contact-manager'), 'width' => 18),

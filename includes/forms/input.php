@@ -29,7 +29,7 @@ $id_markup = ' id="'.$prefix.$name.'"';
 switch ($atts['type']) {
 case 'checkbox': $id_markup = ''; $GLOBALS[$prefix.'checkbox_fields'][] = $name; break;
 case 'radio': $id_markup = ''; $GLOBALS[$prefix.'radio_fields'][] = $name; break;
-case 'email': case 'password': case 'tel':  case 'text': if ($atts['size'] == '') { $atts['size'] = '30'; } break;
+case 'email': case 'password': case 'tel': case 'text': if ($atts['size'] == '') { $atts['size'] = '30'; } break;
 case 'url': if ($atts['size'] == '') { $atts['size'] = '40'; } }
 if ($atts['type'] == 'file') {
 $extensions = array_unique(preg_split('#[^a-z0-9]#', strtolower($atts['extensions']), 0, PREG_SPLIT_NO_EMPTY));
@@ -66,7 +66,7 @@ if ((function_exists('affiliation_session')) && (affiliation_session()) && (affi
 elseif ((function_exists('commerce_session')) && (commerce_session()) && (client_data($name) != '')) { $atts['value'] = client_data($name); }
 elseif ((function_exists('membership_session')) && (membership_session()) && (member_data($name) != '')) { $atts['value'] = member_data($name); }
 elseif ((function_exists('is_user_logged_in')) && (is_user_logged_in())) { $atts['value'] = contact_user_data($name); } } }
-if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ($atts['value'] == '') && ($id_markup != '')) { $GLOBALS['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
+if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ($atts['value'] == '') && ($id_markup != '')) { $GLOBALS['form_focus'] = $prefix.$name; }
 if ((isset($_POST[$prefix.'submit'])) && ($atts['type'] == 'checkbox')) { $atts['checked'] = (isset($_POST[$prefix.$name]) ? 'checked' : ''); } }
 foreach ($atts as $key => $value) {
 switch ($key) {

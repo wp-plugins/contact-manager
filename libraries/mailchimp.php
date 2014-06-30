@@ -4,15 +4,15 @@
 
 /**
  * Super-simple, minimum abstraction MailChimp API v2 wrapper
- * 
+ *
  * Uses curl if available, falls back to file_get_contents and HTTP stream.
  * This probably has more comments than code.
  *
  * Contributors:
  * Michael Minor <me@pixelbacon.com>
  * Lorna Jane Mitchell, github.com/lornajane
- * 
- * @author Drew McLellan <drew.mclellan@gmail.com> 
+ *
+ * @author Drew McLellan <drew.mclellan@gmail.com>
  * @version 1.1
  */
 class MailChimp
@@ -52,7 +52,7 @@ class MailChimp
 	 * @return array          Assoc array of decoded result
 	 */
 	private function _raw_request($method, $args=array())
-	{      
+	{
 		$args['apikey'] = $this->api_key;
 
 		$url = $this->api_endpoint.'/'.$method.'.json';

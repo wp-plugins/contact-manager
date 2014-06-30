@@ -1,4 +1,4 @@
-<?php $lang = strtolower(substr(WPLANG, 0, 2)); if ($lang == '') { $lang = 'en'; }
+<?php $lang = strtolower(substr(get_locale(), 0, 2)); if ($lang == '') { $lang = 'en'; }
 foreach (array('admin_email', 'blogname', 'siteurl') as $key) { $$key = get_option($key); }
 $domain = $_SERVER['SERVER_NAME']; if (substr($domain, 0, 4) == 'www.') { $domain = substr($domain, 4); }
 if ($blogname == '') { $blogname = ucfirst($domain); }
@@ -6,6 +6,7 @@ $blog_email = $admin_email;
 if ((!strstr($blog_email, $domain)) && (isset($_SERVER['SERVER_ADMIN']))) { $blog_email = $_SERVER['SERVER_ADMIN']; }
 if (!strstr($blog_email, $domain)) { $blog_email = 'contact@'.$domain; }
 
+$initial_options = array();
 
 $initial_options[''] = array(
 'affiliation_enabled' => 'no',
@@ -160,6 +161,7 @@ $variables = array(
 'links',
 'menu_displayed_items',
 'menu_items',
+'n',
 'pages_titles',
 'table',
 'table_slug',
@@ -198,7 +200,7 @@ $last_columns = array();
 foreach ($table as $key => $value) {
 if ((!in_array($key, $first_columns)) && (isset($value['name'])) && ($value['name'] != '')) { $last_columns[] = $key; } }
 $displayed_columns = array();
-for ($i = 0; $i < count($first_columns); $i++) { $displayed_columns[] = $i; }
+$n = count($first_columns); for ($i = 0; $i < $n; $i++) { $displayed_columns[] = $i; }
 
 $initial_options[$table_slug] = array(
 'columns' => array_merge($first_columns, $last_columns),
@@ -222,7 +224,7 @@ include CONTACT_MANAGER_PATH.'admin-pages.php';
 $links = array();
 foreach ($admin_links as $key => $value) { $links[] = $key; }
 $displayed_links = array();
-for ($i = 0; $i < count($links); $i++) { $displayed_links[] = $i; }
+$n = count($links); for ($i = 0; $i < $n; $i++) { $displayed_links[] = $i; }
 $menu_items = array();
 $pages_titles = array();
 foreach ($admin_pages as $key => $value) {

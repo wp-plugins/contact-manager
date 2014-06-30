@@ -35,7 +35,7 @@ for ($i = 0; $i < $max_tables; $i++) {
 $tables_slugs[$i] = $_POST['table'.$i];
 if (isset($_POST['table'.$i.'_displayed'])) { $displayed_tables[] = $i; } } }
 else {
-if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+date_default_timezone_set('UTC');
 $displayed_tables = (array) $options['displayed_tables'];
 $end_date = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET);
 $filterby = $options['filterby'];
@@ -50,7 +50,7 @@ $start_date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0
 if ($end_date == '') { $end_date = date('Y-m-d H:i:s', time() + 3600*UTC_OFFSET); }
 else {
 $d = preg_split('#[^0-9]#', $end_date, 0, PREG_SPLIT_NO_EMPTY);
-for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? ($i < 2 ? 1 : 0) : ($i == 3 ? 23 : 59))); }
+for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : ($i == 3 ? 23 : 59))); }
 $end_date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])); }
 $GLOBALS['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
 $date_criteria = "(date BETWEEN '$start_date' AND '$end_date')";
@@ -119,7 +119,7 @@ echo '</tbody></table>'; } ?>
 <p class="description" style="margin: 0 0.5em;"><a href="admin.php?page=contact-manager-back-office#statistics-page"><?php _e('Click here to personalize this table.', 'contact-manager'); ?></a></p>
 <div style="text-align: center;">
 <?php for ($i = 0; $i < $max_tables; $i++) {
-echo '<label>'.__('Table', 'contact-manager').' '.($i + 1).' <select name="table'.$i.'" id="table'.$i.'">';
+echo '<label><span style="margin-right: 0.3em;">'.__('Table', 'contact-manager').' '.($i + 1).'</span> <select style="margin-right: 0.3em;" name="table'.$i.'" id="table'.$i.'">';
 foreach ($tables_names as $key => $value) { echo '<option value="'.$key.'"'.($tables_slugs[$i] == $key ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; }
 echo '</select></label>
 <label><input type="checkbox" name="table'.$i.'_displayed" id="table'.$i.'_displayed" value="yes"'.(!in_array($i, $displayed_tables) ? '' : ' checked="checked"').' /> '.__('Display', 'contact-manager').'</label><br />'; } ?><br />

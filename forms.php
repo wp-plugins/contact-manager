@@ -1,8 +1,8 @@
 <?php function contact_form($atts) {
-global $post, $wpdb;
-$content = '';
 $atts = array_map('contact_do_shortcode', (array) $atts);
 extract(shortcode_atts(array('focus' => '', 'id' => '', 'redirection' => ''), $atts));
+global $post, $wpdb;
+$content = '';
 $focus = format_nice_name($focus);
 $id = (int) preg_replace('/[^0-9]/', '', $id);
 if ($id == 0) { $id = (int) (isset($GLOBALS['contact_form_id']) ? $GLOBALS['contact_form_id'] : 0); }
@@ -26,8 +26,9 @@ if ($redirection == '#') { $redirection .= str_replace('_', '-', substr($prefix,
 foreach (array(
 'strip_accents_js',
 'format_email_address_js') as $function) { add_action('wp_footer', $function); }
+foreach (array('captcha', 'country-selector', 'error', 'input', 'label', 'option', 'select', 'textarea', 'validation-content') as $tag) { remove_shortcode($tag); }
 $tags = array('captcha', 'country-selector', 'input', 'label', 'option', 'select', 'textarea');
-foreach ($tags as $tag) { remove_shortcode($tag); add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
+foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
 if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_GET['referring_url']) ? $_GET['referring_url'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')); }
 if (isset($_POST[$prefix.'submit'])) {
 foreach ($_POST as $key => $value) {
@@ -70,61 +71,58 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displ
 $required_fields_js = '';
 foreach ($GLOBALS[$prefix.'required_fields'] as $field) {
 $required_fields_js .= '
+var element = document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error");
 '.(in_array($field, $GLOBALS[$prefix.'radio_fields']) ? 'var '.$prefix.$field.'_checked = false;
-for (i = 0; i < form.'.$prefix.$field.'.length; i++) { if (form.'.$prefix.$field.'[i].checked == true) { '.$prefix.$field.'_checked = true; } }
-if (!'.$prefix.$field.'_checked)' : (in_array($field, $GLOBALS[$prefix.'checkbox_fields']) ? 'if (form.'.$prefix.$field.'.checked == false)' : 'if (form.'.$prefix.$field.'.value == "")')).' {
-if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) {
-message = document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").getAttribute("data-unfilled-field-message");
-if (!message) { message = "'.str_replace('"', '\"', $GLOBALS[$prefix.'unfilled_field_message']).'"; }
-document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").style.display = "inline";
-document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = message; }
+for (i = 0, n = form.'.$prefix.$field.'.length; i < n; i++) { if (form.'.$prefix.$field.'[i].checked == true) { '.$prefix.$field.'_checked = true; } }
+if (!'.$prefix.$field.'_checked)' : (in_array($field, $GLOBALS[$prefix.'checkbox_fields']) ? 'if (form.'.$prefix.$field.'.checked == false)' : 'if (form.'.$prefix.$field.'.value === "")')).' {
+if (element) {
+var message = element.getAttribute("data-unfilled-field-message");
+if (!message) { message = "'.str_replace(array('\\', '"', "\r", "\n", 'script'), array('\\\\', '\"', "\\r", "\\n", 'scr"+"ipt'), $GLOBALS[$prefix.'unfilled_field_message']).'"; }
+element.style.display = "inline"; element.innerHTML = message; }
 '.(in_array($field, $GLOBALS[$prefix.'radio_fields']) ? '' : 'if (!error) { form.'.$prefix.$field.'.focus(); } ').'error = true; }
-else if (document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error")) {
-document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").style.display = "none";
-document.getElementById("'.$prefix.str_replace('country_code', 'country', $field).'_error").innerHTML = ""; }'; }
+else if (element) { element.style.display = "none"; element.innerHTML = ""; }'; }
 $confirmed_fields_js = '';
 foreach ($GLOBALS[$prefix.'confirmed_fields'] as $field) {
 $confirmed_fields_js .= '
-if (form.'.$prefix.'confirm_'.$field.'.value != form.'.$prefix.$field.'.value) {
-if (document.getElementById("'.$prefix.'confirm_'.$field.'_error")) {
-message = document.getElementById("'.$prefix.'confirm_'.$field.'_error").getAttribute("data-invalid-field-message");
-if (!message) { message = "'.str_replace('"', '\"', $GLOBALS[$prefix.'invalid_field_message']).'"; }
-document.getElementById("'.$prefix.'confirm_'.$field.'_error").style.display = "inline";
-document.getElementById("'.$prefix.'confirm_'.$field.'_error").innerHTML = message; }
+var element = document.getElementById("'.$prefix.'confirm_'.$field.'_error");
+if (form.'.$prefix.'confirm_'.$field.'.value !== form.'.$prefix.$field.'.value) {
+if (element) {
+var message = element.getAttribute("data-invalid-field-message");
+if (!message) { message = "'.str_replace(array('\\', '"', "\r", "\n", 'script'), array('\\\\', '\"', "\\r", "\\n", 'scr"+"ipt'), $GLOBALS[$prefix.'invalid_field_message']).'"; }
+element.style.display = "inline"; element.innerHTML = message; }
 if (!error) { form.'.$prefix.'confirm_'.$field.'.focus(); } error = true; }
-else if (document.getElementById("'.$prefix.'confirm_'.$field.'_error")) {
-document.getElementById("'.$prefix.'confirm_'.$field.'_error").style.display = "none";
-document.getElementById("'.$prefix.'confirm_'.$field.'_error").innerHTML = ""; }'; }
+else if (element) { element.display = "none"; element.innerHTML = ""; }'; }
+if (isset($GLOBALS['form_focus'])) { $form_focus = format_nice_name(strval($GLOBALS['form_focus'])); }
 $form_js = '
 <script type="text/javascript">
-'.($focus == 'yes' ? (isset($GLOBALS['form_focus']) ? str_replace($canonical_prefix, $prefix, $GLOBALS['form_focus']).$GLOBALS['form_focus'] : '') : '').'
-function validate_'.substr($prefix, 0, -1).'(form) {
-var error = false; var message = "";
-'.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? 'form.'.$prefix.'email_address.value = format_email_address(form.'.$prefix.'email_address.value);' : '').'
-'.$required_fields_js.'
-'.$confirmed_fields_js.'
+'.((($focus == 'yes') && (isset($form_focus))) ? ($deduplicator == '' ? 'element = document.getElementById("'.$form_focus.'"); if (element) { element.focus(); }'
+ : 'element = document.getElementById("'.str_replace($prefix, $canonical_prefix, $form_focus).'"); if (element) { element.focus(); }
+else { element = document.getElementById("'.str_replace($canonical_prefix, $prefix, $form_focus).'"); if (element) { element.focus(); } }')."\n" : '').
+'function validate_'.substr($prefix, 0, -1).'(form) {
+var error = false;
+'.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? 'form.'.$prefix.'email_address.value = format_email_address(form.'.$prefix.'email_address.value);'."\n" : '')
+.$required_fields_js.$confirmed_fields_js.'
 '.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? '
-if (form.'.$prefix.'email_address.value != "") {
+if (form.'.$prefix.'email_address.value !== "") {
+var element = document.getElementById("'.$prefix.'email_address_error");
 if ((form.'.$prefix.'email_address.value.indexOf("@") == -1) || (form.'.$prefix.'email_address.value.indexOf(".") == -1)) {
-if (document.getElementById("'.$prefix.'email_address_error")) {
-message = document.getElementById("'.$prefix.'email_address_error").getAttribute("data-invalid-email-address-message");
-if (!message) { message = "'.str_replace('"', '\"', $GLOBALS[$prefix.'invalid_email_address_message']).'"; }
-document.getElementById("'.$prefix.'email_address_error").style.display = "inline";
-document.getElementById("'.$prefix.'email_address_error").innerHTML = message; }
+if (element) {
+var message = element.getAttribute("data-invalid-email-address-message");
+if (!message) { message = "'.str_replace(array('\\', '"', "\r", "\n", 'script'), array('\\\\', '\"', "\\r", "\\n", 'scr"+"ipt'), $GLOBALS[$prefix.'invalid_email_address_message']).'"; }
+element.style.display = "inline"; element.innerHTML = message; }
 if (!error) { form.'.$prefix.'email_address.focus(); } error = true; }
-else if (document.getElementById("'.$prefix.'email_address_error")) {
-document.getElementById("'.$prefix.'email_address_error").style.display = "none";
-document.getElementById("'.$prefix.'email_address_error").innerHTML = ""; } }' : '').'
+else if (element) { element.style.display = "none"; element.innerHTML = ""; } }' : '').'
 return !error; }
 </script>';
 
 $tags = array_merge($tags, array('error', 'validation-content'));
-foreach ($tags as $tag) { remove_shortcode($tag); add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
+foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
 if (!stristr($code, '<form')) { $code = '<form id="'.str_replace('_', '-', substr($prefix, 0, -1)).'" method="post" enctype="multipart/form-data" action="'.esc_attr($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_'.substr($prefix, 0, -1).'(this);">'.$code; }
 if (!stristr($code, '</form>')) { $code .= '<div style="display: none;"><input type="hidden" name="referring_url" value="'.htmlspecialchars($_POST['referring_url']).'" /><input type="hidden" name="'.$prefix.'submit" value="yes" /></div></form>'; }
 $code = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', do_shortcode($code)));
-$content .= (isset($GLOBALS[$prefix.'recaptcha_js']) ? $GLOBALS[$prefix.'recaptcha_js'] : '').$code.$form_js;
+$content .= (isset($GLOBALS[$prefix.'recaptcha_js']) ? $GLOBALS[$prefix.'recaptcha_js'] : '').$code;
+add_action('wp_footer', create_function('', 'echo \''.str_replace("'", "\'", $form_js).'\';'));
 
 foreach (array('contact_form_id', 'contact_form_data') as $key) {
 if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } }

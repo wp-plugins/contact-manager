@@ -1,104 +1,92 @@
-table.jCalendar {
-  background: #c0c0c0;
-  border: 1px solid #000000;
-  border-collapse: separate;
-  border-spacing: 2px;
-}
-
-table.jCalendar td {
-  background: #e0e0e0;
-  color: #000000;
-  padding: 3px 5px;
-  text-align: center;
-}
-
-table.jCalendar td.disabled, table.jCalendar td.unselectable, table.jCalendar td.unselectable:hover {
-  background: #c0c0c0;
-  color: #808080;
-}
-
-table.jCalendar td.dp-hover,
-table.jCalendar td.selected,
-table.jCalendar td.today,
-table.jCalendar tr.activeWeekHover td,
-table.jCalendar tr.selectedWeek td {
-  background: #e0c040;
-  color: #000000;
-}
-
-table.jCalendar td.other-month {
-  background: #808080;
-  color: #000000;
-}
-
-table.jCalendar th {
-  background: #404040;
-  color: #ffffff;
-  font-weight: bold;
-  padding: 3px 5px;
-}
-
-#dp-close {
-  display: block;
-  font-size: 12px;
-  padding: 4px 0;
-  text-align: center;
-}
-
-#dp-close:hover { text-decoration: underline; }
-
-#dp-popup {
-  position: absolute;
-  z-index: 1000;
-}
-
 .dp-popup {
-  background: #e0e0e0;
+  background-color: #e0e0e0;
+  border: 1px solid #c0c0c0;
   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
-  font-size: 9px;
-  line-height: 1.25em;
+  font-size: 0.75em;
+  line-height: 1.2em;
   padding: 2px;
-  position: relative;
-  width: 187px;
+  position: absolute;
 }
 
 .dp-popup a {
   color: #000000;
-  padding: 3px 2px 0;
+  padding: 0.25em;
   text-decoration: none;
 }
 
 .dp-popup a.disabled {
-  color: #c0c0c0;
+  color: #808080;
   cursor: default;
 }
 
 .dp-popup div.dp-nav-next {
   position: absolute;
-  right: 4px;
-  top: 2px;
-  width: 100px;
+  right: 0.25em;
+  top: 0.25em;
 }
 
 .dp-popup div.dp-nav-next a { float: right; }
 
-.dp-popup div.dp-nav-next a, .dp-popup div.dp-nav-prev a, .dp-popup td { cursor: pointer; }
+.dp-popup div.dp-nav-next a,
+.dp-popup div.dp-nav-prev a,
+.dp-popup td { cursor: pointer; }
 
-.dp-popup div.dp-nav-next a.disabled, .dp-popup div.dp-nav-prev a.disabled, .dp-popup td.disabled { cursor: default; }
+.dp-popup div.dp-nav-next a.disabled,
+.dp-popup div.dp-nav-prev a.disabled,
+.dp-popup td.disabled { cursor: default; }
 
 .dp-popup div.dp-nav-prev {
-  left: 4px;
   position: absolute;
-  top: 2px;
-  width: 108px;
+  left: 0.25em;
+  top: 0.25em;
 }
 
 .dp-popup div.dp-nav-prev a { float: left; }
 
 .dp-popup h2 {
-  font-size: 12px;
+  cursor: default;
+  font-size: 1.25em;
   font-weight: bold;
-  margin: 2px 0;
+  margin: 0.2em 0;
   padding: 0;
   text-align: center;
+}
+
+.jCalendar { background-color: #c0c0c0; }
+
+.jCalendar td {
+  background-color: #e0e0e0;
+  color: #000000;
+  padding: 0.3em 0.6em;
+  text-align: center;
+}
+
+.jCalendar td.disabled,
+.jCalendar td.unselectable,
+.jCalendar td.unselectable:hover {
+  background-color: #c0c0c0;
+  color: #808080;
+}
+
+.jCalendar td.dp-hover,
+.jCalendar td.selected,
+.jCalendar td.today,
+.jCalendar td:hover,
+.jCalendar td.other-month:hover {
+  background-color: #e0c040;
+  color: #000000;
+}
+
+.jCalendar td.other-month,
+.jCalendar td.other-month.disabled:hover {
+  background-color: #808080;
+  color: #000000;
+}
+
+.jCalendar th {
+  background-color: #404040;
+  color: #ffffff;
+  cursor: default;
+  font-weight: bold;
+  padding: 0.3em 0.6em;
 }

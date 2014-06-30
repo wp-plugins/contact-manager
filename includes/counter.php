@@ -1,11 +1,11 @@
-<?php global $wpdb;
-if ($type == 'contact_form') {
+<?php if ($type == 'contact_form') {
+$atts = array_map('contact_do_shortcode', (array) $atts);
+extract(shortcode_atts(array('data' => '', 'filter' => '', 'id' => '', 'limit' => ''), $atts));
+global $wpdb;
 $GLOBALS['contact_form_data'] = (array) (isset($GLOBALS['contact_form_data']) ? $GLOBALS['contact_form_data'] : array());
 if ((isset($GLOBALS['contact_form_id'])) && ((!isset($GLOBALS['contact_form_data']['id'])) || ($GLOBALS['contact_form_data']['id'] != $GLOBALS['contact_form_id']))) {
 $GLOBALS['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$GLOBALS['contact_form_id'], OBJECT); }
 $contact_form_data = $GLOBALS['contact_form_data'];
-$atts = array_map('contact_do_shortcode', (array) $atts);
-extract(shortcode_atts(array('data' => '', 'filter' => '', 'id' => '', 'limit' => ''), $atts));
 $field = str_replace('-', '_', format_nice_name($data));
 if (strstr($field, 'display')) { $field = 'displays_count'; } else { $field = 'messages_count'; }
 $id = preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY);
@@ -29,9 +29,10 @@ $contact_form_data = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."cont
 $data = $data + (isset($contact_form_data[$field]) ? $contact_form_data[$field] : 0); } } }
 
 else {
-if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+date_default_timezone_set('UTC');
 $atts = array_map('contact_do_shortcode', (array) $atts);
 extract(shortcode_atts(array('data' => '', 'filter' => '', 'limit' => '', 'range' => '', 'status' => ''), $atts));
+global $wpdb;
 
 $datas = explode('+', $data);
 $m = count($datas);
@@ -139,7 +140,7 @@ $tags = array('limit', 'number', 'remaining-number', 'total-limit', 'total-numbe
 foreach ($tags as $tag) {
 $_tag = str_replace('-', '_', format_nice_name($tag));
 if (isset($GLOBALS['contact_'.$_tag])) { $original['contact_'.$_tag] = $GLOBALS['contact_'.$_tag]; }
-add_shortcode($tag, create_function('$atts', '$atts["data"] = "'.$tag.'"; return contact_counter_tag($atts);')); }
+remove_shortcode($tag); add_shortcode($tag, create_function('$atts', '$atts["data"] = "'.$tag.'"; return contact_counter_tag($atts);')); }
 
 $GLOBALS['contact_limit'] = $limit[$i];
 $GLOBALS['contact_number'] = $data - $limit[$k];

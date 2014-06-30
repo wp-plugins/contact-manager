@@ -14,18 +14,18 @@ $_POST[$field] = (int) $_POST[$field];
 if ($_POST[$field] < 0) { $_POST[$field] = 0; } } }
 $keywords = explode(',', $_POST['keywords']);
 $keywords_list = '';
-for ($i = 0; $i < count($keywords); $i++) { $keywords[$i] = strtolower(trim($keywords[$i])); }
+$n = count($keywords); for ($i = 0; $i < $n; $i++) { $keywords[$i] = strtolower(trim($keywords[$i])); }
 sort($keywords);
 foreach ($keywords as $keyword) { if ($keyword != '') { $keywords_list .= $keyword.', '; } }
-$_POST['keywords'] = substr($keywords_list, 0, -2);
+$_POST['keywords'] = (string) substr($keywords_list, 0, -2);
 if (!$is_category) {
 switch (strtolower($_POST['maximum_messages_quantity_per_sender'])) { case '': case 'i': case 'infinite': case 'u': case 'unlimited': $_POST['maximum_messages_quantity_per_sender'] = (isset($_POST['submit']) ? 'unlimited' : ''); } }
 switch (strtolower($_POST['maximum_messages_quantity'])) { case 'i': case 'infinite': case 'u': case 'unlimited': $_POST['maximum_messages_quantity'] = (isset($_POST['submit']) ? 'unlimited' : 'i'); }
-$members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
+$members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
 sort($members_areas, SORT_NUMERIC);
 $members_areas_list = '';
-foreach ($members_areas as $member_area) { if ($member_area != '') { $members_areas_list .= $member_area.', '; } }
-$_POST['sender_members_areas'] = substr($members_areas_list, 0, -2);
+foreach ($members_areas as $member_area) { $members_areas_list .= $member_area.', '; }
+$_POST['sender_members_areas'] = (string) substr($members_areas_list, 0, -2);
 $_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
 if ($_POST['date'] == '') {
 $_POST['date'] = $current_date;
@@ -39,16 +39,17 @@ $_POST['date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); }
 $custom_fields = (array) $back_office_options[$admin_page.'_page_custom_fields'];
 $item_custom_fields = array();
 foreach ($custom_fields as $key => $value) {
-if ((isset($_POST['custom_field_'.$key])) && ($_POST['custom_field_'.$key] != '')) { $item_custom_fields[$key] = $_POST['custom_field_'.$key]; } }
+$_POST['custom_field_'.$key] = (isset($_POST['custom_field_'.$key]) ? str_replace('\\', '', $_POST['custom_field_'.$key]) : '');
+if ($_POST['custom_field_'.$key] != '') { $item_custom_fields[$key] = $_POST['custom_field_'.$key]; } }
 if ($item_custom_fields != array()) { $_POST['custom_fields'] = serialize($item_custom_fields); }
 if (!$is_category) {
-if ($_POST['messages_count'] > $_POST['displays_count']) { $_POST['messages_count'] = $_POST['displays_count']; } }
+if ($_POST['displays_count'] < $_POST['messages_count']) { $_POST['displays_count'] = $_POST['messages_count']; } }
 
 if (!isset($_GET['id'])) {
 if ($_POST['name'] == '') { $error .= ' '.__('Please fill out the required fields.', 'contact-manager'); }
 elseif ($is_category) {
 $result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."'", OBJECT);
-if ($result) { $error .= ' '.__('This name is not available.', 'contact-manager'); } }
+if ($result) { $_POST['name_error'] = __('This name is not available.', 'contact-manager'); $error .= ' '.$_POST['name_error']; } }
 if (($error == '') && (isset($_POST['submit']))) {
 if ($is_category) { $result = false; }
 else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND date = '".$_POST['date']."'", OBJECT); }
@@ -83,7 +84,7 @@ if ($_POST['name'] != '') {
 if ((!$is_category) && (isset($_POST['submit']))) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); }
 else {
 $result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND id != ".$_GET['id'], OBJECT);
-if ($result) { $error .= ' '.__('This name is not available.', 'contact-manager'); }
+if ($result) { $_POST['name_error'] = __('This name is not available.', 'contact-manager'); $error .= ' '.$_POST['name_error']; }
 elseif (isset($_POST['submit'])) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); } } }
 if (isset($_POST['submit'])) {
 $sql = contact_sql_array($tables[$table_slug], $_POST);
@@ -92,23 +93,59 @@ foreach ($tables[$table_slug] as $key => $value) { switch ($key) {
 case 'id': case 'name': break;
 default: $list .= $key." = ".$sql[$key].","; } }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET ".substr($list, 0, -1)." WHERE id = ".$_GET['id']); } }
+
+if (!isset($_POST['submit'])) {
+$fields = array(); $default_options = array();
+foreach ($tables[$table_slug] as $key => $value) { $fields[] = $key; }
+foreach ($custom_fields as $key => $value) { $fields[] = 'custom_field_'.$key; }
+foreach ($fields as $field) {
+if (!in_array($field, array('id', 'category_id', 'date', 'date_utc', 'custom_fields', 'name'))) {
+$default_options[$field] = contact_form_category_data(array(0 => $field, 'formatting' => 'no', 'id' => $_POST['category_id']));
+if (($default_options[$field] === 'unlimited') && ($field == 'maximum_messages_quantity')) { $default_options[$field] = 'i'; } } }
+foreach ($default_options as $key => $value) { $_POST[$key.'_default_value'] = $value; }
+
+$members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', ($_POST['sender_members_areas'] === '' ? $default_options['sender_members_areas'] : $_POST['sender_members_areas']), 0, PREG_SPLIT_NO_EMPTY)));
+if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
+else { $GLOBALS['member_area_id'] = 0; $GLOBALS['member_area_data'] = array(); }
+foreach (array('category_id', 'status') as $field) {
+if (($default_options['sender_client_'.$field] == '') && (function_exists('commerce_data'))) { $default_options['sender_client_'.$field] = commerce_data('clients_initial_'.$field); }
+if (($default_options['sender_affiliate_'.$field] == '') && (function_exists('affiliation_data'))) { $default_options['sender_affiliate_'.$field] = affiliation_data('affiliates_initial_'.$field); }
+if (($default_options['sender_member_'.$field] == '') && (function_exists('member_area_data'))) { $default_options['sender_member_'.$field] = member_area_data('members_initial_'.$field); } }
+foreach (array('confirmation', 'notification') as $action) {
+if (($default_options['commerce_registration_'.$action.'_email_sent'] == '') && (function_exists('commerce_data'))) { $default_options['commerce_registration_'.$action.'_email_sent'] = commerce_data('registration_'.$action.'_email_sent'); }
+if (($default_options['affiliation_registration_'.$action.'_email_sent'] == '') && (function_exists('affiliation_data'))) { $default_options['affiliation_registration_'.$action.'_email_sent'] = affiliation_data('registration_'.$action.'_email_sent'); }
+if (($default_options['membership_registration_'.$action.'_email_sent'] == '') && (function_exists('member_area_data'))) { $default_options['membership_registration_'.$action.'_email_sent'] = member_area_data('registration_'.$action.'_email_sent'); } }
+
+foreach ($default_options_select_fields as $field) { $_POST[$field.'_default_option_content'] = contact_manager_pages_selector_default_option_content($field, $default_options[$field]); }
+
+foreach ($ids_fields as $field) {
+$applied_value = ($_POST[$field] === '' ? (isset($default_options[$field]) ? $default_options[$field] : '') : $_POST[$field]);
+$_POST[$field.'_description'] = contact_manager_pages_field_description($field, $applied_value);
+$_POST[$field.'_links'] = contact_manager_pages_field_links($back_office_options, $field, $applied_value); }
+
+foreach ($modules[$admin_page] as $key => $value) {
+$_POST[str_replace('-', '_', $key).'_module_description'] = contact_manager_pages_module_description($back_office_options, $key);
+if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) {
+$_POST[str_replace('-', '_', $module_key).'_module_description'] = contact_manager_pages_module_description($back_office_options, $module_key); } } } }
 break;
 
 
 case 'message':
 foreach ($tables['messages'] as $key => $value) { if (!isset($_POST[$key])) { $_POST[$key] = ''; } }
 $_POST['form_id'] = (int) $_POST['form_id'];
-if ($_POST['form_id'] < 1) { $_POST['form_id'] = 1; }
+if ($_POST['form_id'] < 1) {
+$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms ORDER BY messages_count DESC LIMIT 1", OBJECT);
+if ($result) { $_POST['form_id'] = $result->id; } else { $_POST['form_id'] = 1; } }
 $GLOBALS['contact_form_id'] = $_POST['form_id'];
 $GLOBALS['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$_POST['form_id'], OBJECT);
 if ($_POST['receiver'] == '') { $_POST['receiver'] = contact_form_data('message_notification_email_receiver'); }
 if (isset($_POST['submit'])) { foreach (array('subject', 'content') as $field) { $_POST[$field] = str_replace(array('[', ']'), array('&#91;', '&#93;'), $_POST[$field]); } }
 $keywords = explode(',', $_POST['keywords']);
 $keywords_list = '';
-for ($i = 0; $i < count($keywords); $i++) { $keywords[$i] = strtolower(trim($keywords[$i])); }
+$n = count($keywords); for ($i = 0; $i < $n; $i++) { $keywords[$i] = strtolower(trim($keywords[$i])); }
 sort($keywords);
 foreach ($keywords as $keyword) { if ($keyword != '') { if ($keyword != '') { $keywords_list .= $keyword.', '; } } }
-$_POST['keywords'] = substr($keywords_list, 0, -2);
+$_POST['keywords'] = (string) substr($keywords_list, 0, -2);
 if ($_POST['date'] == '') {
 $_POST['date'] = $current_date;
 $_POST['date_utc'] = $current_date_utc; }
@@ -122,7 +159,8 @@ $_POST['email_address'] = format_email_address($_POST['email_address']);
 $custom_fields = (array) $back_office_options['message_page_custom_fields'];
 $item_custom_fields = array();
 foreach ($custom_fields as $key => $value) {
-if ((isset($_POST['custom_field_'.$key])) && ($_POST['custom_field_'.$key] != '')) { $item_custom_fields[$key] = $_POST['custom_field_'.$key]; } }
+$_POST['custom_field_'.$key] = (isset($_POST['custom_field_'.$key]) ? str_replace('\\', '', $_POST['custom_field_'.$key]) : '');
+if ($_POST['custom_field_'.$key] != '') { $item_custom_fields[$key] = $_POST['custom_field_'.$key]; } }
 if ($item_custom_fields != array()) { $_POST['custom_fields'] = serialize($item_custom_fields); }
 if ($_POST['referrer'] != '') {
 if (is_numeric($_POST['referrer'])) {
@@ -167,7 +205,7 @@ $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['commission_payment_date'] = date('Y-m-d H:i:s', $time);
 $_POST['commission_payment_date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); } }
 elseif (isset($_POST['submit'])) { $_POST['commission_payment_date'] = ''; } }
-if (($_POST['referrer2'] == '') && ($_POST['referrer'] != '') && (get_option('affiliation_manager'))) {
+if (($_POST['referrer2'] == '') && ($_POST['referrer2_emptied'] != 'yes') && ($_POST['referrer'] != '') && (get_option('affiliation_manager'))) {
 $result = $wpdb->get_row("SELECT referrer FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
 if ($result) { $_POST['referrer2'] = $result->referrer; } }
 else {
@@ -214,10 +252,10 @@ $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['commission2_payment_date'] = date('Y-m-d H:i:s', $time);
 $_POST['commission2_payment_date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); } }
 elseif (isset($_POST['submit'])) { $_POST['commission2_payment_date'] = ''; } }
-foreach ($tables['messages'] as $key => $value) { if ((isset($value['type'])) && ($value['type'] == 'dec(12,2)')) { $_POST[$key] = number_format($_POST[$key], 2, '.', ''); } }
+foreach ($tables['messages'] as $key => $value) { if ((isset($value['type'])) && ($value['type'] == 'dec(12,2)')) { $_POST[$key] = number_format((float) $_POST[$key], 2, '.', ''); } }
 
 if (!isset($_GET['id'])) {
-if ($_POST['referring_url'] == '') { $_POST['referring_url'] = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''); }
+if (($_POST['referring_url'] == '') && ($_POST['referring_url_emptied'] != 'yes')) { $_POST['referring_url'] = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''); }
 if (isset($_POST['update_fields'])) {
 foreach ($_POST as $key => $value) { $GLOBALS['message_data'][$key] = $value; }
 foreach (array(
@@ -234,8 +272,13 @@ foreach (array(
 if (($_POST['referrer'] != '') && (function_exists('affiliate_data'))) {
 $GLOBALS['referrer_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
 $GLOBALS['affiliate_data'] = $GLOBALS['referrer_data']; }
-foreach ($add_message_fields as $field) { $_POST[$field] = contact_form_data($field); }
-$members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
+foreach ($add_message_fields as $field) { if ((isset($_POST['submit'])) || (!isset($_POST[$field]))) { $_POST[$field] = contact_form_data($field); } }
+$members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
+sort($members_areas, SORT_NUMERIC);
+$members_areas_list = '';
+foreach ($members_areas as $member_area) { $members_areas_list .= $member_area.', '; }
+$_POST['sender_members_areas'] = (string) substr($members_areas_list, 0, -2);
+$_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
 if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
 else { $GLOBALS['member_area_id'] = 0; $GLOBALS['member_area_data'] = array(); }
 foreach (array('category_id', 'status') as $field) {
@@ -277,11 +320,11 @@ if (!isset($_POST['message_custom_instructions'])) { $fields = array_merge($fiel
 'message_custom_instructions_executed',
 'message_custom_instructions')); }
 foreach ($fields as $field) { $_POST[$field] = contact_form_data($field); }
-$members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
+$members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
 sort($members_areas, SORT_NUMERIC);
 $members_areas_list = '';
-foreach ($members_areas as $member_area) { if ($member_area != '') { $members_areas_list .= $member_area.', '; } }
-$_POST['sender_members_areas'] = substr($members_areas_list, 0, -2);
+foreach ($members_areas as $member_area) { $members_areas_list .= $member_area.', '; }
+$_POST['sender_members_areas'] = (string) substr($members_areas_list, 0, -2);
 $_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
 if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
 else { $GLOBALS['member_area_id'] = 0; $GLOBALS['member_area_data'] = array(); }
@@ -318,6 +361,10 @@ if ($displays_count < $messages_count) { $displays_count = $messages_count; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 	displays_count = ".$displays_count.",
 	messages_count = ".$messages_count." WHERE id = ".$_POST['form_id']); } } } }
+
+if (!isset($_POST['submit'])) { foreach ($ids_fields as $field) {
+$_POST[$field.'_description'] = contact_manager_pages_field_description($field, $_POST[$field]);
+$_POST[$field.'_links'] = contact_manager_pages_field_links($back_office_options, $field, $_POST[$field]); } }
 break;
 
 
@@ -358,23 +405,38 @@ $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages O
 $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages ORDER BY id DESC LIMIT 1", OBJECT);
 if (!$result) { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = 1"); }
 else { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = ".($result->id + 1)); } } }
-$members_areas = array_unique(preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY));
+$members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
 sort($members_areas, SORT_NUMERIC);
 $members_areas_list = '';
-foreach ($members_areas as $member_area) { if ($member_area != '') { $members_areas_list .= $member_area.', '; } }
-$_POST['sender_members_areas'] = substr($members_areas_list, 0, -2);
+foreach ($members_areas as $member_area) { $members_areas_list .= $member_area.', '; }
+$_POST['sender_members_areas'] = (string) substr($members_areas_list, 0, -2);
 $_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
 foreach ($initial_options[''] as $key => $value) { if ($_POST[$key] == '') { $_POST[$key] = $value; } $options[$key] = $_POST[$key]; }
 foreach (array(
 'automatic_display_maximum_forms_quantity',
 'maximum_messages_quantity') as $field) { if ((!isset($_POST['submit'])) && ($_POST[$field] === 'unlimited')) { $_POST[$field] = ''; } }
 if (isset($_POST['submit'])) { update_option('contact_manager', $options); }
-foreach (array(
-'code',
-'message_confirmation_email_body',
-'message_custom_instructions',
-'message_notification_email_body',
-'message_removal_custom_instructions') as $field) {
+foreach ($other_options as $field) {
 if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = $initial_options[$field]; }
 if (isset($_POST['submit'])) { update_option(substr('contact_manager_'.$field, 0, 64), $_POST[$field]); } }
+
+if (!isset($_POST['submit'])) {
+$members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $options['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
+if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
+else { $GLOBALS['member_area_id'] = 0; $GLOBALS['member_area_data'] = array(); }
+$fields = array(); $default_options = array();
+foreach (array('category_id', 'status') as $field) {
+$fields[] = 'sender_client_'.$field; $default_options['sender_client_'.$field] = (function_exists('commerce_data') ? commerce_data('clients_initial_'.$field) : '');
+$fields[] = 'sender_affiliate_'.$field; $default_options['sender_affiliate_'.$field] = (function_exists('affiliation_data') ? affiliation_data('affiliates_initial_'.$field) : '');
+$fields[] = 'sender_member_'.$field; $default_options['sender_member_'.$field] = (function_exists('member_area_data') ? member_area_data('members_initial_'.$field) : ''); }
+foreach (array('confirmation', 'notification') as $action) {
+$fields[] = 'commerce_registration_'.$action.'_email_sent'; $default_options['commerce_registration_'.$action.'_email_sent'] = (function_exists('commerce_data') ? commerce_data('registration_'.$action.'_email_sent') : '');
+$fields[] = 'affiliation_registration_'.$action.'_email_sent'; $default_options['affiliation_registration_'.$action.'_email_sent'] = (function_exists('affiliation_data') ? affiliation_data('registration_'.$action.'_email_sent') : '');
+$fields[] = 'membership_registration_'.$action.'_email_sent'; $default_options['membership_registration_'.$action.'_email_sent'] = (function_exists('member_area_data') ? member_area_data('registration_'.$action.'_email_sent') : ''); }
+foreach ($fields as $field) { $_POST[$field.'_default_option_content'] = contact_manager_pages_selector_default_option_content($field, $default_options[$field]); }
+
+foreach ($ids_fields as $field) {
+$applied_value = ($options[$field] === '' ? (isset($default_options[$field]) ? $default_options[$field] : '') : $options[$field]);
+$_POST[$field.'_description'] = contact_manager_pages_field_description($field, $applied_value);
+$_POST[$field.'_links'] = contact_manager_pages_field_links($back_office_options, $field, $applied_value); } }
 break; }

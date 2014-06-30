@@ -1,4 +1,4 @@
-<?php if (function_exists('date_default_timezone_set')) { date_default_timezone_set('UTC'); }
+<?php date_default_timezone_set('UTC');
 switch ($action) {
 case 'decrypt':
 if (strstr($url, '?url=')) {
@@ -16,4 +16,4 @@ case 'encrypt':
 $url = time().'|'.$url;
 if (function_exists('mcrypt_encrypt')) { $url = mcrypt_encrypt(MCRYPT_BLOWFISH, md5(contact_data('encrypted_urls_key')), $url, MCRYPT_MODE_ECB); }
 $url = base64_encode($url);
-$url = CONTACT_MANAGER_URL.'?url='.$url; }
+$url = CONTACT_MANAGER_URL.'index.php?url='.$url; }

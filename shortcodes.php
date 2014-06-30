@@ -1,9 +1,9 @@
 <?php function contact_content($atts, $content) {
-global $wpdb;
 $atts = array_map('contact_do_shortcode', (array) $atts);
 extract(shortcode_atts(array('filter' => '', 'id' => ''), $atts));
+global $wpdb;
 $content = explode('[other]', do_shortcode($content));
-$forms = array_unique(preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY));
+$forms = array_unique(array_map('intval', preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY)));
 if (is_admin()) { if ((isset($GLOBALS['contact_form_id'])) && (in_array($GLOBALS['contact_form_id'], $forms))) { $n = 0; } else { $n = 1; } }
 else {
 $search_criteria = '';

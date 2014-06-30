@@ -35,7 +35,7 @@ if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] != '')) {
 if ((isset($atts['pattern'])) && ($atts['pattern'] != '')
  && (!in_array($_POST[$prefix.$name], preg_grep('#'.str_replace('#', '\#', $atts['pattern']).'#', array($_POST[$prefix.$name]))))) { $GLOBALS[$prefix.$name.'_error'] = 'invalid_field'; } }
 elseif (in_array($atts['required'], array('required', 'yes'))) { $GLOBALS[$prefix.$name.'_error'] = 'unfilled_field'; } }
-if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $GLOBALS['form_focus'] = 'document.getElementById("'.$prefix.$name.'").focus();'; }
+if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $GLOBALS['form_focus'] = $prefix.$name; }
 foreach ($atts as $key => $value) {
 switch ($key) {
 case 'required': if (in_array($value, array('required', 'yes'))) {

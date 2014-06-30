@@ -9,7 +9,7 @@ $markup = '';
 foreach ($atts as $key => $value) {
 if ((!in_array($key, array('answer', 'question', 'theme', 'type'))) && (is_string($key)) && ($value != '')) { $c = (strstr($value, '"') ? "'" : '"'); $markup .= ' '.$key.'='.$c.$value.$c; } }
 if ($atts['type'] == 'recaptcha') {
-$GLOBALS[$prefix.'recaptcha_js'] = '<script type="text/javascript">var RecaptchaOptions = { lang: \''.strtolower(substr(WPLANG, 0, 2)).'\', theme: \''.$atts['theme'].'\' };</script>'."\n";
+$GLOBALS[$prefix.'recaptcha_js'] = '<script type="text/javascript">var RecaptchaOptions = { lang: \''.strtolower(substr(get_locale(), 0, 2)).'\', theme: \''.$atts['theme'].'\' };</script>'."\n";
 if (!function_exists('_recaptcha_qsencode')) { include_once CONTACT_MANAGER_PATH.'libraries/recaptchalib.php'; }
 foreach (array('public', 'private') as $string) {
 if (!defined('RECAPTCHA_'.strtoupper($string).'_KEY')) {

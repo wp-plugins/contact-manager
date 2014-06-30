@@ -23,7 +23,7 @@ $result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."membership_manager_memb
 if ($result) { $GLOBALS['member_data'] = (array) $result; $GLOBALS['member_id'] = $result->id; } } }
 $GLOBALS['user_id'] = (int) (isset($GLOBALS['user_id']) ? $GLOBALS['user_id'] : 0);
 if (($GLOBALS['user_id'] == 0) && ($message['email_address'] != '')) {
-$result = $wpdb->get_row("SELECT * FROM ".$wpdb->base_prefix."users WHERE user_email = '".$message['email_address']."'", OBJECT);
+$result = $wpdb->get_row("SELECT * FROM ".$wpdb->users." WHERE user_email = '".$message['email_address']."'", OBJECT);
 if ($result) { $GLOBALS['user_data'] = (array) $result; $GLOBALS['user_id'] = $result->ID; } }
 $original_custom_fields = $message['custom_fields'];
 if (is_serialized($message['custom_fields'])) {
@@ -166,7 +166,7 @@ foreach (array('maximum', 'minimum') as $string) { $$string = membership_data($s
 if ($length < $minimum) { $member[$field] .= substr(md5(mt_rand()), 0, $minimum - $length); }
 elseif ($length > $maximum) { $member[$field] = substr($member[$field], 0, $maximum); } } } }
 $member['members_areas'] = $message['sender_members_areas'];
-$members_areas = array_unique(preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY));
+$members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $member['members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
 if (count($members_areas) == 1) { $GLOBALS['member_area_id'] = (int) $members_areas[0]; }
 else { $GLOBALS['member_area_id'] = 0; $GLOBALS['member_area_data'] = array(); }
 $member['members_areas_modifications'] = $message['sender_members_areas_modifications'];
@@ -197,7 +197,7 @@ else { $user = $message; }
 $user['role'] = $message['sender_user_role'];
 if ((!isset($user['login'])) || ($user['login'] == '')) { $user['login'] = $user['email_address']; }
 $login = $user['login']; $result = true; $i = 1; while ($result) {
-$result = $wpdb->get_results("SELECT user_login FROM ".$wpdb->base_prefix."users WHERE user_login = '".$user['login']."'", OBJECT);
+$result = $wpdb->get_results("SELECT user_login FROM ".$wpdb->users." WHERE user_login = '".$user['login']."'", OBJECT);
 if ($result) { $user['login'] = $login.$i; $i = $i + 1; } }
 if ((!isset($user['password'])) || ($user['password'] == '')) { $user['password'] = substr(md5(mt_rand()), 0, 8); }
 if (isset($user['ID'])) { unset($user['ID']); }
