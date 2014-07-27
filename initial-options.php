@@ -110,7 +110,7 @@ $initial_options['code'] =
 
 <p><label>[input message-confirmation-email-sent value=yes] '.__('Receive a copy of this message', 'contact-manager').'</label></p>
 
-<div>[input submit style="background-color: #e0c040; border: 1px solid #a08000; border-radius: 4px; box-shadow: 1px 1px 1px #808080; cursor: pointer;" formnovalidate=formnovalidate value="'.__('Send', 'contact-manager').'"]</div>';
+<div style="margin: 1.5em 0;">[input submit style="background-color: #e0c040; border: 1px solid #a08000; border-radius: 4px; box-shadow: 1px 1px 1px #808080; cursor: pointer;" formnovalidate=formnovalidate value="'.__('Send', 'contact-manager').'"]</div>';
 
 
 $initial_options['cron'] = array(
@@ -306,7 +306,6 @@ $initial_options['back_office'] = array(
 	'automatic-display',
 	'autoresponders',
 	'autoresponders-integration',
-	'captcha',
 	'custom-instructions',
 	'membership',
 	'registration-as-a-client',
