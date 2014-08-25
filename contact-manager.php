@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor.com/contact-manager
 Description: Allows you to create and manage your contact forms and messages.
-Version: 5.9.4
+Version: 5.9.7
 Author: Kleor
 Author URI: http://www.kleor.com
 Text Domain: contact-manager

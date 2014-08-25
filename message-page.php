@@ -22,9 +22,13 @@ elseif ($result->id < $_GET['id']) {
 $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = ".($result->id + 1)); }
 if ($message_data->form_id > 0) {
 $contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$message_data->form_id, OBJECT);
+$GLOBALS['contact_form_data'] = (array) $contact_form_data;
 $messages_count = $contact_form_data->messages_count - 1;
 if ($messages_count < 0) { $messages_count = 0; }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = ".$messages_count." WHERE id = ".$contact_form_data->id); }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = ".$messages_count." WHERE id = ".$contact_form_data->id);
+foreach (array('', $GLOBALS['contact_form_id']) as $string) {
+$GLOBALS['contact_form'.$string.'_data'] = (array) (isset($GLOBALS['contact_form'.$string.'_data']) ? $GLOBALS['contact_form'.$string.'_data'] : array());
+$GLOBALS['contact_form'.$string.'_data']['messages_count'] = $messages_count; } }
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 if (contact_data('message_removal_custom_instructions_executed') == 'yes') {
 eval(format_instructions(contact_data('message_removal_custom_instructions'))); } } } } ?>

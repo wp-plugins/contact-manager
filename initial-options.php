@@ -27,6 +27,7 @@ $initial_options[''] = array(
 'encrypted_urls_key' => md5(mt_rand()),
 'encrypted_urls_validity_duration' => 48,
 'failed_upload_message' => __('The file upload failed.', 'contact-manager'),
+'form_submission_custom_instructions_executed' => 'no',
 'getresponse_api_key' => '',
 'invalid_captcha_message' => __('The code you entered for the CAPTCHA is incorrect.', 'contact-manager'),
 'invalid_email_address_message' => __('This email address appears to be invalid.', 'contact-manager'),
@@ -117,6 +118,9 @@ $initial_options['cron'] = array(
 'first_installation' => array('version' => '', 'timestamp' => 0),
 'previous_admin_notices_cron_timestamp' => 0,
 'previous_installation' => array('version' => '', 'number' => 0, 'timestamp' => 0));
+
+
+$initial_options['form_submission_custom_instructions'] = '';
 
 
 $initial_options['message_confirmation_email_body'] =

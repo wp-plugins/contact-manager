@@ -350,9 +350,11 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET ".
 if ($_POST['form_id'] != $message_data->form_id) {
 if ($message_data->form_id > 0) {
 $contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$message_data->form_id, OBJECT);
+$GLOBALS['contact_form'.$message_data->form_id.'_data'] = (array) $contact_form_data;
 $messages_count = $contact_form_data->messages_count - 1;
 if ($messages_count < 0) { $messages_count = 0; }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = ".$messages_count." WHERE id = ".$message_data->form_id); }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET messages_count = ".$messages_count." WHERE id = ".$message_data->form_id);
+$GLOBALS['contact_form'.$message_data->form_id.'_data']['messages_count'] = $messages_count; }
 
 if ($_POST['form_id'] > 0) {
 $displays_count = $GLOBALS['contact_form_data']['displays_count'];
@@ -360,7 +362,10 @@ $messages_count = $GLOBALS['contact_form_data']['messages_count'] + 1;
 if ($displays_count < $messages_count) { $displays_count = $messages_count; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 	displays_count = ".$displays_count.",
-	messages_count = ".$messages_count." WHERE id = ".$_POST['form_id']); } } } }
+	messages_count = ".$messages_count." WHERE id = ".$_POST['form_id']);
+foreach (array('', $GLOBALS['contact_form_id']) as $string) {
+$GLOBALS['contact_form'.$string.'_data'] = (array) (isset($GLOBALS['contact_form'.$string.'_data']) ? $GLOBALS['contact_form'.$string.'_data'] : array());
+foreach (array('displays_count', 'messages_count') as $field) { $GLOBALS['contact_form'.$string.'_data'][$field] = $$field; } } } } } }
 
 if (!isset($_POST['submit'])) { foreach ($ids_fields as $field) {
 $_POST[$field.'_description'] = contact_manager_pages_field_description($field, $_POST[$field]);
@@ -376,6 +381,7 @@ foreach (array(
 'automatic_display_enabled',
 'automatic_display_only_on_single_post_pages',
 'commission2_enabled',
+'form_submission_custom_instructions_executed',
 'message_confirmation_email_sent',
 'message_custom_instructions_executed',
 'message_notification_email_sent',

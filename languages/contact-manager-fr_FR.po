@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.9.4\n"
+"Project-Id-Version: Contact Manager 5.9.7\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2014-07-27 07:18+0100\n"
+"PO-Revision-Date: 2014-08-25 13:53+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -1664,4 +1664,10 @@ msgstr "Modifications automatiques des espaces membres"
 
 msgid "Leave this field blank to automatically generate a new key."
 msgstr "Laissez ce champ vide pour générer automatiquement une nouvelle clé."
+
+msgid "Form submission"
+msgstr "Soumission de formulaire"
+
+msgid "You can add custom instructions that will be executed just after the submission of a form."
+msgstr "Vous pouvez ajouter des instructions personnalisées qui seront exécutées immédiatement après la soumission d'un formulaire."
 

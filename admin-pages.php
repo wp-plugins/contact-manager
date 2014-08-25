@@ -145,7 +145,8 @@ $modules['options'] = array(
 'wordpress' => array('name' => __('WordPress', 'contact-manager')),
 'custom-instructions' => array('name' => __('Custom instructions', 'contact-manager'), 'modules' => array(
 	'message-custom-instructions' => array('name' => __('New message', 'contact-manager')),
-	'message-removal-custom-instructions' => array('name' => __('Message removal', 'contact-manager')))),
+	'message-removal-custom-instructions' => array('name' => __('Message removal', 'contact-manager')),
+	'form-submission-custom-instructions' => array('name' => __('Form submission', 'contact-manager')))),
 'affiliation' => array('name' => __('Affiliation', 'contact-manager'), 'modules' => array(
 	'level-1-commission' => array('name' => __('Level 1 commission', 'contact-manager')),
 	'level-2-commission' => array('name' => __('Level 2 commission', 'contact-manager')))),

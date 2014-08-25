@@ -43,18 +43,18 @@ $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messag
 $GLOBALS['message_id'] = $result->id;
 $message['id'] = $result->id;
 if (!is_admin()) {
-$maximum_messages_quantity = contact_data('maximum_messages_quantity');
-if (is_numeric($maximum_messages_quantity)) {
-$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages", OBJECT);
-$messages_quantity = (int) (isset($row->total) ? $row->total : 0);
-$n = $messages_quantity - $maximum_messages_quantity;
-if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n"); } }
 $maximum_messages_quantity = contact_form_data('maximum_messages_quantity');
 if (is_numeric($maximum_messages_quantity)) {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id'], OBJECT);
 $messages_quantity = (int) (isset($row->total) ? $row->total : 0);
 $n = $messages_quantity - $maximum_messages_quantity;
-if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id']." ORDER BY date ASC LIMIT $n"); } } } }
+if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE form_id = ".$message['form_id']." ORDER BY date ASC LIMIT $n"); } }
+$maximum_messages_quantity = contact_data('maximum_messages_quantity');
+if (is_numeric($maximum_messages_quantity)) {
+$row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages", OBJECT);
+$messages_quantity = (int) (isset($row->total) ? $row->total : 0);
+$n = $messages_quantity - $maximum_messages_quantity;
+if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n"); } } } }
 $message['custom_fields'] = $original_custom_fields;
 $GLOBALS['message_data'] = $message;
 if (($message['referrer'] != '') && (function_exists('affiliate_data'))) {
@@ -71,7 +71,10 @@ $messages_count = contact_form_data('messages_count') + 1;
 if ($displays_count < $messages_count) { $displays_count = $messages_count; }
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 	displays_count = ".$displays_count.",
-	messages_count = ".$messages_count." WHERE id = ".$message['form_id']); }
+	messages_count = ".$messages_count." WHERE id = ".$message['form_id']);
+foreach (array('', $GLOBALS['contact_form_id']) as $string) {
+$GLOBALS['contact_form'.$string.'_data'] = (array) (isset($GLOBALS['contact_form'.$string.'_data']) ? $GLOBALS['contact_form'.$string.'_data'] : array());
+foreach (array('displays_count', 'messages_count') as $field) { $GLOBALS['contact_form'.$string.'_data'][$field] = $$field; } } }
 
 if ((function_exists('add_affiliate')) && ($message['sender_subscribed_to_affiliate_program'] == 'yes')) {
 if ($GLOBALS['affiliate_id'] > 0) {

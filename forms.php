@@ -33,7 +33,7 @@ if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_GET['r
 if (isset($_POST[$prefix.'submit'])) {
 if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_string'))) { $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME); }
 foreach ($_POST as $key => $value) {
-if (is_string($value)) {
+if (($key != $prefix.'password') && (is_string($value))) {
 $value = str_replace(array('[', ']'), array('&#91;', '&#93;'), quotes_entities($value));
 $_POST[$key] = str_replace('\\&', '&', trim((isset($link) ? mysqli_real_escape_string($link, $value) : mysql_real_escape_string($value)))); } }
 if (isset($_POST[$prefix.'country_code'])) {
@@ -67,7 +67,10 @@ foreach (array('checkbox_fields', 'confirmed_fields', 'fields', 'radio_fields', 
 if ((isset($_POST[$prefix.'submit'])) && (!isset($GLOBALS[$prefix.'processed']))) { include CONTACT_MANAGER_PATH.'includes/forms/processing.php'; }
 elseif ($GLOBALS[$canonical_prefix.'number'] == 1) {
 $displays_count = contact_form_data('displays_count') + 1;
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displays_count = ".$displays_count." WHERE id = ".$id); }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET displays_count = ".$displays_count." WHERE id = ".$id);
+foreach (array('', $GLOBALS['contact_form_id']) as $string) {
+$GLOBALS['contact_form'.$string.'_data'] = (array) (isset($GLOBALS['contact_form'.$string.'_data']) ? $GLOBALS['contact_form'.$string.'_data'] : array());
+$GLOBALS['contact_form'.$string.'_data']['displays_count'] = $displays_count; } }
 
 $required_fields_js = '';
 foreach ($GLOBALS[$prefix.'required_fields'] as $field) {

@@ -30,6 +30,9 @@ if ((isset($_POST[$key])) && ($key != 'referring_url') && (!in_array($key, $GLOB
 $custom_fields = array(); foreach ($_POST as $key => $value) {
 if ((substr($key, 0, 13) == 'custom_field_') && (in_array($key, $GLOBALS[$prefix.'fields'])) && ($value != '')) { $custom_fields[substr($key, 13)] = str_replace('\\', '', quotes_entities_decode($value)); } }
 $_POST['custom_fields'] = ($custom_fields == array() ? '' : serialize($custom_fields));
+if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
+if (contact_data('form_submission_custom_instructions_executed') == 'yes') {
+eval(format_instructions(contact_data('form_submission_custom_instructions'))); } }
 foreach (array('email_address', 'content', 'subject') as $field) {
 if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
 $_POST['receiver'] = contact_form_data('message_notification_email_receiver');
@@ -42,7 +45,7 @@ $_POST['date'] = date('Y-m-d H:i:s', $current_time + 3600*UTC_OFFSET);
 $_POST['date_utc'] = date('Y-m-d H:i:s', $current_time);
 if (function_exists('award_message_commission')) { award_message_commission();
 if (($_POST['commission_amount'] > 0) && (affiliation_data('overpayment_deducted') == 'yes')) {
-$affiliate = $wpdb->get_row("SELECT overpayment_amount FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
+$affiliate = $wpdb->get_row("SELECT id, overpayment_amount FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
 if ($affiliate->overpayment_amount > 0) {
 if ($affiliate->overpayment_amount > $_POST['commission_amount']) {
 $overpayment_amount = $affiliate->overpayment_amount - $_POST['commission_amount'];
@@ -51,10 +54,13 @@ $_POST['commission_status'] = ''; }
 else {
 $overpayment_amount = 0;
 $_POST['commission_amount'] = $_POST['commission_amount'] - $affiliate->overpayment_amount; }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET overpayment_amount = ".$overpayment_amount." WHERE login = '".$_POST['referrer']."'"); } } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET overpayment_amount = ".$overpayment_amount." WHERE login = '".$_POST['referrer']."'");
+foreach (array('affiliate', 'referrer', 'affiliate'.$affiliate->id) as $string) {
+$GLOBALS[$string.'_data'] = (array) (isset($GLOBALS[$string.'_data']) ? $GLOBALS[$string.'_data'] : array());
+if ((isset($GLOBALS[$string.'_data']['id'])) && ($GLOBALS[$string.'_data']['id'] == $affiliate->id)) { $GLOBALS[$string.'_data']['overpayment_amount'] = $overpayment_amount; } } } } }
 if (function_exists('award_message_commission2')) { award_message_commission2();
 if (($_POST['commission2_amount'] > 0) && (affiliation_data('overpayment_deducted') == 'yes')) {
-$affiliate = $wpdb->get_row("SELECT overpayment_amount FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer2']."'", OBJECT);
+$affiliate = $wpdb->get_row("SELECT id, overpayment_amount FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer2']."'", OBJECT);
 if ($affiliate->overpayment_amount > 0) {
 if ($affiliate->overpayment_amount > $_POST['commission2_amount']) {
 $overpayment_amount = $affiliate->overpayment_amount - $_POST['commission2_amount'];
@@ -63,7 +69,9 @@ $_POST['commission2_status'] = ''; }
 else {
 $overpayment_amount = 0;
 $_POST['commission2_amount'] = $_POST['commission2_amount'] - $affiliate->overpayment_amount; }
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET overpayment_amount = ".$overpayment_amount." WHERE login = '".$_POST['referrer2']."'"); } } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."affiliation_manager_affiliates SET overpayment_amount = ".$overpayment_amount." WHERE login = '".$_POST['referrer2']."'");
+$GLOBALS['affiliate'.$affiliate->id.'_data'] = (array) (isset($GLOBALS['affiliate'.$affiliate->id.'_data']) ? $GLOBALS['affiliate'.$affiliate->id.'_data'] : array());
+$GLOBALS['affiliate'.$affiliate->id.'_data']['overpayment_amount'] = $overpayment_amount; } } }
 foreach (array('message_id', 'message_data') as $key) {
 if (isset($GLOBALS[$key])) { $original[$key] = $GLOBALS[$key]; unset($GLOBALS[$key]); } }
 $GLOBALS['message_data'] = $_POST;

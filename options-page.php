@@ -33,6 +33,7 @@ else {
 foreach (array('admin-pages.php', 'initial-options.php') as $file) { include CONTACT_MANAGER_PATH.$file; }
 $other_options = array(
 'code',
+'form_submission_custom_instructions',
 'message_confirmation_email_body',
 'message_custom_instructions',
 'message_notification_email_body',
@@ -542,6 +543,18 @@ echo '<option value="'.$role.'"'.($options['sender_user_role'] == $role ? ' sele
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="message_removal_custom_instructions"><?php _e('PHP code', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="float: left; margin-right: 1em; width: 75%;" name="message_removal_custom_instructions" id="message_removal_custom_instructions" rows="10" cols="75"><?php echo htmlspecialchars(get_option('contact_manager_message_removal_custom_instructions')); ?></textarea>
 <span class="description"><?php _e('You can add custom instructions that will be executed just after the removal of a message.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
+</tbody></table>
+</div>
+<div id="form-submission-custom-instructions-module"<?php if (in_array('form-submission-custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
+<h4 id="form-submission-custom-instructions"><strong><?php echo $modules['options']['custom-instructions']['modules']['form-submission-custom-instructions']['name']; ?></strong></h4>
+<table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
+<td><label><input type="checkbox" name="form_submission_custom_instructions_executed" id="form_submission_custom_instructions_executed" value="yes"<?php if ($options['form_submission_custom_instructions_executed'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Execute custom instructions', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="form_submission_custom_instructions"><?php _e('PHP code', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="float: left; margin-right: 1em; width: 75%;" name="form_submission_custom_instructions" id="form_submission_custom_instructions" rows="10" cols="75"><?php echo htmlspecialchars(get_option('contact_manager_form_submission_custom_instructions')); ?></textarea>
+<span class="description"><?php _e('You can add custom instructions that will be executed just after the submission of a form.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#custom-instructions"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
