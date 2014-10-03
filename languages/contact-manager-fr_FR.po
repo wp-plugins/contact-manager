@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 5.9.7\n"
+"Project-Id-Version: Contact Manager 6.0\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2014-08-25 13:53+0100\n"
+"PO-Revision-Date: 2014-10-03 11:44+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -1670,4 +1670,7 @@ msgstr "Soumission de formulaire"
 
 msgid "You can add custom instructions that will be executed just after the submission of a form."
 msgstr "Vous pouvez ajouter des instructions personnalisées qui seront exécutées immédiatement après la soumission d'un formulaire."
+
+msgid "Display the messages saved in the database"
+msgstr "Afficher les messages enregistrés dans la base de données"
 

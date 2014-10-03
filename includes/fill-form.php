@@ -116,7 +116,7 @@ if (($default_options['commerce_registration_'.$action.'_email_sent'] == '') && 
 if (($default_options['affiliation_registration_'.$action.'_email_sent'] == '') && (function_exists('affiliation_data'))) { $default_options['affiliation_registration_'.$action.'_email_sent'] = affiliation_data('registration_'.$action.'_email_sent'); }
 if (($default_options['membership_registration_'.$action.'_email_sent'] == '') && (function_exists('member_area_data'))) { $default_options['membership_registration_'.$action.'_email_sent'] = member_area_data('registration_'.$action.'_email_sent'); } }
 
-foreach ($default_options_select_fields as $field) { $_POST[$field.'_default_option_content'] = contact_manager_pages_selector_default_option_content($field, $default_options[$field]); }
+foreach ($default_options_select_fields as $field) { if (isset($default_options[$field])) { $_POST[$field.'_default_option_content'] = contact_manager_pages_selector_default_option_content($field, $default_options[$field]); } }
 
 foreach ($ids_fields as $field) {
 $applied_value = ($_POST[$field] === '' ? (isset($default_options[$field]) ? $default_options[$field] : '') : $_POST[$field]);

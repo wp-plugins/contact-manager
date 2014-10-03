@@ -31,11 +31,11 @@ $tags = array('captcha', 'country-selector', 'input', 'label', 'option', 'select
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
 if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_GET['referring_url']) ? $_GET['referring_url'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')); }
 if (isset($_POST[$prefix.'submit'])) {
-if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_string'))) { $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME); }
+if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_string'))) { $link = @mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME); }
 foreach ($_POST as $key => $value) {
 if (($key != $prefix.'password') && (is_string($value))) {
 $value = str_replace(array('[', ']'), array('&#91;', '&#93;'), quotes_entities($value));
-$_POST[$key] = str_replace('\\&', '&', trim((isset($link) ? mysqli_real_escape_string($link, $value) : mysql_real_escape_string($value)))); } }
+$_POST[$key] = str_replace('\\&', '&', trim((((isset($link)) && ($link)) ? mysqli_real_escape_string($link, $value) : mysql_real_escape_string($value)))); } }
 if (isset($_POST[$prefix.'country_code'])) {
 include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
 $key = $_POST[$prefix.'country_code'];

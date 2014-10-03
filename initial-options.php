@@ -116,6 +116,7 @@ $initial_options['code'] =
 
 $initial_options['cron'] = array(
 'first_installation' => array('version' => '', 'timestamp' => 0),
+'previous_activation' => array('version' => '', 'timestamp' => 0),
 'previous_admin_notices_cron_timestamp' => 0,
 'previous_installation' => array('version' => '', 'number' => 0, 'timestamp' => 0));
 
@@ -240,7 +241,9 @@ $menu_displayed_items = array();
 foreach ($menu_items as $key => $value) {
 if (!in_array($value, array(
 'form_category',
-'forms_categories'))) {
+'forms_categories',
+'message',
+'statistics'))) {
 $menu_displayed_items[] = $key; } }
 
 $initial_options['back_office'] = array(

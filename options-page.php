@@ -181,7 +181,8 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><label><input type="checkbox" name="messages_registration_enabled" id="messages_registration_enabled" value="yes"<?php if ($options['messages_registration_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Save messages in the database', 'contact-manager'); ?></label></td></tr>
+<td><label><input type="checkbox" name="messages_registration_enabled" id="messages_registration_enabled" value="yes"<?php if ($options['messages_registration_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Save messages in the database', 'contact-manager'); ?></label><br />
+<a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-messages"><?php _e('Display the messages saved in the database', 'contact-manager'); ?></a></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity"><?php _e('Maximum messages quantity', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo ($options['maximum_messages_quantity'] === 'unlimited' ? '' : $options['maximum_messages_quantity']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('You can save only the latest messages to ease your database.', 'contact-manager'); ?><br />

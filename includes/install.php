@@ -8,7 +8,7 @@ foreach ($tables as $table_slug => $table) {
 $list = ''; foreach ($table as $key => $value) { $list .= "
 ".$key." ".$value['type']." ".($key == "id" ? "auto_increment" : "NOT NULL").","; }
 $sql = "CREATE TABLE ".$wpdb->prefix."contact_manager_".$table_slug." (".$list."
-PRIMARY KEY (id)) $charset_collate;"; dbDelta($sql); }
+PRIMARY KEY  (id)) $charset_collate;"; dbDelta($sql); }
 
 load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
 include CONTACT_MANAGER_PATH.'initial-options.php';
@@ -27,6 +27,8 @@ else { add_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 date_default_timezone_set('UTC');
 $current_time = time();
 $cron = (array) get_option('contact_manager_cron');
+if (($context == 'activation') || (!isset($cron['previous_activation'])) || ($cron['previous_activation']['version'] == '')) {
+$cron['previous_activation'] = array('version' => CONTACT_MANAGER_VERSION, 'timestamp' => $current_time); }
 if ((!isset($cron['first_installation'])) || ($cron['first_installation']['version'] == '')) {
 $cron['first_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'timestamp' => $current_time); }
 if ((!isset($cron['previous_installation'])) || ($cron['previous_installation']['version'] != CONTACT_MANAGER_VERSION)) {
@@ -34,6 +36,3 @@ $cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'nu
 else { $cron['previous_installation']['number'] = $cron['previous_installation']['number'] + 1; }
 $cron['previous_installation']['timestamp'] = $current_time;
 update_option('contact_manager_cron', $cron);
-if (in_array($cron['previous_installation']['number'], array(1, 12))) {
-wp_remote_get('http://www.kleor.com/wp-content/plugins/installations-manager/index.php?url='.urlencode(HOME_URL)
-.'&name='.urlencode(get_option('blogname')).'&lang='.$lang.'&plugin=Contact%20Manager&version='.CONTACT_MANAGER_VERSION); }

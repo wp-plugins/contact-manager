@@ -2,11 +2,14 @@
 
 foreach ($_POST as $key => $value) { if (is_string($value)) { $_POST[$key] = quotes_entities($_POST[$key]); } }
 $GLOBALS['selection_criteria'] = ''; $selection_criteria = '';
-foreach (all_tables_keys($tables) as $field) {
-if (isset($_GET[$field])) {
-$GLOBALS['selection_criteria'] .= '&amp;'.$field.'='.str_replace('+', '%20', urlencode($_GET[$field]));
-$selection_criteria .= ($field == "keywords" ? " AND (".$field." LIKE '%".$_GET[$field]."%')" :
- (is_numeric($_GET[$field]) ? " AND (".$field." = ".$_GET[$field].")" : " AND (".$field." = '".$_GET[$field]."')")); } }
+$all_tables_keys = all_tables_keys($tables);
+foreach ($_GET as $key => $value) {
+if ((in_array($key, $all_tables_keys)) || ((substr($key, 0, 13) == 'custom_field_') && ($key == str_replace('-', '_', format_nice_name($key))))) {
+$GLOBALS['selection_criteria'] .= '&amp;'.$key.'='.str_replace('+', '%20', urlencode($value));
+if (substr($key, 0, 13) != 'custom_field_') {
+$selection_criteria .= ($key == "keywords" ? " AND (".$key." LIKE '%".$value."%')" :
+ (is_numeric($value) ? " AND (".$key." = ".$value.")" : " AND (".$key." = '".$value."')")); }
+else { $selection_criteria .= " AND (custom_fields LIKE '%s:".(strlen($key) - 13).":\"".substr($key, 13)."\";s:".strlen($value).":\"".$value."\";%')"; } } }
 $selection_criteria = str_replace("= '!0'", "!= 0", $selection_criteria);
 
 
@@ -104,6 +107,8 @@ return $data; }
 
 function table_td($table, $column, $item) {
 $data = htmlspecialchars(table_data($table, $column, $item));
+if (substr($column, 0, 13) == 'custom_field_') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.contact_excerpt($data, 50).'</a>'); }
+else {
 switch ($column) {
 case 'affiliation_enabled': case 'affiliation_registration_confirmation_email_sent': case 'affiliation_registration_notification_email_sent':
 case 'commerce_registration_confirmation_email_sent': case 'commerce_registration_notification_email_sent': case 'commission2_enabled':
@@ -185,7 +190,7 @@ $members_areas_list .= $member_area.', '; }
 $table_td = (string) substr($members_areas_list, 0, -2); } break;
 case 'sender_user_role': $roles = contact_manager_users_roles(); $table_td = contact_excerpt($roles[$data], 50); break;
 case 'website_name': $website_url = htmlspecialchars(table_data($table, 'website_url', $item)); $table_td = ($website_url == '' ? contact_excerpt($data, 50) : '<a href="'.$website_url.'">'.contact_excerpt(($data == '' ? str_replace(ROOT_URL, '', $website_url) : $data), 50).'</a>'); break;
-default: $table_td = contact_excerpt($data); }
+default: $table_td = contact_excerpt($data); } }
 return $table_td; }
 
 

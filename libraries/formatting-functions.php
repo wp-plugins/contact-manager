@@ -1,7 +1,7 @@
 <?php function fix_url() {
 $url = $_SERVER['REQUEST_URI']; $error = false;
 if (strstr($url, '&amp;')) { $url = str_replace('&amp;', '&', $url); $error = true; }
-if (($error) && (!headers_sent())) { header('Location: '.$url); exit; } }
+if (($error) && (!headers_sent())) { header('Location: '.$url); exit(); } }
 
 
 function format_email_address($string) {

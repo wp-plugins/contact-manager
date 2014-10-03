@@ -33,6 +33,17 @@ add_action('admin_head', 'contact_manager_pages_css');
 
 function contact_manager_pages_js() { ?>
 <script type="text/javascript">
+inputs = document.getElementsByTagName("input");
+for (i = 0, n = inputs.length; i < n; i++) {
+if (inputs[i].type == "text") {
+attributes = ["onblur","onfocus","onkeydown","onkeyup"]; values = [];
+values["onblur"] = "if (this.value.length > "+(2*inputs[i].size + 2)+") { this.size = "+(2*inputs[i].size + 1)+"; } else if (this.value.length > "+inputs[i].size+") { this.size = this.value.length - 1; } else { this.size = "+inputs[i].size+"; }";
+values["onfocus"] = values["onblur"]; values["onkeydown"] = values["onblur"]; values["onkeyup"] = values["onblur"];
+if (inputs[i].value.length > 2*inputs[i].size + 2) { inputs[i].size = 2*inputs[i].size + 1; } else if (inputs[i].value.length > inputs[i].size) { inputs[i].size = inputs[i].value.length - 1; }
+for (j = 0; j < 4; j++) {
+if (inputs[i].hasAttribute(attributes[j])) { string = inputs[i].getAttribute(attributes[j])+" "; } else { string = ""; }
+inputs[i].setAttribute(attributes[j], string+values[attributes[j]]); } } }
+
 textareas = document.getElementsByTagName("textarea");
 for (i = 0, n = textareas.length; i < n; i++) {
 if (textareas[i].rows == 1) {
@@ -196,9 +207,9 @@ $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width
 <span class="description">'.__('The key can not be changed.', 'contact-manager').'</span></td></tr>'; }
 $n = $i + 5; while ($i < $n) {
 $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
-<td style="width: 40%;"><textarea style="vertical-align: 100%; padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50" onchange="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/g, \'-\'));"></textarea></td>
+<td style="width: 40%;"><textarea style="vertical-align: 100%; padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50" onkeydown="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onkeyup="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onchange="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/g, \'-\'));"></textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 40%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50"></textarea>
+<td style="width: 40%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50" onkeydown="this.value = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onkeyup="this.value = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onchange="this.value = format_nice_name(this.value.replace(/[_]/g, \'-\'));"></textarea>
 <input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="add_'.$page_slug.'_page_custom_field" value="'.__('Add', 'contact-manager').'" formaction="'.esc_attr($_SERVER['REQUEST_URI']).'#'.$module.'-custom-fields-module" /><br />
 <span class="description">'.__('Lowercase letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; } ?>
 </tbody></table>
@@ -515,8 +526,9 @@ return $content; }
 
 if ((is_admin()) && ($_GET['page'] != 'contact-manager-back-office')
  && ((!isset($_GET['action'])) || (!in_array($_GET['action'], array('delete', 'uninstall', 'reset'))))) {
-wp_enqueue_script('jquery');
+add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("jquery");'));
 if ($_GET['page'] != 'contact-manager') {
-wp_enqueue_style('contact-manager-date-picker', CONTACT_MANAGER_URL.'libraries/date-picker.css', array(), CONTACT_MANAGER_VERSION, 'all');
-wp_enqueue_script('contact-manager-date-picker', CONTACT_MANAGER_URL.'libraries/date-picker.js', array('jquery'), CONTACT_MANAGER_VERSION, true);
+add_action('admin_enqueue_scripts', create_function('',
+'wp_enqueue_style("contact-manager-date-picker", CONTACT_MANAGER_URL."libraries/date-picker.css", array(), CONTACT_MANAGER_VERSION, "all");
+wp_enqueue_script("contact-manager-date-picker", CONTACT_MANAGER_URL."libraries/date-picker.js", array("jquery"), CONTACT_MANAGER_VERSION, true);'));
 add_action('admin_footer', 'contact_manager_date_picker_js'); } }

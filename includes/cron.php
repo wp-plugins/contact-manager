@@ -10,7 +10,7 @@ $cron['previous_installation']['timestamp'] = $current_time; }
 if ($cron['previous_installation'] != $installation) {
 update_option('contact_manager_cron', $cron);
 wp_remote_get(CONTACT_MANAGER_URL.'index.php?action=install&key='.md5(AUTH_KEY), array('timeout' => 10)); }
-if (($current_time - $cron['previous_admin_notices_cron_timestamp']) > 43200) {
+elseif (($current_time - $cron['previous_admin_notices_cron_timestamp']) > 43200) {
 $cron['previous_admin_notices_cron_timestamp'] = $current_time;
 update_option('contact_manager_cron', $cron);
 $lang = strtolower(substr(get_locale(), 0, 2)); if ($lang == '') { $lang = 'en'; }
@@ -20,8 +20,8 @@ if (is_serialized($body)) {
 $admin_notices = (array) get_option('contact_manager_admin_notices');
 $new_admin_notices = (array) unserialize($body);
 foreach ($new_admin_notices as $key => $notice) {
-if ((!isset($admin_notices[$key])) || (!isset($admin_notices[$key]['version']))
- || ((isset($notice['version'])) && (version_compare($admin_notices[$key]['version'], $notice['version'], '<')))) {
+if ((isset($notice['message'])) && ((!isset($admin_notices[$key])) || (!isset($admin_notices[$key]['version']))
+ || ((isset($notice['version'])) && (version_compare($admin_notices[$key]['version'], $notice['version'], '<'))))) {
 foreach (array('start', 'end') as $string) { if (isset($notice[$string.'_timestamp'])) {
 if ((is_string($notice[$string.'_timestamp'])) && (substr($notice[$string.'_timestamp'], 0, 1) == '+')) {
 $notice[$string.'_timestamp'] = $cron['first_installation']['timestamp'] + intval($notice[$string.'_timestamp']); }

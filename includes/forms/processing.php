@@ -84,5 +84,5 @@ if (!$result) { $GLOBALS['user_id'] = get_current_user_id(); add_message($_POST)
 
 if (($redirection != '') && (substr($redirection, 0, 1) != '#')) {
 $redirection = format_url($redirection);
-if (!headers_sent()) { header('Location: '.$redirection); exit; }
+if (!headers_sent()) { header('Location: '.$redirection); exit(); }
 else { $content .= '<script type="text/javascript">window.location = \''.$redirection.'\';</script>'; } } }

@@ -263,7 +263,8 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 <option value="yes"<?php if ($_POST['messages_registration_enabled'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($_POST['messages_registration_enabled'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php _e('You can save only the latest messages to ease your database.', 'contact-manager'); ?></span></td></tr>
+<span class="description"><?php _e('You can save only the latest messages to ease your database.', 'contact-manager'); ?></span><br />
+<a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-messages"><?php _e('Display the messages saved in the database', 'contact-manager'); ?></a></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity"><?php _e('Maximum messages quantity', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo ($_POST['maximum_messages_quantity'] === 'unlimited' ? 'i' : $_POST['maximum_messages_quantity']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('Enter <em><strong>i</strong></em> for an unlimited quantity.', 'contact-manager'); ?><br />
@@ -676,7 +677,7 @@ if (($default_options['commerce_registration_'.$action.'_email_sent'] == '') && 
 if (($default_options['affiliation_registration_'.$action.'_email_sent'] == '') && (function_exists('affiliation_data'))) { $default_options['affiliation_registration_'.$action.'_email_sent'] = affiliation_data('registration_'.$action.'_email_sent'); }
 if (($default_options['membership_registration_'.$action.'_email_sent'] == '') && (function_exists('member_area_data'))) { $default_options['membership_registration_'.$action.'_email_sent'] = member_area_data('registration_'.$action.'_email_sent'); } }
 
-foreach ($default_options_select_fields as $field) { echo 'element = document.getElementById("'.$field.'_default_option"); if (element) { element.innerHTML = "'.str_replace(array('\\', '"', "\r", "\n", 'script'), array('\\\\', '\"', "\\r", "\\n", 'scr"+"ipt'), contact_manager_pages_selector_default_option_content($field, $default_options[$field])).'"; }'."\n"; } ?>
+foreach ($default_options_select_fields as $field) { if (isset($default_options[$field])) { echo 'element = document.getElementById("'.$field.'_default_option"); if (element) { element.innerHTML = "'.str_replace(array('\\', '"', "\r", "\n", 'script'), array('\\\\', '\"', "\\r", "\\n", 'scr"+"ipt'), contact_manager_pages_selector_default_option_content($field, $default_options[$field])).'"; }'."\n"; } } ?>
 
 <?php $modules_list = array(); foreach ($modules[$admin_page] as $key => $value) {
 $modules_list[] = $key; if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) { $modules_list[] = $module_key; } } }
