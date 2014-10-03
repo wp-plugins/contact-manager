@@ -1,0 +1,1711 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Contact Manager 6.0\n"
+"Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
+"POT-Creation-Date: 2012-04-02 00:00+0000\n"
+"PO-Revision-Date: 2012-04-02 00:00+0000\n"
+"Last-Translator: Kleor <contact@kleor.com>\n"
+"Language-Team: Kleor <contact@kleor.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+
+msgid "Allows you to create and manage your contact forms and messages."
+msgstr ""
+
+msgid "Display the summary"
+msgstr ""
+
+msgid "Modules displayed"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "all fields"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Tuesday"
+msgstr ""
+
+msgid "Wednesday"
+msgstr ""
+
+msgid "Thursday"
+msgstr ""
+
+msgid "Friday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Sun"
+msgstr ""
+
+msgid "Mon"
+msgstr ""
+
+msgid "Tue"
+msgstr ""
+
+msgid "Wed"
+msgstr ""
+
+msgid "Thu"
+msgstr ""
+
+msgid "Fri"
+msgstr ""
+
+msgid "Sat"
+msgstr ""
+
+msgid "January"
+msgstr ""
+
+msgid "February"
+msgstr ""
+
+msgid "March"
+msgstr ""
+
+msgid "April"
+msgstr ""
+
+msgid "May"
+msgstr ""
+
+msgid "June"
+msgstr ""
+
+msgid "July"
+msgstr ""
+
+msgid "August"
+msgstr ""
+
+msgid "September"
+msgstr ""
+
+msgid "October"
+msgstr ""
+
+msgid "November"
+msgstr ""
+
+msgid "December"
+msgstr ""
+
+msgid "Jan"
+msgstr ""
+
+msgid "Feb"
+msgstr ""
+
+msgid "Mar"
+msgstr ""
+
+msgid "Apr"
+msgstr ""
+
+msgid "Jun"
+msgstr ""
+
+msgid "Jul"
+msgstr ""
+
+msgid "Aug"
+msgstr ""
+
+msgid "Sep"
+msgstr ""
+
+msgid "Oct"
+msgstr ""
+
+msgid "Nov"
+msgstr ""
+
+msgid "Dec"
+msgstr ""
+
+msgid "Previous year"
+msgstr ""
+
+msgid "Previous month"
+msgstr ""
+
+msgid "Next year"
+msgstr ""
+
+msgid "Next month"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Choose a date"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Commerce"
+msgstr ""
+
+msgid "Affiliation"
+msgstr ""
+
+msgid "Membership"
+msgstr ""
+
+msgid "Optin"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Form"
+msgstr ""
+
+msgid "Delete Form"
+msgstr ""
+
+msgid "Edit Form"
+msgstr ""
+
+msgid "Add Form"
+msgstr ""
+
+msgid "Forms"
+msgstr ""
+
+msgid "Form Category"
+msgstr ""
+
+msgid "Delete Form Category"
+msgstr ""
+
+msgid "Edit Form Category"
+msgstr ""
+
+msgid "Add Form Category"
+msgstr ""
+
+msgid "Forms Categories"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Delete Message"
+msgstr ""
+
+msgid "Edit Message"
+msgstr ""
+
+msgid "Add Message"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Back Office"
+msgstr ""
+
+msgid "Capabilities"
+msgstr ""
+
+msgid "Icon"
+msgstr ""
+
+msgid "Top"
+msgstr ""
+
+msgid "Menu"
+msgstr ""
+
+msgid "<em>Options</em> page"
+msgstr ""
+
+msgid "<em>Edit Form</em> page"
+msgstr ""
+
+msgid "<em>Add Form</em> page"
+msgstr ""
+
+msgid "<em>Edit Form Category</em> page"
+msgstr ""
+
+msgid "<em>Add Form Category</em> page"
+msgstr ""
+
+msgid "<em>Edit Message</em> page"
+msgstr ""
+
+msgid "<em>Add Message</em> page"
+msgstr ""
+
+msgid "<em>Statistics</em> page"
+msgstr ""
+
+msgid "<em>Back Office</em> page"
+msgstr ""
+
+msgid "General informations"
+msgstr ""
+
+msgid "Gift"
+msgstr ""
+
+msgid "Counters"
+msgstr ""
+
+msgid "Error messages"
+msgstr ""
+
+msgid "Messages registration"
+msgstr ""
+
+msgid "Message confirmation email"
+msgstr ""
+
+msgid "Message notification email"
+msgstr ""
+
+msgid "Autoresponders"
+msgstr ""
+
+msgid "Registration as a client"
+msgstr ""
+
+msgid "Registration to affiliate program"
+msgstr ""
+
+msgid "WordPress"
+msgstr ""
+
+msgid "Custom instructions"
+msgstr ""
+
+msgid "Level 1 commission"
+msgstr ""
+
+msgid "Level 2 commission"
+msgstr ""
+
+msgid "Sender"
+msgstr ""
+
+msgid "Automatic display"
+msgstr ""
+
+msgid "CAPTCHA"
+msgstr ""
+
+msgid "URLs encryption"
+msgstr ""
+
+msgid "Autoresponders integration"
+msgstr ""
+
+msgid "New message"
+msgstr ""
+
+msgid "Message removal"
+msgstr ""
+
+msgid "Data"
+msgstr ""
+
+msgid "Quantity"
+msgstr ""
+
+msgid "Forms categories"
+msgstr ""
+
+msgid "Administrator"
+msgstr ""
+
+msgid "Editor"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Contributor"
+msgstr ""
+
+msgid "Subscriber"
+msgstr ""
+
+msgid "Contact"
+msgstr ""
+
+msgid "Uninstall"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "You don't have sufficient permissions."
+msgstr ""
+
+msgid "Settings saved."
+msgstr ""
+
+msgid "Access"
+msgstr ""
+
+msgid "Minimum role to access the interface of Contact Manager"
+msgstr ""
+
+msgid "Management"
+msgstr ""
+
+msgid "Minimum role to change options and add, edit or delete items of Contact Manager"
+msgstr ""
+
+msgid "Use a custom icon"
+msgstr ""
+
+msgid "Icon URL"
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
+msgid "Display the title"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Display the links"
+msgstr ""
+
+msgid "Links"
+msgstr ""
+
+msgid "Reset the links"
+msgstr ""
+
+msgid "Display the menu"
+msgstr ""
+
+msgid "Pages"
+msgstr ""
+
+msgid "Reset the pages"
+msgstr ""
+
+msgid "Page"
+msgstr ""
+
+msgid "Columns displayed"
+msgstr ""
+
+msgid "Rows displayed"
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Category deleted."
+msgstr ""
+
+msgid "Form deleted."
+msgstr ""
+
+msgid "Do you really want to permanently delete this category?"
+msgstr ""
+
+msgid "Do you really want to permanently delete this form?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Please fill out the required fields."
+msgstr ""
+
+msgid "This name is not available."
+msgstr ""
+
+msgid "Category updated."
+msgstr ""
+
+msgid "Form updated."
+msgstr ""
+
+msgid "Category saved."
+msgstr ""
+
+msgid "Form saved."
+msgstr ""
+
+msgid "Only fields marked with * are required."
+msgstr ""
+
+msgid ""
+"You can apply the default option of the category by leaving the "
+"corresponding field blank."
+msgstr ""
+
+msgid "You can apply the default option of the parent category by leaving the corresponding field blank."
+msgstr ""
+
+msgid "Click here to configure the default options of the parent category."
+msgstr ""
+
+msgid "Click here to configure the default options of the category."
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "The ID can not be changed."
+msgstr ""
+
+msgid "Parent category"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "None "
+msgstr ""
+
+msgid "The options of the parent category will apply by default to this category."
+msgstr ""
+
+msgid "The options of this category will apply by default to the form."
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Keywords"
+msgstr ""
+
+msgid "Separate the keywords with commas."
+msgstr ""
+
+msgid "Creation date"
+msgstr ""
+
+msgid "Download URL"
+msgstr ""
+
+msgid "You can enter several URLs."
+msgstr ""
+
+msgid "More informations"
+msgstr ""
+
+msgid "How to encrypt a download URL?"
+msgstr ""
+
+msgid "Instructions to the sender"
+msgstr ""
+
+msgid "You can offer a gift to senders."
+msgstr ""
+
+msgid "Maximum messages quantity per sender"
+msgstr ""
+
+msgid "Leave this field blank for an unlimited quantity."
+msgstr ""
+
+msgid "Displays count"
+msgstr ""
+
+msgid "Messages count"
+msgstr ""
+
+msgid "Display the messages"
+msgstr ""
+
+msgid "Re-count the messages"
+msgstr ""
+
+msgid "Re-count the messages of all forms"
+msgstr ""
+
+msgid "Click here to configure the default options."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "How to display a form?"
+msgstr ""
+
+msgid "How to create a form?"
+msgstr ""
+
+msgid "Leave this field blank to apply the default option."
+msgstr ""
+
+msgid "Unfilled required fields"
+msgstr ""
+
+msgid "Unfilled required field"
+msgstr ""
+
+msgid "Invalid email address"
+msgstr ""
+
+msgid "Invalid CAPTCHA"
+msgstr ""
+
+msgid "Maximum messages quantity reached"
+msgstr ""
+
+msgid "Save messages in the database"
+msgstr ""
+
+msgid "Default option"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "You can save only the latest messages to ease your database."
+msgstr ""
+
+msgid "Maximum messages quantity"
+msgstr ""
+
+msgid "Enter <em><strong>i</strong></em> for an unlimited quantity."
+msgstr ""
+
+msgid "Send a message confirmation email"
+msgstr ""
+
+msgid "Receiver"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Body"
+msgstr ""
+
+msgid ""
+"You can insert shortcodes into <em>Sender</em>, <em>Receiver</em>, "
+"<em>Subject</em> and <em>Body</em> fields to display informations about the "
+"sender, the message and the form."
+msgstr ""
+
+msgid "Send a message notification email"
+msgstr ""
+
+msgid "Subscribe the sender to an autoresponder list"
+msgstr ""
+
+msgid "Autoresponder"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "For most autoresponders, you must enter the list ID."
+msgstr ""
+
+msgid ""
+"To subscribe the senders as clients, you must have installed and activated "
+"<a href=\"http://www.kleor.com/commerce-manager\">Commerce Manager</"
+"a>."
+msgstr ""
+
+msgid "Subscribe the sender as a client"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgid "Send a registration confirmation email"
+msgstr ""
+
+msgid "Send a registration notification email"
+msgstr ""
+
+msgid ""
+"To use affiliation, you must have installed and activated <a href=\"http://"
+"www.kleor.com/affiliation-manager\">Affiliation Manager</a>."
+msgstr ""
+
+msgid "Subscribe the sender to affiliate program"
+msgstr ""
+
+msgid ""
+"To use membership, you must have installed and activated <a href=\"http://"
+"www.kleor.com/membership-manager\">Membership Manager</a>."
+msgstr ""
+
+msgid "Subscribe the sender to a member area"
+msgstr ""
+
+msgid "Members areas"
+msgstr ""
+
+msgid "You can enter several members areas IDs. Separate them with commas."
+msgstr ""
+
+msgid "Subscribe the sender as a user"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Execute custom instructions"
+msgstr ""
+
+msgid "PHP code"
+msgstr ""
+
+msgid ""
+"You can add custom instructions that will be executed just after the sending "
+"of the message."
+msgstr ""
+
+msgid "Use affiliation"
+msgstr ""
+
+msgid ""
+"The level 1 commission is awarded to the affiliate who referred the message."
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
+msgid ""
+"The level 2 commission is awarded to the referrer of the affiliate who "
+"referred the message."
+msgstr ""
+
+msgid "Award a level 2 commission"
+msgstr ""
+
+msgid "Save Category"
+msgstr ""
+
+msgid "Save Form"
+msgstr ""
+
+msgid "The code you entered for the CAPTCHA is incorrect."
+msgstr ""
+
+msgid "This email address appears to be invalid."
+msgstr ""
+
+msgid ""
+"You have already sent [contact-form maximum-messages-quantity-per-sender] "
+"messages through this form."
+msgstr ""
+
+msgid "We Have Received Your Message"
+msgstr ""
+
+msgid "This field is required."
+msgstr ""
+
+msgid ""
+"Your message has been sent successfully. If it requires an answer, we should "
+"respond within 48 hours."
+msgstr ""
+
+msgid "Your first name:"
+msgstr ""
+
+msgid "Your last name:"
+msgstr ""
+
+msgid "Your email address:"
+msgstr ""
+
+msgid "Your website:"
+msgstr ""
+
+msgid "Subject of your message:"
+msgstr ""
+
+msgid "Your message:"
+msgstr ""
+
+msgid "Receive a copy of this message"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Hi"
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Sent through this form:"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Filter by"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search by"
+msgstr ""
+
+msgid "active"
+msgstr ""
+
+msgid "bottom"
+msgstr ""
+
+msgid "inactive"
+msgstr ""
+
+msgid "no"
+msgstr ""
+
+msgid "paid"
+msgstr ""
+
+msgid "top"
+msgstr ""
+
+msgid "unlimited"
+msgstr ""
+
+msgid "unpaid"
+msgstr ""
+
+msgid "yes"
+msgstr ""
+
+msgid "Arithmetic operation"
+msgstr ""
+
+msgid "Reversed string"
+msgstr ""
+
+msgid "Black Glass"
+msgstr ""
+
+msgid "Clean"
+msgstr ""
+
+msgid "Red"
+msgstr ""
+
+msgid "White"
+msgstr ""
+
+msgid "zero"
+msgstr ""
+
+msgid "one"
+msgstr ""
+
+msgid "two"
+msgstr ""
+
+msgid "three"
+msgstr ""
+
+msgid "four"
+msgstr ""
+
+msgid "five"
+msgstr ""
+
+msgid "six"
+msgstr ""
+
+msgid "seven"
+msgstr ""
+
+msgid "eight"
+msgstr ""
+
+msgid "nine"
+msgstr ""
+
+msgid "ten"
+msgstr ""
+
+msgid "eleven"
+msgstr ""
+
+msgid "twelve"
+msgstr ""
+
+msgid "thirteen"
+msgstr ""
+
+msgid "fourteen"
+msgstr ""
+
+msgid "fifteen"
+msgstr ""
+
+msgid "Message deleted."
+msgstr ""
+
+msgid "Do you really want to permanently delete this message?"
+msgstr ""
+
+msgid "Message updated."
+msgstr ""
+
+msgid "Message saved."
+msgstr ""
+
+msgid "Form ID"
+msgstr ""
+
+msgid "Content"
+msgstr ""
+
+msgid "First name"
+msgstr ""
+
+msgid "Last name"
+msgstr ""
+
+msgid "Email address"
+msgstr ""
+
+msgid "Website name"
+msgstr ""
+
+msgid "Website URL"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Postcode"
+msgstr ""
+
+msgid "Town"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Phone number"
+msgstr ""
+
+msgid "IP address"
+msgstr ""
+
+msgid "User agent"
+msgstr ""
+
+msgid "Referring URL"
+msgstr ""
+
+msgid "Referrer"
+msgstr ""
+
+msgid "Affiliate who referred this message (ID, login name or email address)"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Unpaid"
+msgstr ""
+
+msgid "Paid"
+msgstr ""
+
+msgid "Payment date"
+msgstr ""
+
+msgid ""
+"Leave this field blank if the commission is not paid, or for the current "
+"date if the commission is paid."
+msgstr ""
+
+msgid ""
+"Leave this field blank for the referrer of the affiliate who referred this "
+"message."
+msgstr ""
+
+msgid ""
+"Complete the fields below with the informations about the sender, the "
+"message and the form"
+msgstr ""
+
+msgid "Save Message"
+msgstr ""
+
+msgid "Options reset."
+msgstr ""
+
+msgid "Options and tables deleted."
+msgstr ""
+
+msgid "Do you really want to reset the options of Contact Manager?"
+msgstr ""
+
+msgid ""
+"Do you really want to permanently delete the options and tables of Contact "
+"Manager?"
+msgstr ""
+
+msgid "You can reset an option by leaving the corresponding field blank."
+msgstr ""
+
+msgid "Enable automatic display"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "On the top of posts"
+msgstr ""
+
+msgid "On the bottom of posts"
+msgstr ""
+
+msgid "Default type"
+msgstr ""
+
+msgid "Default reCAPTCHA theme"
+msgstr ""
+
+msgid "reCAPTCHA public key"
+msgstr ""
+
+msgid "Leave this field blank to apply the Commerce Manager's option."
+msgstr ""
+
+msgid "reCAPTCHA private key"
+msgstr ""
+
+msgid "You can encrypt the download URLs."
+msgstr ""
+
+msgid "Validity duration"
+msgstr ""
+
+msgid "hours"
+msgstr ""
+
+msgid "Encryption key"
+msgstr ""
+
+msgid ""
+"You must make some adjustments so that the subscription works with some "
+"autoresponders."
+msgstr ""
+
+msgid "Click here to configure the options of Commerce Manager."
+msgstr ""
+
+msgid "Click here to read the instructions for integration."
+msgstr ""
+
+msgid ""
+"You have no adjustment to make so that the subscription works with "
+"CyberMailing."
+msgstr ""
+
+msgid "API key"
+msgstr ""
+
+msgid "Account ID"
+msgstr ""
+
+msgid "Activation code"
+msgstr ""
+
+msgid "Commerce Manager's option"
+msgstr ""
+
+msgid "Click here to configure the options of Affiliation Manager."
+msgstr ""
+
+msgid "Affiliation Manager's option"
+msgstr ""
+
+msgid "Click here to configure the options of Membership Manager."
+msgstr ""
+
+msgid "Member area's option"
+msgstr ""
+
+msgid ""
+"You can add custom instructions that will be executed just after the sending "
+"of a message."
+msgstr ""
+
+msgid ""
+"You can add custom instructions that will be executed just after the removal "
+"of a message."
+msgstr ""
+
+msgid "You can award a commission to the affiliate who referred a message."
+msgstr ""
+
+msgid "postcode"
+msgstr ""
+
+msgid "town"
+msgstr ""
+
+msgid "country"
+msgstr ""
+
+msgid "IP address "
+msgstr ""
+
+msgid "user agent"
+msgstr ""
+
+msgid "referring URL"
+msgstr ""
+
+msgid "form ID"
+msgstr ""
+
+msgid "referrer"
+msgstr ""
+
+msgid "Global statistics"
+msgstr ""
+
+msgid "Table"
+msgstr ""
+
+msgid "per page"
+msgstr ""
+
+msgid "Reset the columns"
+msgstr ""
+
+msgid "Uncheck all columns"
+msgstr ""
+
+msgid "Check all columns"
+msgstr ""
+
+msgid "Display the columns list"
+msgstr ""
+
+msgid "Column"
+msgstr ""
+
+msgid "No forms"
+msgstr ""
+
+msgid "No categories"
+msgstr ""
+
+msgid "No messages"
+msgstr ""
+
+msgid "Subcategories"
+msgstr ""
+
+msgid "Unlimited"
+msgstr ""
+
+msgid "form"
+msgstr ""
+
+msgid "forms"
+msgstr ""
+
+msgid "category"
+msgstr ""
+
+msgid "categories"
+msgstr ""
+
+msgid "message"
+msgstr ""
+
+msgid "messages"
+msgstr ""
+
+msgid "item"
+msgstr ""
+
+msgid "items"
+msgstr ""
+
+msgid "Go to the first page"
+msgstr ""
+
+msgid "Go to the previous page"
+msgstr ""
+
+msgid "Current page"
+msgstr ""
+
+msgid "of"
+msgstr ""
+
+msgid "Go to the next page"
+msgstr ""
+
+msgid "Go to the last page"
+msgstr ""
+
+msgid "Parent category ID"
+msgstr ""
+
+msgid "Category ID"
+msgstr ""
+
+msgid "the name"
+msgstr ""
+
+msgid "the description"
+msgstr ""
+
+msgid "the keywords"
+msgstr ""
+
+msgid "Creation date (UTC)"
+msgstr ""
+
+msgid "Gift download URL"
+msgstr ""
+
+msgid "the code"
+msgstr ""
+
+msgid "Unfilled fields message"
+msgstr ""
+
+msgid "Unfilled field's message"
+msgstr ""
+
+msgid "Invalid email address message"
+msgstr ""
+
+msgid "Invalid CAPTCHA's message"
+msgstr ""
+
+msgid "Message of maximum messages quantity reached"
+msgstr ""
+
+msgid "Messages registration enabled"
+msgstr ""
+
+msgid "Message confirmation email sent"
+msgstr ""
+
+msgid "Sender of the message confirmation email"
+msgstr ""
+
+msgid "Receiver of the message confirmation email"
+msgstr ""
+
+msgid "Subject of the message confirmation email"
+msgstr ""
+
+msgid "Body of the message confirmation email"
+msgstr ""
+
+msgid "Message notification email sent"
+msgstr ""
+
+msgid "Sender of the message notification email"
+msgstr ""
+
+msgid "Receiver of the message notification email"
+msgstr ""
+
+msgid "Subject of the message notification email"
+msgstr ""
+
+msgid "Body of the message notification email"
+msgstr ""
+
+msgid "Senders subscribed to an autoresponder list"
+msgstr ""
+
+msgid "Senders autoresponder"
+msgstr ""
+
+msgid "Senders autoresponder list"
+msgstr ""
+
+msgid "Senders subscribed as clients"
+msgstr ""
+
+msgid "Senders client category ID"
+msgstr ""
+
+msgid "Senders client status"
+msgstr ""
+
+msgid "Registration confirmation email sent"
+msgstr ""
+
+msgid "(Commerce)"
+msgstr ""
+
+msgid "Registration notification email sent"
+msgstr ""
+
+msgid "Senders subscribed to affiliate program"
+msgstr ""
+
+msgid "Senders affiliate category ID"
+msgstr ""
+
+msgid "Senders affiliate status"
+msgstr ""
+
+msgid "(Affiliation)"
+msgstr ""
+
+msgid "Senders subscribed to a member area"
+msgstr ""
+
+msgid "Senders members areas"
+msgstr ""
+
+msgid "Senders member category ID"
+msgstr ""
+
+msgid "Senders member status"
+msgstr ""
+
+msgid "(Membership)"
+msgstr ""
+
+msgid "Senders subscribed as users"
+msgstr ""
+
+msgid "Senders user role"
+msgstr ""
+
+msgid "Custom instructions executed"
+msgstr ""
+
+msgid "PHP code of the custom instructions"
+msgstr ""
+
+msgid "Affiliation enabled"
+msgstr ""
+
+msgid "Commission amount"
+msgstr ""
+
+msgid "Commission enabled"
+msgstr ""
+
+msgid "(level 2)"
+msgstr ""
+
+msgid "the receiver"
+msgstr ""
+
+msgid "the subject"
+msgstr ""
+
+msgid "the content"
+msgstr ""
+
+msgid "Date (UTC)"
+msgstr ""
+
+msgid "the first name"
+msgstr ""
+
+msgid "the last name"
+msgstr ""
+
+msgid "the email address"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "the website name"
+msgstr ""
+
+msgid "the website URL"
+msgstr ""
+
+msgid "the address"
+msgstr ""
+
+msgid "the postcode"
+msgstr ""
+
+msgid "the town"
+msgstr ""
+
+msgid "the country"
+msgstr ""
+
+msgid "the phone number"
+msgstr ""
+
+msgid "the IP address"
+msgstr ""
+
+msgid "the referrer"
+msgstr ""
+
+msgid "Commission status"
+msgstr ""
+
+msgid "Commission's payment date"
+msgstr ""
+
+msgid "Commission's payment date (UTC)"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Question"
+msgstr ""
+
+msgid "Automatic modifications"
+msgstr ""
+
+msgid "You can offer a temporary access, and automatically modify the list of members areas to which the member can access when a certain date is reached."
+msgstr ""
+
+msgid "Custom fields"
+msgstr ""
+
+msgid "the custom fields"
+msgstr ""
+
+msgid "Click here to add a new custom field."
+msgstr ""
+
+msgid "You have no custom field currently."
+msgstr ""
+
+msgid "You can create an unlimited number of custom fields to record additional data."
+msgstr ""
+
+msgid "Key"
+msgstr ""
+
+msgid "Lowercase letters, numbers and hyphens only"
+msgstr ""
+
+msgid "The file upload failed."
+msgstr ""
+
+msgid "This file is too large."
+msgstr ""
+
+msgid "This file type is not allowed."
+msgstr ""
+
+msgid "Failed upload's message"
+msgstr ""
+
+msgid "Too large file's message"
+msgstr ""
+
+msgid "Unauthorized extension's message"
+msgstr ""
+
+msgid "Failed upload"
+msgstr ""
+
+msgid "Too large file"
+msgstr ""
+
+msgid "Unauthorized extension"
+msgstr ""
+
+msgid "On the top and bottom of posts"
+msgstr ""
+
+msgid "top, bottom"
+msgstr ""
+
+msgid "Only on single post pages"
+msgstr ""
+
+msgid "Maximum quantity of forms displayed per page"
+msgstr ""
+
+msgid "You did not complete correctly the %1$s attribute of the %2$s shortcode."
+msgstr ""
+
+msgid "Icon displayed in the admin menu of WordPress"
+msgstr ""
+
+msgid "You can enter several email addresses. Separate them with commas."
+msgstr ""
+
+msgid "File:"
+msgstr ""
+
+msgid "Encrypted URLs must have a limited validity duration."
+msgstr ""
+
+msgid "Enter a difficult-to-guess string of characters."
+msgstr ""
+
+msgid "Uncheck this box allows you to disable the award of commissions."
+msgstr ""
+
+msgid "Select <em>No</em> allows you to disable the award of commissions."
+msgstr ""
+
+msgid "You can configure this email through the <em>Options</em> page of Affiliation Manager."
+msgstr ""
+
+msgid "You can configure this email through the <em>Client Area</em> page of Commerce Manager."
+msgstr ""
+
+msgid "You can configure this email through the interface of Membership Manager."
+msgstr ""
+
+msgid "The options of this category will apply by default to the forms you assign to this category."
+msgstr ""
+
+msgid "How to display a CAPTCHA?"
+msgstr ""
+
+msgid "How to display an error message?"
+msgstr ""
+
+msgid "Display a form field"
+msgstr ""
+
+msgid "Display a text area"
+msgstr ""
+
+msgid "Display a dropdown list"
+msgstr ""
+
+msgid "Display an error message"
+msgstr ""
+
+msgid "Display a submit button"
+msgstr ""
+
+msgid "form category"
+msgstr ""
+
+msgid "forms categories"
+msgstr ""
+
+msgid "Click here to personalize this table."
+msgstr ""
+
+msgid "The key can not be changed."
+msgstr ""
+
+msgid "Display a form"
+msgstr ""
+
+msgid "Display a content restricted to senders"
+msgstr ""
+
+msgid "Hide this box"
+msgstr ""
+
+msgid "No category"
+msgstr ""
+
+msgid "No form"
+msgstr ""
+
+msgid "Upload an image"
+msgstr ""
+
+msgid "Upload a file"
+msgstr ""
+
+msgid "Click here to open this page."
+msgstr ""
+
+msgid "Open in a new tab the targets of the links"
+msgstr ""
+
+msgid "pointing to the documentation"
+msgstr ""
+
+msgid "allowing to configure the default options"
+msgstr ""
+
+msgid "below the fields allowing to enter an ID"
+msgstr ""
+
+msgid "next to the fields allowing to enter a URL"
+msgstr ""
+
+msgid "at the top of the modules of this page"
+msgstr ""
+
+msgid "Affiliates"
+msgstr ""
+
+msgid "Clients"
+msgstr ""
+
+msgid "Members"
+msgstr ""
+
+msgid "Clicks"
+msgstr ""
+
+msgid "Orders"
+msgstr ""
+
+msgid "Recurring payments"
+msgstr ""
+
+msgid "Delete the options and tables of Contact Manager"
+msgstr ""
+
+msgid "Reset the options of Contact Manager"
+msgstr ""
+
+msgid "Delete the options and tables of Contact Manager for all sites in this network"
+msgstr ""
+
+msgid "Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?"
+msgstr ""
+
+msgid "Invalid fields"
+msgstr ""
+
+msgid "Invalid field"
+msgstr ""
+
+msgid "Invalid fields message"
+msgstr ""
+
+msgid "Invalid field's message"
+msgstr ""
+
+msgid "This field is not correctly filled."
+msgstr ""
+
+msgid "One or more fields are not correctly filled."
+msgstr ""
+
+msgid "You can't disable the display of this module."
+msgstr ""
+
+msgid "You can't disable the display of this column."
+msgstr ""
+
+msgid "You can't disable the display of this row."
+msgstr ""
+
+msgid "Useful only if you use Affiliation Manager"
+msgstr ""
+
+msgid "Useful only if you use Membership Manager"
+msgstr ""
+
+msgid "Useful only if you use Commerce Manager"
+msgstr ""
+
+msgid "Allows you to register the sender as a WordPress user"
+msgstr ""
+
+msgid "Allows you to execute additional PHP instructions"
+msgstr ""
+
+msgid "(<a href=\"%1$s\">More informations</a>)"
+msgstr ""
+
+msgid "You can configure this email <a href=\"%1$s\">here</a>."
+msgstr ""
+
+msgid "Leave this field blank to automatically calculate the amount."
+msgstr ""
+
+msgid "Inexistent or deleted form"
+msgstr ""
+
+msgid "Inexistent or deleted member area"
+msgstr ""
+
+msgid "All members areas"
+msgstr ""
+
+msgid "After the upload, you will just need to copy and paste the URL of the file in this field."
+msgstr ""
+
+msgid "After the upload, you will just need to copy and paste the URL of the image in this field."
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Change"
+msgstr ""
+
+msgid "Automatic modifications of the members areas"
+msgstr ""
+
+msgid "Leave this field blank to automatically generate a new key."
+msgstr ""
+
+msgid "Form submission"
+msgstr ""
+
+msgid "You can add custom instructions that will be executed just after the submission of a form."
+msgstr ""
+
+msgid "Display the messages saved in the database"
+msgstr ""
