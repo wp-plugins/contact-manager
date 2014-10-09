@@ -1,5 +1,6 @@
 <?php global $wpdb;
 if (($for != 'network') || (!is_multisite()) || (!current_user_can('manage_network'))) { $for = 'single'; }
+include_once ABSPATH.'wp-admin/includes/plugin.php';
 deactivate_plugins(CONTACT_MANAGER_FOLDER.'/contact-manager.php');
 if ($for == 'network') {
 $blogs_ids = (array) $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
