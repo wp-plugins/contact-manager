@@ -87,6 +87,7 @@ $tables['messages'] = array(
 'postcode' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('Postcode', 'contact-manager'), 'width' => 9, 'searchby' => __('the postcode', 'contact-manager')),
 'town' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('Town', 'contact-manager'), 'width' => 12, 'searchby' => __('the town', 'contact-manager')),
 'country' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('Country', 'contact-manager'), 'width' => 12, 'searchby' => __('the country', 'contact-manager')),
+'country_code' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('Country code', 'contact-manager'), 'width' => 12, 'searchby' => __('the country code', 'contact-manager')),
 'phone_number' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('Phone number', 'contact-manager'), 'width' => 12, 'searchby' => __('the phone number', 'contact-manager')),
 'ip_address' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('IP address', 'contact-manager'), 'width' => 12, 'searchby' => __('the IP address', 'contact-manager')),
 'user_agent' => array('type' => 'text', 'modules' => array('sender'), 'name' => __('User agent', 'contact-manager'), 'width' => 24),

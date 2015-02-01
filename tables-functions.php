@@ -128,6 +128,12 @@ case 'commission_status': case 'commission2_status': if ($data == 'paid') { $tab
 elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unpaid">'.__('Unpaid', 'contact-manager').'</a>'; }
 else { $table_td = contact_excerpt($data, 50); }
 if ($table_td != '') { $table_td .= ' <span class="row-actions edit"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'#'.($column == 'commission_status' ? 'level-1-commission' : 'level-2-commission').'">'.__('Change', 'contact-manager').'</a></span>'; } break;
+case 'country_code':
+if ($data == '') { $table_td = ''; }
+else {
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
+$description = (isset($countries[$data]) ? ' <span class="description">('.$countries[$data].')</span>' : '');
+$table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>'; } break;
 case 'custom_fields':
 $back_office_options = (array) get_option('contact_manager_back_office');
 $custom_fields = (array) $back_office_options[single_page_slug($table).'_page_custom_fields'];
@@ -144,7 +150,7 @@ if ($description != '') { $description = ' <span class="description">('.$descrip
 if ($data > 0) { $table_td .= ' <span class="row-actions">'.($result ? '<span class="edit"><a href="admin.php?page=contact-manager-form&amp;id='.$data.'">'.__('Edit', 'contact-manager').'</a></span> | ' : '')
 .'<span class="view"><a href="admin.php?page=contact-manager-statistics&amp;form_id='.$data.'">'.__('Statistics', 'contact-manager').'</a></span></span>'; } break;
 case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == ROOT_URL ? '/' : contact_excerpt(str_replace(ROOT_URL, '', $data), 80)).'</a>'); break;
-case 'ip_address': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.contact_excerpt($data, 50).'</a>'); break;
+case 'ip_address': case 'receiver': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.contact_excerpt($data, 50).'</a>'); break;
 case 'keywords':
 $keywords = explode(',', $data);
 $keywords_list = '';
@@ -238,12 +244,14 @@ foreach (array(
 'message-commission',
 'order',
 'order-invoice-url',
+'order-refund-invoice-url',
 'prospect',
 'prospect-commission',
 'purchase-url',
 'recurring-commission',
 'recurring-payment',
 'recurring-payment-invoice-url',
+'recurring-payment-refund-invoice-url',
 'referrer',
 'referrer-affiliate',
 'sender',

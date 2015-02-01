@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.0\n"
-"Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
+"Project-Id-Version: Contact Manager 6.0.3\n"
+"Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2014-10-03 11:44+0100\n"
+"PO-Revision-Date: 2015-01-31 13:07+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -642,8 +642,8 @@ msgstr "Liste"
 msgid "For most autoresponders, you must enter the list ID."
 msgstr "Pour la plupart des autorépondeurs, vous devez entrer l'ID de la liste."
 
-msgid "To subscribe the senders as clients, you must have installed and activated <a href=\"http://www.kleor.com/commerce-manager\">Commerce Manager</a>."
-msgstr "Pour inscrire les expéditeurs en tant que clients, vous devez avoir installé et activé <a href=\"http://www.kleor.com/commerce-manager\">Commerce Manager</a>."
+msgid "To subscribe the senders as clients, you must have installed and activated <a href=\"http://www.kleor.com/commerce-manager/\">Commerce Manager</a>."
+msgstr "Pour inscrire les expéditeurs en tant que clients, vous devez avoir installé et activé <a href=\"http://www.kleor.com/commerce-manager/\">Commerce Manager</a>."
 
 msgid "Subscribe the sender as a client"
 msgstr "Inscrire l'expéditeur en tant que client"
@@ -663,14 +663,14 @@ msgstr "Envoyer un e-mail de confirmation d'inscription"
 msgid "Send a registration notification email"
 msgstr "Envoyer un e-mail de notification d'inscription"
 
-msgid "To use affiliation, you must have installed and activated <a href=\"http://www.kleor.com/affiliation-manager\">Affiliation Manager</a>."
-msgstr "Pour utiliser l'affiliation, vous devez avoir installé et activé <a href=\"http://www.kleor.com/affiliation-manager\">Affiliation Manager</a>."
+msgid "To use affiliation, you must have installed and activated <a href=\"http://www.kleor.com/affiliation-manager/\">Affiliation Manager</a>."
+msgstr "Pour utiliser l'affiliation, vous devez avoir installé et activé <a href=\"http://www.kleor.com/affiliation-manager/\">Affiliation Manager</a>."
 
 msgid "Subscribe the sender to affiliate program"
 msgstr "Inscrire l'expéditeur au programme d'affiliation"
 
-msgid "To use membership, you must have installed and activated <a href=\"http://www.kleor.com/membership-manager\">Membership Manager</a>."
-msgstr "Pour utiliser l'espace membre, vous devez avoir installé et activé <a href=\"http://www.kleor.com/membership-manager\">Membership Manager</a>."
+msgid "To use membership, you must have installed and activated <a href=\"http://www.kleor.com/membership-manager/\">Membership Manager</a>."
+msgstr "Pour utiliser l'espace membre, vous devez avoir installé et activé <a href=\"http://www.kleor.com/membership-manager/\">Membership Manager</a>."
 
 msgid "Subscribe the sender to a member area"
 msgstr "Inscrire l'expéditeur dans un espace membre"
@@ -1673,4 +1673,16 @@ msgstr "Vous pouvez ajouter des instructions personnalisées qui seront exécut�
 
 msgid "Display the messages saved in the database"
 msgstr "Afficher les messages enregistrés dans la base de données"
+
+msgid "This action is irreversible."
+msgstr "Cette action est irréversible."
+
+msgid "Country code"
+msgstr "Code pays"
+
+msgid "the country code"
+msgstr "le code pays"
+
+msgid "country code"
+msgstr "code pays"
 

@@ -17,6 +17,7 @@ $filterby_options = array(
 'postcode' => __('postcode', 'contact-manager'),
 'town' => __('town', 'contact-manager'),
 'country' => __('country', 'contact-manager'),
+'country_code' => __('country code', 'contact-manager'),
 'ip_address' => __('IP address ', 'contact-manager'),
 'user_agent' => __('user agent', 'contact-manager'),
 'referring_url' => __('referring URL', 'contact-manager'),

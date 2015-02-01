@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.0\n"
-"Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager\n"
+"Project-Id-Version: Contact Manager 6.0.3\n"
+"Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
@@ -648,7 +648,7 @@ msgstr ""
 
 msgid ""
 "To subscribe the senders as clients, you must have installed and activated "
-"<a href=\"http://www.kleor.com/commerce-manager\">Commerce Manager</"
+"<a href=\"http://www.kleor.com/commerce-manager/\">Commerce Manager</"
 "a>."
 msgstr ""
 
@@ -672,7 +672,7 @@ msgstr ""
 
 msgid ""
 "To use affiliation, you must have installed and activated <a href=\"http://"
-"www.kleor.com/affiliation-manager\">Affiliation Manager</a>."
+"www.kleor.com/affiliation-manager/\">Affiliation Manager</a>."
 msgstr ""
 
 msgid "Subscribe the sender to affiliate program"
@@ -680,7 +680,7 @@ msgstr ""
 
 msgid ""
 "To use membership, you must have installed and activated <a href=\"http://"
-"www.kleor.com/membership-manager\">Membership Manager</a>."
+"www.kleor.com/membership-manager/\">Membership Manager</a>."
 msgstr ""
 
 msgid "Subscribe the sender to a member area"
@@ -1708,4 +1708,16 @@ msgid "You can add custom instructions that will be executed just after the subm
 msgstr ""
 
 msgid "Display the messages saved in the database"
+msgstr ""
+
+msgid "This action is irreversible."
+msgstr ""
+
+msgid "Country code"
+msgstr ""
+
+msgid "the country code"
+msgstr ""
+
+msgid "country code"
 msgstr ""

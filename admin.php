@@ -107,7 +107,7 @@ foreach (array('', 'network_admin_') as $prefix) { add_filter($prefix.'plugin_ac
 function contact_manager_row_meta($links, $file) {
 if ($file == CONTACT_MANAGER_FOLDER.'/contact-manager.php') {
 $links = array_merge($links, array(
-'<a href="http://www.kleor.com/contact-manager">'.__('Documentation', 'contact-manager').'</a>')); }
+'<a href="http://www.kleor.com/contact-manager/">'.__('Documentation', 'contact-manager').'</a>')); }
 return $links; }
 
 add_filter('plugin_row_meta', 'contact_manager_row_meta', 10, 2);

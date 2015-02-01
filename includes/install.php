@@ -6,7 +6,7 @@ if (!empty($wpdb->collate)) { $charset_collate .= ' COLLATE '.$wpdb->collate; }
 include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables as $table_slug => $table) {
 $list = ''; foreach ($table as $key => $value) { $list .= "
-".$key." ".$value['type']." ".($key == "id" ? "auto_increment" : "NOT NULL").","; }
+".$key." ".$value['type'].(strstr($value['type'], 'int') ? " unsigned" : "")." ".($key == "id" ? "auto_increment" : "NOT NULL").","; }
 $sql = "CREATE TABLE ".$wpdb->prefix."contact_manager_".$table_slug." (".$list."
 PRIMARY KEY  (id)) $charset_collate;"; dbDelta($sql); }
 
@@ -23,6 +23,9 @@ foreach ($value as $option => $initial_value) {
 if ((!isset($options[$option])) || ($options[$option] == '') || (in_array($option, $overwrited_options))) { $options[$option] = $initial_value; } }
 if ($options != $current_options) { update_option('contact_manager'.$_key, $options); } }
 else { add_option(substr('contact_manager'.$_key, 0, 64), $value); } }
+
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php'; foreach ($countries as $country_code => $country) {
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET country_code = '".$country_code."' WHERE country_code = '' AND country LIKE '".str_replace("'", "''", $country)."'"); }
 
 date_default_timezone_set('UTC');
 $current_time = time();

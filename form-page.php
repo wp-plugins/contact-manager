@@ -17,11 +17,7 @@ if ($is_category) {
 $category = $wpdb->get_row("SELECT category_id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE id = ".$_GET['id'], OBJECT);
 foreach (array('forms', 'forms_categories') as $table) {
 $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table." SET category_id = ".$category->category_id." WHERE category_id = ".$_GET['id']); } }
-$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = ".$_GET['id']);
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_".$table_slug." ORDER BY id DESC LIMIT 1", OBJECT);
-if (!$result) { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_".$table_slug." AUTO_INCREMENT = 1"); }
-elseif ($result->id < $_GET['id']) {
-$results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_".$table_slug." AUTO_INCREMENT = ".($result->id + 1)); } } } ?>
+$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = ".$_GET['id']); } } ?>
 <div class="wrap">
 <div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
@@ -35,7 +31,8 @@ echo '<div class="updated"><p><strong>'.($is_category ? __('Category deleted.', 
 <?php wp_nonce_field($_GET['page']); ?>
 <div class="alignleft actions">
 <p><strong style="color: #c00000;"><?php echo ($is_category ? __('Do you really want to permanently delete this category?', 'contact-manager') : __('Do you really want to permanently delete this form?', 'contact-manager')); ?></strong> 
-<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" /></p>
+<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" />
+<span class="description"><?php _e('This action is irreversible.', 'contact-manager'); ?></span></p>
 </div>
 <div class="clear"></div>
 </form><?php } ?>

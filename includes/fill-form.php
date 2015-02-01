@@ -3,6 +3,7 @@ case 'form': case 'form_category':
 if ($is_category) { $table_slug = 'forms_categories'; $attribute = 'category'; }
 else { $table_slug = 'forms'; $attribute = 'id'; }
 foreach ($tables[$table_slug] as $key => $value) { if (!isset($_POST[$key])) { $_POST[$key] = ''; } }
+if (isset($_GET['id'])) { $current_item = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = ".$_GET['id'], OBJECT); }
 foreach (array(
 'commission_amount',
 'commission2_amount') as $field) { $_POST[$field] = str_replace(array('?', ',', ';'), '.', $_POST[$field]); }
@@ -35,7 +36,7 @@ $d = preg_split('#[^0-9]#', $_POST['date'], 0, PREG_SPLIT_NO_EMPTY);
 for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['date'] = date('Y-m-d H:i:s', $time);
-$_POST['date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); }
+$_POST['date_utc'] = date('Y-m-d H:i:s', $time - (isset($_GET['id']) ? contact_manager_utc_offset($current_item, 'date') : 3600*UTC_OFFSET)); }
 $custom_fields = (array) $back_office_options[$admin_page.'_page_custom_fields'];
 $item_custom_fields = array();
 foreach ($custom_fields as $key => $value) {
@@ -132,6 +133,7 @@ break;
 
 case 'message':
 foreach ($tables['messages'] as $key => $value) { if (!isset($_POST[$key])) { $_POST[$key] = ''; } }
+if (isset($_GET['id'])) { $current_item = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id'], OBJECT); }
 $_POST['form_id'] = (int) $_POST['form_id'];
 if ($_POST['form_id'] < 1) {
 $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms ORDER BY messages_count DESC LIMIT 1", OBJECT);
@@ -154,8 +156,20 @@ $d = preg_split('#[^0-9]#', $_POST['date'], 0, PREG_SPLIT_NO_EMPTY);
 for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['date'] = date('Y-m-d H:i:s', $time);
-$_POST['date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); }
+$_POST['date_utc'] = date('Y-m-d H:i:s', $time - (isset($_GET['id']) ? contact_manager_utc_offset($current_item, 'date') : 3600*UTC_OFFSET)); }
 $_POST['email_address'] = format_email_address($_POST['email_address']);
+if ($_POST['country_code'] != '') {
+$_POST['country_code'] = substr(preg_replace('/[^A-Z]/', '', strtoupper($_POST['country_code'])), 0, 2);
+if ($_POST['country'] == '') {
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
+$key = $_POST['country_code'];
+if (isset($countries[$key])) { $_POST['country'] = $countries[$key]; } } }
+elseif ($_POST['country'] != '') {
+if ($_POST['country_code'] == '') {
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
+$country_codes = array_flip($countries);
+$key = $_POST['country'];
+if (isset($country_codes[$key])) { $_POST['country_code'] = $country_codes[$key]; } } }
 $custom_fields = (array) $back_office_options['message_page_custom_fields'];
 $item_custom_fields = array();
 foreach ($custom_fields as $key => $value) {
@@ -203,7 +217,7 @@ $d = preg_split('#[^0-9]#', $_POST['commission_payment_date'], 0, PREG_SPLIT_NO_
 for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['commission_payment_date'] = date('Y-m-d H:i:s', $time);
-$_POST['commission_payment_date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); } }
+$_POST['commission_payment_date_utc'] = date('Y-m-d H:i:s', $time - (isset($_GET['id']) ? contact_manager_utc_offset($current_item, 'commission_payment_date') : 3600*UTC_OFFSET)); } }
 elseif (isset($_POST['submit'])) { $_POST['commission_payment_date'] = ''; } }
 if (($_POST['referrer2'] == '') && ($_POST['referrer2_emptied'] != 'yes') && ($_POST['referrer'] != '') && (get_option('affiliation_manager'))) {
 $result = $wpdb->get_row("SELECT referrer FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$_POST['referrer']."'", OBJECT);
@@ -250,9 +264,9 @@ $d = preg_split('#[^0-9]#', $_POST['commission2_payment_date'], 0, PREG_SPLIT_NO
 for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 1 : 0)); }
 $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['commission2_payment_date'] = date('Y-m-d H:i:s', $time);
-$_POST['commission2_payment_date_utc'] = date('Y-m-d H:i:s', $time - 3600*UTC_OFFSET); } }
+$_POST['commission2_payment_date_utc'] = date('Y-m-d H:i:s', $time - (isset($_GET['id']) ? contact_manager_utc_offset($current_item, 'commission2_payment_date') : 3600*UTC_OFFSET)); } }
 elseif (isset($_POST['submit'])) { $_POST['commission2_payment_date'] = ''; } }
-foreach ($tables['messages'] as $key => $value) { if ((isset($value['type'])) && ($value['type'] == 'dec(12,2)')) { $_POST[$key] = number_format((float) $_POST[$key], 2, '.', ''); } }
+foreach ($tables['messages'] as $key => $value) { if ((isset($value['type'])) && (strstr($value['type'], 'dec'))) { $_POST[$key] = number_format((float) $_POST[$key], 2, '.', ''); } }
 
 if (!isset($_GET['id'])) {
 if (($_POST['referring_url'] == '') && ($_POST['referring_url_emptied'] != 'yes')) { $_POST['referring_url'] = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''); }
@@ -406,11 +420,7 @@ if ((is_numeric($_POST['maximum_messages_quantity'])) && (isset($_POST['submit']
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_manager_messages", OBJECT);
 $messages_quantity = (int) (isset($row->total) ? $row->total : 0);
 $n = $messages_quantity - $_POST['maximum_messages_quantity'];
-if ($n > 0) {
-$results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n");
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages ORDER BY id DESC LIMIT 1", OBJECT);
-if (!$result) { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = 1"); }
-else { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = ".($result->id + 1)); } } }
+if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n"); } }
 $members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
 sort($members_areas, SORT_NUMERIC);
 $members_areas_list = '';

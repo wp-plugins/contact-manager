@@ -80,7 +80,12 @@ $initial_options['admin_notices'] = array();
 
 
 $initial_options['code'] =
-'[validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
+'<style scoped="scoped" type="text/css" media="all">
+input[type="submit"] { background-color: #e0c040; border: 1px solid #a08000; border-radius: 4px; box-shadow: 1px 1px 1px #808080; color: #000000; cursor: pointer; height: 2em; line-height: 1em; padding: 0 0.5em; }
+input[type="submit"]:hover { background-color: #a0a0a0; border: 1px solid #000000; }
+</style>
+
+[validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
 [other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields] [error invalid-fields] [error invalid-captcha]</p>[/validation-content]
 
 <p><label><strong>'.__('Your first name:', 'contact-manager').'</strong>*<br />
@@ -111,7 +116,7 @@ $initial_options['code'] =
 
 <p><label>[input message-confirmation-email-sent value=yes] '.__('Receive a copy of this message', 'contact-manager').'</label></p>
 
-<div style="margin: 1.5em 0;">[input submit style="background-color: #e0c040; border: 1px solid #a08000; border-radius: 4px; box-shadow: 1px 1px 1px #808080; cursor: pointer;" formnovalidate=formnovalidate value="'.__('Send', 'contact-manager').'"]</div>';
+<div style="margin: 1.5em 0;">[input submit formnovalidate=formnovalidate value="'.__('Send', 'contact-manager').'"]</div>';
 
 
 $initial_options['cron'] = array(

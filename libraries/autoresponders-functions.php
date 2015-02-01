@@ -42,7 +42,7 @@ wp_remote_get('http://www.cybermailing.com/mailing/subscribe.php?'.
 
 function subscribe_to_getresponse($list, $contact) {
 ini_set('display_errors', 0);
-include_once CONTACT_MANAGER_PATH.'libraries/getresponse.php';
+if (!class_exists('jsonRPCClient')) { include_once CONTACT_MANAGER_PATH.'libraries/getresponse.php'; }
 $api_key = contact_data('getresponse_api_key');
 $client = new jsonRPCClient('http://api2.getresponse.com');
 $campaigns = $client->get_campaigns($api_key, array('name' => array('EQUALS' => $list)));
@@ -56,7 +56,7 @@ $result = $client->add_contact($api_key, $data); }
 
 
 function subscribe_to_mailchimp($list, $contact) {
-include_once CONTACT_MANAGER_PATH.'libraries/mailchimp.php';
+if (!class_exists('MailChimp')) { include_once CONTACT_MANAGER_PATH.'libraries/mailchimp.php'; }
 $api_key = contact_data('mailchimp_api_key');
 $MailChimp = new MailChimp($api_key);
 $result = $MailChimp->call('lists/subscribe', array(

@@ -31,15 +31,35 @@ $tags = array('captcha', 'country-selector', 'input', 'label', 'option', 'select
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
 if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_GET['referring_url']) ? $_GET['referring_url'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')); }
 if (isset($_POST[$prefix.'submit'])) {
-if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_string'))) { $link = @mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME); }
+if (isset($link)) { unset($link); }
+if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_string'))) {
+$port = null; $socket = null; $host = DB_HOST;
+$port_or_socket = strstr($host, ':');
+if ($port_or_socket) {
+$host = substr($host, 0, strpos($host, ':'));
+$port_or_socket = substr($port_or_socket, 1);
+if (strpos($port_or_socket, '/') != 0) {
+$port = intval($port_or_socket);
+$maybe_socket = strstr($port_or_socket, ':');
+if ($maybe_socket) { $socket = substr($maybe_socket, 1); } }
+else { $socket = $port_or_socket; } }
+$link = mysqli_connect($host, DB_USER, DB_PASSWORD, DB_NAME, $port, $socket); if (mysqli_connect_error()) { unset($link); } }
 foreach ($_POST as $key => $value) {
 if (($key != $prefix.'password') && (is_string($value))) {
 $value = str_replace(array('[', ']'), array('&#91;', '&#93;'), quotes_entities($value));
-$_POST[$key] = str_replace('\\&', '&', trim((((isset($link)) && ($link)) ? mysqli_real_escape_string($link, $value) : mysql_real_escape_string($value)))); } }
-if (isset($_POST[$prefix.'country_code'])) {
+$_POST[$key] = str_replace('\\&', '&', trim((isset($link) ? mysqli_real_escape_string($link, $value) : $value))); } }
+if ((isset($_POST[$prefix.'country_code'])) && ($_POST[$prefix.'country_code'] != '')) {
+$_POST[$prefix.'country_code'] = substr(preg_replace('/[^A-Z]/', '', strtoupper($_POST[$prefix.'country_code'])), 0, 2);
+if ((!isset($_POST[$prefix.'country'])) || ($_POST[$prefix.'country'] == '')) {
 include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
 $key = $_POST[$prefix.'country_code'];
-if (isset($countries[$key])) { $_POST[$prefix.'country'] = $countries[$key]; } }
+if (isset($countries[$key])) { $_POST[$prefix.'country'] = $countries[$key]; } } }
+elseif ((isset($_POST[$prefix.'country'])) && ($_POST[$prefix.'country'] != '')) {
+if ((!isset($_POST[$prefix.'country_code'])) || ($_POST[$prefix.'country_code'] == '')) {
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
+$country_codes = array_flip($countries);
+$key = $_POST[$prefix.'country'];
+if (isset($country_codes[$key])) { $_POST[$prefix.'country_code'] = $country_codes[$key]; } } }
 if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = format_email_address($_POST[$prefix.'email_address']); }
 if (isset($_POST[$prefix.'first_name'])) { $_POST[$prefix.'first_name'] = format_name($_POST[$prefix.'first_name']); }
 if (isset($_POST[$prefix.'last_name'])) { $_POST[$prefix.'last_name'] = format_name($_POST[$prefix.'last_name']); }

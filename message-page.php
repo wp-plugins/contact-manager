@@ -16,10 +16,6 @@ $GLOBALS['message_data'] = (array) $message_data;
 $GLOBALS['referrer'] = $GLOBALS['message_data']['referrer'];
 $GLOBALS['contact_form_id'] = $GLOBALS['message_data']['form_id'];
 $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id']);
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages ORDER BY id DESC LIMIT 1", OBJECT);
-if (!$result) { $results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = 1"); }
-elseif ($result->id < $_GET['id']) {
-$results = $wpdb->query("ALTER TABLE ".$wpdb->prefix."contact_manager_messages AUTO_INCREMENT = ".($result->id + 1)); }
 if ($message_data->form_id > 0) {
 $contact_form_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$message_data->form_id, OBJECT);
 $GLOBALS['contact_form_data'] = (array) $contact_form_data;
@@ -45,7 +41,8 @@ echo '<div class="updated"><p><strong>'.__('Message deleted.', 'contact-manager'
 <?php wp_nonce_field($_GET['page']); ?>
 <div class="alignleft actions">
 <p><strong style="color: #c00000;"><?php _e('Do you really want to permanently delete this message?', 'contact-manager'); ?></strong> 
-<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" /></p>
+<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" />
+<span class="description"><?php _e('This action is irreversible.', 'contact-manager'); ?></span></p>
 </div>
 <div class="clear"></div>
 </form><?php } ?>
@@ -145,7 +142,12 @@ echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? __('Message update
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="town"><?php _e('Town', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="town" id="town" rows="1" cols="50" onchange="<?php if (!isset($_GET['id'])) { echo "this.setAttribute('data-changed', 'yes'); "; } ?>fill_form(this.form);"><?php echo $_POST['town']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="country"><?php _e('Country', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="country" id="country" rows="1" cols="50" onchange="<?php if (!isset($_GET['id'])) { echo "this.setAttribute('data-changed', 'yes'); "; } ?>fill_form(this.form);"><?php echo $_POST['country']; ?></textarea></td></tr>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="country" id="country" rows="1" cols="50" onkeyup="update_country_code(this.form);" onchange="<?php if (!isset($_GET['id'])) { echo "this.setAttribute('data-changed', 'yes'); "; } ?>update_country_code(this.form); fill_form(this.form);"><?php echo $_POST['country']; ?></textarea>
+<span style="vertical-align: 25%; margin-left: 2em;"><label style="font-weight: bold;" for="country_code"><?php _e('Country code', 'contact-manager'); ?></label> <select style="font-family: Consolas, Monaco, monospace; margin-left: 0.5em; max-width: 10em;" name="country_code" id="country_code" onkeyup="update_country(this.form);" onchange="<?php if (!isset($_GET['id'])) { echo "this.setAttribute('data-changed', 'yes'); "; } ?>update_country(this.form); fill_form(this.form);">
+<?php include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
+$countries_list = '<option value="">--</option>'."\n";
+foreach ($countries as $country_code => $country) { $countries_list .= '<option value="'.$country_code.'"'.($_POST['country_code'] == $country_code ? ' selected="selected"' : '').'>'.$country_code.' ('.$country.')</option>'."\n"; }
+echo $countries_list; ?></select></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="phone_number"><?php _e('Phone number', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="phone_number" id="phone_number" rows="1" cols="50" onchange="<?php if (!isset($_GET['id'])) { echo "this.setAttribute('data-changed', 'yes'); "; } ?>fill_form(this.form);"><?php echo $_POST['phone_number']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="ip_address"><?php _e('IP address', 'contact-manager'); ?></label></strong></th>
@@ -189,7 +191,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php if (function_exists('affiliation_data')) { ?>
 <a <?php echo $default_options_links_markup; ?> href="admin.php?page=contact-manager#affiliation"><?php _e('Click here to configure the default options.', 'contact-manager'); ?></a>
-<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager">Affiliation Manager</a>.', 'contact-manager')); } ?></span></td></tr>
+<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager/">Affiliation Manager</a>.', 'contact-manager')); } ?></span></td></tr>
 </tbody></table>
 <div id="level-1-commission-module"<?php if (in_array('level-1-commission', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="level-1-commission"><strong><?php echo $modules['message']['affiliation']['modules']['level-1-commission']['name']; ?></strong></h4>
@@ -356,7 +358,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php if (function_exists('commerce_data')) { ?>
 <a <?php echo $default_options_links_markup; ?> href="admin.php?page=contact-manager#registration-as-a-client"><?php _e('Click here to configure the default options.', 'contact-manager'); ?></a>
-<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager">Commerce Manager</a>.', 'contact-manager')); } ?></span></td></tr>
+<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager/">Commerce Manager</a>.', 'contact-manager')); } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client" value="yes"<?php if ($_POST['sender_subscribed_as_a_client'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes'); fill_form(this.form);" /> 
 <strong><?php _e('Subscribe the sender as a client', 'contact-manager'); ?></strong></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -399,7 +401,7 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php if (function_exists('affiliation_data')) { ?>
 <a <?php echo $default_options_links_markup; ?> href="admin.php?page=contact-manager#registration-to-affiliate-program"><?php _e('Click here to configure the default options.', 'contact-manager'); ?></a>
-<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager">Affiliation Manager</a>.', 'contact-manager')); } ?></span></td></tr>
+<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager/">Affiliation Manager</a>.', 'contact-manager')); } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_to_affiliate_program" id="sender_subscribed_to_affiliate_program" value="yes"<?php if ($_POST['sender_subscribed_to_affiliate_program'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes'); fill_form(this.form);" /> 
 <strong><?php _e('Subscribe the sender to affiliate program', 'contact-manager'); ?></strong></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-to-affiliate-program"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -442,7 +444,7 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php if (function_exists('membership_data')) { ?>
 <a <?php echo $default_options_links_markup; ?> href="admin.php?page=contact-manager#membership"><?php _e('Click here to configure the default options.', 'contact-manager'); ?></a>
-<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use membership, you must have installed and activated <a href="http://www.kleor.com/membership-manager">Membership Manager</a>.', 'contact-manager')); } ?></span></td></tr>
+<?php } else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use membership, you must have installed and activated <a href="http://www.kleor.com/membership-manager/">Membership Manager</a>.', 'contact-manager')); } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_to_members_areas" id="sender_subscribed_to_members_areas" value="yes"<?php if ($_POST['sender_subscribed_to_members_areas'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes'); fill_form(this.form);" /> 
 <strong><?php _e('Subscribe the sender to a member area', 'contact-manager'); ?></strong></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#membership"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -611,5 +613,17 @@ if ((field.value != "") && (field.value != 0) && (element.innerHTML.indexOf("id=
 var actions = ["confirmation","notification"]; for (i = 0; i < 2; i++) {
 var element = document.getElementById("membership-registration-"+actions[i]+"-email-sent-link");
 if (element) { element.href = url+"#registration-"+actions[i]+"-email"; } } }').' }'."\n"; ?>
+
+<?php echo 'function update_country(form) {
+var countries = '.json_encode($countries).';
+if '.(isset($_GET['id']) ? '(form["country"].value == "")' : '((form["country"].value == "") || (form["country"].getAttribute("data-changed") != "yes"))').' {
+var key = form["country_code"].value;
+if (typeof countries[key] != "undefined") { form["country"].value = countries[key]; } } }
+
+function update_country_code(form) {
+var country_codes = '.json_encode(array_flip($countries)).';
+if '.(isset($_GET['id']) ? '(form["country_code"].value == "")' : '((form["country_code"].value == "") || (form["country_code"].getAttribute("data-changed") != "yes"))').' {
+var key = form["country"].value;
+if (typeof country_codes[key] != "undefined") { form["country_code"].value = country_codes[key]; } } }'."\n"; ?>
 </script>
 <?php }

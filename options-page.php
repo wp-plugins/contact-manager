@@ -23,7 +23,8 @@ echo '<div class="updated"><p><strong>'.($_GET['action'] == 'reset' ? __('Option
 <p><strong style="color: #c00000;"><?php if ($_GET['action'] == 'reset') { _e('Do you really want to reset the options of Contact Manager?', 'contact-manager'); }
 elseif ($for == 'network') { _e('Do you really want to permanently delete the options and tables of Contact Manager for all sites in this network?', 'contact-manager'); }
 else { _e('Do you really want to permanently delete the options and tables of Contact Manager?', 'contact-manager'); } ?></strong> 
-<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" /></p>
+<input type="submit" class="button-secondary" name="submit" id="submit" value="<?php _e('Yes', 'contact-manager'); ?>" />
+<span class="description"><?php _e('This action is irreversible.', 'contact-manager'); ?></span></p>
 </div>
 </form><?php } ?>
 </div>
@@ -344,7 +345,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php echo (function_exists('commerce_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=commerce-manager-client-area">'.__('Click here to configure the options of Commerce Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager">Commerce Manager</a>.', 'contact-manager'))); ?></span></td></tr>
+<td><span class="description"><?php echo (function_exists('commerce_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=commerce-manager-client-area">'.__('Click here to configure the options of Commerce Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager/">Commerce Manager</a>.', 'contact-manager'))); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client" value="yes"<?php if ($options['sender_subscribed_as_a_client'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender as a client', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -394,7 +395,7 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php echo (function_exists('affiliation_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=affiliation-manager">'.__('Click here to configure the options of Affiliation Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager">Affiliation Manager</a>.', 'contact-manager'))); ?></span></td></tr>
+<td><span class="description"><?php echo (function_exists('affiliation_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=affiliation-manager">'.__('Click here to configure the options of Affiliation Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager/">Affiliation Manager</a>.', 'contact-manager'))); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_to_affiliate_program" id="sender_subscribed_to_affiliate_program" value="yes"<?php if ($options['sender_subscribed_to_affiliate_program'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender to affiliate program', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-to-affiliate-program"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -444,7 +445,7 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php echo (function_exists('membership_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=membership-manager">'.__('Click here to configure the options of Membership Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use membership, you must have installed and activated <a href="http://www.kleor.com/membership-manager">Membership Manager</a>.', 'contact-manager'))); ?></span></td></tr>
+<td><span class="description"><?php echo (function_exists('membership_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=membership-manager">'.__('Click here to configure the options of Membership Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use membership, you must have installed and activated <a href="http://www.kleor.com/membership-manager/">Membership Manager</a>.', 'contact-manager'))); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_to_members_areas" id="sender_subscribed_to_members_areas" value="yes"<?php if ($options['sender_subscribed_to_members_areas'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender to a member area', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#membership"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -568,7 +569,7 @@ echo '<option value="'.$role.'"'.($options['sender_user_role'] == $role ? ' sele
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php if (function_exists('affiliation_data')) { _e('You can award a commission to the affiliate who referred a message.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#affiliation"><?php _e('More informations', 'contact-manager'); ?></a><?php }
-else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager">Affiliation Manager</a>.', 'contact-manager')); } ?></span></td></tr>
+else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager/">Affiliation Manager</a>.', 'contact-manager')); } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="affiliation_enabled" id="affiliation_enabled" value="yes"<?php if ($options['affiliation_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Use affiliation', 'contact-manager'); ?></label>
 <span class="description" style="vertical-align: -5%;"><?php _e('Uncheck this box allows you to disable the award of commissions.', 'contact-manager'); ?></span></td></tr>
