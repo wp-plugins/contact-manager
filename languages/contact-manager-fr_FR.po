@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.0.3\n"
+"Project-Id-Version: Contact Manager 6.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2015-01-31 13:07+0100\n"
+"PO-Revision-Date: 2015-02-27 23:44+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -348,21 +348,6 @@ msgstr "Quantité"
 msgid "Forms categories"
 msgstr "Catégories de formulaires"
 
-msgid "Administrator"
-msgstr "Administrateur"
-
-msgid "Editor"
-msgstr "Éditeur"
-
-msgid "Author"
-msgstr "Auteur"
-
-msgid "Contributor"
-msgstr "Contributeur"
-
-msgid "Subscriber"
-msgstr "Abonné"
-
 msgid "Contact"
 msgstr "Contact"
 
@@ -381,14 +366,14 @@ msgstr "Réglages enregistrés."
 msgid "Access"
 msgstr "Accès"
 
-msgid "Minimum role to access the interface of Contact Manager"
-msgstr "Rôle minimal nécessaire pour accéder à l'interface de Contact Manager"
+msgid "Roles able to access the interface of Contact Manager"
+msgstr "Rôles capables d'accéder à l'interface de Contact Manager"
 
 msgid "Management"
 msgstr "Gestion"
 
-msgid "Minimum role to change options and add, edit or delete items of Contact Manager"
-msgstr "Rôle minimal nécessaire pour modifier les options et ajouter, modifier ou supprimer des éléments de Contact Manager"
+msgid "Roles able to change options and add, edit or delete items of Contact Manager"
+msgstr "Rôles capables de modifier les options et ajouter, modifier ou supprimer des éléments de Contact Manager"
 
 msgid "Use a custom icon"
 msgstr "Utiliser une icône personnalisée"
@@ -642,10 +627,10 @@ msgstr "Liste"
 msgid "For most autoresponders, you must enter the list ID."
 msgstr "Pour la plupart des autorépondeurs, vous devez entrer l'ID de la liste."
 
-msgid "To subscribe the senders as clients, you must have installed and activated <a href=\"http://www.kleor.com/commerce-manager/\">Commerce Manager</a>."
+msgid "To register the senders as clients, you must have installed and activated <a href=\"http://www.kleor.com/commerce-manager/\">Commerce Manager</a>."
 msgstr "Pour inscrire les expéditeurs en tant que clients, vous devez avoir installé et activé <a href=\"http://www.kleor.com/commerce-manager/\">Commerce Manager</a>."
 
-msgid "Subscribe the sender as a client"
+msgid "Register the sender as a client"
 msgstr "Inscrire l'expéditeur en tant que client"
 
 msgid "Status"
@@ -666,7 +651,7 @@ msgstr "Envoyer un e-mail de notification d'inscription"
 msgid "To use affiliation, you must have installed and activated <a href=\"http://www.kleor.com/affiliation-manager/\">Affiliation Manager</a>."
 msgstr "Pour utiliser l'affiliation, vous devez avoir installé et activé <a href=\"http://www.kleor.com/affiliation-manager/\">Affiliation Manager</a>."
 
-msgid "Subscribe the sender to affiliate program"
+msgid "Register the sender to the affiliate program"
 msgstr "Inscrire l'expéditeur au programme d'affiliation"
 
 msgid "To use membership, you must have installed and activated <a href=\"http://www.kleor.com/membership-manager/\">Membership Manager</a>."
@@ -681,7 +666,7 @@ msgstr "Espaces membres"
 msgid "You can enter several members areas IDs. Separate them with commas."
 msgstr "Vous pouvez entrer plusieurs IDs d'espaces membres. Séparez-les par des virgules."
 
-msgid "Subscribe the sender as a user"
+msgid "Register the sender as a user"
 msgstr "Inscrire l'expéditeur en tant qu'utilisateur"
 
 msgid "Role"
@@ -924,7 +909,7 @@ msgstr "Numéro de téléphone"
 msgid "IP address"
 msgstr "Adresse IP"
 
-msgid "User agent"
+msgid "Browser"
 msgstr "Navigateur"
 
 msgid "Referring URL"
@@ -1071,7 +1056,7 @@ msgstr "pays"
 msgid "IP address "
 msgstr "adresse IP"
 
-msgid "user agent"
+msgid "browser"
 msgstr "navigateur"
 
 msgid "referring URL"
@@ -1245,7 +1230,7 @@ msgstr "Autorépondeur des expéditeurs"
 msgid "Senders autoresponder list"
 msgstr "Liste d'autorépondeur des expéditeurs"
 
-msgid "Senders subscribed as clients"
+msgid "Senders registered as clients"
 msgstr "Expéditeurs inscrits en tant que clients"
 
 msgid "Senders client category ID"
@@ -1263,7 +1248,7 @@ msgstr "(Commerce)"
 msgid "Registration notification email sent"
 msgstr "E-mail de notification d'inscription envoyé"
 
-msgid "Senders subscribed to affiliate program"
+msgid "Senders registered to the affiliate program"
 msgstr "Expéditeurs inscrits au programme d'affiliation"
 
 msgid "Senders affiliate category ID"
@@ -1290,7 +1275,7 @@ msgstr "Statut de membre des expéditeurs"
 msgid "(Membership)"
 msgstr "(Espace membre)"
 
-msgid "Senders subscribed as users"
+msgid "Senders registered as users"
 msgstr "Expéditeurs inscrits en tant qu'utilisateurs"
 
 msgid "Senders user role"
@@ -1685,4 +1670,13 @@ msgstr "le code pays"
 
 msgid "country code"
 msgstr "code pays"
+
+msgid "You can't uncheck this role."
+msgstr "Vous ne pouvez pas décocher ce rôle."
+
+msgid "You can't uncheck your own role."
+msgstr "Vous ne pouvez pas décocher votre propre rôle."
+
+msgid "You can't uncheck the roles able to activate plugins."
+msgstr "Vous ne pouvez pas décocher les rôles capables d'activer des plugins."
 

@@ -5,11 +5,11 @@ if (($error) && (!headers_sent())) { header('Location: '.$url); exit(); } }
 
 
 function format_email_address($string) {
-$string = strtolower(trim(strip_tags($string)));
+$string = trim(strip_tags($string));
 $string = str_replace('à', '@', $string);
 $string = str_replace(';', '.', $string);
 $string = str_replace(' ', '-', $string);
-$string = strip_accents($string);
+$string = strtolower(strip_accents($string));
 $string = preg_replace('/[^a-z0-9_@.-]/', '', $string);
 return $string; }
 
@@ -17,11 +17,11 @@ return $string; }
 function format_email_address_js() { ?>
 <script type="text/javascript">
 function format_email_address(string) {
-string = string.toLowerCase();
 string = string.replace(/[à]/g, '@');
 string = string.replace(/[;]/g, '.');
 string = string.replace(/[ ]/g, '-');
 string = strip_accents(string);
+string = string.toLowerCase();
 string = string.replace(/[^a-z0-9_@.-]/g, '');
 return string; }
 </script>
@@ -71,7 +71,7 @@ return string; }
 
 
 function format_nice_name($string) {
-$string = strip_accents(strtolower(trim(strip_tags($string))));
+$string = strtolower(strip_accents(trim(strip_tags($string))));
 $string = str_replace(' ', '-', $string);
 $string = preg_replace('/[^a-z0-9_-]/', '', $string);
 return $string; }
@@ -80,7 +80,8 @@ return $string; }
 function format_nice_name_js() { ?>
 <script type="text/javascript">
 function format_nice_name(string) {
-string = strip_accents(string.toLowerCase());
+string = strip_accents(string);
+string = string.toLowerCase();
 string = string.replace(/[ ]/g, '-');
 string = string.replace(/[^a-z0-9_-]/g, '');
 return string; }

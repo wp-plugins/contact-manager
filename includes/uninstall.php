@@ -25,9 +25,17 @@ foreach ($blogs_ids as $blog_id) {
 switch_to_blog($blog_id);
 foreach ($initial_options as $key => $value) {
 $_key = ($key == '' ? '' : '_'.$key);
-delete_option(substr('contact_manager'.$_key, 0, 64)); } }
+delete_option(substr('contact_manager'.$_key, 0, 64)); }
+$wp_roles = new WP_Roles();
+foreach ($wp_roles->role_objects as $key => $role) {
+foreach (array('manage', 'view') as $string) {
+if ($role->has_cap($string.'_contact_manager')) { $role->remove_cap($string.'_contact_manager'); } } } }
 switch_to_blog($original_blog_id); }
 else {
 foreach ($initial_options as $key => $value) {
 $_key = ($key == '' ? '' : '_'.$key);
-delete_option(substr('contact_manager'.$_key, 0, 64)); } }
+delete_option(substr('contact_manager'.$_key, 0, 64)); }
+$wp_roles = new WP_Roles();
+foreach ($wp_roles->role_objects as $key => $role) {
+foreach (array('manage', 'view') as $string) {
+if ($role->has_cap($string.'_contact_manager')) { $role->remove_cap($string.'_contact_manager'); } } } }

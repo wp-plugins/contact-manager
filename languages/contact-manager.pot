@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.0.3\n"
+"Project-Id-Version: Contact Manager 6.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -347,21 +347,6 @@ msgstr ""
 msgid "Forms categories"
 msgstr ""
 
-msgid "Administrator"
-msgstr ""
-
-msgid "Editor"
-msgstr ""
-
-msgid "Author"
-msgstr ""
-
-msgid "Contributor"
-msgstr ""
-
-msgid "Subscriber"
-msgstr ""
-
 msgid "Contact"
 msgstr ""
 
@@ -380,13 +365,13 @@ msgstr ""
 msgid "Access"
 msgstr ""
 
-msgid "Minimum role to access the interface of Contact Manager"
+msgid "Roles able to access the interface of Contact Manager"
 msgstr ""
 
 msgid "Management"
 msgstr ""
 
-msgid "Minimum role to change options and add, edit or delete items of Contact Manager"
+msgid "Roles able to change options and add, edit or delete items of Contact Manager"
 msgstr ""
 
 msgid "Use a custom icon"
@@ -647,12 +632,12 @@ msgid "For most autoresponders, you must enter the list ID."
 msgstr ""
 
 msgid ""
-"To subscribe the senders as clients, you must have installed and activated "
+"To register the senders as clients, you must have installed and activated "
 "<a href=\"http://www.kleor.com/commerce-manager/\">Commerce Manager</"
 "a>."
 msgstr ""
 
-msgid "Subscribe the sender as a client"
+msgid "Register the sender as a client"
 msgstr ""
 
 msgid "Status"
@@ -675,7 +660,7 @@ msgid ""
 "www.kleor.com/affiliation-manager/\">Affiliation Manager</a>."
 msgstr ""
 
-msgid "Subscribe the sender to affiliate program"
+msgid "Register the sender to the affiliate program"
 msgstr ""
 
 msgid ""
@@ -692,7 +677,7 @@ msgstr ""
 msgid "You can enter several members areas IDs. Separate them with commas."
 msgstr ""
 
-msgid "Subscribe the sender as a user"
+msgid "Register the sender as a user"
 msgstr ""
 
 msgid "Role"
@@ -944,7 +929,7 @@ msgstr ""
 msgid "IP address"
 msgstr ""
 
-msgid "User agent"
+msgid "Browser"
 msgstr ""
 
 msgid "Referring URL"
@@ -1107,7 +1092,7 @@ msgstr ""
 msgid "IP address "
 msgstr ""
 
-msgid "user agent"
+msgid "browser"
 msgstr ""
 
 msgid "referring URL"
@@ -1281,7 +1266,7 @@ msgstr ""
 msgid "Senders autoresponder list"
 msgstr ""
 
-msgid "Senders subscribed as clients"
+msgid "Senders registered as clients"
 msgstr ""
 
 msgid "Senders client category ID"
@@ -1299,7 +1284,7 @@ msgstr ""
 msgid "Registration notification email sent"
 msgstr ""
 
-msgid "Senders subscribed to affiliate program"
+msgid "Senders registered to the affiliate program"
 msgstr ""
 
 msgid "Senders affiliate category ID"
@@ -1326,7 +1311,7 @@ msgstr ""
 msgid "(Membership)"
 msgstr ""
 
-msgid "Senders subscribed as users"
+msgid "Senders registered as users"
 msgstr ""
 
 msgid "Senders user role"
@@ -1720,4 +1705,13 @@ msgid "the country code"
 msgstr ""
 
 msgid "country code"
+msgstr ""
+
+msgid "You can't uncheck this role."
+msgstr ""
+
+msgid "You can't uncheck your own role."
+msgstr ""
+
+msgid "You can't uncheck the roles able to activate plugins."
 msgstr ""

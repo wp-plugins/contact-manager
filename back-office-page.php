@@ -6,8 +6,20 @@ foreach (array('admin-pages.php', 'initial-options.php') as $file) { include CON
 $max_links = count($admin_links);
 $max_menu_items = count($admin_pages);
 
+$roles = array();
+$current_user = wp_get_current_user();
+$roles['current_user'] = (array) $current_user->roles;
+$roles['required'] = (current_user_can('manage_contact_manager') ? $roles['current_user'] : array());
+foreach (array('manage', 'view') as $string) { $roles[$string] = $roles['required']; }
+$wp_roles = new WP_Roles();
+foreach ($wp_roles->role_objects as $key => $role) {
+if (($key == 'administrator') || ($role->has_cap('activate_plugins'))) { foreach (array('required', 'manage', 'view') as $string) { $roles[$string][] = $key; } }
+elseif ($role->has_cap('manage_contact_manager')) { foreach (array('manage', 'view') as $string) { $roles[$string][] = $key; } }
+elseif ($role->has_cap('view_contact_manager')) { $roles['view'][] = $key; } }
+foreach (array('current_user', 'required', 'manage', 'view') as $string) { $roles[$string] = array_unique($roles[$string]); }
+
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
-if (!contact_manager_user_can($options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
+if (!current_user_can('manage_contact_manager')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace(array('&nbsp;', '&#91;', '&#93;'), array(' ', '&amp;#91;', '&amp;#93;'), $value))); } }
@@ -23,8 +35,12 @@ foreach (array(
 'form_category',
 'message',
 'options') as $page) { update_contact_manager_back_office($options, $page); }
-$_POST['minimum_roles'] = array();
-foreach (array('manage', 'view') as $key) { $_POST['minimum_roles'][$key] = $_POST[$key.'_minimum_role']; }
+foreach ($wp_roles->role_objects as $key => $role) {
+foreach (array('manage', 'view') as $string) {
+if ((in_array($key, $roles['required'])) || ((isset($_POST[$key.'_can_'.$string])) && ($_POST[$key.'_can_'.$string] == 'yes'))) {
+$_POST[$key.'_can_view'] = 'yes'; $role->add_cap($string.'_contact_manager'); if (!in_array($key, $roles[$string])) { $roles[$string][] = $key; } }
+elseif ($role->has_cap($string.'_contact_manager')) {
+$role->remove_cap($string.'_contact_manager'); if (in_array($key, $roles[$string])) { unset($roles[$string][array_search($key, $roles[$string])]); } } } }
 if (isset($_POST['reset_links'])) {
 foreach (array('links', 'displayed_links') as $field) { $_POST[$field] = $initial_options['back_office'][$field]; } }
 else {
@@ -56,33 +72,41 @@ $undisplayed_modules = (array) $options['back_office_page_undisplayed_modules'];
 <div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($options); ?>
 <?php if (isset($_POST['submit'])) { echo '<div class="updated"><p><strong>'.__('Settings saved.', 'contact-manager').'</strong></p></div>'; } ?>
-<form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
+<form method="post" name="<?php echo $_GET['page']; ?>" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <?php contact_manager_pages_menu($options); ?>
 <?php if ($error != '') { echo '<p style="color: #c00000;">'.$error.'</p>'; } ?>
 <?php contact_manager_pages_summary($options); ?>
 
 <div class="postbox" id="capabilities-module"<?php if (in_array('capabilities', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="capabilities"><strong><?php echo $modules['back_office']['capabilities']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="capabilities"><strong><?php echo $modules['back_office']['capabilities']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="view_minimum_role"><?php _e('Access', 'contact-manager'); ?></label></strong></th>
-<td><select name="view_minimum_role" id="view_minimum_role">
-<?php foreach ($roles as $key => $value) {
-echo '<option value="'.$key.'"'.($options['minimum_roles']['view'] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } ?>
-</select> <span class="description"><?php _e('Minimum role to access the interface of Contact Manager', 'contact-manager'); ?></span></td></tr>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="manage_minimum_role"><?php _e('Management', 'contact-manager'); ?></label></strong></th>
-<td><select name="manage_minimum_role" id="manage_minimum_role">
-<?php foreach ($roles as $key => $value) {
-echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? ' selected="selected"' : '').'>'.$value['name'].'</option>'."\n"; } ?>
-</select> <span class="description"><?php _e('Minimum role to change options and add, edit or delete items of Contact Manager', 'contact-manager'); ?></span></td></tr>
+<?php $checkboxes = array('manage' => '', 'view' => '');
+foreach (contact_manager_users_roles() as $role => $name) {
+foreach (array('manage', 'view') as $string) {
+if (in_array($role, $roles['required'])) {
+if ($role == 'administrator') { $title = __('You can\'t uncheck this role.', 'contact-manager'); }
+elseif (in_array($role, $roles['current_user'])) { $title = __('You can\'t uncheck your own role.', 'contact-manager'); }
+else { $title = __('You can\'t uncheck the roles able to activate plugins.', 'contact-manager'); }
+$checkboxes[$string] .= '<label title="'.$title.'"><input type="checkbox" name="'.$role.'_can_'.$string.'" id="'.$role.'_can_'.$string.'" value="yes" checked="checked" disabled="disabled" /> '.$name.'</label><br />'; }
+else {
+if ($string == 'manage') { $onchange = 'if (this.checked == true) { this.form[\''.$role.'_can_view\'].checked = true; }'; }
+else { $onchange = 'if (this.checked == false) { this.form[\''.$role.'_can_manage\'].checked = false; }'; }
+$checkboxes[$string] .= '<label><input type="checkbox" name="'.$role.'_can_'.$string.'" id="'.$role.'_can_'.$string.'" value="yes" onchange="'.$onchange.'"'.(in_array($role, $roles[$string]) ? ' checked="checked"' : '').' /> '.$name.'</label><br />'; } } } ?>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Management', 'contact-manager'); ?></strong></th>
+<td><span style="float: left; margin-right: 5em;"><?php echo $checkboxes['manage']; ?></span>
+<p class="description" style="width: 70%;"><?php _e('Roles able to change options and add, edit or delete items of Contact Manager', 'contact-manager'); ?></p></td></tr>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Access', 'contact-manager'); ?></strong></th>
+<td><span style="float: left; margin-right: 5em;"><?php echo $checkboxes['view']; ?></span>
+<p class="description" style="width: 70%;"><?php _e('Roles able to access the interface of Contact Manager', 'contact-manager'); ?></p></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
 </div></div>
 
 <div class="postbox" id="icon-module"<?php if (in_array('icon', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="icon"><strong><?php echo $modules['back_office']['icon']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="icon"><strong><?php echo $modules['back_office']['icon']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -98,7 +122,7 @@ echo '<option value="'.$key.'"'.($options['minimum_roles']['manage'] == $key ? '
 </div></div>
 
 <div class="postbox" id="top-module"<?php if (in_array('top', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="top"><strong><?php echo $modules['back_office']['top']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="top"><strong><?php echo $modules['back_office']['top']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -121,7 +145,7 @@ echo '</select></label>
 </div></div>
 
 <div class="postbox" id="menu-module"<?php if (in_array('menu', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="menu"><strong><?php echo $modules['back_office']['menu']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="menu"><strong><?php echo $modules['back_office']['menu']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -140,7 +164,7 @@ echo '</select></label>
 </div></div>
 
 <div class="postbox" id="links-module"<?php if (in_array('links', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="links"><strong><?php echo $modules['back_office']['links']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="links"><strong><?php echo $modules['back_office']['links']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><?php _e('Open in a new tab the targets of the links', 'contact-manager'); ?></strong></th>
@@ -164,7 +188,7 @@ echo '<label><input type="checkbox" name="'.$name.'" id="'.$name.'" value="yes"'
 'message-page') as $module) { contact_manager_pages_module($options, $module, $undisplayed_modules); } ?>
 
 <div class="postbox" id="statistics-page-module"<?php if (in_array('statistics-page', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="statistics-page"><strong><?php echo $modules['back_office']['statistics-page']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="statistics-page"><strong><?php echo $modules['back_office']['statistics-page']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>

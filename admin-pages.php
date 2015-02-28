@@ -160,10 +160,3 @@ $statistics_rows = array(
 'messages' => array('name' => __('Messages', 'contact-manager')),
 'forms' => array('name' => __('Forms', 'contact-manager')),
 'forms_categories' => array('name' => __('Forms categories', 'contact-manager')));
-
-$roles = array(
-'administrator' => array('name' => __('Administrator', 'contact-manager'), 'capability' => 'manage_options'),
-'editor' => array('name' => __('Editor', 'contact-manager'), 'capability' => 'edit_pages'),
-'author' => array('name' => __('Author', 'contact-manager'), 'capability' => 'publish_posts'),
-'contributor' => array('name' => __('Contributor', 'contact-manager'), 'capability' => 'edit_posts'),
-'subscriber' => array('name' => __('Subscriber', 'contact-manager'), 'capability' => 'read'));

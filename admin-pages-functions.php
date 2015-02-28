@@ -12,19 +12,18 @@ html.wp-toolbar { padding-top: 0; }
 #wpwrap { padding-top: 32px; }
 .wpdberror { display: none; }
 .wrap { margin-top: 0; }
-.wrap .delete:hover { color: #ff0000; }
+.wrap h2 { float: left; }
+.wrap input.button-secondary, .wrap select { background-color: #ffffff; vertical-align: 0; }
+.wrap input.date-pick { margin-right: 0.5em; width: 10.45em; }
+.wrap p.submit { margin: 0 20%; }
 .wrap .count, .wrap .description, .wrap input[disabled], .wrap textarea[disabled] { color: #808080; }
+.wrap .delete:hover { color: #ff0000; }
 .wrap .disabled { cursor: default; }
 .wrap .dp-choose-date { vertical-align: 6%; }
 .wrap .postbox { background-color: #f9f9f9; }
 .wrap .postbox .description { font-size: 0.9375em; }
-.wrap .postbox h3 { background-color: #f1f1f1; color: #000000; }
-.wrap .postbox h4 { color: #000000; font-family: Tahoma, Geneva, sans-serif; font-size: 1.125em; }
-.wrap .postbox input.button-secondary { background-color: #ffffff; }
-.wrap h2 { float: left; }
-.wrap input.button-secondary, .wrap select { vertical-align: 0; }
-.wrap input.date-pick { margin-right: 0.5em; width: 10.45em; }
-.wrap p.submit { margin: 0 20%; }
+.wrap .postbox h3 { background-color: #f9f9f9; border-bottom: 1px solid #e5e5e5; color: #004080; }
+.wrap .postbox h4 { color: #000000; font-family: Tahoma, Geneva, Sans-Serif; font-size: 1.125em; }
 *:-ms-input-placeholder { color: #a0a0a0; }
 </style>
 <?php }
@@ -82,7 +81,7 @@ include CONTACT_MANAGER_PATH.'admin-pages.php';
 echo '<ul class="subsubsub" style="margin: 1.75em 0 1.5em 0; float: left; white-space: normal;">';
 $links_markup = array(
 'Documentation' => '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/contact-manager/">'.$admin_links['Documentation']['name'].'</a>',
-'Commerce Manager' => (function_exists('commerce_data') ? '<a href="admin.php?page=commerce-manager'.
+'Commerce Manager' => (((function_exists('commerce_data')) && (current_user_can('view_commerce_manager'))) ? '<a href="admin.php?page=commerce-manager'.
 ($_GET['page'] == 'contact-manager-form' ? '-product' : '').
 ($_GET['page'] == 'contact-manager-form-category' ? '-product-category' : '').
 ($_GET['page'] == 'contact-manager-forms' ? '-products' : '').
@@ -91,12 +90,12 @@ $links_markup = array(
 ($_GET['page'] == 'contact-manager-messages' ? '-orders' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Commerce Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/commerce-manager/">'.$admin_links['Commerce Manager']['name'].'</a>'),
-'Affiliation Manager' => (function_exists('affiliation_data') ? '<a href="admin.php?page=affiliation-manager'.
+'Affiliation Manager' => (((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) ? '<a href="admin.php?page=affiliation-manager'.
 ($_GET['page'] == 'contact-manager-message' ? '-affiliate' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'messages') ? '-messages-commissions' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Affiliation Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/affiliation-manager/">'.$admin_links['Affiliation Manager']['name'].'</a>'),
-'Membership Manager' => (function_exists('membership_data') ? '<a href="admin.php?page=membership-manager'.
+'Membership Manager' => (((function_exists('membership_data')) && (current_user_can('view_membership_manager'))) ? '<a href="admin.php?page=membership-manager'.
 ($_GET['page'] == 'contact-manager-form' ? '-member-area' : '').
 ($_GET['page'] == 'contact-manager-form-category' ? '-member-area-category' : '').
 ($_GET['page'] == 'contact-manager-forms' ? '-members-areas' : '').
@@ -105,7 +104,7 @@ $links_markup = array(
 ($_GET['page'] == 'contact-manager-messages' ? '-members' : '').
 (strstr($_GET['page'], 'back-office') ? '-back-office' : '').
 (strstr($_GET['page'], 'statistics') ? '-statistics' : '').'">'.$admin_links['Membership Manager']['name'].'</a>' : '<a target="'.$back_office_options['documentations_links_target'].'" href="http://www.kleor.com/membership-manager/">'.$admin_links['Membership Manager']['name'].'</a>'),
-'Optin Manager' => (function_exists('optin_data') ? '<a href="admin.php?page=optin-manager'.
+'Optin Manager' => (((function_exists('optin_data')) && (current_user_can('view_optin_manager'))) ? '<a href="admin.php?page=optin-manager'.
 ($_GET['page'] == 'contact-manager-form' ? '-form' : '').
 ($_GET['page'] == 'contact-manager-form-category' ? '-form-category' : '').
 ($_GET['page'] == 'contact-manager-forms' ? '-forms' : '').
@@ -150,7 +149,7 @@ include CONTACT_MANAGER_PATH.'admin-pages.php';
 $page_slug = str_replace('-', '_', str_replace('-page', '', $module));
 $page_undisplayed_modules = (array) $back_office_options[$page_slug.'_page_undisplayed_modules']; ?>
 <div class="postbox" id="<?php echo $module.'-module'; ?>"<?php if (in_array($module, $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="<?php echo $module; ?>"><strong><?php echo $modules['back_office'][$module]['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="<?php echo $module; ?>"><strong><?php echo $modules['back_office'][$module]['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <?php if ((strstr($_GET['page'], 'back-office')) && ($page_slug != 'back_office')) { echo '<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -223,20 +222,20 @@ function contact_manager_pages_module_description($back_office_options, $module)
 extract(contact_manager_pages_links_markups($back_office_options));
 $is_category = (strstr($_GET['page'], 'category'));
 $content = ''; switch ($module) {
-case 'autoresponders': case 'custom-instructions': case 'error-messages': case 'form': case 'messages-registration':
-case 'message-confirmation-email': case 'message-notification-email': case 'wordpress': $content = '<th scope="row" style="width: 20%;"></th>
-<td><span class="description"><a '.$default_options_links_markup.' href="admin.php?page=contact-manager'.($_POST['category_id'] == 0 ? '#'.($module == 'form' ? 'forms' : $module) : '-form-category&amp;id='.$_POST['category_id'].'#'.$module).'">
-'.($_POST['category_id'] == 0 ? __('Click here to configure the default options.', 'contact-manager') : ($is_category ? __('Click here to configure the default options of the parent category.', 'contact-manager') : __('Click here to configure the default options of the category.', 'contact-manager'))).'</a>
-'.($module == 'error-messages' ? '<br /><a '.$documentations_links_markup.' href="http://www.kleor.com/contact-manager/#error">'.__('How to display an error message?', 'contact-manager').'</a>' : '').'</span></td>'; break;
 case 'affiliation': case 'membership': case 'registration-as-a-client': case 'registration-to-affiliate-program':
 switch ($module) {
 case 'affiliation': case 'registration-to-affiliate-program': $function = 'affiliation_data'; $string = __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager/">Affiliation Manager</a>.', 'contact-manager'); break;
 case 'membership': $function = 'membership_data'; $string = __('To use membership, you must have installed and activated <a href="http://www.kleor.com/membership-manager/">Membership Manager</a>.', 'contact-manager'); break;
-case 'registration-as-a-client': $function = 'commerce_data'; $string = __('To subscribe the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager/">Commerce Manager</a>.', 'contact-manager'); }
+case 'registration-as-a-client': $function = 'commerce_data'; $string = __('To register the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager/">Commerce Manager</a>.', 'contact-manager'); }
 $content = '<th scope="row" style="width: 20%;"></th>
 <td><span class="description">'.(function_exists($function) ? '<a '.$default_options_links_markup.' href="admin.php?page=contact-manager'.($_POST['category_id'] == 0 ? '#'.$module : '-form-category&amp;id='.$_POST['category_id'].'#'.$module).'">
 '.($_POST['category_id'] == 0 ? __('Click here to configure the default options.', 'contact-manager') : ($is_category ? __('Click here to configure the default options of the parent category.', 'contact-manager') : __('Click here to configure the default options of the category.', 'contact-manager'))).'</a>'
  : str_replace('<a', '<a '.$documentations_links_markup, $string)).'</span></td>'; break;
+case 'autoresponders': case 'custom-instructions': case 'error-messages': case 'form': case 'message-confirmation-email':
+case 'message-notification-email': case 'messages-registration': case 'wordpress': $content = '<th scope="row" style="width: 20%;"></th>
+<td><span class="description"><a '.$default_options_links_markup.' href="admin.php?page=contact-manager'.($_POST['category_id'] == 0 ? '#'.($module == 'form' ? 'forms' : $module) : '-form-category&amp;id='.$_POST['category_id'].'#'.$module).'">
+'.($_POST['category_id'] == 0 ? __('Click here to configure the default options.', 'contact-manager') : ($is_category ? __('Click here to configure the default options of the parent category.', 'contact-manager') : __('Click here to configure the default options of the category.', 'contact-manager'))).'</a>
+'.($module == 'error-messages' ? '<br /><a '.$documentations_links_markup.' href="http://www.kleor.com/contact-manager/#error">'.__('How to display an error message?', 'contact-manager').'</a>' : '').'</span></td>'; break;
 case 'general-informations': if (($is_category) || ($_POST['category_id'] > 0)) { $content = '<th scope="row" style="width: 20%;"></th>
 <td><span class="description">'.($is_category ? __('The options of this category will apply by default to the forms you assign to this category.', 'contact-manager').($_POST['category_id'] > 0 ? '<br />' : '') : '').'
 '.($_POST['category_id'] > 0 ? '<a '.$default_options_links_markup.' href="admin.php?page=contact-manager-form-category&amp;id='.$_POST['category_id'].'">
@@ -340,7 +339,7 @@ function contact_manager_pages_search_field($type, $searchby, $searchby_options)
 echo '<option value="'.$key.'"'.($searchby == $key ? ' selected="selected"' : '').'>'.$value.'</option>'."\n"; } ?>
 </select></label><br />
 <input type="text" name="s" id="s" size="30" value="<?php if (isset($_GET['s'])) { echo $_GET['s']; } ?>" />
-<input type="submit" class="button" name="submit" id="<?php echo $type; ?>-submit" value="<?php _e(ucfirst($type), 'contact-manager'); ?>" /></p>
+<input type="submit" class="button-secondary" name="submit" id="<?php echo $type; ?>-submit" value="<?php _e(ucfirst($type), 'contact-manager'); ?>" /></p>
 <?php }
 
 
@@ -395,7 +394,7 @@ echo '<div class="clear"></div>'; }
 function contact_manager_users_roles() {
 $wp_roles = new WP_Roles();
 $roles = $wp_roles->get_names();
-foreach ($roles as $role => $name) { $roles[$role] = __(translate_user_role($name), 'contact-manager'); }
+foreach ($roles as $role => $name) { $roles[$role] = translate_user_role($name); }
 return $roles; }
 
 
@@ -529,7 +528,7 @@ return $content; }
 
 
 if ((is_admin()) && ($_GET['page'] != 'contact-manager-back-office')
- && ((!isset($_GET['action'])) || (!in_array($_GET['action'], array('delete', 'uninstall', 'reset'))))) {
+ && ((!isset($_GET['action'])) || (!in_array($_GET['action'], array('delete', 'reset', 'uninstall'))))) {
 add_action('admin_enqueue_scripts', create_function('', 'wp_enqueue_script("jquery");'));
 if ($_GET['page'] != 'contact-manager') {
 add_action('admin_enqueue_scripts', create_function('',

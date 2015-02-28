@@ -10,15 +10,13 @@ if ((!isset($options['menu_title_'.$lang])) || ($options['menu_title_'.$lang] ==
  || ($options['pages_titles_'.$lang] == '')) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
 $menu_title = $options['menu_title_'.$lang]; $pages_titles = (array) $options['pages_titles_'.$lang];
 if (((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) || ($menu_title == '')) { $menu_title = __('Contact', 'contact-manager'); }
-if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
-else { $role = $options['minimum_roles']['view']; $capability = $roles[$role]['capability']; }
 if ($options['custom_icon_used'] == 'yes') { $icon_url = format_url($options['custom_icon_url']); } else { $icon_url = ''; }
-add_menu_page('Contact Manager', $menu_title, $capability, 'contact-manager', create_function('', 'include_once CONTACT_MANAGER_PATH."options-page.php";'), $icon_url);
+add_menu_page('Contact Manager', $menu_title, 'view_contact_manager', 'contact-manager', create_function('', 'include_once CONTACT_MANAGER_PATH."options-page.php";'), $icon_url);
 $admin_menu_pages = contact_manager_admin_menu_pages();
 foreach ($admin_pages as $key => $value) { if (in_array($key, $admin_menu_pages)) {
 $slug = 'contact-manager'.($key == '' ? '' : '-'.str_replace('_', '-', $key));
 if ((!isset($_GET['page'])) || (!strstr($_GET['page'], 'contact-manager'))) { $value['menu_title'] = $pages_titles[$key]; }
-add_submenu_page('contact-manager', $value['page_title'], $value['menu_title'], $capability, $slug, create_function('', 'include_once CONTACT_MANAGER_PATH."'.$value['file'].'";')); } } }
+add_submenu_page('contact-manager', $value['page_title'], $value['menu_title'], 'view_contact_manager', $slug, create_function('', 'include_once CONTACT_MANAGER_PATH."'.$value['file'].'";')); } } }
 
 add_action('admin_menu', 'contact_manager_admin_menu');
 
@@ -80,14 +78,8 @@ echo '<li><a target="_blank" href="http://www.kleor.com/contact-manager/'.$url.'
 </ul>
 <?php } }
 
-add_action('add_meta_boxes', create_function('', 'if (contact_manager_user_can(get_option("contact_manager_back_office"), "view")) {
+add_action('add_meta_boxes', create_function('', 'if (current_user_can("view_contact_manager")) {
 foreach (array("page", "post") as $type) { add_meta_box("contact-manager", "Contact Manager", "contact_manager_meta_box", $type, "side"); } }'));
-
-
-function contact_manager_user_can($back_office_options, $capability) {
-if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true)) { $capability = 'manage_options'; }
-else { include CONTACT_MANAGER_PATH.'admin-pages.php'; $role = $back_office_options['minimum_roles'][$capability]; $capability = $roles[$role]['capability']; }
-return current_user_can($capability); }
 
 
 function contact_manager_action_links($links) {

@@ -292,11 +292,6 @@ $initial_options['back_office'] = array(
 'menu_displayed_items' => $menu_displayed_items,
 'menu_items' => $menu_items,
 'menu_title_'.$lang => __('Contact', 'contact-manager'),
-'meta_box_'.$lang => array(
-	'' => __('Documentation', 'contact-manager'),
-	'#forms' => __('Display a form', 'contact-manager'),
-	'#sender-contents' => __('Display a content restricted to senders', 'contact-manager'),
-	'#screen-options-wrap' => __('Hide this box', 'contact-manager')),
 'message_page_custom_fields' => array(),
 'message_page_summary_displayed' => 'yes',
 'message_page_undisplayed_modules' => array(
@@ -309,9 +304,11 @@ $initial_options['back_office'] = array(
 	'registration-as-a-client',
 	'registration-to-affiliate-program',
 	'wordpress'),
-'minimum_roles' => array(
-	'manage' => 'administrator',
-	'view' => 'administrator'),
+'meta_box_'.$lang => array(
+	'' => __('Documentation', 'contact-manager'),
+	'#forms' => __('Display a form', 'contact-manager'),
+	'#sender-contents' => __('Display a content restricted to senders', 'contact-manager'),
+	'#screen-options-wrap' => __('Hide this box', 'contact-manager')),
 'options_page_summary_displayed' => 'yes',
 'options_page_undisplayed_modules' => array(
 	'affiliation',

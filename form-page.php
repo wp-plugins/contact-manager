@@ -11,7 +11,7 @@ else { $admin_page = 'form'; $table_slug = 'forms'; $attribute = 'id'; }
 
 if ((isset($_GET['id'])) && (isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
-if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
+if (!current_user_can('manage_contact_manager')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 if ($is_category) {
 $category = $wpdb->get_row("SELECT category_id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE id = ".$_GET['id'], OBJECT);
@@ -27,7 +27,7 @@ echo '<div class="updated"><p><strong>'.($is_category ? __('Category deleted.', 
 <?php contact_manager_pages_menu($back_office_options); ?>
 <?php if ($error != '') { echo '<p style="color: #c00000;">'.$error.'</p>'; } ?>
 <?php if (!isset($_POST['submit'])) { ?>
-<form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
+<form method="post" name="<?php echo $_GET['page']; ?>" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <div class="alignleft actions">
 <p><strong style="color: #c00000;"><?php echo ($is_category ? __('Do you really want to permanently delete this category?', 'contact-manager') : __('Do you really want to permanently delete this form?', 'contact-manager')); ?></strong> 
@@ -43,7 +43,7 @@ else {
 include CONTACT_MANAGER_PATH.'admin-pages.php'; include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables[$table_slug] as $key => $value) { if (!isset($_POST[$key])) { $_POST[$key] = ''; } }
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
-if (!contact_manager_user_can($back_office_options, 'manage')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
+if (!current_user_can('manage_contact_manager')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
 else {
 foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace(array('&nbsp;', '&#91;', '&#93;'), array(' ', '&amp;#91;', '&amp;#93;'), $value))); } }
@@ -76,7 +76,7 @@ $currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortco
 <?php if ((isset($updated)) && ($updated)) {
 echo '<div class="updated"><p><strong>'.(isset($_GET['id']) ? ($is_category ? __('Category updated.', 'contact-manager') : __('Form updated.', 'contact-manager')) : ($is_category ? __('Category saved.', 'contact-manager') : __('Form saved.', 'contact-manager'))).'</strong></p></div>
 '.(isset($_GET['id']) ? '' : '<script type="text/javascript">setTimeout(\'window.location = "admin.php?page=contact-manager-forms'.($is_category ? '-categories' : '').'"\', 2000);</script>'); } ?>
-<form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>" onsubmit="return validate_form(this);">
+<form method="post" name="<?php echo $_GET['page']; ?>" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>" onsubmit="return validate_form(this);">
 <?php wp_nonce_field($_GET['page']); ?>
 <?php contact_manager_pages_menu($back_office_options); ?>
 <?php if ($error != '') { echo '<p style="color: #c00000;">'.$error.'</p>'; } ?>
@@ -95,7 +95,7 @@ update_category_top_description(<?php echo (int) $_POST['category_id']; ?>);
 </script>
 
 <div class="postbox" id="general-informations-module"<?php if (in_array('general-informations', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="general-informations"><strong><?php echo $modules[$admin_page]['general-informations']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="general-informations"><strong><?php echo $modules[$admin_page]['general-informations']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="general-informations-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'general-informations'); ?></tr>
@@ -129,7 +129,7 @@ echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id
 </div></div>
 
 <div class="postbox" id="custom-fields-module"<?php if (in_array('custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="custom-fields"><strong><?php echo $modules[$admin_page]['custom-fields']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="custom-fields"><strong><?php echo $modules[$admin_page]['custom-fields']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -152,7 +152,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 </div></div>
 
 <div class="postbox" id="gift-module"<?php if (in_array('gift', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="gift"><strong><?php echo $modules[$admin_page]['gift']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="gift"><strong><?php echo $modules[$admin_page]['gift']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="gift-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'gift'); ?></tr>
@@ -171,7 +171,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 
 <?php if (!$is_category) { ?>
 <div class="postbox" id="counters-module"<?php if (in_array('counters', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="counters"><strong><?php echo $modules[$admin_page]['counters']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="counters"><strong><?php echo $modules[$admin_page]['counters']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_per_sender"><?php _e('Maximum messages quantity per sender', 'contact-manager'); ?></label></strong></th>
@@ -191,7 +191,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 <?php } ?>
 
 <div class="postbox" id="form-module"<?php if (in_array('form', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="form"><strong><?php echo $modules[$admin_page]['form']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="form"><strong><?php echo $modules[$admin_page]['form']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="form-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'form'); ?></tr>
@@ -250,7 +250,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 </div></div>
 
 <div class="postbox" id="messages-registration-module"<?php if (in_array('messages-registration', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="messages-registration"><strong><?php echo $modules[$admin_page]['messages-registration']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="messages-registration"><strong><?php echo $modules[$admin_page]['messages-registration']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="messages-registration-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'messages-registration'); ?></tr>
@@ -271,7 +271,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 </div></div>
 
 <div class="postbox" id="message-confirmation-email-module"<?php if (in_array('message-confirmation-email', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="message-confirmation-email"><strong><?php echo $modules[$admin_page]['message-confirmation-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="message-confirmation-email"><strong><?php echo $modules[$admin_page]['message-confirmation-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="message-confirmation-email-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'message-confirmation-email'); ?></tr>
@@ -300,7 +300,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 </div></div>
 
 <div class="postbox" id="message-notification-email-module"<?php if (in_array('message-notification-email', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="message-notification-email"><strong><?php echo $modules[$admin_page]['message-notification-email']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="message-notification-email"><strong><?php echo $modules[$admin_page]['message-notification-email']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="message-notification-email-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'message-notification-email'); ?></tr>
@@ -329,7 +329,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 </div></div>
 
 <div class="postbox" id="autoresponders-module"<?php if (in_array('autoresponders', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="autoresponders"><strong><?php echo $modules[$admin_page]['autoresponders']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="autoresponders"><strong><?php echo $modules[$admin_page]['autoresponders']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="autoresponders-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'autoresponders'); ?></tr>
@@ -358,11 +358,11 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 </div></div>
 
 <div class="postbox" id="registration-as-a-client-module"<?php if (in_array('registration-as-a-client', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="registration-as-a-client"><strong><?php echo $modules[$admin_page]['registration-as-a-client']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="registration-as-a-client"><strong><?php echo $modules[$admin_page]['registration-as-a-client']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="registration-as-a-client-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'registration-as-a-client'); ?></tr>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_subscribed_as_a_client"><?php _e('Subscribe the sender as a client', 'contact-manager'); ?></label></strong></th>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_subscribed_as_a_client"><?php _e('Register the sender as a client', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client">
 <option value=""<?php $default_options_select_fields[] = 'sender_subscribed_as_a_client'; if ($_POST['sender_subscribed_as_a_client'] == '') { echo ' selected="selected"'; } ?> id="sender_subscribed_as_a_client_default_option"><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($_POST['sender_subscribed_as_a_client'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
@@ -411,11 +411,11 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 </div></div>
 
 <div class="postbox" id="registration-to-affiliate-program-module"<?php if (in_array('registration-to-affiliate-program', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="registration-to-affiliate-program"><strong><?php echo $modules[$admin_page]['registration-to-affiliate-program']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="registration-to-affiliate-program"><strong><?php echo $modules[$admin_page]['registration-to-affiliate-program']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="registration-to-affiliate-program-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'registration-to-affiliate-program'); ?></tr>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_subscribed_to_affiliate_program"><?php _e('Subscribe the sender to affiliate program', 'contact-manager'); ?></label></strong></th>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_subscribed_to_affiliate_program"><?php _e('Register the sender to the affiliate program', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_subscribed_to_affiliate_program" id="sender_subscribed_to_affiliate_program">
 <option value=""<?php $default_options_select_fields[] = 'sender_subscribed_to_affiliate_program'; if ($_POST['sender_subscribed_to_affiliate_program'] == '') { echo ' selected="selected"'; } ?> id="sender_subscribed_to_affiliate_program_default_option"><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($_POST['sender_subscribed_to_affiliate_program'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
@@ -464,7 +464,7 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 </div></div>
 
 <div class="postbox" id="membership-module"<?php if (in_array('membership', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="membership"><strong><?php echo $modules[$admin_page]['membership']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="membership"><strong><?php echo $modules[$admin_page]['membership']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="membership-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'membership'); ?></tr>
@@ -535,11 +535,11 @@ echo '<span id="sender-member-category-id-links">'.contact_manager_pages_field_l
 </div></div>
 
 <div class="postbox" id="wordpress-module"<?php if (in_array('wordpress', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="wordpress"><strong><?php echo $modules[$admin_page]['wordpress']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="wordpress"><strong><?php echo $modules[$admin_page]['wordpress']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="wordpress-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'wordpress'); ?></tr>
-<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_subscribed_as_a_user"><?php _e('Subscribe the sender as a user', 'contact-manager'); ?></label></strong></th>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_subscribed_as_a_user"><?php _e('Register the sender as a user', 'contact-manager'); ?></label></strong></th>
 <td><select name="sender_subscribed_as_a_user" id="sender_subscribed_as_a_user">
 <option value=""<?php $default_options_select_fields[] = 'sender_subscribed_as_a_user'; if ($_POST['sender_subscribed_as_a_user'] == '') { echo ' selected="selected"'; } ?> id="sender_subscribed_as_a_user_default_option"><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($_POST['sender_subscribed_as_a_user'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
@@ -557,7 +557,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 </div></div>
 
 <div class="postbox" id="custom-instructions-module"<?php if (in_array('custom-instructions', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="custom-instructions"><strong><?php echo $modules[$admin_page]['custom-instructions']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="custom-instructions"><strong><?php echo $modules[$admin_page]['custom-instructions']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="custom-instructions-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'custom-instructions'); ?></tr>
@@ -577,7 +577,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 </div></div>
 
 <div class="postbox" id="affiliation-module"<?php if (in_array('affiliation', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
-<h3 style="font-size: 1.25em;" id="affiliation"><strong><?php echo $modules[$admin_page]['affiliation']['name']; ?></strong></h3>
+<h3 style="font-size: 1.375em;" id="affiliation"><strong><?php echo $modules[$admin_page]['affiliation']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;" id="affiliation-module-description"><?php echo contact_manager_pages_module_description($back_office_options, 'affiliation'); ?></tr>

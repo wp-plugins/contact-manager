@@ -67,7 +67,7 @@ $end_date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])
 $GLOBALS['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
 $date_criteria = "(date BETWEEN '$start_date' AND '$end_date')";
 
-if (($options) && (contact_manager_user_can($back_office_options, 'manage'))) {
+if (($options) && (current_user_can('manage_contact_manager'))) {
 $options = array(
 'columns' => $columns,
 'columns_list_displayed' => $columns_list_displayed,
@@ -125,7 +125,7 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 <div class="wrap">
 <div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
-<form method="post" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
+<form method="post" name="<?php echo $_GET['page']; ?>" action="<?php echo esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field($_GET['page']); ?>
 <?php contact_manager_pages_menu($back_office_options); ?>
 <?php contact_manager_pages_search_field('search', $searchby, $searchby_options); ?>
@@ -173,7 +173,7 @@ $columns_inputs = '<input style="margin-bottom: 0.5em;" type="submit" class="but
 <input style="margin-bottom: 0.5em; margin-right: 0.5em;" type="submit" class="button-secondary" name="submit" value="'.__('Update', 'contact-manager').'" />
 <span id="check-all-columns1-input"></span>';
 echo $columns_inputs.' <label style="margin-left: 1.5em;"><input type="checkbox" name="columns_list_displayed" id="columns_list_displayed" value="yes" 
-onchange="if (this.checked == true) { value = \'yes\'; document.getElementById(\'columns-list\').style.display = \'\'; document.getElementById(\'check-all-columns1\').style.display = \'\'; } else { value = \'no\'; document.getElementById(\'columns-list\').style.display = \'none\'; document.getElementById(\'check-all-columns1\').style.display = \'none\'; }'.(contact_manager_user_can($back_office_options, 'manage') ? ' jQuery.get(\''.CONTACT_MANAGER_URL.'index.php?action=update-options&amp;page='.$_GET['page'].'&amp;key='.md5(AUTH_KEY).'&amp;columns_list_displayed=\'+value)' : '').';"
+onchange="if (this.checked == true) { value = \'yes\'; document.getElementById(\'columns-list\').style.display = \'\'; document.getElementById(\'check-all-columns1\').style.display = \'\'; } else { value = \'no\'; document.getElementById(\'columns-list\').style.display = \'none\'; document.getElementById(\'check-all-columns1\').style.display = \'none\'; }'.(current_user_can('manage_contact_manager') ? ' jQuery.get(\''.CONTACT_MANAGER_URL.'index.php?action=update-options&amp;page='.$_GET['page'].'&amp;key='.md5(AUTH_KEY).'&amp;columns_list_displayed=\'+value)' : '').';"
 '.($columns_list_displayed == 'yes' ? ' checked="checked"' : '').' /> '.__('Display the columns list', 'contact-manager').'</label>'; ?><br />
 <span id="columns-list"<?php if ($columns_list_displayed == 'no') { echo ' style="display: none;"'; } ?>>
 <?php $all_columns_checked = true;

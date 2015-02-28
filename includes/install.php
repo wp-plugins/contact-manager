@@ -24,8 +24,10 @@ if ((!isset($options[$option])) || ($options[$option] == '') || (in_array($optio
 if ($options != $current_options) { update_option('contact_manager'.$_key, $options); } }
 else { add_option(substr('contact_manager'.$_key, 0, 64), $value); } }
 
-include CONTACT_MANAGER_PATH.'languages/countries/countries.php'; foreach ($countries as $country_code => $country) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET country_code = '".$country_code."' WHERE country_code = '' AND country LIKE '".str_replace("'", "''", $country)."'"); }
+$wp_roles = new WP_Roles();
+foreach ($wp_roles->role_objects as $key => $role) {
+if (($key == 'administrator') || ($role->has_cap('activate_plugins'))) {
+foreach (array('manage', 'view') as $string) { $role->add_cap($string.'_contact_manager'); } } }
 
 date_default_timezone_set('UTC');
 $current_time = time();
@@ -39,3 +41,6 @@ $cron['previous_installation'] = array('version' => CONTACT_MANAGER_VERSION, 'nu
 else { $cron['previous_installation']['number'] = $cron['previous_installation']['number'] + 1; }
 $cron['previous_installation']['timestamp'] = $current_time;
 update_option('contact_manager_cron', $cron);
+if (in_array($cron['previous_installation']['number'], array(1, 5, 9))) {
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php'; foreach ($countries as $country_code => $country) {
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET country_code = '".$country_code."' WHERE country_code = '' AND country LIKE '".str_replace("'", "''", $country)."'"); } }

@@ -134,6 +134,18 @@ break;
 case 'message':
 foreach ($tables['messages'] as $key => $value) { if (!isset($_POST[$key])) { $_POST[$key] = ''; } }
 if (isset($_GET['id'])) { $current_item = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_messages WHERE id = ".$_GET['id'], OBJECT); }
+if ($_POST['country_code'] != '') {
+$_POST['country_code'] = substr(preg_replace('/[^A-Z]/', '', strtoupper($_POST['country_code'])), 0, 2);
+if ($_POST['country'] == '') {
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
+$key = $_POST['country_code'];
+if (isset($countries[$key])) { $_POST['country'] = $countries[$key]; } } }
+elseif ($_POST['country'] != '') {
+if ($_POST['country_code'] == '') {
+include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
+$country_codes = array_flip(array_map('format_nice_name', $countries));
+$key = format_nice_name($_POST['country']);
+if (isset($country_codes[$key])) { $_POST['country_code'] = $country_codes[$key]; } } }
 $_POST['form_id'] = (int) $_POST['form_id'];
 if ($_POST['form_id'] < 1) {
 $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms ORDER BY messages_count DESC LIMIT 1", OBJECT);
@@ -158,18 +170,6 @@ $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['date'] = date('Y-m-d H:i:s', $time);
 $_POST['date_utc'] = date('Y-m-d H:i:s', $time - (isset($_GET['id']) ? contact_manager_utc_offset($current_item, 'date') : 3600*UTC_OFFSET)); }
 $_POST['email_address'] = format_email_address($_POST['email_address']);
-if ($_POST['country_code'] != '') {
-$_POST['country_code'] = substr(preg_replace('/[^A-Z]/', '', strtoupper($_POST['country_code'])), 0, 2);
-if ($_POST['country'] == '') {
-include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
-$key = $_POST['country_code'];
-if (isset($countries[$key])) { $_POST['country'] = $countries[$key]; } } }
-elseif ($_POST['country'] != '') {
-if ($_POST['country_code'] == '') {
-include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
-$country_codes = array_flip($countries);
-$key = $_POST['country'];
-if (isset($country_codes[$key])) { $_POST['country_code'] = $country_codes[$key]; } } }
 $custom_fields = (array) $back_office_options['message_page_custom_fields'];
 $item_custom_fields = array();
 foreach ($custom_fields as $key => $value) {

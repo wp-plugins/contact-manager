@@ -57,8 +57,8 @@ if (isset($countries[$key])) { $_POST[$prefix.'country'] = $countries[$key]; } }
 elseif ((isset($_POST[$prefix.'country'])) && ($_POST[$prefix.'country'] != '')) {
 if ((!isset($_POST[$prefix.'country_code'])) || ($_POST[$prefix.'country_code'] == '')) {
 include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
-$country_codes = array_flip($countries);
-$key = $_POST[$prefix.'country'];
+$country_codes = array_flip(array_map('format_nice_name', $countries));
+$key = format_nice_name($_POST[$prefix.'country']);
 if (isset($country_codes[$key])) { $_POST[$prefix.'country_code'] = $country_codes[$key]; } } }
 if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = format_email_address($_POST[$prefix.'email_address']); }
 if (isset($_POST[$prefix.'first_name'])) { $_POST[$prefix.'first_name'] = format_name($_POST[$prefix.'first_name']); }
@@ -141,7 +141,7 @@ return !error; }
 
 $tags = array_merge($tags, array('error', 'validation-content'));
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
-if (!stristr($code, '<form')) { $code = '<form id="'.str_replace('_', '-', substr($prefix, 0, -1)).'" method="post" enctype="multipart/form-data" action="'.esc_attr($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_'.substr($prefix, 0, -1).'(this);">'.$code; }
+if (!stristr($code, '<form')) { $code = '<form name="'.str_replace('_', '-', substr($prefix, 0, -1)).'" id="'.str_replace('_', '-', substr($prefix, 0, -1)).'" method="post" enctype="multipart/form-data" action="'.esc_attr($_SERVER['REQUEST_URI']).(substr($redirection, 0, 1) == '#' ? $redirection : '').'" onsubmit="return validate_'.substr($prefix, 0, -1).'(this);">'.$code; }
 if (!stristr($code, '</form>')) { $code .= '<div style="display: none;"><input type="hidden" name="referring_url" value="'.htmlspecialchars($_POST['referring_url']).'" /><input type="hidden" name="'.$prefix.'submit" value="yes" /></div></form>'; }
 $code = str_replace(array("\\t", '\\'), array('	', ''), str_replace(array("\\r\\n", "\\n", "\\r"), '
 ', do_shortcode($code)));
@@ -155,6 +155,9 @@ return $content; }
 
 
 function contact_form_captcha($atts) { include CONTACT_MANAGER_PATH.'includes/forms/captcha.php'; return $content; }
+
+
+function contact_form_country_selector($atts) { include CONTACT_MANAGER_PATH.'includes/forms/country-selector.php'; return $content; }
 
 
 function contact_form_error($atts) { include CONTACT_MANAGER_PATH.'includes/forms/error.php'; return $content; }
@@ -176,6 +179,3 @@ function contact_form_textarea($atts, $content) { include CONTACT_MANAGER_PATH.'
 
 
 function contact_form_validation_content($atts, $content) { include CONTACT_MANAGER_PATH.'includes/forms/validation-content.php'; return $content; }
-
-
-function contact_form_country_selector($atts) { include CONTACT_MANAGER_PATH.'includes/forms/country-selector.php'; return $content; }

@@ -9,7 +9,7 @@ case 'fill-form':
 if (!headers_sent()) { header('Content-type: text/plain'); }
 if ((isset($_GET['page'])) && (isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) {
 foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
-if (contact_manager_user_can((array) get_option('contact_manager_back_office'), 'view')) {
+if (current_user_can('view_contact_manager')) {
 $GLOBALS['action'] = 'fill_admin_page_form';
 function contact_fill_admin_page_form() {
 global $wpdb; $error = '';
@@ -33,7 +33,7 @@ case 'install': if ((isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) { 
 case 'update-options':
 if ((isset($_GET['page'])) && (isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) {
 foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
-if (contact_manager_user_can((array) get_option('contact_manager_back_office'), 'manage')) {
+if (current_user_can('manage_contact_manager')) {
 $options = get_option(str_replace('-', '_', $_GET['page']));
 if ($options) { $options = (array) $options;
 foreach ($options as $key => $value) { if (isset($_GET[$key])) { $options[$key] = stripslashes($_GET[$key]); } }
