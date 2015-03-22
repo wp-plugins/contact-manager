@@ -139,8 +139,8 @@ $summary = '<ul class="subsubsub" style="float: none; text-align: center;">
 for ($i = 0; $i < $max_tables; $i++) {
 if (in_array($i, $displayed_tables)) {
 $table_slug = $tables_slugs[$i];
-$table_name = table_name($table_slug);
-$custom_fields = (array) $back_office_options[single_page_slug($table_slug).'_page_custom_fields'];
+$table_name = contact_manager_table_name($table_slug);
+$custom_fields = (array) $back_office_options[contact_manager_single_page_slug($table_slug).'_page_custom_fields'];
 foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
 asort($custom_fields); foreach ($custom_fields as $key => $value) {
 $tables[$table_slug]['custom_field_'.$key] = array('modules' => array('custom-fields'), 'name' => $value, 'width' => 18); }
@@ -151,7 +151,7 @@ for ($k = 0; $k < $max_columns; $k++) {
 if (!isset($tables[$table_slug][$columns[$k]])) { $columns[$k] = 'id'; } }
 $displayed_columns = (array) $options['displayed_columns'];
 $table_ths = '';
-for ($j = 0; $j < $max_columns; $j++) { if (in_array($j, $displayed_columns)) { $table_ths .= table_th($tables, $table_slug, $columns[$j]); } }
+for ($j = 0; $j < $max_columns; $j++) { if (in_array($j, $displayed_columns)) { $table_ths .= contact_manager_table_th($tables, $table_slug, $columns[$j]); } }
 echo $summary.'
 <h3 style="font-size: 1.375em; padding-left: 0.125em;" id="'.str_replace('_', '-', $tables_slugs[$i]).'"><strong>'.$tables_names[$tables_slugs[$i]].'</strong></h3>
 <div style="overflow: auto;">
@@ -165,11 +165,11 @@ if ($items) { foreach ($items as $item) {
 $table_tds = '';
 $first = true; for ($j = 0; $j < $max_columns; $j++) {
 if (in_array($j, $displayed_columns)) {
-$table_tds .= '<td'.($first ? ' style="height: 6em;"' : '').'>'.table_td($table_slug, $columns[$j], $item).($first ? row_actions($table_slug, $item) : '').'</td>';
+$table_tds .= '<td'.($first ? ' style="height: 6em;"' : '').'>'.contact_manager_table_td($table_slug, $columns[$j], $item).($first ? contact_manager_row_actions($table_slug, $item) : '').'</td>';
 $first = false; } }
 echo '<tr'.($boolean ? '' : ' class="alternate"').'>'.$table_tds.'</tr>';
 $table_tds = ''; $boolean = !$boolean; } }
-else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($displayed_columns).'">'.no_items($table_slug).'</td></tr>'; }
+else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($displayed_columns).'">'.contact_manager_no_items($table_slug).'</td></tr>'; }
 echo '</tbody></table></div>';
 $table_ths = ''; } } ?>
 </form>

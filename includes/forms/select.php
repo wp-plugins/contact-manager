@@ -2,7 +2,7 @@
 $prefix = $GLOBALS['contact_form_prefix'];
 $atts = contact_shortcode_atts(array(0 => 'country', 'required' => 'no'), $atts);
 $markup = '';
-$name = str_replace('-', '_', format_nice_name($atts[0]));
+$name = str_replace('-', '_', kleor_format_nice_name($atts[0]));
 $GLOBALS['contact_field_name'] = $name;
 $GLOBALS[$prefix.'fields'][] = $name;
 $main_name = (((substr($name, 0, 8) == 'confirm_') && (in_array(substr($name, 8), $GLOBALS[$prefix.'fields']))) ? substr($name, 8) : $name);

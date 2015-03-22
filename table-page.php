@@ -4,14 +4,14 @@ $table_slug = str_replace('-', '_', str_replace('contact-manager-', '', $_GET['p
 include CONTACT_MANAGER_PATH.'tables.php';
 include_once CONTACT_MANAGER_PATH.'tables-functions.php';
 $options = (array) get_option(str_replace('-', '_', $_GET['page']));
-$table_name = table_name($table_slug);
-$custom_fields = (array) $back_office_options[single_page_slug($table_slug).'_page_custom_fields'];
+$table_name = contact_manager_table_name($table_slug);
+$custom_fields = (array) $back_office_options[contact_manager_single_page_slug($table_slug).'_page_custom_fields'];
 foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
 asort($custom_fields); foreach ($custom_fields as $key => $value) {
 $tables[$table_slug]['custom_field_'.$key] = array('modules' => array('custom-fields'), 'name' => $value, 'width' => 18); }
 foreach ($tables[$table_slug] as $key => $value) { if (!isset($value['name'])) { unset($tables[$table_slug][$key]); } }
 $max_columns = count($tables[$table_slug]);
-$undisplayed_keys = table_undisplayed_keys($tables, $table_slug, $back_office_options);
+$undisplayed_keys = contact_manager_table_undisplayed_keys($tables, $table_slug, $back_office_options);
 foreach ($tables[$table_slug] as $key => $value) {
 if ((isset($value['searchby'])) && (!in_array($key, $undisplayed_keys))) { $searchby_options[$key] = $value['searchby']; } }
 if ((!isset($_GET['orderby'])) || (!isset($tables[$table_slug][$_GET['orderby']]))) { $_GET['orderby'] = $options['orderby']; }
@@ -115,7 +115,7 @@ if (($table_slug == 'messages') && (substr($_GET['orderby'], 0, 13) != 'custom_f
 if ($sorting_method == 'basic') { $items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria ORDER BY ".$_GET['orderby']." ".strtoupper($_GET['order'])." LIMIT $start, $limit", OBJECT); }
 else {
 $items = $wpdb->get_results("SELECT * FROM $table_name WHERE $date_criteria $selection_criteria $search_criteria", OBJECT);
-foreach ($items as $item) { $all_datas[$item->id] = $item; $datas[$item->id] = table_data($table_slug, $_GET['orderby'], $item); }
+foreach ($items as $item) { $all_datas[$item->id] = $item; $datas[$item->id] = contact_manager_table_data($table_slug, $_GET['orderby'], $item); }
 if ($_GET['order'] == 'asc') { asort($datas); } else { arsort($datas); }
 $array = array(); foreach ($datas as $key => $value) { $array[] = array('id' => $key, 'data' => $value); }
 $ids = array(); for ($i = $start; $i < $start + $limit; $i++) { if (isset($array[$i])) { $ids[] = $array[$i]['id']; } }
@@ -139,33 +139,33 @@ case 'forms_categories': $singular = __('category', 'contact-manager'); $plural 
 case 'messages': $singular = __('message', 'contact-manager'); $plural = __('messages', 'contact-manager'); break;
 default: $singular = __('item', 'contact-manager'); $plural = __('items', 'contact-manager'); }
 echo ($limit == 1 ? $singular : $plural).' '.__('per page', 'contact-manager'); ?> <input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" />
-</div><?php tablenav_pages($table_slug, $n, $max_paged, 'top'); ?></div>
+</div><?php contact_manager_tablenav_pages($table_slug, $n, $max_paged, 'top'); ?></div>
 <div style="clear: both; overflow: auto;">
 <table class="wp-list-table widefat">
-<?php if ($search_column) { $search_table_th = table_th($tables, $table_slug, $searchby); $table_ths = $search_table_th; } else { $table_ths = ''; }
+<?php if ($search_column) { $search_table_th = contact_manager_table_th($tables, $table_slug, $searchby); $table_ths = $search_table_th; } else { $table_ths = ''; }
 $columns_displayed = array();
 $original_displayed_columns = $displayed_columns;
 foreach ($displayed_columns as $key => $value) {
 if (in_array($columns[$value], $columns_displayed)) { unset($displayed_columns[$key]); }
 $columns_displayed[] = $columns[$value]; }
-for ($i = 0; $i < $max_columns; $i++) { if (in_array($i, $displayed_columns)) { $table_ths .= table_th($tables, $table_slug, $columns[$i]); } }
+for ($i = 0; $i < $max_columns; $i++) { if (in_array($i, $displayed_columns)) { $table_ths .= contact_manager_table_th($tables, $table_slug, $columns[$i]); } }
 if ($table_ths != '') { echo '<thead><tr>'.$table_ths.'</tr></thead><tfoot><tr>'.$table_ths.'</tr></tfoot>'; } ?>
 <tbody id="the-list">
 <?php $boolean = false; if ($n > 0) { foreach ($items as $item) {
 $table_tds = '';
-if ($search_column) { $search_table_td = '<td>'.table_td($table_slug, $searchby, $item).'</td>'; } else { $search_table_td = ''; }
+if ($search_column) { $search_table_td = '<td>'.contact_manager_table_td($table_slug, $searchby, $item).'</td>'; } else { $search_table_td = ''; }
 $first = true; for ($i = 0; $i < $max_columns; $i++) {
 if (in_array($i, $displayed_columns)) {
-$table_tds .= '<td'.($first ? ' style="height: 6em;"' : '').'>'.table_td($table_slug, $columns[$i], $item).($first ? row_actions($table_slug, $item) : '').'</td>';
+$table_tds .= '<td'.($first ? ' style="height: 6em;"' : '').'>'.contact_manager_table_td($table_slug, $columns[$i], $item).($first ? contact_manager_row_actions($table_slug, $item) : '').'</td>';
 $first = false; } }
 echo '<tr'.($boolean ? '' : ' class="alternate"').'>'.$search_table_td.$table_tds.'</tr>';
 $table_tds = ''; $boolean = !$boolean; } }
-else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($displayed_columns).'">'.no_items($table_slug).'</td></tr>'; } ?>
+else { echo '<tr class="no-items"><td class="colspanchange" colspan="'.count($displayed_columns).'">'.contact_manager_no_items($table_slug).'</td></tr>'; } ?>
 </tbody>
 </table>
 </div>
 <div class="tablenav bottom">
-<?php tablenav_pages($table_slug, $n, $max_paged, 'bottom'); ?>
+<?php contact_manager_tablenav_pages($table_slug, $n, $max_paged, 'bottom'); ?>
 <div class="alignleft actions">
 <input type="hidden" name="submit" value="true" />
 <?php $displayed_columns = $original_displayed_columns;

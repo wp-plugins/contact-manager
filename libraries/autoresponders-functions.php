@@ -1,22 +1,22 @@
-<?php function subscribe_to_autoresponder($autoresponder, $list, $contact) {
+<?php function kleor_subscribe_to_autoresponder($autoresponder, $list, $contact) {
 if ($list != '') {
 include CONTACT_MANAGER_PATH.'libraries/personal-informations.php';
 foreach (array_merge($personal_informations, array('ip_address', 'referrer')) as $field) {
 if (!isset($contact[$field])) { $contact[$field] = ''; } }
-$contact['email_address'] = format_email_address($contact['email_address']);
-$contact['website_url'] = format_url($contact['website_url']);
+$contact['email_address'] = kleor_format_email_address($contact['email_address']);
+$contact['website_url'] = kleor_format_url($contact['website_url']);
 switch ($autoresponder) {
-case 'AWeber': subscribe_to_aweber($list, $contact); break;
-case 'CyberMailing': subscribe_to_cybermailing($list, $contact); break;
-case 'GetResponse': subscribe_to_getresponse($list, $contact); break;
-case 'MailChimp': subscribe_to_mailchimp($list, $contact); break;
-case 'SG Autorépondeur': subscribe_to_sg_autorepondeur($list, $contact); break; } } }
+case 'AWeber': kleor_subscribe_to_aweber($list, $contact); break;
+case 'CyberMailing': kleor_subscribe_to_cybermailing($list, $contact); break;
+case 'GetResponse': kleor_subscribe_to_getresponse($list, $contact); break;
+case 'MailChimp': kleor_subscribe_to_mailchimp($list, $contact); break;
+case 'SG Autorépondeur': kleor_subscribe_to_sg_autorepondeur($list, $contact); break; } } }
 
 
-function subscribe_to_aweber($list, $contact) {
+function kleor_subscribe_to_aweber($list, $contact) {
 $list = str_replace('à', '@', $list);
 if (!strstr($list, '@')) { $list = $list.'@aweber.com'; }
-$contact['first_name'] = strip_accents($contact['first_name']);
+$contact['first_name'] = kleor_strip_accents($contact['first_name']);
 $subject = 'AWeber Subscription';
 $body =
 "\nEmail: ".$contact['email_address'].
@@ -24,13 +24,12 @@ $body =
 "\nReferrer: ".$contact['referrer'];
 $domain = $_SERVER['SERVER_NAME'];
 if (substr($domain, 0, 4) == 'www.') { $domain = substr($domain, 4); }
-if (strlen($domain) < 36) { $sender = 'wordpress@'.$domain; }
-else { $sender = 'w@'.$domain; }
+if (strlen($domain) < 36) { $sender = 'wordpress@'.$domain; } else { $sender = 'w@'.$domain; }
 foreach (array($sender, $contact['first_name'].' <'.$contact['email_address'].'>') as $string) {
 mail($list, $subject, $body, 'From: '.$string); } }
 
 
-function subscribe_to_cybermailing($list, $contact) {
+function kleor_subscribe_to_cybermailing($list, $contact) {
 wp_remote_get('http://www.cybermailing.com/mailing/subscribe.php?'.
 'Liste='.$list.'&'.
 'ListName='.$list.'&'.
@@ -40,7 +39,7 @@ wp_remote_get('http://www.cybermailing.com/mailing/subscribe.php?'.
 'WebSite='.$contact['website_url'], array('timeout' => 10)); }
 
 
-function subscribe_to_getresponse($list, $contact) {
+function kleor_subscribe_to_getresponse($list, $contact) {
 ini_set('display_errors', 0);
 if (!class_exists('jsonRPCClient')) { include_once CONTACT_MANAGER_PATH.'libraries/getresponse.php'; }
 $api_key = contact_data('getresponse_api_key');
@@ -55,7 +54,7 @@ if ($contact['referrer'] != '') { $data['customs'] = array(array('name' => 'refe
 $result = $client->add_contact($api_key, $data); }
 
 
-function subscribe_to_mailchimp($list, $contact) {
+function kleor_subscribe_to_mailchimp($list, $contact) {
 if (!class_exists('MailChimp')) { include_once CONTACT_MANAGER_PATH.'libraries/mailchimp.php'; }
 $api_key = contact_data('mailchimp_api_key');
 $MailChimp = new MailChimp($api_key);
@@ -68,7 +67,7 @@ $result = $MailChimp->call('lists/subscribe', array(
 'replace_interests' => false)); }
 
 
-function subscribe_to_sg_autorepondeur($list, $contact) {
+function kleor_subscribe_to_sg_autorepondeur($list, $contact) {
 $data = array(
 'membreid' => contact_data('sg_autorepondeur_account_id'),
 'codeactivationclient' => contact_data('sg_autorepondeur_activation_code'),

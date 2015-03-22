@@ -15,10 +15,10 @@ foreach (array('default', 'filter') as $key) { $$key = (isset($atts[$key]) ? $at
 $formatting = (((isset($atts['formatting'])) && ($atts['formatting'] == 'no')) ? 'no' : 'yes');
 if (!isset($atts['id'])) { $id = 0; }
 else {
-if (format_nice_name($atts['id']) == 'get') { $id = (int) (isset($_GET['user_id']) ? $_GET['user_id'] : (isset($_GET['id']) ? $_GET['id'] : 0)); }
+if (kleor_format_nice_name($atts['id']) == 'get') { $id = (int) (isset($_GET['user_id']) ? $_GET['user_id'] : (isset($_GET['id']) ? $_GET['id'] : 0)); }
 else { $id = (int) preg_replace('/[^0-9]/', '', $atts['id']); }
 if ($id == 0) { $user_data = array(); } } }
-$field = str_replace('-', '_', format_nice_name($field));
+$field = str_replace('-', '_', kleor_format_nice_name($field));
 if ($field == '') { $field = 'login'; }
 switch ($field) {
 case 'date': case 'date_utc': $field = 'user_registered'; break;

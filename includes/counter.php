@@ -6,7 +6,7 @@ $GLOBALS['contact_form_data'] = (array) (isset($GLOBALS['contact_form_data']) ? 
 if ((isset($GLOBALS['contact_form_id'])) && ((!isset($GLOBALS['contact_form_data']['id'])) || ($GLOBALS['contact_form_data']['id'] != $GLOBALS['contact_form_id']))) {
 $GLOBALS['contact_form_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_forms WHERE id = ".$GLOBALS['contact_form_id'], OBJECT); }
 $contact_form_data = $GLOBALS['contact_form_data'];
-$field = str_replace('-', '_', format_nice_name($data));
+$field = str_replace('-', '_', kleor_format_nice_name($data));
 if (strstr($field, 'display')) { $field = 'displays_count'; } else { $field = 'messages_count'; }
 $id = preg_split('#[^0-9]#', $id, 0, PREG_SPLIT_NO_EMPTY);
 $m = count($id);
@@ -42,14 +42,14 @@ $data = 0; for ($i = 0; $i < $m; $i++) {
 $atts['data'] = $datas[$i];
 $data = $data + contact_counter($atts, '[total-number]'); } }
 else {
-$data = str_replace('_', '-', format_nice_name($data));
+$data = str_replace('_', '-', kleor_format_nice_name($data));
 switch ($data) {
 case 'forms': $table = $wpdb->prefix.'contact_manager_forms'; $field = ''; break;
 case 'forms-categories': $table = $wpdb->prefix.'contact_manager_forms_categories'; $field = ''; break;
 case 'messages': $table = $wpdb->prefix.'contact_manager_messages'; $field = ''; break;
 default: $table = $wpdb->prefix.'contact_manager_messages'; $field = ''; }
 
-$range = str_replace('_', '-', format_nice_name($range));
+$range = str_replace('_', '-', kleor_format_nice_name($range));
 $time = time() + 3600*UTC_OFFSET;
 if (is_numeric($range)) {
 $range = (int) $range;
@@ -104,7 +104,7 @@ $end_date = $y.'-12-31 23:59:59';
 $date_criteria = "AND (date BETWEEN '".$start_date."' AND '".$end_date."')"; break;
 default: $date_criteria = ''; } }
 
-$status = str_replace('-', '_', format_nice_name($status));
+$status = str_replace('-', '_', kleor_format_nice_name($status));
 if ($status == '') { $status_criteria = ''; }
 else { $status_criteria = "AND status = '".$status."'"; }
 
@@ -138,7 +138,7 @@ $content = explode('[after]', do_shortcode($content));
 
 $tags = array('limit', 'number', 'remaining-number', 'total-limit', 'total-number', 'total-remaining-number');
 foreach ($tags as $tag) {
-$_tag = str_replace('-', '_', format_nice_name($tag));
+$_tag = str_replace('-', '_', kleor_format_nice_name($tag));
 if (isset($GLOBALS['contact_'.$_tag])) { $original['contact_'.$_tag] = $GLOBALS['contact_'.$_tag]; }
 remove_shortcode($tag); add_shortcode($tag, create_function('$atts', '$atts["data"] = "'.$tag.'"; return contact_counter_tag($atts);')); }
 
@@ -153,7 +153,7 @@ $content = (isset($content[$k]) ? do_shortcode($content[$k]) : '');
 $content = contact_filter_data($filter, $content);
 
 foreach ($tags as $tag) {
-$_tag = str_replace('-', '_', format_nice_name($tag));
+$_tag = str_replace('-', '_', kleor_format_nice_name($tag));
 if (isset($original['contact_'.$_tag])) { $GLOBALS['contact_'.$_tag] = $original['contact_'.$_tag]; }
 remove_shortcode($tag); }
 

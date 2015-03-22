@@ -28,11 +28,11 @@ include CONTACT_MANAGER_PATH.'tables.php';
 foreach ($tables['messages'] as $key => $value) {
 if ((isset($_POST[$key])) && ($key != 'referring_url') && (!in_array($key, $GLOBALS[$prefix.'fields']))) { unset($_POST[$key]); } }
 $custom_fields = array(); foreach ($_POST as $key => $value) {
-if ((substr($key, 0, 13) == 'custom_field_') && (in_array($key, $GLOBALS[$prefix.'fields']))) { $custom_fields[substr($key, 13)] = str_replace('\\', '', quotes_entities_decode($value)); } }
+if ((substr($key, 0, 13) == 'custom_field_') && (in_array($key, $GLOBALS[$prefix.'fields']))) { $custom_fields[substr($key, 13)] = str_replace('\\', '', kleor_quotes_entities_decode($value)); } }
 $_POST['custom_fields'] = ($custom_fields == array() ? '' : serialize($custom_fields));
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 if (contact_data('form_submission_custom_instructions_executed') == 'yes') {
-eval(format_instructions(contact_data('form_submission_custom_instructions'))); } }
+eval(kleor_format_instructions(contact_data('form_submission_custom_instructions'))); } }
 foreach (array('email_address', 'content', 'subject') as $field) {
 if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
 $_POST['receiver'] = contact_form_data('message_notification_email_receiver');
@@ -83,6 +83,6 @@ $result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_me
 if (!$result) { $GLOBALS['user_id'] = get_current_user_id(); add_message($_POST); }
 
 if (($redirection != '') && (substr($redirection, 0, 1) != '#')) {
-$redirection = format_url($redirection);
+$redirection = kleor_format_url($redirection);
 if (!headers_sent()) { header('Location: '.$redirection); exit(); }
 else { $content .= '<script type="text/javascript">window.location = \''.$redirection.'\';</script>'; } } }

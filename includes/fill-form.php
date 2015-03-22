@@ -49,8 +49,8 @@ if ($_POST['displays_count'] < $_POST['messages_count']) { $_POST['displays_coun
 if (!isset($_GET['id'])) {
 if ($_POST['name'] == '') { $error .= ' '.__('Please fill out the required fields.', 'contact-manager'); }
 elseif ($is_category) {
-$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."'", OBJECT);
-if ($result) { $_POST['name_error'] = __('This name is not available.', 'contact-manager'); $error .= ' '.$_POST['name_error']; } }
+$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."'", OBJECT);
+if ($result) { $_POST['name_error'] = str_replace('<a', '<a '.$ids_fields_links_markup, sprintf(__('This name is already used by <a href="%1$s">this category</a>.', 'contact-manager'), 'admin.php?page=contact-manager-form-category&amp;id='.$result->id)); $error .= ' '.__('This name is not available.', 'contact-manager'); } }
 if (($error == '') && (isset($_POST['submit']))) {
 if ($is_category) { $result = false; }
 else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND date = '".$_POST['date']."'", OBJECT); }
@@ -84,8 +84,8 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 if ($_POST['name'] != '') {
 if ((!$is_category) && (isset($_POST['submit']))) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); }
 else {
-$result = $wpdb->get_results("SELECT name FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND id != ".$_GET['id'], OBJECT);
-if ($result) { $_POST['name_error'] = __('This name is not available.', 'contact-manager'); $error .= ' '.$_POST['name_error']; }
+$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND id != ".$_GET['id'], OBJECT);
+if ($result) { $_POST['name_error'] = str_replace('<a', '<a '.$ids_fields_links_markup, sprintf(__('This name is already used by <a href="%1$s">this category</a>.', 'contact-manager'), 'admin.php?page=contact-manager-form-category&amp;id='.$result->id)); $error .= ' '.__('This name is not available.', 'contact-manager'); }
 elseif (isset($_POST['submit'])) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); } } }
 if (isset($_POST['submit'])) {
 $sql = contact_sql_array($tables[$table_slug], $_POST);
@@ -143,8 +143,8 @@ if (isset($countries[$key])) { $_POST['country'] = $countries[$key]; } } }
 elseif ($_POST['country'] != '') {
 if ($_POST['country_code'] == '') {
 include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
-$country_codes = array_flip(array_map('format_nice_name', $countries));
-$key = format_nice_name($_POST['country']);
+$country_codes = array_flip(array_map('kleor_format_nice_name', $countries));
+$key = kleor_format_nice_name($_POST['country']);
 if (isset($country_codes[$key])) { $_POST['country_code'] = $country_codes[$key]; } } }
 $_POST['form_id'] = (int) $_POST['form_id'];
 if ($_POST['form_id'] < 1) {
@@ -169,7 +169,7 @@ for ($i = 0; $i < 6; $i++) { $d[$i] = (int) (isset($d[$i]) ? $d[$i] : ($i < 3 ? 
 $time = mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]);
 $_POST['date'] = date('Y-m-d H:i:s', $time);
 $_POST['date_utc'] = date('Y-m-d H:i:s', $time - (isset($_GET['id']) ? contact_manager_utc_offset($current_item, 'date') : 3600*UTC_OFFSET)); }
-$_POST['email_address'] = format_email_address($_POST['email_address']);
+$_POST['email_address'] = kleor_format_email_address($_POST['email_address']);
 $custom_fields = (array) $back_office_options['message_page_custom_fields'];
 $item_custom_fields = array();
 foreach ($custom_fields as $key => $value) {
@@ -183,12 +183,12 @@ if (get_option('affiliation_manager')) {
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE id = ".$_POST['referrer'], OBJECT);
 if ($result) { $_POST['referrer'] = $result->login; } } }
 if (strstr($_POST['referrer'], '@')) {
-$_POST['referrer'] = format_email_address($_POST['referrer']);
+$_POST['referrer'] = kleor_format_email_address($_POST['referrer']);
 if (get_option('affiliation_manager')) {
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE (email_address = '".$_POST['referrer']."' OR paypal_email_address = '".$_POST['referrer']."')", OBJECT);
 if ($result) { $_POST['referrer'] = $result->login; } } }
 else {
-$_POST['referrer'] = format_nice_name($_POST['referrer']);
+$_POST['referrer'] = kleor_format_nice_name($_POST['referrer']);
 if (is_numeric($_POST['referrer'])) { $_POST['referrer'] = ''; } } }
 if (($_POST['referrer'] == '') || (strstr($_POST['referrer'], '@'))) {
 $_POST['commission_amount'] = 0;
@@ -229,12 +229,12 @@ if (get_option('affiliation_manager')) {
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE id = ".$_POST['referrer2'], OBJECT);
 if ($result) { $_POST['referrer2'] = $result->login; } } }
 if (strstr($_POST['referrer2'], '@')) {
-$_POST['referrer2'] = format_email_address($_POST['referrer2']);
+$_POST['referrer2'] = kleor_format_email_address($_POST['referrer2']);
 if (get_option('affiliation_manager')) {
 $result = $wpdb->get_row("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE (email_address = '".$_POST['referrer2']."' OR paypal_email_address = '".$_POST['referrer2']."')", OBJECT);
 if ($result) { $_POST['referrer2'] = $result->login; } } }
 else {
-$_POST['referrer2'] = format_nice_name($_POST['referrer2']);
+$_POST['referrer2'] = kleor_format_nice_name($_POST['referrer2']);
 if (is_numeric($_POST['referrer2'])) { $_POST['referrer2'] = ''; } } }
 if (($_POST['referrer2'] == '') || (strstr($_POST['referrer2'], '@'))) {
 $_POST['commission2_amount'] = 0;

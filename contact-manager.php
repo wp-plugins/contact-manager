@@ -3,7 +3,7 @@
 Plugin Name: Contact Manager
 Plugin URI: http://www.kleor.com/contact-manager/
 Description: Allows you to create and manage your contact forms and messages.
-Version: 6.1
+Version: 6.1.1
 Author: Kleor
 Author URI: http://www.kleor.com
 Text Domain: contact-manager
@@ -35,7 +35,7 @@ define('CONTACT_MANAGER_FOLDER', str_replace('/contact-manager.php', '', plugin_
 $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'));
 define('CONTACT_MANAGER_VERSION', $plugin_data['Version']);
 
-if (!function_exists('fix_url')) { include_once CONTACT_MANAGER_PATH.'libraries/formatting-functions.php'; }
+if (!function_exists('kleor_fix_url')) { include_once CONTACT_MANAGER_PATH.'libraries/formatting-functions.php'; }
 if (is_admin()) { include_once CONTACT_MANAGER_PATH.'admin.php'; }
 
 function install_contact_manager($context = '') { include CONTACT_MANAGER_PATH.'includes/install.php'; }
@@ -48,7 +48,7 @@ global $wpdb;
 $contact_manager_options = (array) get_option('contact_manager');
 if ((!isset($contact_manager_options['version'])) || ($contact_manager_options['version'] != CONTACT_MANAGER_VERSION)) { install_contact_manager(); }
 
-fix_url();
+kleor_fix_url();
 
 
 function add_contact_form_in_posts($content) { include CONTACT_MANAGER_PATH.'includes/add-contact-form-in-posts.php'; return $content; }
@@ -121,22 +121,35 @@ function message_data($atts) {
 return contact_item_data('message', $atts); }
 
 
+function contact_mail($sender, $receiver, $subject, $body, $attachments = array()) { include CONTACT_MANAGER_PATH.'includes/mail.php'; }
+
+
+function contact_mysqli_connect() { include CONTACT_MANAGER_PATH.'includes/mysqli-connect.php'; return $link; }
+
+
 function contact_shortcode_atts($default_values, $atts) { include CONTACT_MANAGER_PATH.'includes/shortcode-atts.php'; return $atts; }
 
 
 function contact_sql_array($table, $array) { include CONTACT_MANAGER_PATH.'includes/sql-array.php'; return $sql; }
 
 
+$tags = array();
 foreach (array('contact-content', 'contact-counter', 'contact-form-counter') as $tag) {
 $function = create_function('$atts, $content', 'include_once CONTACT_MANAGER_PATH."shortcodes.php"; return '.str_replace('-', '_', $tag).'($atts, $content);');
-for ($i = 0; $i < 4; $i++) { add_shortcode($tag.($i == 0 ? '' : $i), $function); } }
-add_shortcode('user', 'contact_user_data');
-add_shortcode('contact-manager', 'contact_data');
+for ($i = 0; $i < 4; $i++) { $tags[] = $tag.($i == 0 ? '' : $i); add_shortcode($tag.($i == 0 ? '' : $i), $function); } }
+$tags[] = 'user'; add_shortcode('user', 'contact_user_data');
+$tags[] = 'contact-manager'; add_shortcode('contact-manager', 'contact_data');
 foreach (array(
 'contact-form-category',
 'contact-form',
-'message') as $tag) { add_shortcode($tag, str_replace('-', '_', $tag).'_data'); }
-add_shortcode('sender', 'message_data');
+'message') as $tag) { $tags[] = $tag; add_shortcode($tag, str_replace('-', '_', $tag).'_data'); }
+$tags[] = 'sender'; add_shortcode('sender', 'message_data');
+$contact_manager_shortcodes = $tags;
+
+
+function replace_contact_manager_shortcodes($data) { include CONTACT_MANAGER_PATH.'includes/replace-shortcodes.php'; return $data; }
+
+add_filter('wp_insert_post_data', 'replace_contact_manager_shortcodes', 10, 1);
 
 
 foreach (array(

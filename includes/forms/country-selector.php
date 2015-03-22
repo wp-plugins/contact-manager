@@ -21,7 +21,7 @@ include CONTACT_MANAGER_PATH.'languages/countries/sorted-countries.php';
 $countries_list = '<option value="">--</option>'."\n";
 foreach ($countries as $country_code => $country) {
 if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] == $country_code)) { $_POST[$prefix.'country'] = $country; }
-elseif ((isset($_POST[$prefix.'country'])) && (format_nice_name($_POST[$prefix.'country']) == format_nice_name($country))) { $_POST[$prefix.$name] = $country_code; }
+elseif ((isset($_POST[$prefix.'country'])) && (kleor_format_nice_name($_POST[$prefix.'country']) == kleor_format_nice_name($country))) { $_POST[$prefix.$name] = $country_code; }
 $countries_list .= '<option value="'.$country_code.'"'.(((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] == $country_code)) ? ' selected="selected"' : '').'>'.$country.'</option>'."\n"; }
 if ((isset($_POST[$prefix.'submit'])) && (in_array($atts['required'], array('required', 'yes'))) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $GLOBALS[$prefix.'country_error'] = 'unfilled_field'; }
 if (((!isset($GLOBALS['form_focus'])) || ($GLOBALS['form_focus'] == '')) && ((!isset($_POST[$prefix.$name])) || ($_POST[$prefix.$name] == ''))) { $GLOBALS['form_focus'] = $prefix.$name; }

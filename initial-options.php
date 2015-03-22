@@ -82,7 +82,7 @@ $initial_options['admin_notices'] = array();
 $initial_options['code'] =
 '<style scoped="scoped" type="text/css" media="all">
 input[type="submit"] { background-color: #e0c040; border: 1px solid #a08000; border-radius: 4px; box-shadow: 1px 1px 1px #808080; color: #000000; cursor: pointer; height: 2em; line-height: 1em; padding: 0 0.5em; }
-input[type="submit"]:hover { background-color: #a0a0a0; border: 1px solid #000000; }
+input[type="submit"]:hover { background-color: #a0a0a0; border: 1px solid #000000; color: #000000; }
 </style>
 
 [validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>

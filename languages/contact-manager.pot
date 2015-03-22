@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.1\n"
+"Project-Id-Version: Contact Manager 6.1.1\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -1714,4 +1714,7 @@ msgid "You can't uncheck your own role."
 msgstr ""
 
 msgid "You can't uncheck the roles able to activate plugins."
+msgstr ""
+
+msgid "This name is already used by <a href=\"%1$s\">this category</a>."
 msgstr ""

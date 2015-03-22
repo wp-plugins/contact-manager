@@ -8,8 +8,8 @@ switch ($_GET['action']) {
 case 'fill-form':
 if (!headers_sent()) { header('Content-type: text/plain'); }
 if ((isset($_GET['page'])) && (isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) {
-foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
 if (current_user_can('view_contact_manager')) {
+foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
 $GLOBALS['action'] = 'fill_admin_page_form';
 function contact_fill_admin_page_form() {
 global $wpdb; $error = '';
@@ -32,8 +32,8 @@ contact_fill_admin_page_form(); } } break;
 case 'install': if ((isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) { install_contact_manager(); } break;
 case 'update-options':
 if ((isset($_GET['page'])) && (isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) {
-foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
 if (current_user_can('manage_contact_manager')) {
+foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
 $options = get_option(str_replace('-', '_', $_GET['page']));
 if ($options) { $options = (array) $options;
 foreach ($options as $key => $value) { if (isset($_GET[$key])) { $options[$key] = stripslashes($_GET[$key]); } }

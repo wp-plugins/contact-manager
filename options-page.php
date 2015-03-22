@@ -4,10 +4,13 @@ extract(contact_manager_pages_links_markups($back_office_options));
 $admin_page = 'options';
 
 if ((isset($_GET['action'])) && (($_GET['action'] == 'reset') || ($_GET['action'] == 'uninstall'))) {
+if ((!current_user_can('activate_plugins')) || (!current_user_can('manage_contact_manager'))) {
+if (!headers_sent()) { header('Location: admin.php?page=contact-manager'); exit(); }
+else { echo '<script type="text/javascript">window.location = "admin.php?page=contact-manager";</script>'; } }
+else {
 $for = (((isset($_GET['for'])) && (is_multisite()) && (current_user_can('manage_network'))) ? $_GET['for'] : 'single');
 if ((isset($_POST['submit'])) && (check_admin_referer($_GET['page']))) {
-if (!current_user_can('manage_contact_manager')) { $_POST = array(); $error = __('You don\'t have sufficient permissions.', 'contact-manager'); }
-else { if ($_GET['action'] == 'reset') { reset_contact_manager(); } else { uninstall_contact_manager($for); } } } ?>
+if ($_GET['action'] == 'reset') { reset_contact_manager(); } else { uninstall_contact_manager($for); } } ?>
 <div class="wrap">
 <div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
@@ -28,7 +31,7 @@ else { _e('Do you really want to permanently delete the options and tables of Co
 </div>
 </form><?php } ?>
 </div>
-</div><?php }
+</div><?php } }
 
 else {
 foreach (array('admin-pages.php', 'initial-options.php') as $file) { include CONTACT_MANAGER_PATH.$file; }
@@ -280,7 +283,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <h3 style="font-size: 1.375em;" id="autoresponders-integration"><strong><?php echo $modules['options']['autoresponders-integration']['name']; ?></strong></h3>
 <div class="inside">
 <table class="form-table"><tbody>
-<?php if (function_exists('commerce_data')) { ?>
+<?php if ((function_exists('commerce_data')) && (current_user_can('view_commerce_manager'))) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><a <?php echo $default_options_links_markup; ?> href="admin.php?page=commerce-manager#autoresponders-integration"><?php _e('Click here to configure the options of Commerce Manager.', 'contact-manager'); ?></a></span></td></tr>
 <?php } ?>
@@ -345,7 +348,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php echo (function_exists('commerce_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=commerce-manager-client-area">'.__('Click here to configure the options of Commerce Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To register the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager/">Commerce Manager</a>.', 'contact-manager'))); ?></span></td></tr>
+<td><span class="description"><?php echo (((function_exists('commerce_data')) && (current_user_can('view_commerce_manager'))) ? '<a '.$default_options_links_markup.' href="admin.php?page=commerce-manager-client-area">'.__('Click here to configure the options of Commerce Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To register the senders as clients, you must have installed and activated <a href="http://www.kleor.com/commerce-manager/">Commerce Manager</a>.', 'contact-manager'))); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_as_a_client" id="sender_subscribed_as_a_client" value="yes"<?php if ($options['sender_subscribed_as_a_client'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Register the sender as a client', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-as-a-client"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -377,14 +380,14 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 <option value="yes"<?php if ($options['commerce_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['commerce_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php (function_exists('commerce_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-confirmation-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('commerce_data')) && (current_user_can('view_commerce_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-confirmation-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commerce_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
 <td><select name="commerce_registration_notification_email_sent" id="commerce_registration_notification_email_sent">
 <option value=""<?php if ($options['commerce_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?> id="commerce_registration_notification_email_sent_default_option"><?php _e('Commerce Manager\'s option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($options['commerce_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['commerce_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php (function_exists('commerce_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-notification-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('commerce_data')) && (current_user_can('view_commerce_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-notification-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -395,7 +398,7 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php echo (function_exists('affiliation_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=affiliation-manager">'.__('Click here to configure the options of Affiliation Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager/">Affiliation Manager</a>.', 'contact-manager'))); ?></span></td></tr>
+<td><span class="description"><?php echo (((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) ? '<a '.$default_options_links_markup.' href="admin.php?page=affiliation-manager">'.__('Click here to configure the options of Affiliation Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use affiliation, you must have installed and activated <a href="http://www.kleor.com/affiliation-manager/">Affiliation Manager</a>.', 'contact-manager'))); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_to_affiliate_program" id="sender_subscribed_to_affiliate_program" value="yes"<?php if ($options['sender_subscribed_to_affiliate_program'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Register the sender to the affiliate program', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#registration-to-affiliate-program"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -427,14 +430,14 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 <option value="yes"<?php if ($options['affiliation_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['affiliation_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php (function_exists('affiliation_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-confirmation-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-confirmation-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="affiliation_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
 <td><select name="affiliation_registration_notification_email_sent" id="affiliation_registration_notification_email_sent">
 <option value=""<?php if ($options['affiliation_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?> id="affiliation_registration_notification_email_sent_default_option"><?php _e('Affiliation Manager\'s option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($options['affiliation_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['affiliation_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php (function_exists('affiliation_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-notification-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-notification-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -445,7 +448,7 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><?php echo (function_exists('membership_data') ? '<a '.$default_options_links_markup.' href="admin.php?page=membership-manager">'.__('Click here to configure the options of Membership Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use membership, you must have installed and activated <a href="http://www.kleor.com/membership-manager/">Membership Manager</a>.', 'contact-manager'))); ?></span></td></tr>
+<td><span class="description"><?php echo (((function_exists('membership_data')) && (current_user_can('view_membership_manager'))) ? '<a '.$default_options_links_markup.' href="admin.php?page=membership-manager">'.__('Click here to configure the options of Membership Manager.', 'contact-manager').'</a>' : str_replace('<a', '<a '.$documentations_links_markup, __('To use membership, you must have installed and activated <a href="http://www.kleor.com/membership-manager/">Membership Manager</a>.', 'contact-manager'))); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="sender_subscribed_to_members_areas" id="sender_subscribed_to_members_areas" value="yes"<?php if ($options['sender_subscribed_to_members_areas'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender to a member area', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#membership"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
@@ -492,14 +495,14 @@ echo '<span id="sender-member-category-id-links">'.contact_manager_pages_field_l
 <option value="yes"<?php if ($options['membership_registration_confirmation_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['membership_registration_confirmation_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php (function_exists('membership_data') ? printf(str_replace('<a', '<a id="membership-registration-confirmation-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-confirmation-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('membership_data')) && (current_user_can('view_membership_manager'))) ? printf(str_replace('<a', '<a id="membership-registration-confirmation-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-confirmation-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="membership_registration_notification_email_sent"><?php _e('Send a registration notification email', 'contact-manager'); ?></label></strong></th>
 <td><select name="membership_registration_notification_email_sent" id="membership_registration_notification_email_sent">
 <option value=""<?php if ($options['membership_registration_notification_email_sent'] == '') { echo ' selected="selected"'; } ?> id="membership_registration_notification_email_sent_default_option"><?php _e('Member area\'s option', 'contact-manager'); ?></option>
 <option value="yes"<?php if ($options['membership_registration_notification_email_sent'] == 'yes') { echo ' selected="selected"'; } ?>><?php _e('Yes', 'contact-manager'); ?></option>
 <option value="no"<?php if ($options['membership_registration_notification_email_sent'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select>
-<span class="description"><?php (function_exists('membership_data') ? printf(str_replace('<a', '<a id="membership-registration-notification-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-notification-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('membership_data')) && (current_user_can('view_membership_manager'))) ? printf(str_replace('<a', '<a id="membership-registration-notification-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-notification-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -621,6 +624,21 @@ subelement = document.getElementById(submodules[modules[i]][j]+"-module");
 if ((subelement) && (anchor == "#"+submodules[modules[i]][j])) {
 element.style.display = "block"; subelement.style.display = "block"; } } }'."\n"; ?>
 
+<?php $fields = array(); $strings = array();
+foreach (array(
+'encrypted_urls_validity_duration',
+'commission_amount',
+'commission2_amount') as $field) { $fields[] = $field; $strings[$field] = "this.value.replace(/[?,;]/g, '.')"; }
+foreach (array('automatic_display_form_id') as $field) { $fields[] = $field; $strings[$field] = "this.value.replace(/[^0-9]/g, '')"; }
+echo 'fields = '.json_encode($fields).';
+strings = '.json_encode($strings).';
+for (i = 0, n = fields.length; i < n; i++) {
+element = document.getElementById(fields[i]);
+if ((element) && ((element.type == "text") || (element.type == "textarea"))) {
+events = ["onchange","onkeyup"]; for (j = 0; j < 2; j++) {
+if (element.hasAttribute(events[j])) { string = " "+element.getAttribute(events[j]); } else { string = ""; }
+element.setAttribute(events[j], "this.value = "+strings[fields[i]]+";"+string); } } }'."\n"; ?>
+
 <?php echo 'fields = []; default_values = [];'."\n";
 foreach ($initial_options[''] as $key => $value) {
 $value = (string) $value; if (($value != '') && (!in_array($key, array('automatic_display_maximum_forms_quantity', 'maximum_messages_quantity')))) {
@@ -700,7 +718,7 @@ var fields = '.json_encode($urls_fields).';
 for (i = 0, n = fields.length; i < n; i++) {
 var element = document.getElementById(fields[i].replace(/[_]/g, "-")+"-link");
 if (element) {
-var urls = form[fields[i]].value.split(","); var url = format_url(urls[0].replace(/[ ]/g, ""));
+var urls = form[fields[i]].value.split(","); var url = kleor_format_url(urls[0].replace(/[ ]/g, ""));
 if (url == "") { element.innerHTML = ""; }
 else { element.innerHTML = \'<a style="vertical-align: 25%;" '.$urls_fields_links_markup.' href="\'+url.replace(/[&]/g, "&amp;")+\'">'.__('Link', 'contact-manager').'</a>\'; } } }
 '.(!function_exists('membership_data') ? '' : 'var field = form["sender_members_areas"]; if (field) {

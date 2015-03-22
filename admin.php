@@ -10,7 +10,7 @@ if ((!isset($options['menu_title_'.$lang])) || ($options['menu_title_'.$lang] ==
  || ($options['pages_titles_'.$lang] == '')) { install_contact_manager(); $options = (array) get_option('contact_manager_back_office'); }
 $menu_title = $options['menu_title_'.$lang]; $pages_titles = (array) $options['pages_titles_'.$lang];
 if (((isset($_GET['page'])) && (strstr($_GET['page'], 'contact-manager'))) || ($menu_title == '')) { $menu_title = __('Contact', 'contact-manager'); }
-if ($options['custom_icon_used'] == 'yes') { $icon_url = format_url($options['custom_icon_url']); } else { $icon_url = ''; }
+if ($options['custom_icon_used'] == 'yes') { $icon_url = kleor_format_url($options['custom_icon_url']); } else { $icon_url = ''; }
 add_menu_page('Contact Manager', $menu_title, 'view_contact_manager', 'contact-manager', create_function('', 'include_once CONTACT_MANAGER_PATH."options-page.php";'), $icon_url);
 $admin_menu_pages = contact_manager_admin_menu_pages();
 foreach ($admin_pages as $key => $value) { if (in_array($key, $admin_menu_pages)) {
@@ -83,6 +83,7 @@ foreach (array("page", "post") as $type) { add_meta_box("contact-manager", "Cont
 
 
 function contact_manager_action_links($links) {
+if (current_user_can('manage_contact_manager')) {
 if (!is_network_admin()) {
 $links = array_merge($links, array(
 '<span class="delete"><a href="admin.php?page=contact-manager&amp;action=uninstall" title="'.__('Delete the options and tables of Contact Manager', 'contact-manager').'">'.__('Uninstall', 'contact-manager').'</a></span>',
@@ -90,7 +91,7 @@ $links = array_merge($links, array(
 '<a href="admin.php?page=contact-manager">'.__('Options', 'contact-manager').'</a>')); }
 else {
 $links = array_merge($links, array(
-'<span class="delete"><a href="../admin.php?page=contact-manager&amp;action=uninstall&amp;for=network" title="'.__('Delete the options and tables of Contact Manager for all sites in this network', 'contact-manager').'">'.__('Uninstall', 'contact-manager').'</a></span>')); }
+'<span class="delete"><a href="../admin.php?page=contact-manager&amp;action=uninstall&amp;for=network" title="'.__('Delete the options and tables of Contact Manager for all sites in this network', 'contact-manager').'">'.__('Uninstall', 'contact-manager').'</a></span>')); } }
 return $links; }
 
 foreach (array('', 'network_admin_') as $prefix) { add_filter($prefix.'plugin_action_links_'.CONTACT_MANAGER_FOLDER.'/contact-manager.php', 'contact_manager_action_links', 10, 2); }

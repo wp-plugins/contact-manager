@@ -3,7 +3,7 @@ $atts = array_map('contact_do_shortcode', (array) $atts);
 extract(shortcode_atts(array('focus' => '', 'id' => '', 'redirection' => ''), $atts));
 global $post, $wpdb;
 $content = '';
-$focus = format_nice_name($focus);
+$focus = kleor_format_nice_name($focus);
 $id = (int) preg_replace('/[^0-9]/', '', $id);
 if ($id == 0) { $id = (int) (isset($GLOBALS['contact_form_id']) ? $GLOBALS['contact_form_id'] : 0); }
 if (($id == 0) && ((!function_exists('current_user_can')) || (!current_user_can('edit_pages')))) { $id = 1; }
@@ -24,29 +24,18 @@ $prefix = $canonical_prefix.$deduplicator;
 $GLOBALS['contact_form_prefix'] = $prefix;
 if ($redirection == '#') { $redirection .= str_replace('_', '-', substr($prefix, 0, -1)); }
 foreach (array(
-'strip_accents_js',
-'format_email_address_js') as $function) { add_action('wp_footer', $function); }
+'kleor_strip_accents_js',
+'kleor_format_email_address_js') as $function) { add_action('wp_footer', $function); }
 foreach (array('captcha', 'country-selector', 'error', 'input', 'label', 'option', 'select', 'textarea', 'validation-content') as $tag) { remove_shortcode($tag); }
 $tags = array('captcha', 'country-selector', 'input', 'label', 'option', 'select', 'textarea');
 foreach ($tags as $tag) { add_shortcode($tag, 'contact_form_'.str_replace('-', '_', $tag)); }
 if (!isset($_POST['referring_url'])) { $_POST['referring_url'] = (isset($_GET['referring_url']) ? $_GET['referring_url'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')); }
 if (isset($_POST[$prefix.'submit'])) {
-if (isset($link)) { unset($link); }
 if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_string'))) {
-$port = null; $socket = null; $host = DB_HOST;
-$port_or_socket = strstr($host, ':');
-if ($port_or_socket) {
-$host = substr($host, 0, strpos($host, ':'));
-$port_or_socket = substr($port_or_socket, 1);
-if (strpos($port_or_socket, '/') != 0) {
-$port = intval($port_or_socket);
-$maybe_socket = strstr($port_or_socket, ':');
-if ($maybe_socket) { $socket = substr($maybe_socket, 1); } }
-else { $socket = $port_or_socket; } }
-$link = mysqli_connect($host, DB_USER, DB_PASSWORD, DB_NAME, $port, $socket); if (mysqli_connect_error()) { unset($link); } }
+$link = contact_mysqli_connect(); if (mysqli_connect_error()) { unset($link); } }
 foreach ($_POST as $key => $value) {
 if (($key != $prefix.'password') && (is_string($value))) {
-$value = str_replace(array('[', ']'), array('&#91;', '&#93;'), quotes_entities($value));
+$value = str_replace(array('<', '>', '[', ']'), array('&lt;', '&gt;', '&#91;', '&#93;'), kleor_quotes_entities($value));
 $_POST[$key] = str_replace('\\&', '&', trim((isset($link) ? mysqli_real_escape_string($link, $value) : $value))); } }
 if ((isset($_POST[$prefix.'country_code'])) && ($_POST[$prefix.'country_code'] != '')) {
 $_POST[$prefix.'country_code'] = substr(preg_replace('/[^A-Z]/', '', strtoupper($_POST[$prefix.'country_code'])), 0, 2);
@@ -57,15 +46,15 @@ if (isset($countries[$key])) { $_POST[$prefix.'country'] = $countries[$key]; } }
 elseif ((isset($_POST[$prefix.'country'])) && ($_POST[$prefix.'country'] != '')) {
 if ((!isset($_POST[$prefix.'country_code'])) || ($_POST[$prefix.'country_code'] == '')) {
 include CONTACT_MANAGER_PATH.'languages/countries/countries.php';
-$country_codes = array_flip(array_map('format_nice_name', $countries));
-$key = format_nice_name($_POST[$prefix.'country']);
+$country_codes = array_flip(array_map('kleor_format_nice_name', $countries));
+$key = kleor_format_nice_name($_POST[$prefix.'country']);
 if (isset($country_codes[$key])) { $_POST[$prefix.'country_code'] = $country_codes[$key]; } } }
-if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = format_email_address($_POST[$prefix.'email_address']); }
-if (isset($_POST[$prefix.'first_name'])) { $_POST[$prefix.'first_name'] = format_name($_POST[$prefix.'first_name']); }
-if (isset($_POST[$prefix.'last_name'])) { $_POST[$prefix.'last_name'] = format_name($_POST[$prefix.'last_name']); }
-if (isset($_POST[$prefix.'website_url'])) { $_POST[$prefix.'website_url'] = format_url($_POST[$prefix.'website_url']); }
+if (isset($_POST[$prefix.'email_address'])) { $_POST[$prefix.'email_address'] = kleor_format_email_address($_POST[$prefix.'email_address']); }
+if (isset($_POST[$prefix.'first_name'])) { $_POST[$prefix.'first_name'] = kleor_format_name($_POST[$prefix.'first_name']); }
+if (isset($_POST[$prefix.'last_name'])) { $_POST[$prefix.'last_name'] = kleor_format_name($_POST[$prefix.'last_name']); }
+if (isset($_POST[$prefix.'website_url'])) { $_POST[$prefix.'website_url'] = kleor_format_url($_POST[$prefix.'website_url']); }
 $_POST['referring_url'] = html_entity_decode($_POST['referring_url']);
-if (str_replace('-', '_', format_nice_name($redirection)) == 'referring_url') { $redirection = $_POST['referring_url'];
+if (str_replace('-', '_', kleor_format_nice_name($redirection)) == 'referring_url') { $redirection = $_POST['referring_url'];
 if ((substr($redirection, 0, 4) == 'http') && (substr($redirection, 0, strlen(HOME_URL)) != HOME_URL)) { $redirection = ''; } } }
 $maximum_messages_quantity_per_sender = contact_form_data('maximum_messages_quantity_per_sender');
 if (is_numeric($maximum_messages_quantity_per_sender)) { $GLOBALS[$prefix.'required_fields'] = array('email_address'); }
@@ -116,7 +105,7 @@ if (!message) { message = "'.str_replace(array('\\', '"', "\r", "\n", 'script'),
 element.style.display = "inline"; element.innerHTML = message; }
 if (!error) { form.'.$prefix.'confirm_'.$field.'.focus(); } error = true; }
 else if (element) { element.display = "none"; element.innerHTML = ""; }'; }
-if (isset($GLOBALS['form_focus'])) { $form_focus = format_nice_name(strval($GLOBALS['form_focus'])); }
+if (isset($GLOBALS['form_focus'])) { $form_focus = kleor_format_nice_name(strval($GLOBALS['form_focus'])); }
 $form_js = '
 <script type="text/javascript">
 '.((($focus == 'yes') && (isset($form_focus))) ? ($deduplicator == '' ? 'element = document.getElementById("'.$form_focus.'"); if (element) { element.focus(); }'
@@ -124,7 +113,7 @@ $form_js = '
 else { element = document.getElementById("'.str_replace($canonical_prefix, $prefix, $form_focus).'"); if (element) { element.focus(); } }')."\n" : '').
 'function validate_'.substr($prefix, 0, -1).'(form) {
 var error = false;
-'.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? 'form.'.$prefix.'email_address.value = format_email_address(form.'.$prefix.'email_address.value);'."\n" : '')
+'.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? 'form.'.$prefix.'email_address.value = kleor_format_email_address(form.'.$prefix.'email_address.value);'."\n" : '')
 .$required_fields_js.$confirmed_fields_js.'
 '.(in_array('email_address', $GLOBALS[$prefix.'fields']) ? '
 if (form.'.$prefix.'email_address.value !== "") {

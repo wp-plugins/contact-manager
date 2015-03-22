@@ -25,11 +25,11 @@ if (isset($atts[$key])) { unset($atts[$key]); } }
 $formatting = (((isset($atts['formatting'])) && ($atts['formatting'] == 'no')) ? 'no' : 'yes');
 if (!isset($atts['id'])) { $id = 0; }
 else {
-if (format_nice_name($atts['id']) == 'get') { $id = (int) (isset($_GET[$type.'_id']) ? $_GET[$type.'_id'] : (isset($_GET['id']) ? $_GET['id'] : 0)); }
+if (kleor_format_nice_name($atts['id']) == 'get') { $id = (int) (isset($_GET[$type.'_id']) ? $_GET[$type.'_id'] : (isset($_GET['id']) ? $_GET['id'] : 0)); }
 else { $id = (int) preg_replace('/[^0-9]/', '', $atts['id']); }
 if ($id == 0) { $item_data = array(); } }
 $part = (int) (isset($atts['part']) ? preg_replace('/[^0-9]/', '', $atts['part']) : 0); }
-$field = str_replace('-', '_', format_nice_name($field));
+$field = str_replace('-', '_', kleor_format_nice_name($field));
 if ($field == '') { $field = $default_field; }
 if (($id > 0) && ((!isset($item_data['id'])) || ($id != $item_data['id']))) {
 foreach (array($type.'_id', $type.'_data') as $key) {

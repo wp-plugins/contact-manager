@@ -19,7 +19,7 @@ return contact_filter_data($filter, $content[$n]); }
 function contact_counter_tag($atts) {
 $atts = array_map('contact_do_shortcode', (array) $atts);
 extract(shortcode_atts(array('data' => '', 'decimals' => '0/2', 'filter' => ''), $atts));
-$string = $GLOBALS['contact_'.str_replace('-', '_', format_nice_name($data))];
+$string = $GLOBALS['contact_'.str_replace('-', '_', kleor_format_nice_name($data))];
 $string = contact_filter_data($filter, $string);
 $string = contact_decimals_data($decimals, $string);
 return $string; }

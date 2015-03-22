@@ -28,7 +28,7 @@ $GLOBALS['contact_form'.$string.'_data'] = (array) (isset($GLOBALS['contact_form
 $GLOBALS['contact_form'.$string.'_data']['messages_count'] = $messages_count; } } }
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 if (contact_data('message_removal_custom_instructions_executed') == 'yes') {
-eval(format_instructions(contact_data('message_removal_custom_instructions'))); } } } } ?>
+eval(kleor_format_instructions(contact_data('message_removal_custom_instructions'))); } } } } ?>
 <div class="wrap">
 <div id="poststuff" style="padding-top: 0;">
 <?php contact_manager_pages_top($back_office_options); ?>
@@ -67,7 +67,7 @@ if ($message_data) {
 $GLOBALS['message_data'] = (array) $message_data;
 $GLOBALS['message_id'] = $message_data->id;
 foreach ($message_data as $key => $value) { if ((!isset($_POST[$key])) || (!isset($_POST[$key.'_error']))) { $_POST[$key] = $value; } }
-foreach (array('subject', 'content') as $field) { $_POST[$field] = str_replace(array('&#91;', '&#93;'), array('[', ']'), $_POST[$field]); } }
+foreach (array('subject', 'content') as $field) { $_POST[$field] = str_replace(array('&lt;', '&gt;', '&#91;', '&#93;'), array('<', '>', '[', ']'), $_POST[$field]); } }
 elseif (!headers_sent()) { header('Location: admin.php?page=contact-manager-messages'); exit(); }
 else { echo '<script type="text/javascript">window.location = "admin.php?page=contact-manager-messages";</script>'; } }
 else { $GLOBALS['message_id'] = 0; $GLOBALS['message_data'] = array(); }
@@ -384,10 +384,10 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/commerce-manager/documentation/#client-status"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="commerce_registration_confirmation_email_sent" id="commerce_registration_confirmation_email_sent" value="yes"<?php if ($_POST['commerce_registration_confirmation_email_sent'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes');" /> <?php _e('Send a registration confirmation email', 'contact-manager'); ?></label><br />
-<span class="description"><?php (function_exists('commerce_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-confirmation-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('commerce_data')) && (current_user_can('view_commerce_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-confirmation-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="commerce_registration_notification_email_sent" id="commerce_registration_notification_email_sent" value="yes"<?php if ($_POST['commerce_registration_notification_email_sent'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes');" /> <?php _e('Send a registration notification email', 'contact-manager'); ?></label><br />
-<span class="description"><?php (function_exists('commerce_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-notification-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('commerce_data')) && (current_user_can('view_commerce_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=commerce-manager-client-area#registration-notification-email') : _e('You can configure this email through the <em>Client Area</em> page of Commerce Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Save', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -427,10 +427,10 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/affiliation-manager/documentation/#affiliate-status"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="affiliation_registration_confirmation_email_sent" id="affiliation_registration_confirmation_email_sent" value="yes"<?php if ($_POST['affiliation_registration_confirmation_email_sent'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes');" /> <?php _e('Send a registration confirmation email', 'contact-manager'); ?></label><br />
-<span class="description"><?php (function_exists('affiliation_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-confirmation-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-confirmation-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="affiliation_registration_notification_email_sent" id="affiliation_registration_notification_email_sent" value="yes"<?php if ($_POST['affiliation_registration_notification_email_sent'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes');" /> <?php _e('Send a registration notification email', 'contact-manager'); ?></label><br />
-<span class="description"><?php (function_exists('affiliation_data') ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-notification-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) ? printf(str_replace('<a', '<a '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), 'admin.php?page=affiliation-manager#registration-notification-email') : _e('You can configure this email through the <em>Options</em> page of Affiliation Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Save', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -482,10 +482,10 @@ echo '<span id="sender-member-category-id-links">'.contact_manager_pages_field_l
 <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/membership-manager/documentation/#member-status"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="membership_registration_confirmation_email_sent" id="membership_registration_confirmation_email_sent" value="yes"<?php if ($_POST['membership_registration_confirmation_email_sent'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes');" /> <?php _e('Send a registration confirmation email', 'contact-manager'); ?></label><br />
-<span class="description"><?php (function_exists('membership_data') ? printf(str_replace('<a', '<a id="membership-registration-confirmation-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-confirmation-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('membership_data')) && (current_user_can('view_membership_manager'))) ? printf(str_replace('<a', '<a id="membership-registration-confirmation-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-confirmation-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="membership_registration_notification_email_sent" id="membership_registration_notification_email_sent" value="yes"<?php if ($_POST['membership_registration_notification_email_sent'] == 'yes') { echo ' checked="checked"'; } ?> onchange="this.setAttribute('data-changed', 'yes');" /> <?php _e('Send a registration notification email', 'contact-manager'); ?></label><br />
-<span class="description"><?php (function_exists('membership_data') ? printf(str_replace('<a', '<a id="membership-registration-notification-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-notification-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
+<span class="description"><?php (((function_exists('membership_data')) && (current_user_can('view_membership_manager'))) ? printf(str_replace('<a', '<a id="membership-registration-notification-email-sent-link" '.$default_options_links_markup, __('You can configure this email <a href="%1$s">here</a>.', 'contact-manager')), $url.'#registration-notification-email') : _e('You can configure this email through the interface of Membership Manager.', 'contact-manager')); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Save', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -557,6 +557,25 @@ subelement = document.getElementById(submodules[modules[i]][j]+"-module");
 if ((subelement) && (anchor == "#"+submodules[modules[i]][j])) {
 element.style.display = "block"; subelement.style.display = "block"; } } }'."\n"; } ?>
 
+<?php $fields = array(); $strings = array();
+foreach (array('kleor_strip_accents_js', 'kleor_format_email_address_js') as $function) { add_action('admin_footer', $function); }
+foreach (array(
+'email_address',
+'referrer',
+'referrer2') as $field) { $fields[] = $field; $strings[$field] = "kleor_format_email_address(this.value)"; }
+foreach (array(
+'commission_amount',
+'commission2_amount') as $field) { $fields[] = $field; $strings[$field] = "this.value.replace(/[?,;]/g, '.')"; }
+foreach (array('form_id') as $field) { $fields[] = $field; $strings[$field] = "this.value.replace(/[^0-9]/g, '')"; }
+echo 'fields = '.json_encode($fields).';
+strings = '.json_encode($strings).';
+for (i = 0, n = fields.length; i < n; i++) {
+element = document.getElementById(fields[i]);
+if ((element) && ((element.type == "text") || (element.type == "textarea"))) {
+events = ["onchange","onkeyup"]; for (j = 0; j < 2; j++) {
+if (element.hasAttribute(events[j])) { string = " "+element.getAttribute(events[j]); } else { string = ""; }
+element.setAttribute(events[j], "this.value = "+strings[fields[i]]+";"+string); } } }'."\n"; ?>
+
 <?php $fields = array();
 foreach ($tables['messages'] as $key => $value) { $fields[] = $key; }
 foreach ($custom_fields as $key => $value) { $fields[] = 'custom_field_'.$key; }
@@ -601,7 +620,7 @@ var element = document.getElementById(fields[i].replace(/[_]/g, "-")+"-link");
 if (element) {
 if (fields[i].substr(0, 13) == "custom_field_") {
 var url = form[fields[i]].value; if ((url.indexOf(" ") >= 0) || (url.substr(0, 4) != "http")) { url = ""; } }
-else { var urls = form[fields[i]].value.split(","); var url = format_url(urls[0].replace(/[ ]/g, "")); }
+else { var urls = form[fields[i]].value.split(","); var url = kleor_format_url(urls[0].replace(/[ ]/g, "")); }
 if (url == "") { element.innerHTML = ""; }
 else { element.innerHTML = \'<a style="vertical-align: 25%;" '.$urls_fields_links_markup.' href="\'+url.replace(/[&]/g, "&amp;")+\'">'.__('Link', 'contact-manager').'</a>\'; }
 if (fields[i] == "website_url") {
@@ -615,7 +634,7 @@ var actions = ["confirmation","notification"]; for (i = 0; i < 2; i++) {
 var element = document.getElementById("membership-registration-"+actions[i]+"-email-sent-link");
 if (element) { element.href = url+"#registration-"+actions[i]+"-email"; } } }').' }'."\n"; ?>
 
-<?php foreach (array('strip_accents_js', 'format_nice_name_js') as $function) { add_action('admin_footer', $function); }
+<?php foreach (array('kleor_strip_accents_js', 'kleor_format_nice_name_js') as $function) { add_action('admin_footer', $function); }
 echo 'function update_country(form) {
 var countries = '.json_encode($countries).';
 if '.(isset($_GET['id']) ? '(form["country"].value == "")' : '((form["country"].value == "") || (form["country"].getAttribute("data-changed") != "yes"))').' {
@@ -623,9 +642,9 @@ var key = form["country_code"].value;
 if (typeof countries[key] != "undefined") { form["country"].value = countries[key]; } } }
 
 function update_country_code(form) {
-var country_codes = '.json_encode(array_flip(array_map('format_nice_name', $countries))).';
+var country_codes = '.json_encode(array_flip(array_map('kleor_format_nice_name', $countries))).';
 if '.(isset($_GET['id']) ? '(form["country_code"].value == "")' : '((form["country_code"].value == "") || (form["country_code"].getAttribute("data-changed") != "yes"))').' {
-var key = format_nice_name(form["country"].value);
+var key = kleor_format_nice_name(form["country"].value);
 if (typeof country_codes[key] != "undefined") { form["country_code"].value = country_codes[key]; } } }'."\n"; ?>
 </script>
 <?php }

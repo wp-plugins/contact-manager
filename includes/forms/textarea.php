@@ -3,18 +3,18 @@ $prefix = $GLOBALS['contact_form_prefix'];
 $atts = contact_shortcode_atts(array(
 0 => 'content',
 'cols' => '60',
-'onchange' => '',
-'onmouseout' => '',
+'onblur' => '',
+'onkeyup' => '',
 'required' => 'no',
 'rows' => '15'), $atts);
 $markup = '';
-$name = str_replace('-', '_', format_nice_name($atts[0]));
+$name = str_replace('-', '_', kleor_format_nice_name($atts[0]));
 $GLOBALS[$prefix.'fields'][] = $name;
 $main_name = (((substr($name, 0, 8) == 'confirm_') && (in_array(substr($name, 8), $GLOBALS[$prefix.'fields']))) ? substr($name, 8) : $name);
 if ($main_name != $name) { $GLOBALS[$prefix.'confirmed_fields'][] = $main_name; }
 if ((in_array($name, $GLOBALS[$prefix.'required_fields'])) && ($atts['required'] != 'required')) { $atts['required'] = 'yes'; }
 if ($name == 'email_address') {
-if ($atts['onmouseout'] == '') { $atts['onmouseout'] = "this.value = format_email_address(this.value);"; }
+foreach (array('onblur', 'onkeyup') as $key) { if ($atts[$key] == '') { $atts[$key] = "this.value = kleor_format_email_address(this.value);"; } }
 if (isset($_POST[$prefix.'submit'])) {
 if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] != '') && ((!strstr($_POST[$prefix.$name], '@')) || (!strstr($_POST[$prefix.$name], '.')))) {
 $GLOBALS[$prefix.$name.'_error'] = 'invalid_email_address'; } } }

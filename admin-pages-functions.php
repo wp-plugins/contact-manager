@@ -1,6 +1,6 @@
 <?php load_plugin_textdomain('contact-manager', false, CONTACT_MANAGER_FOLDER.'/languages');
 if (is_admin()) {
-foreach ($_GET as $key => $value) { if (is_string($value)) { $_GET[$key] = quotes_entities($_GET[$key]); } }
+foreach ($_GET as $key => $value) { if (is_string($value)) { $_GET[$key] = kleor_quotes_entities($_GET[$key]); } }
 if (isset($_GET['id'])) { $_GET['id'] = (int) $_GET['id']; if ($_GET['id'] < 1) { unset($_GET['id']); } }
 foreach ($_GET as $key => $value) { if ((!isset($GLOBALS[$key])) && (is_scalar($value))) { $GLOBALS[$key] = $value; } } }
 
@@ -31,7 +31,8 @@ html.wp-toolbar { padding-top: 0; }
 add_action('admin_head', 'contact_manager_pages_css');
 
 
-function contact_manager_pages_js() { ?>
+function contact_manager_pages_js() {
+kleor_format_url_js(); ?>
 <script type="text/javascript">
 inputs = document.getElementsByTagName("input");
 for (i = 0, n = inputs.length; i < n; i++) {
@@ -55,18 +56,6 @@ values["onkeydown"] = values["onfocus"]; values["onkeyup"] = values["onfocus"];
 for (j = 0; j < 4; j++) {
 if (textareas[i].hasAttribute(attributes[j])) { string = textareas[i].getAttribute(attributes[j])+" "; } else { string = ""; }
 textareas[i].setAttribute(attributes[j], string+values[attributes[j]]); } } }
-
-function format_url(string) {
-if (string != "") {
-string = string.replace(/^\s+/g, "").replace(/\s+$/g, "");
-string = string.replace(/[ ]/g, "-");
-if ((string.substr(0, 1) != ".") && (string.indexOf("http://") == -1) && (string.indexOf("https://") == -1)) {
-var strings = string.split("/");
-if (strings[0].indexOf(".") >= 0) { string = "http://"+string; }
-else { string = "http://<?php echo $_SERVER['SERVER_NAME']; ?>/"+string; } }
-while (string.indexOf("//") >= 0) { string = string.replace("//", "/"); }
-string = string.replace(":/", "://"); }
-return string; }
 </script>
 <?php }
 
@@ -185,7 +174,7 @@ else { echo '<label'.$module_title.'><input style="margin-left: 2em;" type="chec
 <input type="submit" class="button-secondary" name="update_back_office_options" value="<?php _e('Update', 'contact-manager'); ?>" onclick="this.setAttribute('data-clicked', 'yes');" /></td></tr>
 </tbody></table>
 <?php if ((strstr($_GET['page'], 'back-office')) && (isset($modules['back_office'][$module]['modules'][$module.'-custom-fields']))) {
-foreach (array('strip_accents_js', 'format_nice_name_js') as $function) { add_action('admin_footer', $function); } ?>
+foreach (array('kleor_strip_accents_js', 'kleor_format_nice_name_js') as $function) { add_action('admin_footer', $function); } ?>
 <div id="<?php echo $module; ?>-custom-fields-module"<?php if (in_array($module.'-custom-fields', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="<?php echo $module; ?>-custom-fields"><strong><?php echo $modules['back_office'][$module]['modules'][$module.'-custom-fields']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
@@ -203,9 +192,9 @@ $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width
 <span class="description">'.__('The key can not be changed.', 'contact-manager').'</span></td></tr>'; }
 $n = $i + 5; while ($i < $n) {
 $i = $i + 1; echo '<tr style="vertical-align: top;"><th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_name'.$i.'">'.__('Name', 'contact-manager').'</label></strong></th>
-<td style="width: 40%;"><textarea style="vertical-align: 100%; padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50" onkeydown="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onkeyup="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onchange="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = format_nice_name(this.value.replace(/[_]/g, \'-\'));"></textarea></td>
+<td style="width: 40%;"><textarea style="vertical-align: 100%; padding: 0 0.25em; height: 1.75em; width: 90%;" name="'.$page_slug.'_page_custom_field_name'.$i.'" id="'.$page_slug.'_page_custom_field_name'.$i.'" rows="1" cols="50" onkeydown="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = kleor_format_nice_name(this.value.replace(/[_]/g, \'-\'));" onkeyup="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = kleor_format_nice_name(this.value.replace(/[_]/g, \'-\'));" onchange="this.form.'.$page_slug.'_page_custom_field_key'.$i.'.placeholder = kleor_format_nice_name(this.value.replace(/[_]/g, \'-\'));"></textarea></td>
 <th scope="row" style="width: 4%;"><strong><label for="'.$page_slug.'_page_custom_field_key'.$i.'">'.__('Key', 'contact-manager').'</label></strong></th>
-<td style="width: 40%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50" onkeydown="this.value = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onkeyup="this.value = format_nice_name(this.value.replace(/[_]/g, \'-\'));" onchange="this.value = format_nice_name(this.value.replace(/[_]/g, \'-\'));"></textarea>
+<td style="width: 40%;"><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="'.$page_slug.'_page_custom_field_key'.$i.'" id="'.$page_slug.'_page_custom_field_key'.$i.'" rows="1" cols="50" onkeydown="this.value = kleor_format_nice_name(this.value.replace(/[_]/g, \'-\'));" onkeyup="this.value = kleor_format_nice_name(this.value.replace(/[_]/g, \'-\'));" onchange="this.value = kleor_format_nice_name(this.value.replace(/[_]/g, \'-\'));"></textarea>
 <input type="hidden" name="submit" value="true" /><input style="vertical-align: top;" type="submit" class="button-secondary" name="add_'.$page_slug.'_page_custom_field" value="'.__('Add', 'contact-manager').'" formaction="'.esc_attr($_SERVER['REQUEST_URI']).'#'.$module.'-custom-fields-module" /><br />
 <span class="description">'.__('Lowercase letters, numbers and hyphens only', 'contact-manager').'</span></td></tr>'; } ?>
 </tbody></table>
@@ -282,7 +271,7 @@ case 'category_id': $plugin = 'contact'; $type = 'form'; $string = __('Forms', '
 case 'sender_affiliate_category_id': $plugin = 'affiliation'; $type = 'affiliate'; $string = __('Affiliates', 'contact-manager'); break;
 case 'sender_client_category_id': $plugin = 'commerce'; $type = 'client'; $string = __('Clients', 'contact-manager'); break;
 case 'sender_member_category_id': $plugin = 'membership'; $type = 'member'; $string = __('Members', 'contact-manager'); }
-if (($value > 0) && (function_exists($plugin.'_data'))) {
+if (($value > 0) && (function_exists($plugin.'_data')) && (current_user_can('view_'.$plugin.'_manager'))) {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix.$plugin."_manager_".$type."s WHERE category_id = ".$value, OBJECT);
 $items_number = (int) (isset($row->total) ? $row->total : 0);
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix.$plugin."_manager_".$type."s_categories WHERE category_id = ".$value, OBJECT);
@@ -306,13 +295,13 @@ $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_ma
 $messages_number = (int) (isset($row->total) ? $row->total : 0);
 $content .= ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=contact-manager-statistics&amp;form_id='.$value.'">'.__('Statistics', 'contact-manager').'</a>'
 .($messages_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=contact-manager-messages&amp;form_id='.$value.'&amp;start_date=0">'.__('Messages', 'contact-manager').' <span class="count">('.$messages_number.')</span></a>'); } } break;
-case 'referrer': case 'referrer2': if (function_exists('affiliation_data')) {
-$value = format_email_address($value); if ($value != '') {
+case 'referrer': case 'referrer2': if ((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) {
+$value = kleor_format_email_address($value); if ($value != '') {
 if (strstr($value, '@')) { $result = false; }
 else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$value."'", OBJECT); }
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."affiliation_manager_clicks WHERE referrer = '".$value."'", OBJECT);
 $clicks_number = (int) (isset($row->total) ? $row->total : 0);
-if (!function_exists('commerce_data')) { $orders_number = 0; $recurring_payments_number = 0; }
+if ((!function_exists('commerce_data')) || (!current_user_can('view_commerce_manager'))) { $orders_number = 0; $recurring_payments_number = 0; }
 else {
 $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."commerce_manager_orders WHERE referrer = '".$value."'", OBJECT);
 $orders_number = (int) (isset($row->total) ? $row->total : 0);
@@ -324,7 +313,7 @@ $content = ($result ? '<a style="text-decoration: none;" '.$ids_fields_links_mar
 .($clicks_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=affiliation-manager-clicks&amp;referrer='.$value.'&amp;start_date=0">'.__('Clicks', 'contact-manager').' <span class="count">('.$clicks_number.')</span></a>')
 .($orders_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=commerce-manager-orders&amp;referrer='.$value.'&amp;start_date=0">'.__('Orders', 'contact-manager').' <span class="count">('.$orders_number.')</span></a>')
 .($recurring_payments_number == 0 ? '' : ' | <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=commerce-manager-recurring-payments&amp;referrer='.$value.'&amp;start_date=0">'.__('Recurring payments', 'contact-manager').' <span class="count">('.$recurring_payments_number.')</span></a>'); } } break;
-case 'sender_members_areas': if ((function_exists('membership_data')) && (is_numeric($value))) {
+case 'sender_members_areas': if ((function_exists('membership_data')) && (current_user_can('view_membership_manager')) && (is_numeric($value))) {
 $value = (int) preg_replace('/[^0-9]/', '', $value); if (($value > 0) && (member_area_data(array(0 => 'id', 'id' => $value)) == $value)) {
 $content = '<a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-member-area&amp;id='.$value.'">'.__('Edit', 'contact-manager').'</a> | 
 <a style="text-decoration: none;" '.$ids_fields_links_markup.' href="admin.php?page=membership-manager-member-area&amp;id='.$value.'&amp;action=delete" class="delete">'.__('Delete', 'contact-manager').'</a>'; } } }
@@ -394,6 +383,7 @@ echo '<div class="clear"></div>'; }
 function contact_manager_users_roles() {
 $wp_roles = new WP_Roles();
 $roles = $wp_roles->get_names();
+if ((defined('CONTACT_MANAGER_DEMO')) && (CONTACT_MANAGER_DEMO == true) && (isset($roles['tester']))) { unset($roles['tester']); }
 foreach ($roles as $role => $name) { $roles[$role] = translate_user_role($name); }
 return $roles; }
 
@@ -422,7 +412,7 @@ if (isset($_POST['delete_'.$page.'_page_custom_field'.$i])) { $_POST['delete_'.$
 elseif ((isset($_POST[$page.'_page_custom_field_name'.$i])) && ($_POST[$page.'_page_custom_field_name'.$i] != '')) {
 if ((!isset($_POST[$page.'_page_custom_field_key'.$i])) || ($_POST[$page.'_page_custom_field_key'.$i] == '')) {
 $_POST[$page.'_page_custom_field_key'.$i] = $_POST[$page.'_page_custom_field_name'.$i]; }
-$_POST[$page.'_page_custom_field_key'.$i] = str_replace('-', '_', format_nice_name($_POST[$page.'_page_custom_field_key'.$i]));
+$_POST[$page.'_page_custom_field_key'.$i] = str_replace('-', '_', kleor_format_nice_name($_POST[$page.'_page_custom_field_key'.$i]));
 if ($_POST[$page.'_page_custom_field_key'.$i] != '') {
 $_POST[$page.'_page_custom_fields'][$_POST[$page.'_page_custom_field_key'.$i]] = $_POST[$page.'_page_custom_field_name'.$i];
 if (!isset($custom_fields[$_POST[$page.'_page_custom_field_key'.$i]])) { $_POST[$page.'_page_custom_fields_module_displayed'] = 'yes'; } } } } }
@@ -454,7 +444,8 @@ function format_date(date, type) {
 if (date.replace(/[^0-9]/g, "") == "") { date = ""; }
 if (date == "") { if (type == "start") { date = "'.$start_date.'"; } else { date = "'.$end_date.'"; } }
 else {
-var d = date.split(/[^0-9]/g);
+var a = date.split(/[^0-9]/g);
+d = []; for (i = 0, n = a.length; i < n; i++) { if (a[i] != "") { d.push(a[i]); } }
 for (i = 0; i < 6; i++) {
 if (i >= d.length) {
 if (i < 3) { d[i] = 1; }

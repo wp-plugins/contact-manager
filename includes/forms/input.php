@@ -2,17 +2,16 @@
 $prefix = $GLOBALS['contact_form_prefix'];
 $atts = contact_shortcode_atts(array(
 0 => 'submit',
-'class' => '',
 'extensions' => '',
 'maxsize' => 0,
-'onchange' => '',
-'onmouseout' => '',
+'onblur' => '',
+'onkeyup' => '',
 'required' => 'no',
 'size' => '',
 'type' => '',
 'value' => ''), $atts);
 $markup = '';
-$name = str_replace('-', '_', format_nice_name($atts[0]));
+$name = str_replace('-', '_', kleor_format_nice_name($atts[0]));
 $GLOBALS[$prefix.'fields'][] = $name;
 $main_name = (((substr($name, 0, 8) == 'confirm_') && (in_array(substr($name, 8), $GLOBALS[$prefix.'fields']))) ? substr($name, 8) : $name);
 if ($main_name != $name) { $GLOBALS[$prefix.'confirmed_fields'][] = $main_name; }
@@ -43,7 +42,7 @@ elseif ((($maxsize > 0) && (filesize($_FILES[$prefix.$name]['tmp_name']) > $maxs
 elseif ($_FILES[$prefix.$name]['error'] != 0) { $GLOBALS[$prefix.$name.'_error'] = 'failed_upload'; } } }
 else {
 if ($name == 'email_address') {
-if ($atts['onmouseout'] == '') { $atts['onmouseout'] = "this.value = format_email_address(this.value);"; }
+foreach (array('onblur', 'onkeyup') as $key) { if ($atts[$key] == '') { $atts[$key] = "this.value = kleor_format_email_address(this.value);"; } }
 if (isset($_POST[$prefix.'submit'])) {
 if ((isset($_POST[$prefix.$name])) && ($_POST[$prefix.$name] != '') && ((!strstr($_POST[$prefix.$name], '@')) || (!strstr($_POST[$prefix.$name], '.')))) {
 $GLOBALS[$prefix.$name.'_error'] = 'invalid_email_address'; } } }

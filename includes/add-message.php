@@ -85,7 +85,7 @@ elseif ($message['email_address'] != '') {
 $affiliate = $message;
 foreach (array('login', 'password') as $field) {
 if ((isset($affiliate[$field])) && ($affiliate[$field] != '')) {
-if ($field == 'login') { $affiliate[$field] = format_nice_name($affiliate[$field]);
+if ($field == 'login') { $affiliate[$field] = kleor_format_nice_name($affiliate[$field]);
 if (($affiliate[$field] == '') || (is_numeric($affiliate[$field]))) { $affiliate[$field] .= '-'; } }
 $length = strlen($affiliate[$field]);
 foreach (array('maximum', 'minimum') as $string) { $$string = affiliation_data($string.'_'.$field.'_length'); }
@@ -93,7 +93,7 @@ if ($length < $minimum) { $affiliate[$field] .= substr(md5(mt_rand()), 0, $minim
 elseif ($length > $maximum) { $affiliate[$field] = substr($affiliate[$field], 0, $maximum); } } }
 if ((!isset($affiliate['login'])) || ($affiliate['login'] == '')) { $affiliate['login'] = $affiliate['email_address']; }
 $array = explode('@', $affiliate['login']);
-$affiliate['login'] = format_nice_name($array[0]);
+$affiliate['login'] = kleor_format_nice_name($array[0]);
 if (($affiliate['login'] == '') || (is_numeric($affiliate['login']))) { $affiliate['login'] .= '-'; }
 $login = $affiliate['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['login']."'", OBJECT);
@@ -124,7 +124,7 @@ else {
 $client = $message;
 foreach (array('login', 'password') as $field) {
 if ((isset($client[$field])) && ($client[$field] != '')) {
-if ($field == 'login') { $client[$field] = format_email_address($client[$field]);
+if ($field == 'login') { $client[$field] = kleor_format_email_address($client[$field]);
 if (($client[$field] == '') || (is_numeric($client[$field]))) { $client[$field] .= '-'; } }
 $length = strlen($client[$field]);
 foreach (array('maximum', 'minimum') as $string) { $$string = commerce_data($string.'_'.$field.'_length'); }
@@ -162,7 +162,7 @@ else {
 $member = $message;
 foreach (array('login', 'password') as $field) {
 if ((isset($member[$field])) && ($member[$field] != '')) {
-if ($field == 'login') { $member[$field] = format_email_address($member[$field]);
+if ($field == 'login') { $member[$field] = kleor_format_email_address($member[$field]);
 if (($member[$field] == '') || (is_numeric($member[$field]))) { $member[$field] .= '-'; } }
 $length = strlen($member[$field]);
 foreach (array('maximum', 'minimum') as $string) { $$string = membership_data($string.'_'.$field.'_length'); }
@@ -242,11 +242,9 @@ move_uploaded_file($value['tmp_name'], $file);
 $files[] = $file; } } }
 
 foreach (array('confirmation', 'notification') as $action) {
-foreach (array('sent', 'sender', 'receiver', 'subject', 'body') as $field) {
-$$field = str_replace(array("\\t", '\\', '&#91;', '&#93;'), array('	', '', '[', ']'), str_replace(array("\\r\\n", "\\n", "\\r"), '
-', $message['message_'.$action.'_email_'.$field])); }
+foreach (array('sent', 'sender', 'receiver', 'subject', 'body') as $field) { $$field = $message['message_'.$action.'_email_'.$field]; }
 if ($action == 'confirmation') { $attachments = array(); } else { $attachments = $files; }
-if ($sent == 'yes') { wp_mail($receiver, $subject, $body, 'From: '.$sender.(((strstr($body, '</')) || (strstr($body, '/>'))) ? "\r\nContent-type: text/html" : ""), $attachments); } }
+if ($sent == 'yes') { contact_mail($sender, $receiver, $subject, $body, $attachments); } }
 
 if ((function_exists('referrer_data')) && ($message['referrer'] != '') && (!strstr($message['referrer'], '@'))) {
 if (affiliation_data('message_notification_email_disabled') != 'yes') {
@@ -254,15 +252,14 @@ $GLOBALS['referrer'] = $message['referrer'];
 if (referrer_data('status') == 'active') {
 $sent = referrer_data('message_notification_email_sent');
 if (($sent == 'yes') || (($sent == 'if commission') && ($message['commission_amount'] > 0))) {
-foreach (array('sender', 'receiver', 'subject', 'body') as $field) {
-$$field = str_replace(array('&#91;', '&#93;'), array('[', ']'), affiliation_data('message_notification_email_'.$field)); }
-wp_mail($receiver, $subject, $body, 'From: '.$sender.(((strstr($body, '</')) || (strstr($body, '/>'))) ? "\r\nContent-type: text/html" : "")); } } } }
+foreach (array('sender', 'receiver', 'subject', 'body') as $field) { $$field = affiliation_data('message_notification_email_'.$field); }
+contact_mail($sender, $receiver, $subject, $body); } } } }
 
 if (($message['sender_subscribed_to_autoresponder'] == 'yes') && ($message['email_address'] != '')) {
-if (!function_exists('subscribe_to_autoresponder')) { include_once CONTACT_MANAGER_PATH.'libraries/autoresponders-functions.php'; }
-subscribe_to_autoresponder($message['sender_autoresponder'], $message['sender_autoresponder_list'], $message); }
+if (!function_exists('kleor_subscribe_to_autoresponder')) { include_once CONTACT_MANAGER_PATH.'libraries/autoresponders-functions.php'; }
+kleor_subscribe_to_autoresponder($message['sender_autoresponder'], $message['sender_autoresponder_list'], $message); }
 
 if ($message['message_custom_instructions_executed'] == 'yes') {
-eval(format_instructions($message['message_custom_instructions'])); }
+eval(kleor_format_instructions($message['message_custom_instructions'])); }
 
 foreach ($files as $file) { chmod($file, 0777); unlink($file); } } }

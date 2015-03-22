@@ -9,7 +9,7 @@ $$key = (isset($atts[$key]) ? $atts[$key] : '');
 if (isset($atts[$key])) { unset($atts[$key]); } }
 $formatting = (((isset($atts['formatting'])) && ($atts['formatting'] == 'no')) ? 'no' : 'yes');
 $part = (int) (isset($atts['part']) ? preg_replace('/[^0-9]/', '', $atts['part']) : 0); }
-$field = str_replace('-', '_', format_nice_name($field));
+$field = str_replace('-', '_', kleor_format_nice_name($field));
 if (($field == 'code') || (substr($field, -10) == 'email_body') || (substr($field, -19) == 'custom_instructions')) {
 $data = get_option(substr('contact_manager_'.$field, 0, 64)); }
 else { $data = (isset($contact_manager_options[$field]) ? $contact_manager_options[$field] : ''); }
