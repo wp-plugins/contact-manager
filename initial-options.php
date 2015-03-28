@@ -85,32 +85,32 @@ input[type="submit"] { background-color: #e0c040; border: 1px solid #a08000; bor
 input[type="submit"]:hover { background-color: #a0a0a0; border: 1px solid #000000; color: #000000; }
 </style>
 
-[validation-content]<p style="color: green;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
-[other]<p style="color: red;">[error maximum-messages-quantity-reached] [error unfilled-fields] [error invalid-fields] [error invalid-captcha]</p>[/validation-content]
+[validation-content]<p style="color: #008000;">'.__('Your message has been sent successfully. If it requires an answer, we should respond within 48 hours.', 'contact-manager').'</p>
+[other]<p style="color: #c00000;">[error maximum-messages-quantity-reached] [error unfilled-fields] [error invalid-fields] [error invalid-captcha]</p>[/validation-content]
 
 <p><label><strong>'.__('Your first name:', 'contact-manager').'</strong>*<br />
 [input first-name size=30 required=yes]<br />
-[error first-name style="color: red;"]</label></p>
+[error first-name style="color: #c00000;"]</label></p>
 
 <p><label><strong>'.__('Your last name:', 'contact-manager').'</strong><br />
 [input last-name size=30]<br />
-[error last-name style="color: red;"]</label></p>
+[error last-name style="color: #c00000;"]</label></p>
 
 <p><label><strong>'.__('Your email address:', 'contact-manager').'</strong>*<br />
 [input email-address size=40 required=yes]<br />
-[error email-address style="color: red;"]</label></p>
+[error email-address style="color: #c00000;"]</label></p>
 
 <p><label><strong>'.__('Your website:', 'contact-manager').'</strong><br />
 [input website-url size=40]<br />
-[error website-url style="color: red;"]</label></p>
+[error website-url style="color: #c00000;"]</label></p>
 
 <p><label><strong>'.__('Subject of your message:', 'contact-manager').'</strong>*<br />
 [input subject size=60 required=yes]<br />
-[error subject style="color: red;"]</label></p>
+[error subject style="color: #c00000;"]</label></p>
 
 <p><label><strong>'.__('Your message:', 'contact-manager').'</strong>*<br />
 [textarea content cols=60 rows=10 required=yes][/textarea]<br />
-[error content style="color: red;"]</label></p>
+[error content style="color: #c00000;"]</label></p>
 
 <p><strong>'.__('File:', 'contact-manager').'</strong> [input attachment type=file]<br />[error attachment]</p>
 

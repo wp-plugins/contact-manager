@@ -76,6 +76,8 @@ foreach (array('', $GLOBALS['contact_form_id']) as $string) {
 $GLOBALS['contact_form'.$string.'_data'] = (array) (isset($GLOBALS['contact_form'.$string.'_data']) ? $GLOBALS['contact_form'.$string.'_data'] : array());
 foreach (array('displays_count', 'messages_count') as $field) { $GLOBALS['contact_form'.$string.'_data'][$field] = $$field; } } }
 
+if (!function_exists('kleor_generate_password')) { include_once CONTACT_MANAGER_PATH.'libraries/passwords-functions.php'; }
+
 if ((function_exists('add_affiliate')) && ($message['sender_subscribed_to_affiliate_program'] == 'yes')) {
 if ($GLOBALS['affiliate_id'] > 0) {
 if ($message['sender_affiliate_category_id'] > 0) {
@@ -98,7 +100,7 @@ if (($affiliate['login'] == '') || (is_numeric($affiliate['login']))) { $affilia
 $login = $affiliate['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$affiliate['login']."'", OBJECT);
 if ($result) { $affiliate['login'] = $login.$i; $i = $i + 1; } }
-if ((!isset($affiliate['password'])) || ($affiliate['password'] == '')) { $affiliate['password'] = substr(md5(mt_rand()), 0, affiliation_data('automatically_generated_password_length')); }
+if ((!isset($affiliate['password'])) || ($affiliate['password'] == '')) { $affiliate['password'] = kleor_generate_password(affiliation_data('automatically_generated_password_length')); }
 $affiliate['paypal_email_address'] = $affiliate['email_address'];
 foreach (array('category_id', 'status') as $field) {
 $affiliate[$field] = $message['sender_affiliate_'.$field];
@@ -134,7 +136,7 @@ if ((!isset($client['login'])) || ($client['login'] == '')) { $client['login'] =
 $login = $client['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."commerce_manager_clients WHERE login = '".$client['login']."'", OBJECT);
 if ($result) { $client['login'] = $login.$i; $i = $i + 1; } }
-if ((!isset($client['password'])) || ($client['password'] == '')) { $client['password'] = substr(md5(mt_rand()), 0, commerce_data('automatically_generated_password_length')); }
+if ((!isset($client['password'])) || ($client['password'] == '')) { $client['password'] = kleor_generate_password(commerce_data('automatically_generated_password_length')); }
 foreach (array('category_id', 'status') as $field) {
 $client[$field] = $message['sender_client_'.$field];
 if ($client[$field] == '') { $client[$field] = commerce_data('clients_initial_'.$field); } }
@@ -177,7 +179,7 @@ if ((!isset($member['login'])) || ($member['login'] == '')) { $member['login'] =
 $login = $member['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT login FROM ".$wpdb->prefix."membership_manager_members WHERE login = '".$member['login']."'", OBJECT);
 if ($result) { $member['login'] = $login.$i; $i = $i + 1; } }
-if ((!isset($member['password'])) || ($member['password'] == '')) { $member['password'] = substr(md5(mt_rand()), 0, membership_data('automatically_generated_password_length')); }
+if ((!isset($member['password'])) || ($member['password'] == '')) { $member['password'] = kleor_generate_password(membership_data('automatically_generated_password_length')); }
 foreach (array('category_id', 'status') as $field) {
 $member[$field] = $message['sender_member_'.$field];
 if ($member[$field] == '') { $member[$field] = member_area_data('members_initial_'.$field); } }
@@ -202,7 +204,7 @@ if ((!isset($user['login'])) || ($user['login'] == '')) { $user['login'] = $user
 $login = $user['login']; $result = true; $i = 1; while ($result) {
 $result = $wpdb->get_results("SELECT user_login FROM ".$wpdb->users." WHERE user_login = '".$user['login']."'", OBJECT);
 if ($result) { $user['login'] = $login.$i; $i = $i + 1; } }
-if ((!isset($user['password'])) || ($user['password'] == '')) { $user['password'] = substr(md5(mt_rand()), 0, 8); }
+if ((!isset($user['password'])) || ($user['password'] == '')) { $user['password'] = kleor_generate_password(); }
 if (isset($user['ID'])) { unset($user['ID']); }
 $user['user_login'] = $user['login'];
 $user['user_pass'] = $user['password'];
