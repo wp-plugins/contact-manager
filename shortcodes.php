@@ -10,7 +10,7 @@ $search_criteria = '';
 if (count($forms) > 0) {
 foreach ($forms as $form) { $search_criteria .= " OR form_id = ".$form; }
 $search_criteria = 'AND ('.substr($search_criteria, 4).')'; }
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE ip_address = '".str_replace("'", "''", $_SERVER['REMOTE_ADDR'])."' $search_criteria", OBJECT);
+$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE ip_address = '".str_replace(array("\\", "'"), array("", "''"), $_SERVER['REMOTE_ADDR'])."' $search_criteria", OBJECT);
 if ($result) { $n = 0; } else { $n = 1; } }
 if (!isset($content[$n])) { $content[$n] = ''; }
 return contact_filter_data($filter, $content[$n]); }

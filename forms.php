@@ -34,9 +34,13 @@ if (isset($_POST[$prefix.'submit'])) {
 if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_string'))) {
 $link = contact_mysqli_connect(); if (mysqli_connect_error()) { unset($link); } }
 foreach ($_POST as $key => $value) {
-if (($key != $prefix.'password') && (is_string($value))) {
+if (is_string($value)) {
+if ($key == $prefix.'password') {
+$_POST[$key] = str_replace(array('</', '/>'), array('<|', '|>'), $value);
+if ($_POST[$key] != strip_shortcodes($_POST[$key])) { $_POST[$key] = str_replace('[', '(', $_POST[$key]); } }
+else {
 $value = str_replace(array('<', '>', '[', ']'), array('&lt;', '&gt;', '&#91;', '&#93;'), kleor_quotes_entities($value));
-$_POST[$key] = str_replace('\\&', '&', trim((isset($link) ? mysqli_real_escape_string($link, $value) : $value))); } }
+$_POST[$key] = str_replace('\\&', '&', trim((isset($link) ? mysqli_real_escape_string($link, $value) : $value))); } } }
 if ((isset($_POST[$prefix.'country_code'])) && ($_POST[$prefix.'country_code'] != '')) {
 $_POST[$prefix.'country_code'] = substr(preg_replace('/[^A-Z]/', '', strtoupper($_POST[$prefix.'country_code'])), 0, 2);
 if ((!isset($_POST[$prefix.'country'])) || ($_POST[$prefix.'country'] == '')) {

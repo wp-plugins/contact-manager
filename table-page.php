@@ -3,7 +3,12 @@ $back_office_options = (array) get_option('contact_manager_back_office');
 $table_slug = str_replace('-', '_', str_replace('contact-manager-', '', $_GET['page']));
 include CONTACT_MANAGER_PATH.'tables.php';
 include_once CONTACT_MANAGER_PATH.'tables-functions.php';
-$options = (array) get_option(str_replace('-', '_', $_GET['page']));
+$option_name = str_replace('-', '_', $_GET['page']);
+$options = (array) get_option($option_name);
+if (!current_user_can('manage_contact_manager')) {
+if ((!headers_sent()) && (session_id() == '')) { session_start(); }
+if ((isset($_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']])) && (is_array($_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']]))) { $options = $_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']]; }
+else { $_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']] = $options; } }
 $table_name = contact_manager_table_name($table_slug);
 $custom_fields = (array) $back_office_options[contact_manager_single_page_slug($table_slug).'_page_custom_fields'];
 foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode($value); }
@@ -67,7 +72,7 @@ $end_date = date('Y-m-d H:i:s', mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0])
 $GLOBALS['date_criteria'] = str_replace(' ', '%20', '&amp;start_date='.$start_date.'&amp;end_date='.$end_date);
 $date_criteria = "(date BETWEEN '$start_date' AND '$end_date')";
 
-if (($options) && (current_user_can('manage_contact_manager'))) {
+if ($options) {
 $options = array(
 'columns' => $columns,
 'columns_list_displayed' => $columns_list_displayed,
@@ -77,7 +82,8 @@ $options = array(
 'orderby' => $_GET['orderby'],
 'searchby' => $searchby,
 'start_date' => $start_date);
-update_option('contact_manager_'.$table_slug, $options); }
+if (current_user_can('manage_contact_manager')) { update_option($option_name, $options); }
+else { $_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']] = $options; } }
 
 $GLOBALS['criteria'] = $GLOBALS['date_criteria'].$GLOBALS['selection_criteria'];
 
@@ -132,7 +138,7 @@ foreach ($items as $item) { $item->$_GET['orderby'] = $datas[$item->id]; } } } ?
 <?php contact_manager_pages_date_picker($start_date, $end_date); ?>
 <div class="tablenav top">
 <div class="alignleft actions">
-<?php _e('Display', 'contact-manager'); ?> <input type="hidden" name="old_limit" value="<?php echo $limit; ?>" /><input style="text-align: center;" type="text" name="limit" id="limit" size="2" value="<?php echo $limit; ?>" onfocus="this.value = '';" onblur="if (this.value == '') { this.value = this.form.old_limit.value; }" onchange="this.value = this.value.replace(/[^0-9]/g, ''); if ((this.value == '') || (this.value == 0)) { this.value = this.form.old_limit.value; } if (this.value > 1000) { this.value = 1000; }" /> 
+<?php _e('Display', 'contact-manager'); ?> <input type="hidden" name="old_limit" value="<?php echo $limit; ?>" /><input style="text-align: center;" type="text" name="limit" id="limit" size="2" value="<?php echo $limit; ?>" onfocus="this.value = '';" onblur="if (this.value == '') { this.value = <?php echo $limit; ?>; }" onchange="this.value = this.value.replace(/[^0-9]/g, ''); if ((this.value == '') || (this.value == 0)) { this.value = <?php echo $limit; ?>; } if (this.value > 1000) { this.value = 1000; }" /> 
 <?php switch ($table_slug) {
 case 'forms': $singular = __('form', 'contact-manager'); $plural = __('forms', 'contact-manager'); break;
 case 'forms_categories': $singular = __('category', 'contact-manager'); $plural = __('categories', 'contact-manager'); break;
@@ -173,7 +179,7 @@ $columns_inputs = '<input style="margin-bottom: 0.5em;" type="submit" class="but
 <input style="margin-bottom: 0.5em; margin-right: 0.5em;" type="submit" class="button-secondary" name="submit" value="'.__('Update', 'contact-manager').'" />
 <span id="check-all-columns1-input"></span>';
 echo $columns_inputs.' <label style="margin-left: 1.5em;"><input type="checkbox" name="columns_list_displayed" id="columns_list_displayed" value="yes" 
-onchange="if (this.checked == true) { value = \'yes\'; document.getElementById(\'columns-list\').style.display = \'\'; document.getElementById(\'check-all-columns1\').style.display = \'\'; } else { value = \'no\'; document.getElementById(\'columns-list\').style.display = \'none\'; document.getElementById(\'check-all-columns1\').style.display = \'none\'; }'.(current_user_can('manage_contact_manager') ? ' jQuery.get(\''.CONTACT_MANAGER_URL.'index.php?action=update-options&amp;page='.$_GET['page'].'&amp;key='.md5(AUTH_KEY).'&amp;columns_list_displayed=\'+value)' : '').';"
+onchange="if (this.checked == true) { value = \'yes\'; document.getElementById(\'columns-list\').style.display = \'\'; document.getElementById(\'check-all-columns1\').style.display = \'\'; } else { value = \'no\'; document.getElementById(\'columns-list\').style.display = \'none\'; document.getElementById(\'check-all-columns1\').style.display = \'none\'; } jQuery.get(\''.CONTACT_MANAGER_URL.'index.php?action=update-options&amp;page='.$_GET['page'].'&amp;key='.md5(AUTH_KEY).'&amp;columns_list_displayed=\'+value);"
 '.($columns_list_displayed == 'yes' ? ' checked="checked"' : '').' /> '.__('Display the columns list', 'contact-manager').'</label>'; ?><br />
 <span id="columns-list"<?php if ($columns_list_displayed == 'no') { echo ' style="display: none;"'; } ?>>
 <?php $all_columns_checked = true;
@@ -200,7 +206,7 @@ echo '</select></label>
 
 <?php $check_all_columns1_input = '<label id="check-all-columns1" style="margin-left: 0.5em;'.($columns_list_displayed == 'no' ? ' display: none;' : '').'"><input type="checkbox" name="check_all_columns1" id="check_all_columns1" value="yes" onchange="check_all_columns_js(1);"'.($all_columns_checked ? ' checked="checked"' : '').' /> <span id="check_all_columns1_text">'.($all_columns_checked ? __('Uncheck all columns', 'contact-manager') : __('Check all columns', 'contact-manager')).'</span></label>';
 $check_all_columns2_input = str_replace(array('check_all_columns1', 'check-all-columns1', '(1)', ' display: none;'), array('check_all_columns2', 'check-all-columns2', '(2)', ''), $check_all_columns1_input);
-$paging_input_bottom = '<input class="current-page" title="'.__('Current page', 'contact-manager').'" type="text" name="paged2" id="paged2" value="'.$_GET['paged'].'" size="2" onfocus="this.value = \\\'\\\';" onblur="if (this.value == \\\'\\\') { this.value = this.form.old_paged.value; }" onchange="this.value = this.value.replace(/[^0-9]/g, \\\'\\\'); if ((this.value == \\\'\\\') || (this.value == 0)) { this.value = this.form.old_paged.value; } if (this.value > '.$max_paged.') { this.value = '.$max_paged.'; } if (this.value != this.form.old_paged.value) { window.location = \\\'admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;orderby='.$_GET['orderby'].'&amp;order='.$_GET['order'].'&amp;paged=\\\'+this.value; }" />'; ?>
+$paging_input_bottom = '<input class="current-page" title="'.__('Current page', 'contact-manager').'" type="text" name="paged2" id="paged2" value="'.$_GET['paged'].'" size="2" onfocus="this.value = \\\'\\\';" onblur="if (this.value == \\\'\\\') { this.value = '.$_GET['paged'].'; }" onchange="this.value = this.value.replace(/[^0-9]/g, \\\'\\\'); if ((this.value == \\\'\\\') || (this.value == 0)) { this.value = '.$_GET['paged'].'; } if (this.value > '.$max_paged.') { this.value = '.$max_paged.'; } if (this.value != '.$_GET['paged'].') { window.location = \\\'admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;orderby='.$_GET['orderby'].'&amp;order='.$_GET['order'].'&amp;paged=\\\'+this.value; }" />'; ?>
 
 <script type="text/javascript">
 document.getElementById('check-all-columns1-input').innerHTML = '<?php echo $check_all_columns1_input; ?>';

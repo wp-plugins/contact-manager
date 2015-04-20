@@ -24,6 +24,8 @@ html.wp-toolbar { padding-top: 0; }
 .wrap .postbox .description { font-size: 0.9375em; }
 .wrap .postbox h3 { background-color: #f9f9f9; border-bottom: 1px solid #e5e5e5; color: #004080; }
 .wrap .postbox h4 { color: #000000; font-family: Tahoma, Geneva, Sans-Serif; font-size: 1.125em; }
+.wrap .wp-list-table tr, .wrap .wp-list-table tr .row-actions { background-color: #ffffff; }
+.wrap .wp-list-table tr.alternate, .wrap .wp-list-table tr.alternate .row-actions { background-color: #f9f9f9; }
 *:-ms-input-placeholder { color: #a0a0a0; }
 </style>
 <?php }
@@ -56,6 +58,8 @@ values["onkeydown"] = values["onfocus"]; values["onkeyup"] = values["onfocus"];
 for (j = 0; j < 4; j++) {
 if (textareas[i].hasAttribute(attributes[j])) { string = textareas[i].getAttribute(attributes[j])+" "; } else { string = ""; }
 textareas[i].setAttribute(attributes[j], string+values[attributes[j]]); } } }
+
+if (window.location.hash != '') { setTimeout('window.location = window.location.hash;', 250); }
 </script>
 <?php }
 

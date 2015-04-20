@@ -7,10 +7,11 @@ foreach ($_GET as $key => $value) {
 if ((in_array($key, $all_tables_keys)) || ((substr($key, 0, 13) == 'custom_field_') && ($key == str_replace('-', '_', kleor_format_nice_name($key))))) {
 $GLOBALS['selection_criteria'] .= '&amp;'.$key.'='.str_replace('+', '%20', urlencode($value));
 if (substr($key, 0, 13) != 'custom_field_') {
-$selection_criteria .= ($key == "keywords" ? " AND (".$key." LIKE '%".$value."%')" :
- (is_numeric($value) ? " AND (".$key." = ".$value.")" : " AND (".$key." = '".$value."')")); }
+if ($key == "keywords") { $selection_criteria .= " AND (".$key." LIKE '%".$value."%')"; }
+else {
+$operator = '='; if (substr($value, 0, 1) == '!') { $operator = '!='; $value = substr($value, 1); }
+$selection_criteria .= (is_numeric($value) ? " AND (".$key." ".$operator." ".$value.")" : " AND (".$key." ".$operator." '".$value."')"); } }
 else { $selection_criteria .= " AND (custom_fields LIKE '%s:".(strlen($key) - 13).":\"".substr($key, 13)."\";s:".strlen($value).":\"".$value."\";%')"; } } }
-$selection_criteria = str_replace("= '!0'", "!= 0", $selection_criteria);
 
 
 function contact_manager_all_tables_keys($tables) {
@@ -223,7 +224,7 @@ $url = 'admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;orderby='.$_GE
 echo '<div class="tablenav-pages" style="float: right;"><span class="displaying-num">'.$n.' '.($n <= 1 ? $singular : $plural).'</span>
 <a class="first-page'.($_GET['paged'] == 1 ? ' disabled' : '').'" title="'.__('Go to the first page', 'contact-manager').'" href="'.$url.'&amp;paged=1">&laquo;</a>
 <a class="prev-page'.($_GET['paged'] == 1 ? ' disabled' : '').'" title="'.__('Go to the previous page', 'contact-manager').'" href="'.$url.'&amp;paged='.$prev_paged.'">&lsaquo;</a>
-<span class="paging-input" id="paging-input-'.$location.'">'.($location == 'top' ? '<input type="hidden" name="old_paged" value="'.$_GET['paged'].'" /><input class="current-page" title="'.__('Current page', 'contact-manager').'" type="text" name="paged" id="paged" value="'.$_GET['paged'].'" size="2" onfocus="this.value = \'\';" onblur="if (this.value == \'\') { this.value = this.form.old_paged.value; }" onchange="this.value = this.value.replace(/[^0-9]/g, \'\'); if ((this.value == \'\') || (this.value == 0)) { this.value = this.form.old_paged.value; } if (this.value > '.$max_paged.') { this.value = '.$max_paged.'; } if (this.value != this.form.old_paged.value) { window.location = \''.$url.'&amp;paged=\'+this.value; }" />' : $_GET['paged']).'</span> '.__('of', 'contact-manager').' <span class="total-pages">'.$max_paged.'</span>
+<span class="paging-input" id="paging-input-'.$location.'">'.($location == 'top' ? '<input type="hidden" name="old_paged" value="'.$_GET['paged'].'" /><input class="current-page" title="'.__('Current page', 'contact-manager').'" type="text" name="paged" id="paged" value="'.$_GET['paged'].'" size="2" onfocus="this.value = \'\';" onblur="if (this.value == \'\') { this.value = '.$_GET['paged'].'; }" onchange="this.value = this.value.replace(/[^0-9]/g, \'\'); if ((this.value == \'\') || (this.value == 0)) { this.value = '.$_GET['paged'].'; } if (this.value > '.$max_paged.') { this.value = '.$max_paged.'; } if (this.value != '.$_GET['paged'].') { window.location = \''.$url.'&amp;paged=\'+this.value; }" />' : $_GET['paged']).'</span> '.__('of', 'contact-manager').' <span class="total-pages">'.$max_paged.'</span>
 <a class="next-page'.($_GET['paged'] == $max_paged ? ' disabled' : '').'" title="'.__('Go to the next page', 'contact-manager').'" href="'.$url.'&amp;paged='.$next_paged.'">&rsaquo;</a>
 <a class="last-page'.($_GET['paged'] == $max_paged ? ' disabled' : '').'" title="'.__('Go to the last page', 'contact-manager').'" href="'.$url.'&amp;paged='.$max_paged.'">&raquo;</a></div>'; }
 
