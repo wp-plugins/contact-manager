@@ -49,11 +49,11 @@ if ($_POST['displays_count'] < $_POST['messages_count']) { $_POST['displays_coun
 if (!isset($_GET['id'])) {
 if ($_POST['name'] == '') { $error .= ' '.__('Please fill out the required fields.', 'contact-manager'); }
 elseif ($is_category) {
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."'", OBJECT);
+$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace(array("\\", "'"), array("", "''"), $_POST['name'])."'", OBJECT);
 if ($result) { $_POST['name_error'] = str_replace('<a', '<a '.$ids_fields_links_markup, sprintf(__('This name is already used by <a href="%1$s">this category</a>.', 'contact-manager'), 'admin.php?page=contact-manager-form-category&amp;id='.$result->id)); $error .= ' '.__('This name is not available.', 'contact-manager'); } }
 if (($error == '') && (isset($_POST['submit']))) {
 if ($is_category) { $result = false; }
-else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND date = '".$_POST['date']."'", OBJECT); }
+else { $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms WHERE name = '".str_replace(array("\\", "'"), array("", "''"), $_POST['name'])."' AND date = '".$_POST['date']."'", OBJECT); }
 if (!$result) {
 $updated = true;
 $sql = contact_sql_array($tables[$table_slug], $_POST);
@@ -82,11 +82,11 @@ $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms SET
 	displays_count = ".$displays_count.",
 	messages_count = ".$messages_count." WHERE id = ".$form->id); } } } }
 if ($_POST['name'] != '') {
-if ((!$is_category) && (isset($_POST['submit']))) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); }
+if ((!$is_category) && (isset($_POST['submit']))) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_".$table_slug." SET name = '".str_replace(array("\\", "'"), array("", "''"), $_POST['name'])."' WHERE id = ".$_GET['id']); }
 else {
-$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace("'", "''", $_POST['name'])."' AND id != ".$_GET['id'], OBJECT);
+$result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."contact_manager_forms_categories WHERE name = '".str_replace(array("\\", "'"), array("", "''"), $_POST['name'])."' AND id != ".$_GET['id'], OBJECT);
 if ($result) { $_POST['name_error'] = str_replace('<a', '<a '.$ids_fields_links_markup, sprintf(__('This name is already used by <a href="%1$s">this category</a>.', 'contact-manager'), 'admin.php?page=contact-manager-form-category&amp;id='.$result->id)); $error .= ' '.__('This name is not available.', 'contact-manager'); }
-elseif (isset($_POST['submit'])) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".str_replace("'", "''", $_POST['name'])."' WHERE id = ".$_GET['id']); } } }
+elseif (isset($_POST['submit'])) { $results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_forms_categories SET name = '".str_replace(array("\\", "'"), array("", "''"), $_POST['name'])."' WHERE id = ".$_GET['id']); } } }
 if (isset($_POST['submit'])) {
 $sql = contact_sql_array($tables[$table_slug], $_POST);
 $list = '';
@@ -347,7 +347,7 @@ if (($_POST['sender_client_'.$field] == '') && (function_exists('commerce_data')
 if (($_POST['sender_affiliate_'.$field] == '') && (function_exists('affiliation_data'))) { $_POST['sender_affiliate_'.$field] = affiliation_data('affiliates_initial_'.$field); }
 if (($_POST['sender_member_'.$field] == '') && (function_exists('member_area_data'))) { $_POST['sender_member_'.$field] = member_area_data('members_initial_'.$field); } }
 if ($error == '') {
-$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".str_replace("'", "''", $_POST['subject'])."' AND content = '".str_replace("'", "''", $_POST['content'])."' AND date = '".$_POST['date']."'", OBJECT);
+$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".str_replace(array("\\", "'"), array("", "''"), $_POST['subject'])."' AND content = '".str_replace(array("\\", "'"), array("", "''"), $_POST['content'])."' AND date = '".$_POST['date']."'", OBJECT);
 if (!$result) { $updated = true; add_message($_POST); } } } }
 
 if (isset($_GET['id'])) {

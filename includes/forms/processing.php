@@ -33,8 +33,7 @@ $_POST['custom_fields'] = ($custom_fields == array() ? '' : serialize($custom_fi
 if ((!defined('CONTACT_MANAGER_DEMO')) || (CONTACT_MANAGER_DEMO == false)) {
 if (contact_data('form_submission_custom_instructions_executed') == 'yes') {
 eval(kleor_format_instructions(contact_data('form_submission_custom_instructions'))); } }
-foreach (array('email_address', 'content', 'subject') as $field) {
-if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
+foreach (array('email_address', 'content', 'subject') as $field) { if (!isset($_POST[$field])) { $_POST[$field] = ''; } }
 $_POST['receiver'] = contact_form_data('message_notification_email_receiver');
 $_POST['ip_address'] = $_SERVER['REMOTE_ADDR'];
 $_POST['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -75,11 +74,15 @@ $GLOBALS['affiliate'.$affiliate->id.'_data']['overpayment_amount'] = $overpaymen
 foreach (array('message_id', 'message_data') as $key) {
 if (isset($GLOBALS[$key])) { $original[$key] = $GLOBALS[$key]; unset($GLOBALS[$key]); } }
 $GLOBALS['message_data'] = $_POST;
+if (isset($_POST['password'])) {
+$original_password = $_POST['password']; $password = kleor_quotes_entities($_POST['password']);
+$GLOBALS['message_data']['password'] = str_replace('\\&', '&', trim((isset($link) ? mysqli_real_escape_string($link, $password) : $password))); }
 foreach (array('subject', 'content') as $field) {
 if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = contact_form_data('message_notification_email_'.($field == 'content' ? 'body' : $field)); } }
+if (isset($original_password)) { $GLOBALS['message_data']['password'] = $original_password; }
 foreach (array('message_id', 'message_data') as $key) {
 if (isset($original[$key])) { $GLOBALS[$key] = $original[$key]; } }
-$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".str_replace("'", "''", $_POST['subject'])."' AND content = '".str_replace("'", "''", $_POST['content'])."'", OBJECT);
+$result = $wpdb->get_results("SELECT id FROM ".$wpdb->prefix."contact_manager_messages WHERE email_address = '".$_POST['email_address']."' AND subject = '".str_replace(array("\\", "'"), array("", "''"), $_POST['subject'])."' AND content = '".str_replace(array("\\", "'"), array("", "''"), $_POST['content'])."'", OBJECT);
 if (!$result) { $GLOBALS['user_id'] = get_current_user_id(); add_message($_POST); }
 
 if (($redirection != '') && (substr($redirection, 0, 1) != '#')) {

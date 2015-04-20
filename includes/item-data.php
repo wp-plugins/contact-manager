@@ -10,7 +10,7 @@ $n = $GLOBALS[$type.'_id']; if (isset($GLOBALS[$type.$n.'_data'])) { $GLOBALS[$t
 elseif ($n > 0) { $GLOBALS[$type.'_data'] = (array) $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE id = $n", OBJECT); $GLOBALS[$type.$n.'_data'] = $GLOBALS[$type.'_data']; } }
 if ((!is_admin()) && ($type == 'message') && (!isset($GLOBALS[$type.'_id'])) && (!isset($GLOBALS[$type.'_data']['email_address'])) && (!isset($GLOBALS[$type.'_searched_by_ip_address']))) {
 $GLOBALS[$type.'_searched_by_ip_address'] = 'yes';
-$result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE ip_address = '".str_replace("'", "''", $_SERVER['REMOTE_ADDR'])."' ORDER BY date DESC LIMIT 1", OBJECT);
+$result = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table." WHERE ip_address = '".str_replace(array("\\", "'"), array("", "''"), $_SERVER['REMOTE_ADDR'])."' ORDER BY date DESC LIMIT 1", OBJECT);
 if ($result) { $GLOBALS[$type.'_data'] = (array) $result; } }
 if (isset($GLOBALS[$type.'_data']['id'])) { $n = $GLOBALS[$type.'_data']['id']; $GLOBALS[$type.$n.'_data'] = $GLOBALS[$type.'_data']; }
 $item_data = $GLOBALS[$type.'_data'];

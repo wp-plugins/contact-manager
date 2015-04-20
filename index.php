@@ -32,12 +32,16 @@ contact_fill_admin_page_form(); } } break;
 case 'install': if ((isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) { install_contact_manager(); } break;
 case 'update-options':
 if ((isset($_GET['page'])) && (isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) {
-if (current_user_can('manage_contact_manager')) {
-foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
-$options = get_option(str_replace('-', '_', $_GET['page']));
-if ($options) { $options = (array) $options;
+$option_name = str_replace('-', '_', $_GET['page']);
+$options = (array) get_option($option_name);
+if (!current_user_can('manage_contact_manager')) {
+if ((!headers_sent()) && (session_id() == '')) { session_start(); }
+if ((isset($_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']])) && (is_array($_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']]))) { $options = $_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']]; }
+else { $_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']] = $options; } }
+if ($options) {
 foreach ($options as $key => $value) { if (isset($_GET[$key])) { $options[$key] = stripslashes($_GET[$key]); } }
-update_option(str_replace('-', '_', $_GET['page']), $options); } } } break;
+if (current_user_can('manage_contact_manager')) { update_option($option_name, $options); }
+else { $_SESSION[$option_name.'_'.$_SERVER['REMOTE_ADDR']] = $options; } } } break;
 default: if (!headers_sent()) { header('Location: '.HOME_URL); exit(); } } }
 elseif (isset($_GET['url'])) {
 $url = contact_decrypt_url($_SERVER['REQUEST_URI']);

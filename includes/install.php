@@ -43,4 +43,4 @@ $cron['previous_installation']['timestamp'] = $current_time;
 update_option('contact_manager_cron', $cron);
 if (in_array($cron['previous_installation']['number'], array(1, 5, 9))) {
 include CONTACT_MANAGER_PATH.'languages/countries/countries.php'; foreach ($countries as $country_code => $country) {
-$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET country_code = '".$country_code."' WHERE country_code = '' AND country LIKE '".str_replace("'", "''", $country)."'"); } }
+$results = $wpdb->query("UPDATE ".$wpdb->prefix."contact_manager_messages SET country_code = '".$country_code."' WHERE country_code = '' AND country LIKE '".str_replace(array("\\", "'"), array("", "''"), $country)."'"); } }
