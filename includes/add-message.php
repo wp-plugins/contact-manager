@@ -239,7 +239,7 @@ foreach ($_FILES as $key => $value) {
 if ($value['error'] == 0) {
 $extension = strtolower(substr(strrchr($value['name'], '.'), 1));
 if (!in_array($extension, array('php', 'php3', 'phtml'))) {
-$file = $folder.'/'.basename($value['name']);
+$file = $folder.'/'.wp_unique_filename($folder, basename($value['name']));
 move_uploaded_file($value['tmp_name'], $file);
 $files[] = $file; } } }
 

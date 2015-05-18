@@ -45,6 +45,7 @@ if ($_POST['custom_field_'.$key] != '') { $item_custom_fields[$key] = $_POST['cu
 if ($item_custom_fields != array()) { $_POST['custom_fields'] = serialize($item_custom_fields); }
 if (!$is_category) {
 if ($_POST['displays_count'] < $_POST['messages_count']) { $_POST['displays_count'] = $_POST['messages_count']; } }
+if (!current_user_can('edit_plugins')) { $_POST['message_custom_instructions'] = (isset($_GET['id']) ? $current_item->message_custom_instructions : ''); }
 
 if (!isset($_GET['id'])) {
 if ($_POST['name'] == '') { $error .= ' '.__('Please fill out the required fields.', 'contact-manager'); }
@@ -270,6 +271,7 @@ foreach ($tables['messages'] as $key => $value) { if ((isset($value['type'])) &&
 
 if (!isset($_GET['id'])) {
 if (($_POST['referring_url'] == '') && ($_POST['referring_url_emptied'] != 'yes')) { $_POST['referring_url'] = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''); }
+if ((isset($_POST['message_custom_instructions'])) && (!current_user_can('edit_plugins'))) { $_POST['message_custom_instructions'] = contact_form_data('message_custom_instructions'); }
 if (isset($_POST['update_fields'])) {
 foreach ($_POST as $key => $value) { $GLOBALS['message_data'][$key] = $value; }
 foreach (array(
@@ -427,12 +429,14 @@ $members_areas_list = '';
 foreach ($members_areas as $member_area) { $members_areas_list .= $member_area.', '; }
 $_POST['sender_members_areas'] = (string) substr($members_areas_list, 0, -2);
 $_POST['sender_members_areas_modifications'] = contact_manager_format_members_areas_modifications($_POST['sender_members_areas_modifications']);
-foreach ($initial_options[''] as $key => $value) { if ($_POST[$key] == '') { $_POST[$key] = $value; } $options[$key] = $_POST[$key]; }
+$options = array(); foreach ($initial_options[''] as $key => $value) { if ($_POST[$key] == '') { $_POST[$key] = $value; } $options[$key] = $_POST[$key]; }
 foreach (array(
 'automatic_display_maximum_forms_quantity',
 'maximum_messages_quantity') as $field) { if ((!isset($_POST['submit'])) && ($_POST[$field] === 'unlimited')) { $_POST[$field] = ''; } }
 if (isset($_POST['submit'])) { update_option('contact_manager', $options); }
+$can_edit_plugins = (current_user_can('edit_plugins'));
 foreach ($other_options as $field) {
+if ((!$can_edit_plugins) && (substr($field, -19) == 'custom_instructions')) { $_POST[$field] = get_option('contact_manager_'.$field); }
 if ((!isset($_POST[$field])) || ($_POST[$field] == '')) { $_POST[$field] = $initial_options[$field]; }
 if (isset($_POST['submit'])) { update_option(substr('contact_manager_'.$field, 0, 64), $_POST[$field]); } }
 

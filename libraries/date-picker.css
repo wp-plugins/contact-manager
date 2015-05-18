@@ -52,6 +52,8 @@
   text-align: center;
 }
 
+.dp-popup table { margin: 0; }
+
 .jCalendar { background-color: #c0c0c0; }
 
 .jCalendar td {

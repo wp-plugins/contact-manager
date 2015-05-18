@@ -35,7 +35,7 @@ if ((function_exists('mysqli_connect')) && (function_exists('mysqli_real_escape_
 $link = contact_mysqli_connect(); if (mysqli_connect_error()) { unset($link); } }
 foreach ($_POST as $key => $value) {
 if (is_string($value)) {
-if ($key == $prefix.'password') {
+if (in_array($key, array($prefix.'confirm_password', $prefix.'password'))) {
 $_POST[$key] = str_replace(array('</', '/>'), array('<|', '|>'), $value);
 if ($_POST[$key] != strip_shortcodes($_POST[$key])) { $_POST[$key] = str_replace('[', '(', $_POST[$key]); } }
 else {

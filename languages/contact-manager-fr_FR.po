@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.1.2\n"
+"Project-Id-Version: Contact Manager 6.2\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2015-03-28 17:38+0100\n"
+"PO-Revision-Date: 2015-05-18 01:53+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -1682,4 +1682,7 @@ msgstr "Vous ne pouvez pas décocher les rôles capables d'activer des plugins."
 
 msgid "This name is already used by <a href=\"%1$s\">this category</a>."
 msgstr "Ce nom est déjà utilisé par <a href=\"%1$s\">cette catégorie</a>."
+
+msgid "You don't have the capability required (edit_plugins) to change this code."
+msgstr "Vous n'avez pas la capacité requise (edit_plugins) pour modifier ce code."
 

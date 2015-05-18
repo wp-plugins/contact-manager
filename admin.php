@@ -49,14 +49,14 @@ if ((($key == 'contact-manager-latest-version') && (!version_compare(CONTACT_MAN
 elseif ((isset($_GET['dismiss-notice'])) && ($_GET['dismiss-notice'] == $key)) {
 $new_admin_notices[$key]['dismiss_timestamps'] = (array) (isset($notice['dismiss_timestamps']) ? $notice['dismiss_timestamps'] : array());
 $new_admin_notices[$key]['dismiss_timestamps'][$user_id] = $current_time; }
-elseif (!in_array($key, $GLOBALS['kleor_admin_notices'])) {
-$condition = (((!isset($notice['start_timestamp'])) || ($notice['start_timestamp'] <= $current_time))
+elseif ((!in_array($key, $GLOBALS['kleor_admin_notices']))
+ && ((!isset($notice['capability'])) || (current_user_can($notice['capability'])))
+ && ((!isset($notice['start_timestamp'])) || ($notice['start_timestamp'] <= $current_time))
  && (((!isset($notice['dismiss_timestamps'])) || (!isset($notice['dismiss_timestamps'][$user_id])))
- || ((isset($notice['dismiss_delay'])) && ($notice['dismiss_timestamps'][$user_id] + $notice['dismiss_delay'] < $current_time))));
-if ($condition) { eval($notice['condition']); if ($condition) {
+ || ((isset($notice['dismiss_delay'])) && ($notice['dismiss_timestamps'][$user_id] + $notice['dismiss_delay'] < $current_time)))) {
 $GLOBALS['kleor_admin_notices'][] = $key;
 $dismiss_notice_url = $url[0].(strstr($url[0], '?') ? '&' : '?').'dismiss-notice='.$key;
-$content .= do_shortcode(str_replace('[dismiss-notice-url]', esc_attr($dismiss_notice_url), $notice['message'])); } } } }
+$content .= do_shortcode(str_replace('[dismiss-notice-url]', esc_attr($dismiss_notice_url), $notice['message'])); } }
 if ($new_admin_notices != $admin_notices) { update_option('contact_manager_admin_notices', $new_admin_notices); }
 echo $content; }
 

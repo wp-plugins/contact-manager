@@ -109,7 +109,7 @@ return $data; }
 function contact_manager_table_td($table, $column, $item) {
 $data = contact_manager_table_data($table, $column, $item);
 if ($column != 'custom_fields') { $data = str_replace(array('&amp;lt;', '&amp;gt;', '&amp;#91;', '&amp;#93;'), array('&lt;', '&gt;', '&#91;', '&#93;'), htmlspecialchars($data)); }
-if (substr($column, 0, 13) == 'custom_field_') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.contact_excerpt($data, 50).'</a>'); }
+if (substr($column, 0, 13) == 'custom_field_') { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.htmlspecialchars(contact_excerpt($data, 50)).'</a>'); }
 else {
 switch ($column) {
 case 'affiliation_enabled': case 'affiliation_registration_confirmation_email_sent': case 'affiliation_registration_notification_email_sent':
@@ -119,7 +119,7 @@ case 'message_confirmation_email_sent': case 'message_custom_instructions_execut
 case 'sender_subscribed_as_a_client': case 'sender_subscribed_as_a_user': case 'sender_subscribed_to_affiliate_program': case 'sender_subscribed_to_autoresponder': case 'sender_subscribed_to_members_areas': 
 if ($data == 'yes') { $table_td = '<span style="color: #008000;">'.__('Yes', 'contact-manager').'</span>'; }
 elseif ($data == 'no') { $table_td = '<span style="color: #c00000;">'.__('No', 'contact-manager').'</span>'; }
-else { $table_td = contact_excerpt($data, 50); } break;
+else { $table_td = htmlspecialchars(contact_excerpt($data, 50)); } break;
 case 'category_id': $description = ($data == 0 ? __('No category', 'contact-manager') : htmlspecialchars(contact_excerpt(contact_form_category_data(array(0 => 'name', 'id' => $data)), 50)));
 if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>';
 if ($data > 0) { $table_td .= ' <span class="row-actions edit"><a href="admin.php?page=contact-manager-form-category&amp;id='.$data.'">'.__('Edit', 'contact-manager').'</a></span>'; } break;
@@ -128,7 +128,7 @@ if ($table == 'messages') { $table_td = ($data == '' ? '' : '<a href="admin.php?
 else { $table_td = $data; } break;
 case 'commission_status': case 'commission2_status': if ($data == 'paid') { $table_td = '<a style="color: #008000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=paid">'.__('Paid', 'contact-manager').'</a>'; }
 elseif ($data == 'unpaid') { $table_td = '<a style="color: #e08000;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unpaid">'.__('Unpaid', 'contact-manager').'</a>'; }
-else { $table_td = contact_excerpt($data, 50); }
+else { $table_td = htmlspecialchars(contact_excerpt($data, 50)); }
 if ($table_td != '') { $table_td .= ' <span class="row-actions edit"><a href="admin.php?page=contact-manager-message&amp;id='.$item->id.'#'.($column == 'commission_status' ? 'level-1-commission' : 'level-2-commission').'">'.__('Change', 'contact-manager').'</a></span>'; } break;
 case 'country_code':
 if ($data == '') { $table_td = ''; }
@@ -144,15 +144,15 @@ foreach ($custom_fields as $key => $value) { $custom_fields[$key] = do_shortcode
 asort($custom_fields); $table_td = '';
 foreach ($custom_fields as $key => $value) {
 if ((isset($item_custom_fields[$key])) && ($item_custom_fields[$key] != '')) { $table_td .= htmlspecialchars($value).' => '.htmlspecialchars($item_custom_fields[$key]).',<br />'; } } break;
-case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.contact_excerpt($data, 50).'</a>'; break;
+case 'email_address': $table_td = '<a href="mailto:'.$data.'">'.htmlspecialchars(contact_excerpt($data, 50)).'</a>'; break;
 case 'form_id': $description = ($data == 0 ? __('No form', 'contact-manager') : htmlspecialchars(contact_excerpt(contact_form_data(array(0 => 'name', 'id' => $data)), 50)));
 $result = ((isset($GLOBALS['contact_form'.$data.'_data'])) && (isset($GLOBALS['contact_form'.$data.'_data']['id'])));
 if ((!$result) && ($data > 0)) { $description = __('Inexistent or deleted form', 'contact-manager'); }
 if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.$description.'</a>';
 if ($data > 0) { $table_td .= ' <span class="row-actions">'.($result ? '<span class="edit"><a href="admin.php?page=contact-manager-form&amp;id='.$data.'">'.__('Edit', 'contact-manager').'</a></span> | ' : '')
 .'<span class="view"><a href="admin.php?page=contact-manager-statistics&amp;form_id='.$data.'">'.__('Statistics', 'contact-manager').'</a></span></span>'; } break;
-case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == ROOT_URL ? '/' : contact_excerpt(str_replace(ROOT_URL, '', $data), 80)).'</a>'); break;
-case 'ip_address': case 'receiver': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.contact_excerpt($data, 50).'</a>'); break;
+case 'gift_download_url': case 'referring_url': case 'website_url': $table_td = ($data == '' ? '' : '<a href="'.$data.'">'.($data == ROOT_URL ? '/' : htmlspecialchars(contact_excerpt(str_replace(ROOT_URL, '', $data), 80))).'</a>'); break;
+case 'ip_address': case 'receiver': $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.str_replace('+', '%20', urlencode(html_entity_decode($data))).'">'.htmlspecialchars(contact_excerpt($data, 50)).'</a>'); break;
 case 'keywords':
 $keywords = explode(',', $data);
 $keywords_list = '';
@@ -163,7 +163,7 @@ $keywords_list .= $keyword.', '; }
 $table_td = (string) substr($keywords_list, 0, -2); break;
 case 'maximum_messages_quantity': case 'maximum_messages_quantity_per_sender': if ($data === 'unlimited') { $table_td = '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'=unlimited">'.__('Unlimited', 'contact-manager').'</a>'; } else { $table_td = ($data == '' ? '' : '<a href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.$data.'</a>'); } break;
 case 'messages_count': $table_td = ($data == 0 ? 0 : '<a href="admin.php?page=contact-manager-messages&amp;form_id='.$item->id.'&amp;start_date=0">'.$data.'</a>'); break;
-case 'referrer': case 'referrer2': if ($data != '') { $table_td = '<a style="margin-right: 1em;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.contact_excerpt($data, 50).'</a>';
+case 'referrer': case 'referrer2': if ($data != '') { $table_td = '<a style="margin-right: 1em;" href="admin.php?page='.$_GET['page'].$GLOBALS['criteria'].'&amp;'.$column.'='.$data.'">'.htmlspecialchars(contact_excerpt($data, 50)).'</a>';
 if ((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager'))) {
 if (strstr($data, '@')) { $result = false; } else { global $wpdb; $result = $wpdb->get_row("SELECT id FROM ".$wpdb->prefix."affiliation_manager_affiliates WHERE login = '".$data."'", OBJECT); }
 $table_td .= ' <span class="row-actions">'.($result ? '<span class="edit"><a href="admin.php?page=affiliation-manager-affiliate&amp;id='.$result->id.'">'.__('Edit', 'contact-manager').'</a></span> | ' : '')
@@ -172,7 +172,7 @@ else { $table_td = ''; } break;
 case 'sender_affiliate_status': case 'sender_client_status': case 'sender_member_status':
 if ($data == 'active') { $table_td = '<span style="color: #008000;">'.__('Active', 'contact-manager').'</span>'; }
 elseif ($data == 'inactive') { $table_td = '<span style="color: #e08000;">'.__('Inactive', 'contact-manager').'</span>'; }
-else { $table_td = contact_excerpt($data, 50); } break;
+else { $table_td = htmlspecialchars(contact_excerpt($data, 50)); } break;
 case 'sender_affiliate_category_id': $description = ($data == 0 ? __('No category', 'contact-manager') : (function_exists('affiliate_category_data') ? htmlspecialchars(contact_excerpt(affiliate_category_data(array(0 => 'name', 'id' => $data)), 50)) : ''));
 if ($description != '') { $description = ' <span class="description">('.$description.')</span>'; } $table_td = $data.$description;
 if ((function_exists('affiliation_data')) && (current_user_can('view_affiliation_manager')) && ($data > 0)) { $table_td .= ' <span class="row-actions edit"><a href="admin.php?page=affiliation-manager-affiliate-category&amp;id='.$data.'">'.__('Edit', 'contact-manager').'</a></span>'; } break;
@@ -196,9 +196,9 @@ foreach ($members_areas as $member_area) {
 if ((function_exists('membership_data')) && (current_user_can('view_membership_manager')) && ($member_area > 0)) { $member_area = '<a href="admin.php?page=membership-manager-member-area&amp;id='.$member_area.'">'.$member_area.'</a>'; }
 $members_areas_list .= $member_area.', '; }
 $table_td = (string) substr($members_areas_list, 0, -2); } break;
-case 'sender_user_role': $roles = contact_manager_users_roles(); $table_td = contact_excerpt((isset($roles[$data]) ? $roles[$data] : $data), 50); break;
-case 'website_name': $website_url = htmlspecialchars(contact_manager_table_data($table, 'website_url', $item)); $table_td = ($website_url == '' ? contact_excerpt($data, 50) : '<a href="'.$website_url.'">'.contact_excerpt(($data == '' ? str_replace(ROOT_URL, '', $website_url) : $data), 50).'</a>'); break;
-default: $table_td = contact_excerpt($data); } }
+case 'sender_user_role': $roles = contact_manager_users_roles(); $table_td = htmlspecialchars(contact_excerpt((isset($roles[$data]) ? $roles[$data] : $data), 50)); break;
+case 'website_name': $website_url = htmlspecialchars(contact_manager_table_data($table, 'website_url', $item)); $table_td = ($website_url == '' ? htmlspecialchars(contact_excerpt($data, 50)) : '<a href="'.$website_url.'">'.htmlspecialchars(contact_excerpt(($data == '' ? str_replace(ROOT_URL, '', $website_url) : $data), 50)).'</a>'); break;
+default: $table_td = htmlspecialchars(contact_excerpt($data)); } }
 return $table_td; }
 
 
