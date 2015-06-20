@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.2\n"
+"Project-Id-Version: Contact Manager 6.2.2\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
-"PO-Revision-Date: 2015-05-18 01:53+0100\n"
+"PO-Revision-Date: 2015-06-16 19:36+0100\n"
 "Last-Translator: Kleor <contact@kleor.com>\n"
 "Language-Team: Kleor <contact@kleor.com>\n"
 "MIME-Version: 1.0\n"
@@ -1004,9 +1004,6 @@ msgstr "Vous devez effectuer quelques réglages afin que l'inscription fonctionn
 
 msgid "Click here to configure the options of Commerce Manager."
 msgstr "Cliquez ici pour configurer les options de Commerce Manager."
-
-msgid "Click here to read the instructions for integration."
-msgstr "Cliquez ici pour lire les instructions d'intégration."
 
 msgid "You have no adjustment to make so that the subscription works with CyberMailing."
 msgstr "Vous n'avez aucun réglage à effectuer afin que l'inscription fonctionne avec CyberMailing."

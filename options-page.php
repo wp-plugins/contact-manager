@@ -48,7 +48,7 @@ else {
 foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace(array('&nbsp;', '&#91;', '&#93;'), array(' ', '&amp;#91;', '&amp;#93;'), $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, 'options');
-include CONTACT_MANAGER_PATH.'includes/fill-form.php'; } }
+include CONTACT_MANAGER_PATH.'includes/update-form.php'; } }
 if (!isset($options)) { $options = (array) get_option('contact_manager'); }
 
 foreach ($options as $key => $value) {
@@ -86,11 +86,11 @@ $currency_code = (isset($commerce_manager_options['currency_code']) ? do_shortco
 <option value="top, bottom"<?php if ($options['automatic_display_location'] == 'top, bottom') { echo ' selected="selected"'; } ?>><?php _e('On the top and bottom of posts', 'contact-manager'); ?></option>
 </select></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="automatic_display_form_id"><?php _e('Form ID', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_form_id" id="automatic_display_form_id" rows="1" cols="25" onkeyup="if (this.value != '') { fill_form(this.form); }" onchange="fill_form(this.form);"><?php echo $options['automatic_display_form_id']; ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_form_id" id="automatic_display_form_id" rows="1" cols="25" onkeyup="if (this.value != '') { update_form(this.form); }" onchange="update_form(this.form);"><?php echo $options['automatic_display_form_id']; ?></textarea>
 <span class="description" style="vertical-align: 25%;" id="automatic-display-form-id-description"><?php echo contact_manager_pages_field_description('automatic_display_form_id', $options['automatic_display_form_id']); ?></span>
 <span id="automatic-display-form-id-links"><?php $ids_fields[] = 'automatic_display_form_id'; echo contact_manager_pages_field_links($back_office_options, 'automatic_display_form_id', $options['automatic_display_form_id']); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="automatic_display_maximum_forms_quantity"><?php _e('Maximum quantity of forms displayed per page', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_maximum_forms_quantity" id="automatic_display_maximum_forms_quantity" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo ($options['automatic_display_maximum_forms_quantity'] === 'unlimited' ? '' : $options['automatic_display_maximum_forms_quantity']); ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="automatic_display_maximum_forms_quantity" id="automatic_display_maximum_forms_quantity" rows="1" cols="25" onchange="update_form(this.form);"><?php echo ($options['automatic_display_maximum_forms_quantity'] === 'unlimited' ? '' : $options['automatic_display_maximum_forms_quantity']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for an unlimited quantity.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
@@ -188,7 +188,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <td><label><input type="checkbox" name="messages_registration_enabled" id="messages_registration_enabled" value="yes"<?php if ($options['messages_registration_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Save messages in the database', 'contact-manager'); ?></label><br />
 <a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-messages"><?php _e('Display the messages saved in the database', 'contact-manager'); ?></a></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity"><?php _e('Maximum messages quantity', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo ($options['maximum_messages_quantity'] === 'unlimited' ? '' : $options['maximum_messages_quantity']); ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" cols="25" onchange="update_form(this.form);"><?php echo ($options['maximum_messages_quantity'] === 'unlimited' ? '' : $options['maximum_messages_quantity']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('You can save only the latest messages to ease your database.', 'contact-manager'); ?><br />
 <?php _e('Leave this field blank for an unlimited quantity.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
@@ -203,7 +203,7 @@ echo '<option value="'.$key.'"'.($recaptcha_theme == $key ? ' selected="selected
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php _e('You can encrypt the download URLs.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#urls-encryption"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="encrypted_urls_validity_duration"><?php _e('Validity duration', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="encrypted_urls_validity_duration" id="encrypted_urls_validity_duration" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo $options['encrypted_urls_validity_duration']; ?></textarea> <span style="vertical-align: 25%;"><?php _e('hours', 'contact-manager'); ?></span>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="encrypted_urls_validity_duration" id="encrypted_urls_validity_duration" rows="1" cols="25" onchange="update_form(this.form);"><?php echo $options['encrypted_urls_validity_duration']; ?></textarea> <span style="vertical-align: 25%;"><?php _e('hours', 'contact-manager'); ?></span>
 <span class="description" style="vertical-align: 25%;"><?php _e('Encrypted URLs must have a limited validity duration.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="encrypted_urls_key"><?php _e('Encryption key', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="encrypted_urls_key" id="encrypted_urls_key" rows="1" cols="50"><?php echo $options['encrypted_urls_key']; ?></textarea>
@@ -293,8 +293,12 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 <div id="aweber-module"<?php if (in_array('aweber', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
 <h4 id="aweber"><strong><?php echo $modules['options']['autoresponders-integration']['modules']['aweber']['name']; ?></strong></h4>
 <table class="form-table"><tbody>
+<tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="aweber_api_key"><?php _e('API key', 'contact-manager'); ?></label></strong></th>
+<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="aweber_api_key" id="aweber_api_key" rows="2" cols="50"><?php echo $options['aweber_api_key']; ?></textarea> 
+<span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#aweber"><?php _e('More informations', 'contact-manager'); ?></a>
+<?php if (function_exists('commerce_data')) { echo '<br />'.__('Leave this field blank to apply the Commerce Manager\'s option.', 'contact-manager'); } ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
-<td><span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#aweber"><?php _e('Click here to read the instructions for integration.', 'contact-manager'); ?></a></span></td></tr>
+<td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
 </div>
 <div id="cybermailing-module"<?php if (in_array('cybermailing', $undisplayed_modules)) { echo ' style="display: none;"'; } ?>>
@@ -356,7 +360,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."commerce_manager_clients_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
-<td><select name="sender_client_category_id" id="sender_client_category_id" onchange="fill_form(this.form);">
+<td><select name="sender_client_category_id" id="sender_client_category_id" onchange="update_form(this.form);">
 <option value=""<?php if ($options['sender_client_category_id'] == '') { echo ' selected="selected"'; } ?> id="sender_client_category_id_default_option"><?php _e('Commerce Manager\'s option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($options['sender_client_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
@@ -406,7 +410,7 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."affiliation_manager_affiliates_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_affiliate_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
-<td><select name="sender_affiliate_category_id" id="sender_affiliate_category_id" onchange="fill_form(this.form);">
+<td><select name="sender_affiliate_category_id" id="sender_affiliate_category_id" onchange="update_form(this.form);">
 <option value=""<?php if ($options['sender_affiliate_category_id'] == '') { echo ' selected="selected"'; } ?> id="sender_affiliate_category_id_default_option"><?php _e('Affiliation Manager\'s option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($options['sender_affiliate_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
@@ -453,7 +457,7 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 <td><label><input type="checkbox" name="sender_subscribed_to_members_areas" id="sender_subscribed_to_members_areas" value="yes"<?php if ($options['sender_subscribed_to_members_areas'] == 'yes') { echo ' checked="checked"'; } ?> /> 
 <?php _e('Subscribe the sender to a member area', 'contact-manager'); ?></label> <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#membership"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas"><?php _e('Members areas', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="sender_members_areas" id="sender_members_areas" rows="1" cols="50" onkeyup="update_links(this.form); fill_form(this.form);" onchange="update_links(this.form); fill_form(this.form);"><?php echo $options['sender_members_areas']; ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="sender_members_areas" id="sender_members_areas" rows="1" cols="50" onkeyup="update_links(this.form); update_form(this.form);" onchange="update_links(this.form); update_form(this.form);"><?php echo $options['sender_members_areas']; ?></textarea>
 <?php if (function_exists('membership_data')) {
 $ids_fields[] = 'sender_members_areas';
 echo '<span class="description" style="vertical-align: 25%;" id="sender-members-areas-description">'.contact_manager_pages_field_description('sender_members_areas', $options['sender_members_areas']).'</span>';
@@ -461,14 +465,14 @@ $links = contact_manager_pages_field_links($back_office_options, 'sender_members
 $string = '-member-area&amp;id='.$options['sender_members_areas']; $url = 'admin.php?page=membership-manager'.(strstr($links, $string) ? $string : ''); } ?><br />
 <span class="description"><?php _e('You can enter several members areas IDs. Separate them with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas_modifications"><?php _e('Automatic modifications', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50" onchange="fill_form(this.form);"><?php echo $options['sender_members_areas_modifications']; ?></textarea>
+<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50" onchange="update_form(this.form);"><?php echo $options['sender_members_areas_modifications']; ?></textarea>
 <span class="description"><?php _e('You can offer a temporary access, and automatically modify the list of members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
  <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/membership-manager/documentation/#members-areas-modifications"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <?php if (get_option('membership_manager')) {
 $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."membership_manager_members_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_member_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
-<td><select name="sender_member_category_id" id="sender_member_category_id" onchange="fill_form(this.form);">
+<td><select name="sender_member_category_id" id="sender_member_category_id" onchange="update_form(this.form);">
 <option value=""<?php if ($options['sender_member_category_id'] == '') { echo ' selected="selected"'; } ?> id="sender_member_category_id_default_option"><?php _e('Member area\'s option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($options['sender_member_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
@@ -584,7 +588,7 @@ else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use aff
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php _e('The level 1 commission is awarded to the affiliate who referred the message.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/affiliation-manager/documentation/#commissions-levels"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_amount"><?php _e('Amount', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission_amount" id="commission_amount" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo $options['commission_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission_amount" id="commission_amount" rows="1" cols="25" onchange="update_form(this.form);"><?php echo $options['commission_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -597,7 +601,7 @@ else { echo str_replace('<a', '<a '.$documentations_links_markup, __('To use aff
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><label><input type="checkbox" name="commission2_enabled" id="commission2_enabled" value="yes"<?php if ($options['commission2_enabled'] == 'yes') { echo ' checked="checked"'; } ?> /> <?php _e('Award a level 2 commission', 'contact-manager'); ?></label></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_amount"><?php _e('Amount', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission2_amount" id="commission2_amount" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo $options['commission2_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission2_amount" id="commission2_amount" rows="1" cols="25" onchange="update_form(this.form);"><?php echo $options['commission2_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php _e('Update', 'contact-manager'); ?>" /></td></tr>
 </tbody></table>
@@ -686,9 +690,9 @@ foreach ($fields as $field) { echo 'element = document.getElementById("'.$field.
 <?php $fields = array();
 foreach ($initial_options[''] as $key => $value) { $fields[] = $key; }
 $fields = array_merge($fields, $other_options);
-echo 'fill_form_call_number = 0;
-function fill_form(form) {
-fill_form_call_number += 1;
+echo 'update_form_call_number = 0;
+function update_form(form) {
+update_form_call_number += 1;
 data = {}; fields = '.json_encode($fields).';
 for (i = 0, n = fields.length; i < n; i++) {
 if ((form[fields[i]]) && ((form[fields[i]].getAttribute("data-empty") != "yes") || (form[fields[i]].getAttribute("data-focused") == "yes"))) {
@@ -696,9 +700,9 @@ if (form[fields[i]].type != "checkbox") { data[fields[i]] = form[fields[i]].valu
 else { if (form[fields[i]].checked == true) { data[fields[i]] = "yes"; } } } }
 data["other_options"] = '.json_encode($other_options).';
 ids_fields = '.json_encode($ids_fields).'; data["ids_fields"] = ids_fields;
-data["fill_form_call_number"] = fill_form_call_number;
-jQuery.post("'.CONTACT_MANAGER_URL.'index.php?action=fill-form&page='.$_GET['page'].'&key='.md5(AUTH_KEY).'", data, function(data) {
-if (data["fill_form_call_number"] == fill_form_call_number) {
+data["update_form_call_number"] = update_form_call_number;
+jQuery.post("'.CONTACT_MANAGER_URL.'index.php?action=update-form&page='.$_GET['page'].'&key='.md5(AUTH_KEY).'", data, function(data) {
+if (data["update_form_call_number"] == update_form_call_number) {
 for (i = 0, n = fields.length; i < n; i++) {
 if ((form[fields[i]]) && (typeof data[fields[i]] != "undefined") && (fields[i] != document.activeElement.name)) {
 if (form[fields[i]].type != "checkbox") { form[fields[i]].value = data[fields[i]]; }

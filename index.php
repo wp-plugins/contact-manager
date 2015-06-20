@@ -5,13 +5,14 @@ include_once $file;
 if (function_exists('contact_data')) {
 if (isset($_GET['action'])) {
 switch ($_GET['action']) {
-case 'fill-form':
+case 'install': if ((isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) { install_contact_manager(); } break;
+case 'update-form':
 if (!headers_sent()) { header('Content-type: text/plain'); }
 if ((isset($_GET['page'])) && (isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) {
 if (current_user_can('view_contact_manager')) {
 foreach (array('admin.php', 'admin-pages-functions.php') as $file) { include_once CONTACT_MANAGER_PATH.$file; }
-$GLOBALS['action'] = 'fill_admin_page_form';
-function contact_fill_admin_page_form() {
+$GLOBALS['action'] = 'update_admin_page_form';
+function contact_update_admin_page_form() {
 global $wpdb; $error = '';
 $back_office_options = (array) get_option('contact_manager_back_office');
 extract(contact_manager_pages_links_markups($back_office_options));
@@ -26,10 +27,9 @@ $$variable = (array) (isset($_POST[$variable]) ? $_POST[$variable] : array()); }
 foreach ($_POST as $key => $value) { if (is_string($value)) { $_POST[$key] = stripslashes($value); } }
 $_POST['update_fields'] = 'yes'; if (isset($_POST['submit'])) { unset($_POST['submit']); }
 foreach (array('admin-pages.php', 'tables.php') as $file) { include CONTACT_MANAGER_PATH.$file; }
-include CONTACT_MANAGER_PATH.'includes/fill-form.php';
+include CONTACT_MANAGER_PATH.'includes/update-form.php';
 echo json_encode(array_map('strval', $_POST)); }
-contact_fill_admin_page_form(); } } break;
-case 'install': if ((isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) { install_contact_manager(); } break;
+contact_update_admin_page_form(); } } break;
 case 'update-options':
 if ((isset($_GET['page'])) && (isset($_GET['key'])) && ($_GET['key'] == md5(AUTH_KEY))) {
 $option_name = str_replace('-', '_', $_GET['page']);

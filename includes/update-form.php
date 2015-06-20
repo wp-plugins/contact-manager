@@ -423,6 +423,11 @@ $row = $wpdb->get_row("SELECT count(*) as total FROM ".$wpdb->prefix."contact_ma
 $messages_quantity = (int) (isset($row->total) ? $row->total : 0);
 $n = $messages_quantity - $_POST['maximum_messages_quantity'];
 if ($n > 0) { $results = $wpdb->query("DELETE FROM ".$wpdb->prefix."contact_manager_messages ORDER BY date ASC LIMIT $n"); } }
+$_POST['aweber_api_key'] = trim($_POST['aweber_api_key']);
+if ((isset($_POST['submit'])) && (substr_count($_POST['aweber_api_key'], '|') > 3)) {
+if (!class_exists('AWeberAPI')) { include_once CONTACT_MANAGER_PATH.'libraries/aweber.php'; }
+$array = AWeberAPI::getDataFromAweberID($_POST['aweber_api_key']);
+if ((is_array($array)) && (count($array) == 4)) { $_POST['aweber_api_key'] = $array[0].'|'.$array[1].'|'.$array[2].'|'.$array[3]; } }
 $members_areas = array_unique(array_map('intval', preg_split('#[^0-9]#', $_POST['sender_members_areas'], 0, PREG_SPLIT_NO_EMPTY)));
 sort($members_areas, SORT_NUMERIC);
 $members_areas_list = '';

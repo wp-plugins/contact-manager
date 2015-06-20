@@ -17,6 +17,7 @@ $initial_options[''] = array(
 'automatic_display_location' => 'top',
 'automatic_display_maximum_forms_quantity' => 2,
 'automatic_display_only_on_single_post_pages' => 'yes',
+'aweber_api_key' => '',
 'commerce_registration_confirmation_email_sent' => '',
 'commerce_registration_notification_email_sent' => '',
 'commission_amount' => 1,

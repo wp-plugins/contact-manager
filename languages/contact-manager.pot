@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Contact Manager 6.2\n"
+"Project-Id-Version: Contact Manager 6.2.2\n"
 "Report-Msgid-Bugs-To: http://www.kleor.com/contact-manager/\n"
 "POT-Creation-Date: 2012-04-02 00:00+0000\n"
 "PO-Revision-Date: 2012-04-02 00:00+0000\n"
@@ -1033,9 +1033,6 @@ msgid ""
 msgstr ""
 
 msgid "Click here to configure the options of Commerce Manager."
-msgstr ""
-
-msgid "Click here to read the instructions for integration."
 msgstr ""
 
 msgid ""

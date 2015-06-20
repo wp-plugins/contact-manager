@@ -14,9 +14,31 @@ case 'SG Autorépondeur': kleor_subscribe_to_sg_autorepondeur($list, $contact); 
 
 
 function kleor_subscribe_to_aweber($list, $contact) {
+$contact['first_name'] = kleor_strip_accents($contact['first_name']);
+$array = explode('|', contact_data('aweber_api_key'));
+if (count($array) != 4) { $email_parser = true; }
+else {
+$email_parser = false;
+list($consumerKey, $consumerSecret, $accessToken, $accessSecret) = $array;
+try {
+if (!class_exists('AWeberAPI')) { include_once CONTACT_MANAGER_PATH.'libraries/aweber.php'; }
+$aweber = new AWeberAPI($consumerKey, $consumerSecret);
+$account = $aweber->getAccount($accessToken, $accessSecret);
+if (!is_numeric(str_replace('awlist', '', $list))) {
+$lists = $account->lists->find(array('name' => $list))->data;
+if ((isset($lists['entries'])) && (isset($lists['entries'][0])) && (isset($lists['entries'][0]['id']))) { $list = $lists['entries'][0]['id']; } else { $email_parser = true; } }
+if (!$email_parser) {
+$list = $account->loadFromUrl('/accounts/'.$account->id.'/lists/'.preg_replace('/[^0-9]/', '', $list));
+$list->subscribers->create(array(
+'email' => $contact['email_address'],
+'name' => $contact['first_name'],
+'ip_address' => $contact['ip_address'],
+'ad_tracking' => $contact['referrer'])); } }
+catch(Exception $exc) { $email_parser = true; } }
+if ($email_parser) {
+if (is_numeric($list)) { $list = 'awlist'.$list; }
 $list = str_replace('à', '@', $list);
 if (!strstr($list, '@')) { $list = $list.'@aweber.com'; }
-$contact['first_name'] = kleor_strip_accents($contact['first_name']);
 $subject = 'AWeber Subscription';
 $body =
 "\nEmail: ".$contact['email_address'].
@@ -26,7 +48,7 @@ $domain = $_SERVER['SERVER_NAME'];
 if (substr($domain, 0, 4) == 'www.') { $domain = substr($domain, 4); }
 if (strlen($domain) < 36) { $sender = 'wordpress@'.$domain; } else { $sender = 'w@'.$domain; }
 foreach (array($sender, $contact['first_name'].' <'.$contact['email_address'].'>') as $string) {
-mail($list, $subject, $body, 'From: '.$string); } }
+mail($list, $subject, $body, 'From: '.$string); } } }
 
 
 function kleor_subscribe_to_cybermailing($list, $contact) {

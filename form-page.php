@@ -48,7 +48,7 @@ else {
 foreach ($_POST as $key => $value) {
 if (is_string($value)) { $_POST[$key] = stripslashes(html_entity_decode(str_replace(array('&nbsp;', '&#91;', '&#93;'), array(' ', '&amp;#91;', '&amp;#93;'), $value))); } }
 $back_office_options = update_contact_manager_back_office($back_office_options, $admin_page);
-include CONTACT_MANAGER_PATH.'includes/fill-form.php'; } }
+include CONTACT_MANAGER_PATH.'includes/update-form.php'; } }
 
 if (isset($_GET['id'])) {
 $item_data = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."contact_manager_".$table_slug." WHERE id = ".$_GET['id'], OBJECT);
@@ -105,7 +105,7 @@ update_category_top_description(<?php echo (int) $_POST['category_id']; ?>);
 <?php $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."contact_manager_forms_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="category_id"><?php echo ($is_category ? __('Parent category', 'contact-manager') : __('Category', 'contact-manager')); ?></label></strong></th>
-<td><select name="category_id" id="category_id" onchange="update_category_top_description(this.value); fill_form(this.form);">
+<td><select name="category_id" id="category_id" onchange="update_category_top_description(this.value); update_form(this.form);">
 <option value="0"<?php if ($_POST['category_id'] == 0) { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
 if ((!$is_category) || (!isset($_GET['id'])) || (!in_array($_GET['id'], contact_forms_categories_list($category->id)))) {
@@ -115,15 +115,15 @@ echo '<option value="'.$category->id.'"'.($_POST['category_id'] == $category->id
 <?php $ids_fields[] = 'category_id'; echo '<span id="category-id-links">'.contact_manager_pages_field_links($back_office_options, 'category_id', $_POST['category_id']).'</span>'; ?></td></tr>
 <?php } ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;<?php if ((!isset($_GET['id'])) && (isset($_POST['submit'])) && ($_POST['name'] == '')) { echo ' color: #c00000;'; } ?>" id="name-th"><strong><label for="name"><?php _e('Name', 'contact-manager'); ?></label></strong> *</th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="name" id="name" rows="1" cols="50"<?php if ((!isset($_GET['id'])) && (isset($_POST['submit'])) && ($_POST['name'] == '')) { echo ' placeholder="'.__('This field is required.', 'contact-manager').'"'; } ?> onchange="fill_form(this.form);"><?php echo $_POST['name']; ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="name" id="name" rows="1" cols="50"<?php if ((!isset($_GET['id'])) && (isset($_POST['submit'])) && ($_POST['name'] == '')) { echo ' placeholder="'.__('This field is required.', 'contact-manager').'"'; } ?> onchange="update_form(this.form);"><?php echo $_POST['name']; ?></textarea>
 <br /><span style="color: #c00000;" id="name_error"><?php echo (isset($_POST['name_error']) ? $_POST['name_error'] : ''); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="description"><?php _e('Description', 'contact-manager'); ?></label></strong></th>
 <td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="description" id="description" rows="1" cols="75"><?php echo $_POST['description']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="keywords"><?php _e('Keywords', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="keywords" id="keywords" rows="1" cols="75" onchange="fill_form(this.form);"><?php echo $_POST['keywords']; ?></textarea><br />
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 75%;" name="keywords" id="keywords" rows="1" cols="75" onchange="update_form(this.form);"><?php echo $_POST['keywords']; ?></textarea><br />
 <span class="description"><?php _e('Separate the keywords with commas.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="date"><?php _e('Creation date', 'contact-manager'); ?></label></strong></th>
-<td><input class="date-pick" type="text" name="date" id="date" size="20" value="<?php echo ($_POST['date'] != '' ? $_POST['date'] : $current_date); ?>" onchange="fill_form(this.form);" /></td></tr>
+<td><input class="date-pick" type="text" name="date" id="date" size="20" value="<?php echo ($_POST['date'] != '' ? $_POST['date'] : $current_date); ?>" onchange="update_form(this.form);" /></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
 </tbody></table>
 </div></div>
@@ -175,12 +175,12 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 <div class="inside">
 <table class="form-table"><tbody>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity_per_sender"><?php _e('Maximum messages quantity per sender', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity_per_sender" id="maximum_messages_quantity_per_sender" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo (!is_numeric($_POST['maximum_messages_quantity_per_sender']) ? '' : $_POST['maximum_messages_quantity_per_sender']); ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity_per_sender" id="maximum_messages_quantity_per_sender" rows="1" cols="25" onchange="update_form(this.form);"><?php echo (!is_numeric($_POST['maximum_messages_quantity_per_sender']) ? '' : $_POST['maximum_messages_quantity_per_sender']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank for an unlimited quantity.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="displays_count"><?php _e('Displays count', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="displays_count" id="displays_count" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo (int) $_POST['displays_count']; ?></textarea></td></tr>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="displays_count" id="displays_count" rows="1" cols="25" onchange="update_form(this.form);"><?php echo (int) $_POST['displays_count']; ?></textarea></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="messages_count"><?php _e('Messages count', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="messages_count" id="messages_count" rows="1" cols="25" <?php if (isset($_GET['id'])) { echo 'onkeyup="update_links(this.form);" '; } ?>onchange="<?php if (isset($_GET['id'])) { echo 'update_links(this.form); '; } ?>fill_form(this.form);"><?php echo (int) $_POST['messages_count']; ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="messages_count" id="messages_count" rows="1" cols="25" <?php if (isset($_GET['id'])) { echo 'onkeyup="update_links(this.form);" '; } ?>onchange="<?php if (isset($_GET['id'])) { echo 'update_links(this.form); '; } ?>update_form(this.form);"><?php echo (int) $_POST['messages_count']; ?></textarea>
 <?php if (isset($_GET['id'])) { echo '<br /><a id="messages-count-link" style="text-decoration: none;'.($_POST['messages_count'] > 0 ? '' : ' display: none;').'" '.$ids_fields_links_markup.' href="admin.php?page=contact-manager-messages&amp;form_id='.$_GET['id'].'&amp;start_date=0">'.__('Display the messages', 'contact-manager').'</a>
 <input type="hidden" name="submit" value="true" />
 <input type="submit" class="button-secondary" name="count_messages" value="'.__('Re-count the messages', 'contact-manager').'" />
@@ -263,7 +263,7 @@ echo $content; if ($content == '') { echo '<tr style="vertical-align: top;"><th 
 <span class="description"><?php _e('You can save only the latest messages to ease your database.', 'contact-manager'); ?></span><br />
 <a style="text-decoration: none;" <?php echo $ids_fields_links_markup; ?> href="admin.php?page=contact-manager-messages"><?php _e('Display the messages saved in the database', 'contact-manager'); ?></a></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="maximum_messages_quantity"><?php _e('Maximum messages quantity', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo ($_POST['maximum_messages_quantity'] === 'unlimited' ? 'i' : $_POST['maximum_messages_quantity']); ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="maximum_messages_quantity" id="maximum_messages_quantity" rows="1" cols="25" onchange="update_form(this.form);"><?php echo ($_POST['maximum_messages_quantity'] === 'unlimited' ? 'i' : $_POST['maximum_messages_quantity']); ?></textarea>
 <span class="description" style="vertical-align: 25%;"><?php _e('Enter <em><strong>i</strong></em> for an unlimited quantity.', 'contact-manager'); ?><br />
 <?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th><td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
@@ -373,7 +373,7 @@ echo '<option value="'.$value.'"'.($autoresponder == $value ? ' selected="select
 $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."commerce_manager_clients_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_client_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
-<td><select name="sender_client_category_id" id="sender_client_category_id" onchange="fill_form(this.form);">
+<td><select name="sender_client_category_id" id="sender_client_category_id" onchange="update_form(this.form);">
 <option value=""<?php $default_options_select_fields[] = 'sender_client_category_id'; if ($_POST['sender_client_category_id'] == '') { echo ' selected="selected"'; } ?> id="sender_client_category_id_default_option"><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($_POST['sender_client_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
@@ -426,7 +426,7 @@ echo '<span id="sender-client-category-id-links">'.contact_manager_pages_field_l
 $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."affiliation_manager_affiliates_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_affiliate_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
-<td><select name="sender_affiliate_category_id" id="sender_affiliate_category_id" onchange="fill_form(this.form);">
+<td><select name="sender_affiliate_category_id" id="sender_affiliate_category_id" onchange="update_form(this.form);">
 <option value=""<?php $default_options_select_fields[] = 'sender_affiliate_category_id'; if ($_POST['sender_affiliate_category_id'] == '') { echo ' selected="selected"'; } ?> id="sender_affiliate_category_id_default_option"><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($_POST['sender_affiliate_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
@@ -476,7 +476,7 @@ echo '<span id="sender-affiliate-category-id-links">'.contact_manager_pages_fiel
 </select>
 <span class="description"><a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/contact-manager/#membership"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas"><?php _e('Members areas', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="sender_members_areas" id="sender_members_areas" rows="1" cols="50" onkeyup="update_links(this.form); fill_form(this.form);" onchange="update_links(this.form); fill_form(this.form);"><?php echo $_POST['sender_members_areas']; ?></textarea>
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 50%;" name="sender_members_areas" id="sender_members_areas" rows="1" cols="50" onkeyup="update_links(this.form); update_form(this.form);" onchange="update_links(this.form); update_form(this.form);"><?php echo $_POST['sender_members_areas']; ?></textarea>
 <?php if (function_exists('membership_data')) {
 $ids_fields[] = 'sender_members_areas';
 $members_areas = contact_form_data(array(0 => 'sender_members_areas', $attribute => (isset($_GET['id']) ? $_GET['id'] : 0)));
@@ -486,7 +486,7 @@ $string = '-member-area&amp;id='.$members_areas; $url = 'admin.php?page=membersh
 <span class="description"><?php _e('You can enter several members areas IDs. Separate them with commas.', 'contact-manager'); ?><br />
 <?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_members_areas_modifications"><?php _e('Automatic modifications', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50" onchange="fill_form(this.form);"><?php echo $_POST['sender_members_areas_modifications']; ?></textarea>
+<td><textarea style="float: left; margin-right: 1em; width: 50%;" name="sender_members_areas_modifications" id="sender_members_areas_modifications" rows="2" cols="50" onchange="update_form(this.form);"><?php echo $_POST['sender_members_areas_modifications']; ?></textarea>
 <span class="description"><?php _e('You can offer a temporary access, and automatically modify the list of members areas to which the member can access when a certain date is reached.', 'contact-manager'); ?>
  <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/membership-manager/documentation/#members-areas-modifications"><?php _e('More informations', 'contact-manager'); ?></a><br />
 <?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
@@ -494,7 +494,7 @@ $string = '-member-area&amp;id='.$members_areas; $url = 'admin.php?page=membersh
 $categories = $wpdb->get_results("SELECT id, name FROM ".$wpdb->prefix."membership_manager_members_categories ORDER BY name ASC", OBJECT);
 if ($categories) { ?>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="sender_member_category_id"><?php _e('Category', 'contact-manager'); ?></label></strong></th>
-<td><select name="sender_member_category_id" id="sender_member_category_id" onchange="fill_form(this.form);">
+<td><select name="sender_member_category_id" id="sender_member_category_id" onchange="update_form(this.form);">
 <option value=""<?php $default_options_select_fields[] = 'sender_member_category_id'; if ($_POST['sender_member_category_id'] == '') { echo ' selected="selected"'; } ?> id="sender_member_category_id_default_option"><?php _e('Default option', 'contact-manager'); ?></option>
 <option value="0"<?php if ($_POST['sender_member_category_id'] == '0') { echo ' selected="selected"'; } ?>><?php _e('None ', 'contact-manager'); ?></option>
 <?php foreach ($categories as $category) {
@@ -595,7 +595,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><span class="description"><?php _e('The level 1 commission is awarded to the affiliate who referred the message.', 'contact-manager'); ?> <a <?php echo $documentations_links_markup; ?> href="http://www.kleor.com/affiliation-manager/documentation/#commissions-levels"><?php _e('More informations', 'contact-manager'); ?></a></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission_amount"><?php _e('Amount', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission_amount" id="commission_amount" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo $_POST['commission_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span> 
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission_amount" id="commission_amount" rows="1" cols="25" onchange="update_form(this.form);"><?php echo $_POST['commission_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span> 
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
@@ -613,7 +613,7 @@ echo '<option value="'.$role.'"'.($_POST['sender_user_role'] == $role ? ' select
 <option value="no"<?php if ($_POST['commission2_enabled'] == 'no') { echo ' selected="selected"'; } ?>><?php _e('No', 'contact-manager'); ?></option>
 </select></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"><strong><label for="commission2_amount"><?php _e('Amount', 'contact-manager'); ?></label></strong></th>
-<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission2_amount" id="commission2_amount" rows="1" cols="25" onchange="fill_form(this.form);"><?php echo $_POST['commission2_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span> 
+<td><textarea style="padding: 0 0.25em; height: 1.75em; width: 25%;" name="commission2_amount" id="commission2_amount" rows="1" cols="25" onchange="update_form(this.form);"><?php echo $_POST['commission2_amount']; ?></textarea> <span style="vertical-align: 25%;"><?php echo $currency_code; ?></span> 
 <span class="description" style="vertical-align: 25%;"><?php _e('Leave this field blank to apply the default option.', 'contact-manager'); ?></span></td></tr>
 <tr style="vertical-align: top;"><th scope="row" style="width: 20%;"></th>
 <td><input type="submit" class="button-secondary" name="submit" value="<?php echo (isset($_GET['id']) ? __('Update', 'contact-manager') : __('Save', 'contact-manager')); ?>" /></td></tr>
@@ -695,9 +695,9 @@ foreach ($default_options_select_fields as $field) { if (isset($default_options[
 
 <?php $modules_list = array(); foreach ($modules[$admin_page] as $key => $value) {
 $modules_list[] = $key; if (isset($value['modules'])) { foreach ($value['modules'] as $module_key => $module_value) { $modules_list[] = $module_key; } } }
-echo 'fill_form_call_number = 0;
-function fill_form(form) {
-fill_form_call_number += 1;
+echo 'update_form_call_number = 0;
+function update_form(form) {
+update_form_call_number += 1;
 data = {}; fields = '.json_encode($fields).';
 for (i = 0, n = fields.length; i < n; i++) {
 if ((form[fields[i]]) && ((form[fields[i]].getAttribute("data-empty") != "yes") || (form[fields[i]].getAttribute("data-focused") == "yes"))) {
@@ -705,9 +705,9 @@ if (form[fields[i]].type != "checkbox") { data[fields[i]] = form[fields[i]].valu
 else { if (form[fields[i]].checked == true) { data[fields[i]] = "yes"; } } } }
 data["default_options_select_fields"] = '.json_encode($default_options_select_fields).';
 ids_fields = '.json_encode($ids_fields).'; data["ids_fields"] = ids_fields;
-data["fill_form_call_number"] = fill_form_call_number;
-jQuery.post("'.CONTACT_MANAGER_URL.'index.php?action=fill-form&page='.$_GET['page'].(isset($_GET['id']) ? '&id='.$_GET['id'] : '').'&time='.$current_time.'&key='.md5(AUTH_KEY).'", data, function(data) {
-if (data["fill_form_call_number"] == fill_form_call_number) {
+data["update_form_call_number"] = update_form_call_number;
+jQuery.post("'.CONTACT_MANAGER_URL.'index.php?action=update-form&page='.$_GET['page'].(isset($_GET['id']) ? '&id='.$_GET['id'] : '').'&time='.$current_time.'&key='.md5(AUTH_KEY).'", data, function(data) {
+if (data["update_form_call_number"] == update_form_call_number) {
 for (i = 0, n = fields.length; i < n; i++) {
 if (form[fields[i]]) {
 if ((typeof data[fields[i]] != "undefined") && (fields[i] != document.activeElement.name)) {
